@@ -12,4 +12,11 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Wings {
+        int DEPLOY_1 = -1;
+        int DEPLOY_2 = -1;
+        int PANCAKE_1 = -1;
+        int PANCAKE_2 = -1;
+    }
 }
