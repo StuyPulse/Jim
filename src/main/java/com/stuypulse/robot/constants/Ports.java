@@ -12,4 +12,10 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Plant {
+        int FORWARD = 0;
+        int REVERSE = 0;
+
+    }
 }
