@@ -31,6 +31,9 @@ public interface Settings {
             SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 0);
             SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0);
             SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0);
+
+            SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0);
+            SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0);
         }
         public interface Drive {
             SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0);
@@ -39,7 +42,7 @@ public interface Settings {
 
             SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0);
             SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);               
+            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);           
         }
 
         public interface FrontRight {
