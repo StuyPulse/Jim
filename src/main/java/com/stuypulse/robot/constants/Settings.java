@@ -14,4 +14,9 @@ import com.stuypulse.stuylib.network.SmartNumber;
  * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
  * values that we can edit on Shuffleboard.
  */
-public interface Settings {}
+public interface Settings {
+    public interface LED {
+        double MANUAL_UPDATE_TIME = 0.75;
+        double BLINK_TIME = 0.5;
+    }
+}

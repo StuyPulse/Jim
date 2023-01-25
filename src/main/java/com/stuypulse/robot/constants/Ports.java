@@ -12,4 +12,8 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface LEDController {
+        int PORT = 694; // PWM
+    }
 }
