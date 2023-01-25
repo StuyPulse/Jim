@@ -22,6 +22,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public interface Motors {
 
+    public interface Arm {
+        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 1 / 25);
+        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40, 1 / 25);
+        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 1 / 25);
+    }
+
     /** Classes to store all of the values a motor needs */
 
     public static class TalonSRXConfig {
