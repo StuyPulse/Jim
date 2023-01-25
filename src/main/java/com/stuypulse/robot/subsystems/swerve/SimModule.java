@@ -1,14 +1,7 @@
 package com.stuypulse.robot.subsystems.swerve;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
-import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import com.stuypulse.robot.subsystems.ISwerveModule;
@@ -18,7 +11,6 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.Feedforward;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.network.SmartAngle;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
