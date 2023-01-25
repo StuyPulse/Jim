@@ -17,8 +17,11 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    double DT = 0.05;
 
     public interface Swerve {
+        double MAX_SPEED = 4.2;
+
         public interface Turn {
             SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 0);
             SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0);
