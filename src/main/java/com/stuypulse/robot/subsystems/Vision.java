@@ -6,12 +6,23 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.network.limelight.Limelight;
 import com.stuypulse.stuylib.network.limelight.Solve3DResult;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
+
+    private static Vision instance;
+
+    public static Vision getInstance() {
+        if(instance == null) {
+            instance = new Vision();
+        } 
+        return instance; 
+    }
 
     public enum ResultStatus {
         TRUST(0),
