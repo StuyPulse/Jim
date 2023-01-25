@@ -170,11 +170,6 @@ public class SwerveDrive extends SubsystemBase {
     
     @Override
     public void periodic() {
-        Odometry.getInstance().updatePose(
-            getGyroAngle(),
-            getModulePositions()
-        );
-
         Pose2d pose = Odometry.getInstance().getPose();
         for (int i = 0; i < modules.length; ++i) {
             module2ds[i].setPose(new Pose2d(
