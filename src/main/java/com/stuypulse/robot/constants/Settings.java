@@ -9,6 +9,7 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 
 /*-
  * File containing tunable settings for every subsystem on the robot.
@@ -27,4 +28,41 @@ public interface Settings {
 
     
     
+    double DT = 0.02;
+
+    public interface Swerve {
+        double MAX_SPEED = 4.2;
+
+        public interface Turn {
+            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 0);
+            SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0);
+            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0);
+        }
+        public interface Drive {
+            SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0);
+            SmartNumber kI = new SmartNumber("Swerve/Drive/kI", 0);
+            SmartNumber kD = new SmartNumber("Swerve/Drive/kD", 0); 
+
+            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0);
+            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0);
+            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);               
+        }
+
+        public interface Encoder {
+            public interface Drive {
+                double WHEEL_DIAMETER = Units.inchesToMeters(3);
+                double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+                double GEAR_RATIO = 1.0 / 4.71;
+                
+                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO;
+                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+            }
+
+            public interface Turn {
+                double GEAR_RATIO = -1;
+                double POSITION_CONVERSION = GEAR_RATIO * 2 * Math.PI;
+                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+            }
+        } 
+    } 
 }
