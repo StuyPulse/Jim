@@ -43,7 +43,7 @@ public class SL_SwerveModule extends ISwerveModule {
     private final CANSparkMax driveMotor;
     private final RelativeEncoder driveEncoder;
     
-    // controller
+    // controllers
     private Controller driveController;
     private AngleController turnController;
 
@@ -55,7 +55,7 @@ public class SL_SwerveModule extends ISwerveModule {
 
         // turn 
         turnMotor = new CANSparkMax(turnCANId, MotorType.kBrushless);
-        Motors.Swerve.TURN.configure(turnMotor); // constant
+        Motors.Swerve.TURN.configure(turnMotor);
         
         // double check this
         absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);

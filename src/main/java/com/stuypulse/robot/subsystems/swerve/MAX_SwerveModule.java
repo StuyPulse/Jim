@@ -60,10 +60,15 @@ public class MAX_SwerveModule extends ISwerveModule {
         // double check this
         absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
         turnController = turnMotor.getPIDController();
+        turnController.setFeedbackDevice(absoluteEncoder);
+
         turnController.setP(Turn.kP.doubleValue());
         turnController.setI(Turn.kI.doubleValue());
         turnController.setD(Turn.kD.doubleValue());
-        // turnController.setPositionPIDWrappingEnabled(true);
+
+        turnController.setPositionPIDWrappingEnabled(true);
+        turnController.setPositionPIDWrappingMinInput(-Math.PI);
+        turnController.setPositionPIDWrappingMaxInput(+Math.PI);
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
@@ -74,6 +79,8 @@ public class MAX_SwerveModule extends ISwerveModule {
         driveEncoder.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
         
         drivePID = driveMotor.getPIDController();
+        drivePID.setFeedbackDevice(driveEncoder);
+
         drivePID.setP(Drive.kP.doubleValue());
         drivePID.setI(Drive.kI.doubleValue());
         drivePID.setD(Drive.kD.doubleValue());
@@ -122,7 +129,6 @@ public class MAX_SwerveModule extends ISwerveModule {
     @Override
     public void periodic() {
         // turn
-        // SEE IF WE NEED ERROR THING
         turnController.setReference(targetState.angle.getRadians(), ControlType.kPosition);
 
         // drive
