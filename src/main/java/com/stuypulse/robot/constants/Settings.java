@@ -15,6 +15,7 @@ import com.stuypulse.stuylib.network.SmartNumber;
  */
 public interface Settings {
 
+    //shut up amber
     public interface Intake{
         double debounceTime = 0.3;
         double STALLING_THRESHOLD = 0.2;
@@ -23,5 +24,24 @@ public interface Settings {
         SmartNumber coneBackMotorSpeed = new SmartNumber("Settings/Intake/coneBackMotorSpeed", 0.3);
         SmartNumber cubeBackMotorSpeed = new SmartNumber("Settings/Intake/cubeBackMotorSpeed", 0.2);
 
+    }
+
+    public interface Arm {
+        public interface ShoulderFeedback {
+            double P = 1;
+            double I = 0;
+            double D = 0;
+        }
+
+        public interface WristFeedback {
+            double P = 1;
+            double I = 0;
+            double D = 0;
+        }
+
+        double SHOULDER_GEAR_RATIO = 1;
+        double WRIST_GEAR_RATIO = 1;
+        double SHOULDER_CONVERSION = 360 / SHOULDER_GEAR_RATIO;
+        double WRIST_CONVERSION = 360 / WRIST_GEAR_RATIO;
     }
 }

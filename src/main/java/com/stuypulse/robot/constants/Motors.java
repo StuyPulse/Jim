@@ -21,6 +21,17 @@ import com.revrobotics.CANSparkMax.IdleMode;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+    //shut up amber
+    public interface Arm {
+        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 1 / 25);
+        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40, 1 / 25);
+        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 1 / 25);
+    }
+
+    public interface Intake {
+        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake);
+        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake);
+    }
 
     /** Classes to store all of the values a motor needs */
 

@@ -13,8 +13,16 @@ public interface Ports {
         int DEBUGGER = 2;
     }
     public interface Intake {
-        int FRONTMOTOR = 0;
-        int BACKMOTOR = 1;
-        int IRSENSOR = 2;
+        int FRONTMOTOR = 30;
+        int BACKMOTOR = 31;
+        int IRSENSOR = 2;// idk what this is
+    }
+    
+
+    // shut up amber
+    public interface Arm {
+        int SHOULDER_LEFT = -1;
+        int SHOULDER_RIGHT =  -1;
+        int WRIST = -1;
     }
 }

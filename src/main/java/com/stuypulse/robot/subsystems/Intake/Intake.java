@@ -10,7 +10,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.arm.Arm;
+
 import static com.stuypulse.robot.constants.Settings.Intake.*;
+import static com.stuypulse.robot.constants.Motors.Intake.*;
 
 public class Intake extends IIntake{
 
@@ -20,19 +23,19 @@ public class Intake extends IIntake{
     private Debouncer isTripped;
     private boolean isReversed;
 
-    public Intake(){
+    private final Arm arm;
+
+    public Intake(Arm arm){
        
         frontMotor = new CANSparkMax(Ports.Intake.FRONTMOTOR, MotorType.kBrushless);
         backMotor = new CANSparkMax(Ports.Intake.BACKMOTOR, MotorType.kBrushless);
         IRSensor = new DigitalInput(Ports.Intake.IRSENSOR);
 
-        backMotor.setInverted(true);
-
-        frontMotor.setIdleMode(IdleMode.kBrake);
-        backMotor.setIdleMode(IdleMode.kBrake);
-
         isTripped = new Debouncer(debounceTime, DebounceType.kRising);
 
+        FRONT_MOTOR.configure(frontMotor);
+        BACK_MOTOR.configure(backMotor);
+        this.arm = arm;
     }
     public double isReversed(){
         if(isReversed){
@@ -74,7 +77,7 @@ public class Intake extends IIntake{
     }
 
     public double getAngle(){
-        return 0;
+        return arm.getWristAngle().toRadians();
     }
 
     // shut up amber
@@ -83,10 +86,12 @@ public class Intake extends IIntake{
         SmartDashboard.putBoolean("Intake/is Stalling", isStalling());
         SmartDashboard.putBoolean("Intake/is Tripped", isTripped.calculate(IRSensor.get()));
 
-        shouldStop();
+        
         if (getAngle() > Math.PI) {
             isReversed = true;
         }
+        
+        shouldStop();
     }
 
 }
