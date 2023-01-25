@@ -42,10 +42,14 @@ public class SwerveDrive extends SubsystemBase {
                     new MAX_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, Ports.Swerve.BackRight.ENCODER, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
                 );
             } else {
-                
+                instance = new SwerveDrive(
+                    new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
+                    new SimModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET),
+                    new SimModule(BackLeft.ID, BackLeft.MODULE_OFFSET),
+                    new SimModule(BackRight.ID, BackRight.MODULE_OFFSET)
+                );
             }
         }
-
         return instance;
     }
 

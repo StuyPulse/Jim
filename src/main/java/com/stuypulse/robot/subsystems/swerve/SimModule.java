@@ -27,7 +27,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
-public class SL_SwerveModule extends ISwerveModule {
+public class SimModule extends ISwerveModule {
+    
+    private static LinearSystem<N2, N1, N2> identifyVelocityPositionSystem(double kV, double kA) {
+        if (kV <= 0.0) {
+            throw new IllegalArgumentException("Kv must be greater than zero.");
+          }
+          if (kA <= 0.0) {
+            throw new IllegalArgumentException("Ka must be greater than zero.");
+          }
+      
+          return new LinearSystem<N2, N1, N2>(
+              Matrix.mat(Nat.N2(), Nat.N2()).fill(0.0, 1.0, 0.0, -kV / kA),
+              Matrix.mat(Nat.N2(), Nat.N1()).fill(0.0, 1.0 / kA),
+              Matrix.mat(Nat.N2(), Nat.N2()).fill(1.0, 0.0, 0.0, 1.0),
+              Matrix.mat(Nat.N2(), Nat.N1()).fill(0.0, 0.0));
+    }
 
     // module data
     private final String id;
@@ -35,45 +50,33 @@ public class SL_SwerveModule extends ISwerveModule {
     private SwerveModuleState targetState;
 
     // turn
-    private final CANSparkMax turnMotor;
-    private final SparkMaxAbsoluteEncoder absoluteEncoder;
-    private final SmartAngle angleOffset;
+    private final LinearSystemSim<N2, N1, N1> turnSim;
 
     // drive
-    private final CANSparkMax driveMotor;
-    private final RelativeEncoder driveEncoder;
+    private final LinearSystemSim<N2, N1, N2> driveSim;
     
     // controllers
     private Controller driveController;
     private AngleController turnController;
 
-    public SL_SwerveModule(String id, Translation2d location, int turnCANId, SmartAngle angleOffset, int driveCANId) {
+    public SimModule(String id, Translation2d location) {
         
         // module data
         this.id = id;
         this.location = location;
 
         // turn 
-        turnMotor = new CANSparkMax(turnCANId, MotorType.kBrushless);
-        Motors.Swerve.TURN.configure(turnMotor);
-        
-        // double check this
-        absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        turnSim = new LinearSystemSim<>(LineaSystemId.identifyPositionSystem(Turn.kV, Turn.kA));
+
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
 
         // drive
-        driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
-        Motors.Swerve.DRIVE.configure(turnMotor); 
-        
-        driveEncoder = driveMotor.getEncoder();
-        driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
-        driveEncoder.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+        driveSim = new LinearSystemSim<>(LinearSystemId.identifyVelocityPositionSystem(Drive.kV, Drive.kA));
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
             .add(new Feedforward.Motor(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
-        this.angleOffset = angleOffset;
     }   
     
     @Override
@@ -92,11 +95,15 @@ public class SL_SwerveModule extends ISwerveModule {
     }
     
     private double getSpeed() {
-        return driveEncoder.getVelocity();
+        return driveSim.getOutput(1);
+    }
+
+    private double getDistance() {
+        return driveSim.getOutput(0);
     }
     
     private Rotation2d getAngle() {
-        return Rotation2d.fromRotations(absoluteEncoder.getPosition()).minus(angleOffset.getRotation2d());
+        return Rotation2d.fromRadians(turnSim.getOutput(0));
     } 
 
     @Override 
@@ -106,29 +113,45 @@ public class SL_SwerveModule extends ISwerveModule {
     
     @Override
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+        return new SwerveModulePosition(getDistance(), getAngle());
     }
 
     @Override
     public void periodic() {
         // turn
-        turnMotor.setVoltage(turnController.update(
+        turnController.update(
             Angle.fromRotation2d(targetState.angle), 
-            Angle.fromRotation2d(getAngle())));
+            Angle.fromRotation2d(getAngle()));
 
         // drive
-        driveMotor.setVoltage(driveController.update(
+        driveController.update(
             targetState.speedMetersPerSecond, 
-            getSpeed()));
-        
+            getSpeed());
+
         SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber(id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber(id + "/Angle Voltage", turnController.getOutput());
-        SmartDashboard.putNumber(id + "/Absolute Angle", absoluteEncoder.getPosition() * 360);
         SmartDashboard.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber(id + "/Speed", getSpeed());
         SmartDashboard.putNumber(id + "/Speed Error", driveController.getError());
         SmartDashboard.putNumber(id + "/Speed Voltage", driveController.getOutput());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // drive
+        driveSim.setInput(driveController.getOutput());
+        driveSim.update(Settings.DT);
+        
+        // turn
+        turnSim.setInput(turnController.getOutput());
+        turnSim.update(Settings.DT);
+        
+       // turn simulation
+       RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(
+           turnSim.getCurrentDrawAmps() + driveSim.getCurrentDrawAmps()
+       ));
+
     }
 }

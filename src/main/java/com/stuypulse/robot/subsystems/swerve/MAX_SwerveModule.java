@@ -92,7 +92,7 @@ public class MAX_SwerveModule extends ISwerveModule {
     }   
     
     @Override
-    public String getID(){
+    public String getID() {
         return id;
     }
     
