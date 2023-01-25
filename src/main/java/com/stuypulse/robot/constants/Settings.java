@@ -16,6 +16,6 @@ import com.stuypulse.stuylib.network.SmartNumber;
  */
 public interface Settings {
     public interface Wings {
-        double RETRACT_DELAY = 0.0; // temporary value
+        double PANCAKE_DELAY = 0.0; // time takes for pancake to disengage
     }
 }
