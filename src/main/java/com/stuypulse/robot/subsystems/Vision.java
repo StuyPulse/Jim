@@ -4,13 +4,10 @@ import java.util.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.network.limelight.Limelight;
-import com.stuypulse.stuylib.network.limelight.Solve3DResult;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -63,6 +60,17 @@ public class Vision extends SubsystemBase {
             this.latency = latency;
             this.status = status;
         }
+
+        public Result(Limelight camera) {
+            this(
+                getPose2d(camera),
+                camera.getLatencyMs(),
+                ResultStatus.fromValue(
+                    distanceToTarget(
+                        Field.aprilTags[(int)camera.getTagID()-1].toPose2d(),
+                        getPose2d(camera))
+                ));
+        }
         
         public Pose2d getPose() {
             return pose;
@@ -75,6 +83,7 @@ public class Vision extends SubsystemBase {
         public ResultStatus getStatus() {
             return status;
         }
+
 
 
     }
@@ -96,14 +105,10 @@ public class Vision extends SubsystemBase {
 
     private void updateResult() {
         if(front.getValidTarget()) {
-            Pose2d frontTag = Field.aprilTags[(int)front.getTagID()-1].toPose2d();
-            double frontDistance = distanceToTarget(frontTag, getPose2d(front));
-            results.add(new Result(frontTag, frontDistance, ResultStatus.fromValue(frontDistance)));
+            results.add(new Result(front));
         }
         if (back.getValidTarget()) {
-            Pose2d backTag = Field.aprilTags[(int)back.getTagID()-1].toPose2d();
-            double backDistance = distanceToTarget(backTag, getPose2d(back));
-            results.add(new Result(backTag, backDistance, ResultStatus.fromValue(backDistance)));
+            results.add(new Result(back));
         } 
     }
 
@@ -112,8 +117,7 @@ public class Vision extends SubsystemBase {
     }
     
     private Pose2d getPose2d(Limelight limelight) {
-        Pose3d pose = getPose3d(limelight);
-        return pose.toPose2d();
+        return getPose3d(limelight).toPose2d();
     }
 
     private Pose3d getPose3d(Limelight limelight){
@@ -121,5 +125,9 @@ public class Vision extends SubsystemBase {
 			return new Pose3d();
 		}
         return limelight.getRobotPose();
+    }
+
+    public Rotation2d getAngle(){
+        return results.get(-1).getPose().getRotation();
     }
 }

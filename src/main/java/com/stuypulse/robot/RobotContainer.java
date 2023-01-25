@@ -21,6 +21,7 @@ public class RobotContainer {
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
     // Subsystem
+    private final SwerveDrive = SwerveDrive.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();

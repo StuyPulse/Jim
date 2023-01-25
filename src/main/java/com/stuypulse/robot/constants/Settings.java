@@ -5,10 +5,13 @@
 
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartAngle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -31,6 +34,8 @@ public interface Settings {
     double DT = 0.02;
 
     public interface Swerve {
+        double WIDTH = Units.inchesToMeters(30.0);
+        double HEIGHT = Units.inchesToMeters(24.0);
         double MAX_SPEED = 4.2;
 
         public interface Turn {
@@ -46,6 +51,30 @@ public interface Settings {
             SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0);
             SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0);
             SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);               
+        }
+
+        public interface FrontRight {
+            String ID = "Front Right";
+            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, HEIGHT * -0.5);
+        }
+
+        public interface FrontLeft {
+            String ID = "Front Left";
+            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, HEIGHT * +0.5);
+        }
+
+        public interface BackLeft {
+            String ID = "Back Left";
+            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, HEIGHT * +0.5);
+        }
+
+        public interface BackRight {
+            String ID = "Back Right";
+            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, HEIGHT * -0.5);
         }
 
         public interface Encoder {
