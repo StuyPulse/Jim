@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
 
-    private RobotContainer robot;
+    private Jim robot;
     private Command auto;
 
     /*************************/
@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        robot = new RobotContainer();
+        robot = new Jim();
     }
 
     @Override

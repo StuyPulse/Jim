@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RobotContainer {
+public class Jim {
 
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
@@ -27,7 +27,7 @@ public class RobotContainer {
 
     // Robot container
 
-    public RobotContainer() {
+    public Jim() {
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
