@@ -32,9 +32,9 @@ public interface Settings {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(42);
                 
-            double MAXANGLE = Units.degreesToRadians(30); 
-            double MINANGLE = Units.degreesToRadians(-210);
-            double MASS = 7; 
+            double MAXANGLE = Units.degreesToRadians(360); 
+            double MINANGLE = Units.degreesToRadians(-360);
+            double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
 
@@ -42,25 +42,25 @@ public interface Settings {
             double ACCEL_LIMIT = 10;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Shoulder/kP", 0.1);
+                SmartNumber kP = new SmartNumber("Shoulder/kP", 0.2);
                 SmartNumber kI = new SmartNumber ("Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Shoulder/kD", 0.1);
+                SmartNumber kD = new SmartNumber("Shoulder/kD", 0);
             }
             
             public interface Feedforward {
-                double kS = 0.1;
-                double kA = 0.06;
-                double kG = 3.382;
-                double kV = 0.3;
+                SmartNumber kS = new SmartNumber("Shoulder/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Shoulder/kA", 0.06);
+                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.18);
+                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.3);
             }
         }
     
         public interface Wrist {
-            double GEARING = 80;
+            double GEARING = 50;
             double LENGTH = Units.inchesToMeters(17);
             double MAXANGLE = Double.POSITIVE_INFINITY; 
             double MINANGLE = Double.NEGATIVE_INFINITY;
-            double MASS = 4;
+            double MASS = 0.001;
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
             
@@ -74,10 +74,10 @@ public interface Settings {
             }
     
             public interface Feedforward {
-                double kS = 0.1;
-                double kA = 0.05;
-                double kG = 0.7;
-                double kV = 0.1;
+                SmartNumber kS = new SmartNumber("Wrist/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Wrist/kA", 0.05);
+                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.0);
+                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.1);
             }
         }
     }
