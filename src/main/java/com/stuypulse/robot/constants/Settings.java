@@ -10,6 +10,7 @@ import com.stuypulse.stuylib.network.SmartAngle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -20,11 +21,29 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+
+    public interface Vision {
+        double TOLERANCE = -1;
+        double COMMUNITY_DISTANCE = Field.PEG_TO_CHARGING_STATION_EDGE - Swerve.LENGTH/2;
+
+        public interface Limelight {
+            String [] LIMELIGHTS = new String[] {"limelight-front","limelight-back"};
+            int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
+            double CAMERA_TO_CENTER = Units.inchesToMeters(-1);
+            Angle CAMERA_PITCH = Angle.fromDegrees(-1);
+            double CAMERA_HEIGHT = Units.inchesToMeters(-1);
+        }
+
+    }
+
+    
+    
     double DT = 0.02;
+
 
     public interface Swerve {
         double WIDTH = Units.inchesToMeters(30.0);
-        double HEIGHT = Units.inchesToMeters(24.0);
+        double LENGTH = Units.inchesToMeters(24.0);
         double MAX_SPEED = 4.2;
 
         public interface Turn {
@@ -45,25 +64,25 @@ public interface Settings {
         public interface FrontRight {
             String ID = "Front Right";
             SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, HEIGHT * -0.5);
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
             SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, HEIGHT * +0.5);
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
             SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, HEIGHT * +0.5);
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
             SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, HEIGHT * -0.5);
+            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
         public interface Encoder {

@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.stuypulse.robot.subsystems.ISwerveModule;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports.Swerve.FrontRight;
@@ -87,7 +88,7 @@ public class SwerveDrive extends SubsystemBase {
         return locations;
     }
     
-    private SwerveModulePosition[] getModulePositions() {
+    public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for(int i = 0; i < modules.length; i++) {
             positions[i] = modules[i].getModulePosition();
