@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.Intake;
+package com.stuypulse.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,7 +22,7 @@ public class Intake extends IIntake{
     private CANSparkMax backMotor;
 
     private DigitalInput cubeSensor;
-    private BStream isStalling;
+    private BStream stalling;
 
     public Intake(){
        
@@ -32,7 +32,7 @@ public class Intake extends IIntake{
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
 
-        isStalling = BStream.create(this::isMomentarilyStalling)
+        stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT);
 
@@ -46,7 +46,7 @@ public class Intake extends IIntake{
     }
 
     private boolean isStalling() {
-        return isStalling.get();
+        return stalling.get();
     }
 
     // CUBE DETECTION (ir sensor)

@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.Intake;
+package com.stuypulse.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*
@@ -27,10 +27,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 
 public abstract class IIntake extends SubsystemBase {
-
     public abstract void cubeIntake();
     public abstract void coneIntake();
     public abstract void cubeOuttake();
     public abstract void coneOuttake();
-
 }
