@@ -14,6 +14,7 @@ import com.stuypulse.robot.constants.Settings.Swerve.BackLeft;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -114,14 +115,22 @@ public class SwerveDrive extends SubsystemBase {
     
     /** MODULE STATES API **/
     public void drive(Vector2D velocity, double omega) {
-        // ADD 254 DRIFT FIX!
-        
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.y, -velocity.x,
                 -omega,
                 Odometry.getInstance().getAngle());
 
-        setChassisSpeeds(speeds, false);
+        Pose2d robotVel = new Pose2d(
+            Settings.DT * velocity.x,
+            Settings.DT * velocity.y,
+            Rotation2d.fromRadians(Settings.DT * omega));
+        Twist2d twistVel = new Pose2d().log(robotVel);
+
+        setChassisSpeeds(new ChassisSpeeds(
+            twistVel.dx / Settings.DT,
+            twistVel.dy / Settings.DT,
+            twistVel.dtheta / Settings.DT
+        ), false);
     }
     
     public void setChassisSpeeds(ChassisSpeeds robotSpeed, boolean fieldRelative) {
