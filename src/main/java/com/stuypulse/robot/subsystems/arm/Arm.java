@@ -81,6 +81,11 @@ public class Arm extends IArm {
         return wristEncoder.getPosition();
     }
 
+    // FIXME: possibly unnecessary due to absolute encoder
+    public double getAbsoluteWristDegrees() {
+        return 180 + getShoulderDegrees() - getWristDegrees();
+    }
+
     @Override
     public void setTargetShoulderAngle(double angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
@@ -118,11 +123,6 @@ public class Arm extends IArm {
 
     public void moveWrist(double angle) {
         wristTargetAngle.set(wristTargetAngle.get() + angle);
-    }
-
-    // FIXME: possibly unnecessary due to absolute encoder
-    public double getAbsoluteWristDegrees() {
-        return 180 + getShoulderDegrees() - getWristDegrees();
     }
 
     private void runShoulder(double voltage) {
