@@ -1,6 +1,7 @@
-package com.stuypulse.robot.subsystems.vision;
+package com.stuypulse.robot.subsystems.odometry;
 
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.Vision.Result;
 
 import edu.wpi.first.math.VecBuilder;
@@ -10,10 +11,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Odometry extends SubsystemBase {
+public class Odometry extends IOdometry {
 
     private static Odometry instance;
 
