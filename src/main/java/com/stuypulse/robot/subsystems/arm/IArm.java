@@ -28,5 +28,7 @@ public abstract class IArm extends SubsystemBase {
 
     public abstract boolean isShoulderAtAngle(double maxError);
     public abstract boolean isWristAtAngle(double maxError);
-    
+
+    public abstract double getShoulderTargetAngle();
+    public abstract double getWristTargetAngle();
 }

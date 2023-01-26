@@ -22,10 +22,11 @@ public class ArmVisualizer extends SubsystemBase {
     private MechanismLigament2d baseLigament;
     private MechanismLigament2d shoulderLigament;
     private MechanismLigament2d wristLigament;
+    private MechanismLigament2d targetShoulderLigament;
+    private MechanismLigament2d targetWristLigament;
     private MechanismLigament2d swerveLigamentRight;
     private MechanismLigament2d pegMid;
     private MechanismLigament2d pegTop;
-
 
     private MechanismRoot2d shoulderRoot;
     private MechanismRoot2d wristRoot;
@@ -61,9 +62,14 @@ public class ArmVisualizer extends SubsystemBase {
 
         wristLigament = new MechanismLigament2d("Wrist", Units.metersToInches(Wrist.LENGTH) / 10, armSubsystem.getWristAngle().getDegrees());
         shoulderLigament = new MechanismLigament2d("Arm", Units.metersToInches(Shoulder.LENGTH) / 10, armSubsystem.getShoulderAngle().getDegrees());
+        targetWristLigament = new MechanismLigament2d("Target Wrist", Units.metersToInches(Wrist.LENGTH) / 10, armSubsystem.getWristTargetAngle());
+        targetShoulderLigament = new MechanismLigament2d("Target Arm", Units.metersToInches(Shoulder.LENGTH) / 10, armSubsystem.getShoulderTargetAngle());
         baseLigament.setColor(new Color8Bit(0, 255, 0));
         shoulderLigament.setColor(new Color8Bit(255, 0, 255));
         wristLigament.setColor(new Color8Bit(0, 0, 255));
+
+        targetShoulderLigament.setColor(new Color8Bit(255, 100, 255));
+        targetWristLigament.setColor(new Color8Bit(0, 100, 255));
 
         pegRootMid.append(pegMid);
         pegRootTop.append(pegTop);
@@ -71,6 +77,8 @@ public class ArmVisualizer extends SubsystemBase {
         shoulderRoot.append(baseLigament);
         shoulderRoot.append(shoulderLigament);
         wristRoot.append(wristLigament);
+        shoulderRoot.append(targetShoulderLigament);
+        wristRoot.append(targetWristLigament);
 
         SmartDashboard.putData("Arm Mech2d", arm);
     }
@@ -83,5 +91,7 @@ public class ArmVisualizer extends SubsystemBase {
         baseLigament.setAngle(-90);
         shoulderLigament.setAngle(armSubsystem.getShoulderAngle().getDegrees());
         wristLigament.setAngle(armSubsystem.getWristAngle().getDegrees());
+        targetShoulderLigament.setAngle(armSubsystem.getShoulderTargetAngle());
+        targetWristLigament.setAngle(armSubsystem.getWristTargetAngle());
     }
 }

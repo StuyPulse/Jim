@@ -24,23 +24,23 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /*
-* absolute encoder: conversion is not 360, this puts the range in 0, 360
-* the range should be -180, +180, we can handle this manually and cleanly through a series of helper functions
-* MathUtil.java is your best friend here
+* X absolute encoder: conversion is not 360, this puts the range in 0, 360
+* X the range should be -180, +180, we can handle this manually and cleanly through a series of helper functions
+* X MathUtil.java is your best friend here
 **
-* the angle of the joints are no longer linear, and we have to deal with the jump from 180 to -180 with rotation2d's
+* X the angle of the joints are no longer linear, and we have to deal with the jump from 180 to -180 with rotation2d's
 * I think. 
 * 
 * because of that , we need to make sure the arm goes in the exact direction we expect every single time. we also need
 * to be careful of physical limits that consider the correct angle (e..g once you go past one full rotation you're at -180 and that's
 * probably a valid angle)
 * 
-* also you need to consider zeroing the absolute encoder stuff
+* X also you need to consider zeroing the absolute encoder stuff 
 * also the starting wrist and shoulder angle must match the angle of the initial target values
 *
 * also we don't have constants right now that make the simulation work
-* also can you put the sim mechanism2d stuff in its own class so we can use it for the actual robot. also add duplicate
-* ligament so that the real vs target can be logged. 
+* X also can you put the sim mechanism2d stuff in its own class so we can use it for the actual robot. also add duplicate
+* X ligament so that the real vs target can be logged. 
 */
 public class Arm extends IArm {
     
@@ -64,6 +64,9 @@ public class Arm extends IArm {
 
         shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+
+        shoulderEncoder.setZeroOffset(shoulderEncoder.getPosition());
+        wristEncoder.setZeroOffset(wristEncoder.getPosition());
 
         configureMotors();
 
@@ -95,6 +98,16 @@ public class Arm extends IArm {
     @Override
     public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(SLMath.map(wristEncoder.getPosition(), 0, 1, -180, 180));
+    }
+
+    @Override
+    public double getShoulderTargetAngle() {
+        return shoulderTargetAngle.get();
+    }
+
+    @Override
+    public double getWristTargetAngle() {
+        return wristTargetAngle.get();
     }
 
     @Override

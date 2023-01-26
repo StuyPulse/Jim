@@ -62,6 +62,16 @@ public class SimArm extends IArm {
     }
 
     @Override
+    public double getShoulderTargetAngle() {
+        return shoulderTargetAngle.get();
+    }
+
+    @Override
+    public double getWristTargetAngle() {
+        return wristTargetAngle.get();
+    }
+
+    @Override
     public void setTargetShoulderAngle(double angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
     }
@@ -78,7 +88,6 @@ public class SimArm extends IArm {
 
         wristTargetAngle.set(angle);
     }
-
 
     // don't need methods below
     
