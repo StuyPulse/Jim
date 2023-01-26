@@ -1,132 +1,150 @@
-// package com.stuypulse.robot.subsystems.arm;
+package com.stuypulse.robot.subsystems.arm;
 
-// import com.revrobotics.CANSparkMax;
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-// import static com.stuypulse.robot.constants.Motors.Arm.*;
-// import static com.stuypulse.robot.constants.Ports.Arm.*;
-// import static com.stuypulse.robot.constants.Settings.Arm.*;
-// import com.stuypulse.robot.subsystems.IArm;
-// import com.stuypulse.stuylib.control.Controller;
-// import com.stuypulse.stuylib.control.feedback.PIDController;
-// import com.stuypulse.stuylib.control.feedforward.Feedforward;
-// import com.stuypulse.stuylib.math.Angle;
-// import com.stuypulse.stuylib.network.SmartAngle;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static com.stuypulse.robot.constants.Motors.Arm.*;
+import static com.stuypulse.robot.constants.Ports.Arm.*;
+import static com.stuypulse.robot.constants.Settings.Arm.*;
 
-// import edu.wpi.first.math.MathUtil;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
+import com.stuypulse.robot.subsystems.IArm;
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
-// public class Arm extends IArm {
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class Arm extends IArm {
     
-//     private final CANSparkMax shoulderLeft;
-//     private final CANSparkMax shoulderRight;
-//     private final CANSparkMax wrist;
+    private final CANSparkMax shoulderLeft;
+    private final CANSparkMax shoulderRight;
+    private final CANSparkMax wrist;
 
-//     // todo: ask verit
-//     private final RelativeEncoder shoulderEncoder;
-//     private final RelativeEncoder wristEncoder;
+    // todo: ask verit
+    private final RelativeEncoder shoulderEncoder;
+    private final RelativeEncoder wristEncoder;
 
-//     private final Controller shoulderController;
-//     private final Controller wristController;
+    private final Controller shoulderController;
+    private final Controller wristController;
 
-//     // degrees
-//     private final SmartAngle shoulderTargetAngle;
-//     private final SmartAngle wristTargetAngle; 
+    // degrees
+    private final SmartNumber shoulderTargetAngle;
+    private final SmartNumber wristTargetAngle; 
 
-//     public Arm() {
-//         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
-//         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
-//         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
+    public Arm() {
+        shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
+        shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
+        wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-//         shoulderEncoder = shoulderLeft.getEncoder();
-//         shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
-//         wristEncoder = wrist.getEncoder();
-//         wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
+        shoulderEncoder = shoulderLeft.getEncoder();
+        shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
+        wristEncoder = wrist.getEncoder();
+        wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
 
-//         shoulderController = new Feedforward.Motor(ShoulderFeedForward.kS, ShoulderFeedForward.kA, ShoulderFeedForward.kV).position()
-//             .add(new FeedforwardArm(ShoulderFeedForward.kG))
-//             .add(new PIDController(ShoulderFeedback.P, ShoulderFeedback.I, ShoulderFeedback.D))
-//             // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
-//             .setOutputFilter(x -> MathUtil.clamp(x, -SHOULDER_MAX_VOLTAGE, +SHOULDER_MAX_VOLTAGE));
-
-//         wristController = new Feedforward.Motor(WristFeedForward.kS, WristFeedForward.kA, WristFeedForward.kV).position()
-//             .add(new FeedforwardArm(WristFeedForward.kG))
-//             .add(new PIDController(WristFeedback.P, WristFeedback.I, WristFeedback.D))
-//             // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT));
-//             .setOutputFilter(x -> MathUtil.clamp(x, -WRIST_MAX_VOLTAGE, +WRIST_MAX_VOLTAGE));
-
-//         shoulderTargetAngle = new SmartAngle("Arm/Shoulder Target Angle", Angle.kZero);
-//         wristTargetAngle = new SmartAngle("Arm/Wrist Target Angle", Angle.kZero);
-
-//         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
-//         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
-//         WRIST_CONFIG.configure(wrist);
-//     }
-
-//     // rotations * 2pi gets us radians
-//     @Override
-//     public double getShoulderDegrees() {
-//         return shoulderEncoder.getPosition();
-//     }
-
-//     @Override
-//     public double getWristDegrees() {
-//         return wristEncoder.getPosition();
-//     }
-
-//     @Override
-//     public void setTargetShoulderAngle(double degrees) {
-//         shoulderTargetAngle.set(degrees);
-//     }
-
-//     @Override
-//     public void setTargetWristAngle(double degrees) {
-//         wristTargetAngle.set(degrees);
-//     }
-
-//     @Override
-//     public boolean isShoulderAtAngle(double maxError) {
-//         return Math.abs(getShoulderAngle().add(shoulderTargetAngle.get().negative()).toDegrees()) < maxError;
-//     }
-
-//     @Override
-//     public boolean isWristAtAngle(double maxError) {
-//         return Math.abs(getWristAngle().add(wristTargetAngle.get().negative()).toDegrees()) < maxError;
-//     }
-
-//     public void moveShoulder(Angle angle) {
-//         shoulderTargetAngle.set(shoulderTargetAngle.get().add(angle));
-//     }
-
-//     public void moveWrist(Angle angle) {
-//         wristTargetAngle.set(wristTargetAngle.get().add(angle));
-//     }
-
-//     public Angle getAbsoluteWristAngle() {
-//         return Angle.k180deg.add(getShoulderAngle()).add(getWristAngle().negative());
-//     }
-
-//     private void runShoulder(double voltage) {
-//         shoulderLeft.setVoltage(voltage);
-//         shoulderRight.setVoltage(voltage);
-//     }
-
-//     private void runWrist(double voltage) {
-//         wrist.setVoltage(voltage);
-//     }
-
-//     public void execute() {
-//         double shoulderOutput = shoulderController.update(shoulderTargetAngle.get().toDegrees(), getShoulderAngle().toDegrees());
-//         double wristOutput = wristController.update(wristTargetAngle.get().toDegrees(), getWristAngle().toDegrees());
-
-//         runShoulder(shoulderOutput);
-//         runWrist(wristOutput);
-
-//         SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().toDegrees());
-//         SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().toDegrees());
-//         SmartDashboard.putNumber("Arm/Wrist/Abs Angle", getAbsoluteWristAngle().toDegrees());
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
+                                    .add(new ArmFeedforward(Shoulder.Feedforward.kG))
+                                    .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+                                    .setSetpointFilter(new MotionProfile(SHOULDER_VEL_LIMIT, SHOULDER_ACC_LIMIT));
+                                    // .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));;
         
-//         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
-//         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
-//     }
-// }
+        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kA, Wrist.Feedforward.kV).position()
+                                    .add(new ArmFeedforward(Wrist.Feedforward.kG))
+                                    .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+                                    .setSetpointFilter(new MotionProfile(WRIST_VEL_LIMIT, WRIST_ACC_LIMIT));
+                                    // .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
+
+        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle", 0);
+        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle", 0);
+    
+        configureMotors();
+    }
+
+    private void configureMotors() {
+        SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
+        SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
+        WRIST_CONFIG.configure(wrist);
+    }
+
+    @Override
+    public double getShoulderDegrees() {
+        return shoulderEncoder.getPosition();
+    }
+
+    @Override
+    public double getWristDegrees() {
+        return wristEncoder.getPosition();
+    }
+
+    @Override
+    public void setTargetShoulderAngle(double angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
+    }
+
+    @Override
+    public void setTargetWristAngle(double angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE)));
+    }
+
+    @Override
+    public void setTargetWristAngle(double angle, boolean clockwise) {
+        double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
+        
+        if (!clockwise) {
+            wristTargetAngle.set(-clamped);
+        } else {
+            wristTargetAngle.set(clamped);
+        }
+    }
+
+    @Override
+    public boolean isShoulderAtAngle(double maxError) {
+        return Math.abs(getShoulderDegrees() - shoulderTargetAngle.get()) < maxError;
+    }
+
+    @Override
+    public boolean isWristAtAngle(double maxError) {
+        return Math.abs(getWristDegrees() - wristTargetAngle.get()) < maxError;
+    }
+
+    public void moveShoulder(double angle) {
+        shoulderTargetAngle.set(shoulderTargetAngle.get() + angle);
+    }
+
+    public void moveWrist(double angle) {
+        wristTargetAngle.set(wristTargetAngle.get() + angle);
+    }
+
+    public double getAbsoluteWristAngle() {
+        return 180 + getShoulderDegrees() - getWristDegrees();
+    }
+
+    private void runShoulder(double voltage) {
+        shoulderLeft.setVoltage(voltage);
+        shoulderRight.setVoltage(voltage);
+    }
+
+    private void runWrist(double voltage) {
+        wrist.setVoltage(voltage);
+    }
+
+    public void execute() {
+        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderDegrees());
+        double wristOutput = wristController.update(wristTargetAngle.get(), getWristDegrees());
+
+        runShoulder(shoulderOutput);
+        runWrist(wristOutput);
+
+        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Abs Angle", getAbsoluteWristAngle());
+        
+        SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
+        SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
+    }
+}

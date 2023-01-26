@@ -1,15 +1,13 @@
     package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Arm;
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
 import com.stuypulse.robot.subsystems.IArm;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.Feedforward;
-import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.MathUtil;
@@ -55,21 +53,18 @@ public class SimArm extends IArm {
         // simulation
         armSim = new DoubleJointedArmSim(new SingleJointedArmSim(DCMotor.getNEO(1), Shoulder.GEARING, Shoulder.JKG+Wrist.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MINANGLE, Shoulder.MAXANGLE, Shoulder.MASS, true), 
             new SingleJointedArmSim(DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MINANGLE, Wrist.MAXANGLE, Wrist.MASS, true));
-    
-        
-        //controller initialization
 
-        shoulderController = new Feedforward.Motor(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
-            .add(new FeedforwardArm(Shoulder.Feedforward.kG))
-            .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-            // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
-            .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
+                                    .add(new ArmFeedforward(Shoulder.Feedforward.kG))
+                                    .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+                                    // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
+                                    .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));;
         
-        wristController = new Feedforward.Motor(Wrist.Feedforward.kS, Wrist.Feedforward.kA, Wrist.Feedforward.kV).position()
-            .add(new FeedforwardArm(Wrist.Feedforward.kG))
-            .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
-            // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT));
-            .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
+        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kA, Wrist.Feedforward.kV).position()
+                                    .add(new ArmFeedforward(Wrist.Feedforward.kG))
+                                    .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+                                    // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
+                                    .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
 
         // ligament initialization
