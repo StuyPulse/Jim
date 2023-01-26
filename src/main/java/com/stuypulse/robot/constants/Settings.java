@@ -14,15 +14,18 @@ import com.stuypulse.stuylib.network.SmartNumber;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    double DT = 0.05;
 
     //shut up amber
     public interface Intake{
-        double debounceTime = 0.3;
-        double STALLING_THRESHOLD = 0.2;
+        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
+        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
 
-        SmartNumber frontMotorSpeed = new SmartNumber("Settings/Intake/frontMotorSpeed", 0.3);
-        SmartNumber coneBackMotorSpeed = new SmartNumber("Settings/Intake/coneBackMotorSpeed", 0.3);
-        SmartNumber cubeBackMotorSpeed = new SmartNumber("Settings/Intake/cubeBackMotorSpeed", 0.2);
+        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 0.3);
+        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 0);
+
+        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 0.3);
+        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.2);
 
     }
 

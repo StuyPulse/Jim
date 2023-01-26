@@ -28,12 +28,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class IIntake extends SubsystemBase {
 
-    //shut up amber
     public abstract void cubeIntake();
     public abstract void coneIntake();
     public abstract void cubeOuttake();
     public abstract void coneOuttake();
-    public abstract boolean isStalling();
-    public abstract double getAngle();
 
 }

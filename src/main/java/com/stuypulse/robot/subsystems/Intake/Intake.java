@@ -1,16 +1,17 @@
 package com.stuypulse.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.arm.IArm;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import static com.stuypulse.robot.constants.Settings.Intake.*;
 import static com.stuypulse.robot.constants.Motors.Intake.*;
@@ -19,79 +20,99 @@ public class Intake extends IIntake{
 
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
-    private DigitalInput IRSensor; 
-    private Debouncer isTripped;
-    private boolean isReversed;
 
-    private final Arm arm;
+    private DigitalInput cubeSensor;
+    private BStream isStalling;
 
-    public Intake(Arm arm){
+    public Intake(){
        
         frontMotor = new CANSparkMax(Ports.Intake.FRONTMOTOR, MotorType.kBrushless);
         backMotor = new CANSparkMax(Ports.Intake.BACKMOTOR, MotorType.kBrushless);
-        IRSensor = new DigitalInput(Ports.Intake.IRSENSOR);
-
-        isTripped = new Debouncer(debounceTime, DebounceType.kRising);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
-        this.arm = arm;
+
+        isStalling = BStream.create(this::isMomentarilyStalling)
+            .filtered(new BDebounce.Rising(STALL_TIME))
+            .polling(Settings.DT);
+
+        cubeSensor = new DigitalInput(Ports.Intake.IRSENSOR);
     }
-    public double isReversed(){
-        if(isReversed){
-            return -1;
-        } else{
-            return 1;
-        }
+
+    // CONE DETECTION (stall detection)
+
+    private boolean isMomentarilyStalling() {
+        return Math.abs(frontMotor.getOutputCurrent()) > STALL_CURRENT.doubleValue();
     }
+
+    private boolean isStalling() {
+        return isStalling.get();
+    }
+
+    // CUBE DETECTION (ir sensor)
+
+    private boolean hasCube() {
+        return !cubeSensor.get();
+    }
+
+    // WRIST ORIENTATION
+
+    private boolean isFlipped() {
+        IArm arm = Arm.getInstance();
+        return arm.getWristAngle().toRadians() > Math.PI /2 || arm.getWristAngle().toRadians() < 3 * Math.PI / 2;
+    }
+
+    // INTAKING MODES
+
     public void cubeIntake(){
-        frontMotor.set(frontMotorSpeed.get() * isReversed());
-        backMotor.set(cubeBackMotorSpeed.get() * isReversed());
+        if (isFlipped()) {
+            frontMotor.set(-CUBE_FRONT_ROLLER.get());
+            backMotor.set(-CUBE_BACK_ROLLER.get());
+        } else {
+            frontMotor.set(CUBE_FRONT_ROLLER.get());
+            backMotor.set(CUBE_BACK_ROLLER.get());
+        }
     }
 
     public void coneIntake() {
-        frontMotor.set(frontMotorSpeed.get() * isReversed());
-        backMotor.set(-1 * cubeBackMotorSpeed.get() * isReversed());
+        if (isFlipped()) {
+            frontMotor.set(-CONE_FRONT_ROLLER.get());
+            backMotor.set(CONE_BACK_ROLLER.get());
+        } else {
+            frontMotor.set(CONE_FRONT_ROLLER.get());
+            backMotor.set(-CONE_BACK_ROLLER.get());
+        }
     }
 
     public void cubeOuttake(){
-        frontMotor.set(-1 * frontMotorSpeed.get()* isReversed());
-        backMotor.set(-1 * cubeBackMotorSpeed.get() * isReversed());
+        if (isFlipped()) {
+            frontMotor.set(CUBE_FRONT_ROLLER.get());
+            backMotor.set(CUBE_BACK_ROLLER.get());
+        } else {
+            frontMotor.set(-CUBE_FRONT_ROLLER.get());
+            backMotor.set(-CUBE_BACK_ROLLER.get());
+        }
     }
 
     public void coneOuttake(){
-        frontMotor.set(-1 * frontMotorSpeed.get());
-        backMotor.set(coneBackMotorSpeed.get());
-    }
-
-
-    public boolean isStalling() {
-        return frontMotor.getOutputCurrent() > STALLING_THRESHOLD;
-    }
-
-    public void shouldStop(){
-        if(isStalling() || isTripped.calculate(IRSensor.get())){ 
-            frontMotor.set(0);
-            backMotor.set(0);
+        if (isFlipped()) {
+            frontMotor.set(CONE_FRONT_ROLLER.get());
+            backMotor.set(-CONE_BACK_ROLLER.get());
+        } else {
+            frontMotor.set(-CONE_FRONT_ROLLER.get());
+            backMotor.set(CONE_BACK_ROLLER.get());
         }
     }
 
-    public double getAngle(){
-        return arm.getWristAngle().toRadians();
-    }
-
-    // shut up amber
     @Override
     public void periodic(){
-        SmartDashboard.putBoolean("Intake/is Stalling", isStalling());
-        SmartDashboard.putBoolean("Intake/is Tripped", isTripped.calculate(IRSensor.get()));
-
-        
-        if (getAngle() > Math.PI) {
-            isReversed = true;
+        if (isStalling() || hasCube()) {
+            frontMotor.stopMotor();
+            backMotor.stopMotor();
         }
-        
-        shouldStop();
+        SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
+        SmartDashboard.putBoolean("Intake/Is Stalling", isStalling());
+        SmartDashboard.putBoolean("Intake/Has Cube", hasCube());
     }
 
 }

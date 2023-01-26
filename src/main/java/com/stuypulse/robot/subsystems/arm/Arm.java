@@ -12,9 +12,8 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartAngle;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Arm extends SubsystemBase {
+public class Arm extends IArm {
     
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
