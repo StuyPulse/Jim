@@ -32,8 +32,8 @@ public interface Settings {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(42);
                 
-            double MAXANGLE = Units.degreesToRadians(360); 
-            double MINANGLE = Units.degreesToRadians(-360);
+            double MAX_ANGLE = Units.degreesToRadians(180); 
+            double MIN_ANGLE = Units.degreesToRadians(-180);
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
@@ -58,8 +58,8 @@ public interface Settings {
         public interface Wrist {
             double GEARING = 50;
             double LENGTH = Units.inchesToMeters(17);
-            double MAXANGLE = Double.POSITIVE_INFINITY; 
-            double MINANGLE = Double.NEGATIVE_INFINITY;
+            double MAX_ANGLE = Double.POSITIVE_INFINITY; 
+            double MIN_ANGLE = Double.NEGATIVE_INFINITY;
             double MASS = 0.001;
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));

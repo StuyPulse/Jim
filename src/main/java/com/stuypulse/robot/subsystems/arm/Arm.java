@@ -112,19 +112,13 @@ public class Arm extends IArm {
 
     @Override
     public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
+        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
     }
 
     @Override
-    public void setTargetWristAngle(double angle, boolean longPath) {
-        double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
-        
-        if (!longPath) {
-            wristTargetAngle.set(-clamped);
-        } else {
-            wristTargetAngle.set(clamped);
-        }
-    }
+    public void setTargetWristAngle(double angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
+    } 
 
     @Override
     public boolean isShoulderAtAngle(double maxError) {

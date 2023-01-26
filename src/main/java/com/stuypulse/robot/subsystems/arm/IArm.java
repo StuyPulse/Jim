@@ -21,10 +21,7 @@ public abstract class IArm extends SubsystemBase {
     public abstract Rotation2d getWristAngle();
 
     public abstract void setTargetShoulderAngle(double degrees);
-    public final void setTargetWristAngle(double degrees) {
-        setTargetWristAngle(degrees, false);
-    }
-    public abstract void setTargetWristAngle(double degrees, boolean longPath);
+    public abstract void setTargetWristAngle(double degrees);
 
     public abstract boolean isShoulderAtAngle(double maxError);
     public abstract boolean isWristAtAngle(double maxError);
