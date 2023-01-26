@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems;
 
+import com.stuypulse.robot.subsystems.Vision.Result;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.VecBuilder;
@@ -7,6 +8,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,7 +25,6 @@ public class Odometry extends SubsystemBase {
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
-
     private final Field2d field;
 
     public Odometry() {   
@@ -50,7 +51,31 @@ public class Odometry extends SubsystemBase {
         SwerveDrive drive = SwerveDrive.getInstance();
         Vision vision = Vision.getInstance();
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
-        poseEstimator.update(vision.getAngle(), drive.getModulePositions());
+
+        for (Result result : vision.getResults()) {
+            switch (result.getError()) {
+                case LOW:
+                    // pose estimator reset
+                    poseEstimator.resetPosition(
+                        drive.getGyroAngle(), 
+                        drive.getModulePositions(),
+                        result.getPose());
+                    break;
+
+                case MID:
+                    // pose estimator add vision measurement
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency());
+                    break;
+                
+                case HIGH:
+                    break; // DO NOT DO ANYTHING
+            }
+        }
+
+        // poseEstimator.addVisionMeasurement(getPose(), 0);
+        
         field.setRobotPose(getPose());
     }
 

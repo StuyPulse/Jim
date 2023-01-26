@@ -4,6 +4,7 @@ import java.util.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.network.limelight.Limelight;
+import com.stuypulse.stuylib.network.limelight.LimelightTable;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -21,57 +22,25 @@ public class Vision extends SubsystemBase {
         return instance; 
     }
 
-    public enum ResultStatus {
-        TRUST(0),
-        TRUST_WITH_ERROR(1),
-        UNTRUST(2);
 
-        private final int value;
-
-        private ResultStatus(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static ResultStatus fromValue(double distance) {
-            if (distance > Settings.Vision.TOLERANCE)
-                return TRUST;
-            return UNTRUST;
-        }
-
+    // [] TODO: change names
+    public enum Error {
+        LOW,
+        MID,
+        HIGH;
     }
     
     public class Result {
         private final Pose2d pose;
-        private double latency;
-        private ResultStatus status;
+        private final double latency;
+        private final Error error;
 
-        public Result() {
-            pose = new Pose2d();
-            latency = 0;
-            status = ResultStatus.UNTRUST;
-        }
-
-        public Result(Pose2d pose, double latency, ResultStatus status) {
+        public Result(Pose2d pose, double latency, Error error) {
             this.pose = pose;
             this.latency = latency;
-            this.status = status;
+            this.error = error;
         }
 
-        public Result(Limelight camera) {
-            this(
-                getPose2d(camera),
-                camera.getLatencyMs(),
-                ResultStatus.fromValue(
-                    distanceToTarget(
-                        Field.aprilTags[(int)camera.getTagID()-1].toPose2d(),
-                        getPose2d(camera))
-                ));
-        }
-        
         public Pose2d getPose() {
             return pose;
         }
@@ -80,36 +49,45 @@ public class Vision extends SubsystemBase {
             return latency;
         }
 
-        public ResultStatus getStatus() {
-            return status;
+        public Error getError() {
+            return error;
         }
-
-
-
     }
 
-    private final Limelight front;
-    private final Limelight back;
-    private List<Result> results;
+    private final Limelight [] limelights;
 
     public Vision() {
-        front = Limelight.getInstance("front");
-        back = Limelight.getInstance("back");
+        limelights = new Limelight[2];
+        limelights[0] = Limelight.getInstance(Settings.Vision.LL_FRONT);
+        limelights[1] = Limelight.getInstance(Settings.Vision.LL_FRONT);
     }
 
-    public List<Result> getResult() {
+    public List<Result> getResults() {
         var results = new ArrayList<Result>();
-        updateResult();
+
+        for (Limelight camera: limelights){
+            if(camera.getValidTarget()){
+                results.add(getResult(camera));
+            }
+        }
         return results;
     }
 
-    private void updateResult() {
-        if(front.getValidTarget()) {
-            results.add(new Result(front));
+    private Result getResult(Limelight limelight) {
+        double robotDistance = distanceToTarget(getPose2d(limelight), getAprilTagPose2d(limelight));
+        boolean inZone = robotDistance <= Settings.Vision.STATION_DISTANCE;
+        boolean inTolerance = robotDistance <= Settings.Vision.TOLERANCE;
+        Error error = Error.HIGH;
+        if(inZone){
+            error = Error.LOW;
         }
-        if (back.getValidTarget()) {
-            results.add(new Result(back));
-        } 
+        else if(!inZone && inTolerance){
+            error = Error.MID;
+        }
+        else if(!inTolerance){
+            error = Error.HIGH;
+        }
+        return new Result(getPose2d(limelight), limelight.getLatencyMs(), error);
     }
 
     private double distanceToTarget(Pose2d aprilTag, Pose2d robot) {
@@ -127,7 +105,9 @@ public class Vision extends SubsystemBase {
         return limelight.getRobotPose();
     }
 
-    public Rotation2d getAngle(){
-        return results.get(-1).getPose().getRotation();
+    private Pose2d getAprilTagPose2d(Limelight limelight){
+        int id = (int) limelight.getTagID();
+        return Field.aprilTags[id-1].toPose2d();
     }
+
 }

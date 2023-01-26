@@ -24,9 +24,9 @@ public interface Settings {
 
     public interface Vision {
         double TOLERANCE = -1;
-        Pose2d[] TAGS = {
-            
-        };
+        double STATION_DISTANCE = -1;
+        String LL_FRONT = "front";
+        String LL_BACK = "back";
     }
 
     
