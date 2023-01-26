@@ -1,7 +1,7 @@
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.vision;
 
-import com.stuypulse.robot.subsystems.Vision.Result;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.subsystems.vision.Vision.Result;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -72,10 +72,7 @@ public class Odometry extends SubsystemBase {
                 case HIGH:
                     break; // DO NOT DO ANYTHING
             }
-        }
-
-        // poseEstimator.addVisionMeasurement(getPose(), 0);
-        
+        }    
         field.setRobotPose(getPose());
     }
 

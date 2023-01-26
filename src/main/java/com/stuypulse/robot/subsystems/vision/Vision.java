@@ -1,14 +1,15 @@
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.network.limelight.Limelight;
-import com.stuypulse.stuylib.network.limelight.LimelightTable;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -21,9 +22,7 @@ public class Vision extends SubsystemBase {
         } 
         return instance; 
     }
-
-
-    // [] TODO: change names
+    
     public enum Error {
         LOW,
         MID,
@@ -57,9 +56,16 @@ public class Vision extends SubsystemBase {
     private final Limelight [] limelights;
 
     public Vision() {
-        limelights = new Limelight[2];
-        limelights[0] = Limelight.getInstance(Settings.Vision.LL_FRONT);
-        limelights[1] = Limelight.getInstance(Settings.Vision.LL_FRONT);
+        String [] hostNames = Settings.Vision.Limelight.LIMELIGHTS;
+        limelights = new Limelight[hostNames.length];
+
+        for(int i = 0; i < hostNames.length; i++){
+            limelights[i] = Limelight.getInstance(hostNames[i]);
+            for (int port : Settings.Vision.Limelight.PORTS) {
+                PortForwarder.add(port, hostNames[i] + ".local", port);
+            }
+        }
+        CameraServer.startAutomaticCapture();
     }
 
     public List<Result> getResults() {
@@ -74,10 +80,13 @@ public class Vision extends SubsystemBase {
     }
 
     private Result getResult(Limelight limelight) {
-        double robotDistance = distanceToTarget(getPose2d(limelight), getAprilTagPose2d(limelight));
-        boolean inZone = robotDistance <= Settings.Vision.STATION_DISTANCE;
+        double robotDistance = distToTarget(getPose2d(limelight), getTagPose2d(limelight));
+        boolean inZone = robotDistance <= Settings.Vision.COMMUNITY_DISTANCE;
         boolean inTolerance = robotDistance <= Settings.Vision.TOLERANCE;
+
+        // defaults to high error
         Error error = Error.HIGH;
+
         if(inZone){
             error = Error.LOW;
         }
@@ -87,11 +96,17 @@ public class Vision extends SubsystemBase {
         else if(!inTolerance){
             error = Error.HIGH;
         }
-        return new Result(getPose2d(limelight), limelight.getLatencyMs(), error);
+
+        return new Result(getPose2d(limelight), getLatency(limelight), error);
     }
 
-    private double distanceToTarget(Pose2d aprilTag, Pose2d robot) {
-        return Math.sqrt(Math.pow(aprilTag.getX() - robot.getX(), 2) + Math.pow(aprilTag.getY() - robot.getY(), 2));
+    public double getLatency(Limelight limelight){
+        return limelight.getLatencyMs()/1000.0;
+    }
+
+    private double distToTarget(Pose2d aprilTag, Pose2d robot) {
+        return Math.hypot(aprilTag.getX()- robot.getX(), aprilTag.getY() - robot.getY());
+        // return Math.sqrt(Math.pow(aprilTag.getX() - robot.getX(), 2) + Math.pow(aprilTag.getY() - robot.getY(), 2));
     }
     
     private Pose2d getPose2d(Limelight limelight) {
@@ -105,9 +120,28 @@ public class Vision extends SubsystemBase {
         return limelight.getRobotPose();
     }
 
-    private Pose2d getAprilTagPose2d(Limelight limelight){
+    private Pose2d getTagPose2d(Limelight limelight){
+        if(!limelight.getValidTarget()){
+            return new Pose2d();
+        }
         int id = (int) limelight.getTagID();
         return Field.aprilTags[id-1].toPose2d();
     }
 
+    @Override
+    public void periodic(){
+        for (int i = 0; i < limelights.length; i ++){
+            Limelight camera = limelights[i];
+            Pose2d pose = getPose2d(limelights[i]);
+            String limelight = Settings.Vision.Limelight.LIMELIGHTS[i];
+
+            if (!camera.isConnected()){
+                System.out.println("[WARNING] Limelight " + limelight + "is disconected.");
+            }
+
+            SmartDashboard.putNumber("Vision/" + limelight +  "/Pose X", pose.getX());
+            SmartDashboard.putNumber("Vision/" + limelight +  "/Pose Y", pose.getY());
+            SmartDashboard.putNumber("Vision/" + limelight +"Pose Rotation", pose.getRotation().getDegrees());   
+        }
+    }
 }

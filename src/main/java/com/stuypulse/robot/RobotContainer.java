@@ -8,6 +8,8 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.subsystems.vision.Odometry;
+import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -23,6 +25,8 @@ public class RobotContainer {
     
     // Subsystem
     private final SwerveDrive swerve = SwerveDrive.getInstance();
+    private final Vision vision = Vision.getInstance();
+    private final Odometry odometry = Odometry.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
