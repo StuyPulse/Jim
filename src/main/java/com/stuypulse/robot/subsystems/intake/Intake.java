@@ -58,7 +58,7 @@ public class Intake extends IIntake{
     // WRIST ORIENTATION
 
     private boolean isFlipped() {
-        IArm arm = Arm.getInstance();
+        IArm arm = IArm.getInstance();
         return arm.getWristAngle().toRadians() > Math.PI /2 || arm.getWristAngle().toRadians() < 3 * Math.PI / 2;
     }
 

@@ -1,6 +1,7 @@
-package com.stuypulse.robot.subsystems.arm;
+package com.stuypulse.robot.subsystems;
 
-import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.arm.SimArm;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,12 +19,16 @@ public abstract class IArm extends SubsystemBase {
         return RobotBase.isReal() ? new Arm() : new SimArm();
     }
     
-    public abstract Angle getShoulderAngle();
-    public abstract Angle getWristAngle();
+    public abstract double getShoulderDegrees();
+    public abstract double getWristDegrees();
 
-    public abstract void setTargetShoulderAngle(Angle angle);
-    public abstract void setTargetWristAngle(Angle angle);
+    public abstract void setTargetShoulderAngle(double degrees);
+    public final void setTargetWristAngle(double degrees) {
+        setTargetWristAngle(degrees, false);
+    }
+    public abstract void setTargetWristAngle(double degrees, boolean longPath);
 
     public abstract boolean isShoulderAtAngle(double maxError);
     public abstract boolean isWristAtAngle(double maxError);
+    
 }
