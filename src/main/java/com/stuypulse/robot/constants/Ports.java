@@ -18,8 +18,8 @@ public interface Ports {
         int BACK_MOTOR = 31;
         int FRONT_RIGHT_SENSOR = 0;
         int FRONT_LEFT_SENSOR = 1;
-        int BACK_RIGHT_SENSOR = 3;
         int BACK_LEFT_SENSOR = 2;
+        int BACK_RIGHT_SENSOR = 3;
     }
 
     public interface Arm {
