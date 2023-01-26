@@ -15,7 +15,7 @@ import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.Feedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartAngle;
 
@@ -70,7 +70,7 @@ public class SL_SwerveModule extends ISwerveModule {
         driveEncoder.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-            .add(new Feedforward.Motor(Drive.kS, Drive.kV, Drive.kA).velocity());
+            .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
         this.angleOffset = angleOffset;
