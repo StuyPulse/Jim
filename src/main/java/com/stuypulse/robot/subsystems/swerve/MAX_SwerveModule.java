@@ -15,9 +15,10 @@ import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import com.stuypulse.robot.subsystems.ISwerveModule;
 import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.feedforward.Feedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.network.SmartAngle;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -85,7 +86,7 @@ public class MAX_SwerveModule extends ISwerveModule {
         drivePID.setI(Drive.kI.doubleValue());
         drivePID.setD(Drive.kD.doubleValue());
 
-        driveFF = new Feedforward.Motor(Drive.kS, Drive.kV, Drive.kA).velocity();
+        driveFF = new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity();
         
         targetState = new SwerveModuleState();
         this.angleOffset = angleOffset;
