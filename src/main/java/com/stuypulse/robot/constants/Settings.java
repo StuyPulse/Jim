@@ -110,6 +110,11 @@ public interface Settings {
             double D = 0;
         }
 
+        double SHOULDER_VEL_LIMIT = 1;
+        double SHOULDER_ACC_LIMIT = 1;
+        double WRIST_VEL_LIMIT = 1;
+        double WRIST_ACC_LIMIT = 1;
+
         double SHOULDER_MAX_VOLTAGE = 3;
         double WRIST_MAX_VOLTAGE = 3;
         double SHOULDER_GEAR_RATIO = 1;
