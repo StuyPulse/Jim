@@ -14,8 +14,8 @@ public interface Ports {
     }
 
     public interface Arm {
-        int SHOULDER_LEFT = -1;
-        int SHOULDER_RIGHT =  -1;
-        int WRIST = -1;
+        int SHOULDER_LEFT = 20;
+        int SHOULDER_RIGHT =  21;
+        int WRIST = 22;
     }
 }
