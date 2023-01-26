@@ -43,9 +43,9 @@ public class Arm extends IArm {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
-        // shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
+        shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
-        // wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
+        wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
