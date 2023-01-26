@@ -9,7 +9,7 @@ import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.control.feedforward.Feedforward;
 import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.Matrix;
@@ -76,7 +76,7 @@ public class SimModule extends ISwerveModule {
         driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV.get(), Drive.kA.get()));
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-            .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
+            .add(new Feedforward.Motor(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
     }   
