@@ -1,8 +1,10 @@
 package com.stuypulse.robot.subsystems.arm;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
@@ -26,14 +28,12 @@ public class Arm extends IArm {
     private final CANSparkMax shoulderRight;
     private final CANSparkMax wrist;
 
-    // todo: ask verit
-    private final RelativeEncoder shoulderEncoder;
-    private final RelativeEncoder wristEncoder;
+    private final AbsoluteEncoder shoulderEncoder;
+    private final AbsoluteEncoder wristEncoder;
 
     private final Controller shoulderController;
     private final Controller wristController;
 
-    // degrees
     private final SmartNumber shoulderTargetAngle;
     private final SmartNumber wristTargetAngle; 
 
@@ -42,10 +42,10 @@ public class Arm extends IArm {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderEncoder = shoulderLeft.getEncoder();
-        shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
-        wristEncoder = wrist.getEncoder();
-        wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
+        shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        // shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
+        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        // wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
@@ -120,7 +120,8 @@ public class Arm extends IArm {
         wristTargetAngle.set(wristTargetAngle.get() + angle);
     }
 
-    public double getAbsoluteWristAngle() {
+    // FIXME: possibly unnecessary due to absolute encoder
+    public double getAbsoluteWristDegrees() {
         return 180 + getShoulderDegrees() - getWristDegrees();
     }
 
@@ -142,7 +143,7 @@ public class Arm extends IArm {
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Angle", getWristDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Abs Angle", getAbsoluteWristAngle());
+        SmartDashboard.putNumber("Arm/Wrist/Abs Angle", getAbsoluteWristDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
