@@ -17,6 +17,8 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    double DT = 0.02;
+
     public interface Arm {
         public interface Simulation {
             double ROBOT_HEIGHT = 0;
@@ -26,19 +28,16 @@ public interface Settings {
 
             public interface Shoulder {
                 double GEARING = 80;
-                double LENGTH = 42; // inches
+                double LENGTH = Units.inchesToMeters(42);
                 
                 double MAXANGLE = Units.degreesToRadians(30); 
                 double MINANGLE = Units.degreesToRadians(-210);
                 double MASS = 7; 
                 double WEIGHT = MASS * 9.81; 
-                double JKG = 0.33 * MASS * (Math.pow(Units.inchesToMeters(LENGTH), 2));
+                double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
     
                 double VEL_LIMIT = 30;
                 double ACCEL_LIMIT = 10;
-    
-                double MIDGOAL = 0.5; // meters
-                double HIGHGOAL = 0.5; // meters
     
                 public interface PID {
                     SmartNumber kP = new SmartNumber("Shoulder/kP", 1);
@@ -56,21 +55,17 @@ public interface Settings {
             }
     
             public interface Wrist {
-                
                 double GEARING = 80;
-                double LENGTH = 17; // inches
-                double MAXANGLE = 90; 
-                double MINANGLE = -90;
+                double LENGTH = Units.inchesToMeters(17);
+                double MAXANGLE = Double.POSITIVE_INFINITY; 
+                double MINANGLE = Double.NEGATIVE_INFINITY;
                 double MASS = 4;
                 double WEIGHT = MASS * 9.81;
-                double JKG = 0.33 * MASS * (Math.pow(Units.inchesToMeters(LENGTH), 2));
+                double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
     
                 double VEL_LIMIT = 4;
                 double ACCEL_LIMIT = 2;
     
-                double MIDGOAL = 0.5; // meters
-                double HIGHGOAL = 0.5; // meters
-            
                 public interface PID {
                     SmartNumber kP = new SmartNumber("Wrist/kP", 0.6);
                     SmartNumber kI = new SmartNumber ("Wrist/kI", 0);

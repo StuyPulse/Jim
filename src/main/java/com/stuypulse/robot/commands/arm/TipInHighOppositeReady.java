@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class TipInHighOppositeReady extends InstantCommand {
     public TipInHighOppositeReady(IArm arm) {
-        arm.setTargetShoulderAngle(-15);
-        arm.setTargetWristAngle(+20);
+        super(() -> {
+            arm.setTargetShoulderAngle(-15);
+            arm.setTargetWristAngle(+20, false);
+        }, arm);
     }
 }

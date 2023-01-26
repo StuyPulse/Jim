@@ -1,5 +1,6 @@
     package com.stuypulse.robot.subsystems.arm;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
 import com.stuypulse.robot.subsystems.IArm;
@@ -89,8 +90,8 @@ public class SimArm extends IArm {
         baseLigament = new MechanismLigament2d("Base", 5.2, 0);
         swerveLigamentRight = new MechanismLigament2d("SwerveRight", (31)/10, 0);
 
-        wristLigament = new MechanismLigament2d("Wrist", Wrist.LENGTH / 10, getWristDegrees());
-        shoulderLigament = new MechanismLigament2d("Arm", Shoulder.LENGTH / 10, getShoulderDegrees());
+        wristLigament = new MechanismLigament2d("Wrist", Units.metersToInches(Wrist.LENGTH) / 10, getWristDegrees());
+        shoulderLigament = new MechanismLigament2d("Arm", Units.metersToInches(Shoulder.LENGTH) / 10, getShoulderDegrees());
         baseLigament.setColor(new Color8Bit(0, 255, 0));
         shoulderLigament.setColor(new Color8Bit(255, 0, 255));
         wristLigament.setColor(new Color8Bit(0, 0, 255));
@@ -125,17 +126,16 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public void setTargetWristAngle(double angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE)));
-    }
-    public void setTargetWristAngle(double angle, boolean clockwise) {
-        double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
+    public void setTargetWristAngle(double angle, boolean longPath) {
+        double error = MathUtil.inputModulus(angle - getWristDegrees(), -180, 180);
+        angle = getWristDegrees() + error;
 
-        if (clockwise) {
-            
+        if (longPath) {
+            if (error < 0) angle += 360;
+            else           angle -= 360;
         }
 
-        // wristTargetAngle.set();
+        wristTargetAngle.set(angle);
     }
 
 
@@ -155,16 +155,15 @@ public class SimArm extends IArm {
     public void periodic() {        
         armSim.setInput(shoulderController.update(shoulderTargetAngle.get(), getShoulderDegrees()), wristController.update(wristTargetAngle.get(), getWristDegrees()));
 
-        armSim.update(0.02);
+        armSim.update(Settings.DT);
 
-        wristRoot.setPosition(8 + (Shoulder.LENGTH/10)*Math.cos(Units.degreesToRadians(getShoulderDegrees())),  
-        5.2 + (Shoulder.LENGTH/10)*Math.sin(Units.degreesToRadians(getShoulderDegrees())));
+        wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(getShoulderDegrees())),  
+        5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(getShoulderDegrees())));
 
         baseLigament.setAngle(-90);
         shoulderLigament.setAngle(getShoulderDegrees());
         wristLigament.setAngle(getWristDegrees());
 
-//sus
         SmartDashboard.putNumber("Arm/Arm Angle", getShoulderDegrees());
         SmartDashboard.putNumber("Arm/Wrist Angle", getWristDegrees());
         SmartDashboard.putNumber("Arm/Arm Voltage", shoulderController.getOutput());

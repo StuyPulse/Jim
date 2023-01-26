@@ -81,11 +81,6 @@ public class Arm extends IArm {
         return wristEncoder.getPosition();
     }
 
-    // FIXME: possibly unnecessary due to absolute encoder
-    public double getAbsoluteWristDegrees() {
-        return 180 + getShoulderDegrees() - getWristDegrees();
-    }
-
     @Override
     public void setTargetShoulderAngle(double angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
@@ -143,7 +138,6 @@ public class Arm extends IArm {
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Angle", getWristDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Abs Angle", getAbsoluteWristDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);

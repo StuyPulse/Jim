@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class ArmNeutral extends InstantCommand {
     public ArmNeutral(IArm arm) {
-        arm.setTargetShoulderAngle(-90);
-        arm.setTargetWristAngle(+90);
+        super(() -> {
+            arm.setTargetShoulderAngle(-90);
+            arm.setTargetWristAngle(+90, false);
+        }, arm);
     }
 }

@@ -2,9 +2,8 @@ package com.stuypulse.robot.util;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DoubleJointedArmSim extends SubsystemBase{
+public class DoubleJointedArmSim {
 
     private final SingleJointedArmSim shoulderSim;
     private final SingleJointedArmSim wristSim; 
