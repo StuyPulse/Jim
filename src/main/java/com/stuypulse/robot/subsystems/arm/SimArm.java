@@ -1,7 +1,7 @@
-    package com.stuypulse.robot.subsystems.arm;
+package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
+import static com.stuypulse.robot.constants.Settings.Arm.Simulation.*;
+
 import com.stuypulse.robot.subsystems.IArm;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
 import com.stuypulse.stuylib.control.Controller;
