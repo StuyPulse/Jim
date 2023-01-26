@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class IArm extends SubsystemBase {
 
     public static IArm getInstance() {
-        return RobotBase.isReal() ? new Arm() : new SimArm();
+        return RobotBase.isReal() ? new SimArm() : new SimArm();
     }
     
-    public abstract double getShoulderDegrees();
-    public abstract double getWristDegrees();
+    public abstract Rotation2d getShoulderAngle();
+    public abstract Rotation2d getWristAngle();
 
     public abstract void setTargetShoulderAngle(double degrees);
     public final void setTargetWristAngle(double degrees) {

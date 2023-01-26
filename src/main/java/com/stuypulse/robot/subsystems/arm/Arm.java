@@ -10,16 +10,18 @@ import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /*
 * absolute encoder: conversion is not 360, this puts the range in 0, 360
@@ -86,13 +88,13 @@ public class Arm extends IArm {
     }
 
     @Override
-    public double getShoulderDegrees() {
-        return shoulderEncoder.getPosition();
+    public Rotation2d getShoulderAngle() {
+        return Rotation2d.fromDegrees(SLMath.map(shoulderEncoder.getPosition(), 0, 1, -180, 180));
     }
 
     @Override
-    public double getWristDegrees() {
-        return wristEncoder.getPosition();
+    public Rotation2d getWristAngle() {
+        return Rotation2d.fromDegrees(SLMath.map(wristEncoder.getPosition(), 0, 1, -180, 180));
     }
 
     @Override
@@ -113,12 +115,12 @@ public class Arm extends IArm {
 
     @Override
     public boolean isShoulderAtAngle(double maxError) {
-        return Math.abs(getShoulderDegrees() - shoulderTargetAngle.get()) < maxError;
+        return Math.abs(getShoulderAngle().getDegrees() - shoulderTargetAngle.get()) < maxError;
     }
 
     @Override
     public boolean isWristAtAngle(double maxError) {
-        return Math.abs(getWristDegrees() - wristTargetAngle.get()) < maxError;
+        return Math.abs(getWristAngle().getDegrees() - wristTargetAngle.get()) < maxError;
     }
 
     public void moveShoulder(double angle) {
@@ -139,14 +141,14 @@ public class Arm extends IArm {
     }
 
     public void execute() {
-        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderDegrees());
-        double wristOutput = wristController.update(wristTargetAngle.get(), getWristDegrees());
+        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
+        double wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());
 
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().getDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
