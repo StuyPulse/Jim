@@ -2,7 +2,7 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.stuypulse.robot.subsystems.ISwerveModule;
-import com.stuypulse.robot.subsystems.Odometry;
+import com.stuypulse.robot.subsystems.vision.Odometry;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports;
