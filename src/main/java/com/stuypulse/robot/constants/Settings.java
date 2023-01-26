@@ -20,11 +20,8 @@ public interface Settings {
     double DT = 0.02;
 
     public interface Arm {
+    
         public interface Simulation {
-            double ROBOT_HEIGHT = 0;
-            double ROBOT_WIDTH = 0;
-            double MID_PEG_HEIGHT = 0;
-            double TOP_PEG_HEIGHT = 0;
 
             public interface Shoulder {
                 double GEARING = 80;
@@ -45,7 +42,6 @@ public interface Settings {
                     SmartNumber kD = new SmartNumber("Shoulder/kD", 0.1);
                 }
             
-    
                 public interface Feedforward {
                     double kS = 0.1;
                     double kA = 0.06;
@@ -81,39 +77,12 @@ public interface Settings {
             }
         }
 
-        public interface ShoulderFeedForward {
-            double kG = -1;
-            double kS = 1;
-            double kA = 1;
-            double kV = 1;
-        }
-
-        public interface WristFeedForward {
-            double kG = -1;
-            double kS = 1;
-            double kA = 1;
-            double kV = 1;
-        }
-
-        public interface ShoulderFeedback {
-            double P = 1;
-            double I = 0;
-            double D = 0;
-        }
-
-        public interface WristFeedback {
-            double P = 1;
-            double I = 0;
-            double D = 0;
-        }
 
         double SHOULDER_VEL_LIMIT = 1;
         double SHOULDER_ACC_LIMIT = 1;
         double WRIST_VEL_LIMIT = 1;
         double WRIST_ACC_LIMIT = 1;
 
-        double SHOULDER_MAX_VOLTAGE = 3;
-        double WRIST_MAX_VOLTAGE = 3;
         double SHOULDER_GEAR_RATIO = 1;
         double WRIST_GEAR_RATIO = 1;
         double SHOULDER_CONVERSION = 360 / SHOULDER_GEAR_RATIO;
