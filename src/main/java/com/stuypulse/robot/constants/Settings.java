@@ -80,6 +80,7 @@ public interface Settings {
                 }
             }
         }
+
         public interface ShoulderFeedForward {
             double kG = -1;
             double kS = 1;
@@ -93,6 +94,7 @@ public interface Settings {
             double kA = 1;
             double kV = 1;
         }
+
         public interface ShoulderFeedback {
             double P = 1;
             double I = 0;

@@ -1,7 +1,4 @@
-package com.stuypulse.robot.subsystems;
-
-import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.arm.SimArm;
+package com.stuypulse.robot.subsystems.arm;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

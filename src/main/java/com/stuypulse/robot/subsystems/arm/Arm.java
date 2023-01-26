@@ -11,7 +11,6 @@ import static com.stuypulse.robot.constants.Settings.Arm.*;
 
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
-import com.stuypulse.robot.subsystems.IArm;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
@@ -87,15 +86,10 @@ public class Arm extends IArm {
     }
 
     @Override
-    public void setTargetWristAngle(double angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE)));
-    }
-
-    @Override
-    public void setTargetWristAngle(double angle, boolean clockwise) {
+    public void setTargetWristAngle(double angle, boolean longPath) {
         double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
         
-        if (!clockwise) {
+        if (!longPath) {
             wristTargetAngle.set(-clamped);
         } else {
             wristTargetAngle.set(clamped);
