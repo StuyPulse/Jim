@@ -1,11 +1,10 @@
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.plant;
 
 import com.stuypulse.robot.constants.Ports;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*
 * @author Samuel Chen
@@ -14,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 * @author Tracey Lin
 *
 */
-public class Plant extends SubsystemBase{
+public class Plant extends IPlant {
     private final DoubleSolenoid solenoid;
 
     public Plant() {
