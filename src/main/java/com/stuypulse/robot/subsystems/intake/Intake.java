@@ -1,27 +1,35 @@
 package com.stuypulse.robot.subsystems.intake;
 
+import static com.stuypulse.robot.constants.Motors.Intake.BACK_MOTOR;
+import static com.stuypulse.robot.constants.Motors.Intake.FRONT_MOTOR;
+import static com.stuypulse.robot.constants.Settings.Intake.CONE_BACK_ROLLER;
+import static com.stuypulse.robot.constants.Settings.Intake.CONE_FRONT_ROLLER;
+import static com.stuypulse.robot.constants.Settings.Intake.CUBE_BACK_ROLLER;
+import static com.stuypulse.robot.constants.Settings.Intake.CUBE_FRONT_ROLLER;
+import static com.stuypulse.robot.constants.Settings.Intake.STALL_CURRENT;
+import static com.stuypulse.robot.constants.Settings.Intake.STALL_TIME;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.arm.IArm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
-import static com.stuypulse.robot.constants.Settings.Intake.*;
-import static com.stuypulse.robot.constants.Motors.Intake.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends IIntake{
 
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
 
-    private DigitalInput cubeSensor;
+    private DigitalInput frontLeftSensor;
+    private DigitalInput frontRightSensor;
+    private DigitalInput backLeftSensor;
+    private DigitalInput backRightSensor;
+
     private BStream stalling;
 
     public Intake(){
@@ -36,7 +44,10 @@ public class Intake extends IIntake{
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT);
 
-        cubeSensor = new DigitalInput(Ports.Intake.CUBE_SENSOR);
+        frontLeftSensor = new DigitalInput(Ports.Intake.FRONT_LEFT_SENSOR);
+        frontRightSensor = new DigitalInput(Ports.Intake.FRONT_RIGHT_SENSOR);
+        backLeftSensor = new DigitalInput(Ports.Intake.BACK_LEFT_SENSOR);
+        backRightSensor = new DigitalInput(Ports.Intake.BACK_RIGHT_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
@@ -49,10 +60,16 @@ public class Intake extends IIntake{
         return stalling.get();
     }
 
-    // CUBE DETECTION (ir sensor)
+    // CUBE DETECTION (ir sensors)
 
+    private boolean hasCubeFront() {
+        return !frontLeftSensor.get()||!frontRightSensor.get();
+    }
+    private boolean hasCubeBack() {
+        return !backLeftSensor.get()||!backRightSensor.get();
+    }
     private boolean hasCube() {
-        return !cubeSensor.get();
+        return isFlipped()? hasCubeBack() : hasCubeFront();
     }
 
     // WRIST ORIENTATION

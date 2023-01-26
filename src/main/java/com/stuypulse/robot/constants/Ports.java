@@ -16,7 +16,10 @@ public interface Ports {
     public interface Intake {
         int FRONT_MOTOR = 30;
         int BACK_MOTOR = 31;
-        int CUBE_SENSOR = 2;
+        int FRONT_RIGHT_SENSOR = 0;
+        int FRONT_LEFT_SENSOR = 1;
+        int BACK_RIGHT_SENSOR = 3;
+        int BACK_LEFT_SENSOR = 2;
     }
 
     public interface Arm {
