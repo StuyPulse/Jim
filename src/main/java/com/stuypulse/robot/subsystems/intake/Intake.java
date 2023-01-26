@@ -26,8 +26,8 @@ public class Intake extends IIntake{
 
     public Intake(){
        
-        frontMotor = new CANSparkMax(Ports.Intake.FRONTMOTOR, MotorType.kBrushless);
-        backMotor = new CANSparkMax(Ports.Intake.BACKMOTOR, MotorType.kBrushless);
+        frontMotor = new CANSparkMax(Ports.Intake.FRONT_MOTOR, MotorType.kBrushless);
+        backMotor = new CANSparkMax(Ports.Intake.BACK_MOTOR, MotorType.kBrushless);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
@@ -36,7 +36,7 @@ public class Intake extends IIntake{
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT);
 
-        cubeSensor = new DigitalInput(Ports.Intake.IRSENSOR);
+        cubeSensor = new DigitalInput(Ports.Intake.CUBE_SENSOR);
     }
 
     // CONE DETECTION (stall detection)

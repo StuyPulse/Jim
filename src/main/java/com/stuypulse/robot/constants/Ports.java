@@ -14,8 +14,8 @@ public interface Ports {
     }
 
     public interface Intake {
-        int FRONT_ROLLER = 30;
-        int BACK_ROLLER = 31;
+        int FRONT_MOTOR = 30;
+        int BACK_MOTOR = 31;
         int CUBE_SENSOR = 2;
     }
 
