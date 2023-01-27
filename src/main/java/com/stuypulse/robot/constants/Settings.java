@@ -19,7 +19,7 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
-    double DT = 0.05;
+    double DT = 0.02;
 
     //shut up amber
     public interface Intake{

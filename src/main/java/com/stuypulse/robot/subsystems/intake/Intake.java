@@ -6,7 +6,6 @@ import static com.stuypulse.robot.constants.Ports.Intake.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.IArm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -47,8 +46,12 @@ public class Intake extends IIntake{
 
     // CONE DETECTION (stall detection)
 
+    private double maxCurrentDraw(){
+        return frontMotor.getOutputCurrent() > backMotor.getOutputCurrent()? frontMotor.getOutputCurrent() : backMotor.getOutputCurrent();
+    }
+
     private boolean isMomentarilyStalling() {
-        return frontMotor.getOutputCurrent() > STALL_CURRENT.doubleValue() || backMotor.getOutputCurrent() > STALL_CURRENT.doubleValue();
+        return maxCurrentDraw() > STALL_CURRENT.doubleValue();
     }
 
     private boolean isStalling() {
@@ -76,6 +79,7 @@ public class Intake extends IIntake{
 
     // INTAKING MODES
 
+    @Override
     public void cubeIntake(){
         if (isFlipped()) {
             frontMotor.set(-CUBE_FRONT_ROLLER.get());
@@ -86,6 +90,7 @@ public class Intake extends IIntake{
         }
     }
 
+    @Override
     public void coneIntake() {
         if (isFlipped()) {
             frontMotor.set(-CONE_FRONT_ROLLER.get());
@@ -96,6 +101,7 @@ public class Intake extends IIntake{
         }
     }
 
+    @Override
     public void cubeOuttake(){
         if (isFlipped()) {
             frontMotor.set(CUBE_FRONT_ROLLER.get());
@@ -106,6 +112,7 @@ public class Intake extends IIntake{
         }
     }
 
+    @Override
     public void coneOuttake(){
         if (isFlipped()) {
             frontMotor.set(CONE_FRONT_ROLLER.get());
