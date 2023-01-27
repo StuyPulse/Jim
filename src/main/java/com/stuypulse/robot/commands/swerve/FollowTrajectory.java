@@ -7,6 +7,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
@@ -21,26 +22,23 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private PathPlannerTrajectory path;
-	private SwerveDrive swerve;
-	
-	public FollowTrajectory(SwerveDrive swerve, PathPlannerTrajectory path) {
-		
+
+	public FollowTrajectory(PathPlannerTrajectory path) {
+
 		super(
 			path,
-			Odometry.getInstance()::getPose,
-			swerve.getKinematics(),
+			IOdometry.getInstance()::getPose,
+			SwerveDrive.getInstance().getKinematics(),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.THETA.kP, Motion.THETA.kI, Motion.THETA.kD),
-			swerve::setModuleStates,
+			SwerveDrive.getInstance()::setModuleStates,
 			true,
-			swerve
+			SwerveDrive.getInstance()
 		);
 		
-
 		robotRelative = false;
 		this.path = path;
-		this.swerve = swerve;
 	}
 
 	public FollowTrajectory robotRelative() {
