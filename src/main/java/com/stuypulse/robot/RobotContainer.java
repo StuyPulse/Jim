@@ -5,9 +5,11 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.arm.*;
+import com.stuypulse.robot.util.ArmAngles;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -53,6 +55,10 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
+        autonChooser.addOption("Arm", new ArmFollowPath(new ArmAngles[] {
+            new ArmAngles(-180, -90),
+            new ArmAngles(0, 0),
+        }));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }
