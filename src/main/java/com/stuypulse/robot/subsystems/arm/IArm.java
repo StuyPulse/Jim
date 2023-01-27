@@ -36,18 +36,10 @@ public abstract class IArm extends SubsystemBase {
     public abstract Rotation2d getWristTargetAngle();
 
     public final void addShoulderAngle(Rotation2d angle) {
-        setTargetShoulderAngle(new Rotation2d(getShoulderAngle().getDegrees() + angle.getDegrees()));
-    }
-
-    public final void addWristAngle(Rotation2d angle) {
-        setTargetWristAngle(new Rotation2d(getWristAngle().getDegrees() + angle.getDegrees()));
-    }
-
-    public final void moveShoulder(Rotation2d angle) {
         setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
     }
 
-    public final void moveWrist(Rotation2d angle) {
+    public final void addWristAngle(Rotation2d angle) {
         setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
 }

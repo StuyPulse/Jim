@@ -2,6 +2,8 @@ package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.constants.Settings;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
+
+import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
