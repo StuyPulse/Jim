@@ -34,6 +34,10 @@ public interface Settings {
             double ACCEL_LIMIT = 0.4;
 
             double ANGLE_OFFSET = 0;
+
+            double ANGLE_DEADZONE = 30;
+            double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
+            double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Shoulder/kP", 0.2);

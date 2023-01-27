@@ -98,8 +98,18 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public void periodic() {    
-        armSim.setInput(shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees()), wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees()));
+    public void periodic() {
+
+        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
+        double wristOutput;
+
+        if (Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
+            wristOutput = wristController.update(90, getWristAngle().getDegrees());
+        } else {
+            wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());
+        }
+    
+        armSim.setInput(shoulderOutput, wristOutput);
 
         armSim.update(Settings.DT);
 
