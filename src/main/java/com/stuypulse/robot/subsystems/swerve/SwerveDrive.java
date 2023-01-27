@@ -1,8 +1,10 @@
 package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.stuypulse.robot.subsystems.ISwerveModule;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.swerve.modules.ISwerveModule;
+import com.stuypulse.robot.subsystems.swerve.modules.MAX_SwerveModule;
+import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports;
@@ -67,20 +69,21 @@ public class SwerveDrive extends SubsystemBase {
 
         gyro = new AHRS(SPI.Port.kMXP);
 
-        kinematics = new SwerveDriveKinematics(getModuleLocations());
-        
+        kinematics = new SwerveDriveKinematics(getModuleOffsets());
+
+        Field2d field = IOdometry.getInstance().getField();
         module2ds = new FieldObject2d[modules.length];       
         for(int i = 0; i < module2ds.length; ++i){
-            module2ds[i] = Odometry.getInstance().getField().getObject(modules[i].getID()+"-2d");
+            module2ds[i] = field.getObject(modules[i].getID()+"-2d");
         }
         
     }
     
-    private Translation2d[] getModuleLocations() {
+    private Translation2d[] getModuleOffsets() {
         Translation2d[] locations = new Translation2d[modules.length];    
         
         for(int i = 0; i < modules.length; ++i) {
-            locations[i] = modules[i].getLocation();
+            locations[i] = modules[i].getOffset();
         }
         
         return locations;
@@ -114,17 +117,19 @@ public class SwerveDrive extends SubsystemBase {
         return getKinematics().toChassisSpeeds(getModuleStates());
     }
     
+
+
     /** MODULE STATES API **/
     public void drive(Vector2D velocity, double omega) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.y, -velocity.x,
                 -omega,
-                Odometry.getInstance().getRotation());
+                IOdometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
-            Settings.DT * velocity.x,
-            Settings.DT * velocity.y,
-            Rotation2d.fromRadians(Settings.DT * omega));
+            Settings.DT * speeds.vxMetersPerSecond,
+            Settings.DT * speeds.vyMetersPerSecond,
+            Rotation2d.fromRadians(Settings.DT * speeds.omegaRadiansPerSecond));
         Twist2d twistVel = new Pose2d().log(robotVel);
 
         setChassisSpeeds(new ChassisSpeeds(
@@ -138,7 +143,7 @@ public class SwerveDrive extends SubsystemBase {
         if (fieldRelative) {
             robotSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
                 robotSpeed,
-                Odometry.getInstance().getRotation());
+                IOdometry.getInstance().getRotation());
         }
 
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
@@ -160,6 +165,8 @@ public class SwerveDrive extends SubsystemBase {
         setChassisSpeeds(new ChassisSpeeds(), true);
     }
     
+
+
     /** GYRO API **/
     public Rotation2d getGyroAngle() {
         return gyro.getRotation2d();
@@ -173,18 +180,23 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
     
-    /* Kinematics*/
+
+
+    /** KINEMATICS **/
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
     
+
+
     @Override
     public void periodic() {
-        Pose2d pose = Odometry.getInstance().getPose();
+        IOdometry odometry = IOdometry.getInstance();
+        Pose2d pose = odometry.getPose();
         for (int i = 0; i < modules.length; ++i) {
             module2ds[i].setPose(new Pose2d(
-                pose.getTranslation().plus(modules[i].getLocation().rotateBy(pose.getRotation())),
-                modules[i].getState().angle.plus(pose.getRotation())
+                pose.getTranslation().plus(modules[i].getOffset().rotateBy(odometry.getRotation())),
+                modules[i].getState().angle.plus(odometry.getRotation())
             ));
         }
 

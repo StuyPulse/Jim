@@ -1,10 +1,9 @@
-package com.stuypulse.robot.subsystems.swerve;
+package com.stuypulse.robot.subsystems.swerve.modules;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
-import com.stuypulse.robot.subsystems.ISwerveModule;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -73,7 +72,7 @@ public class SimModule extends ISwerveModule {
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
 
         // drive
-        driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV.get(), Drive.kA.get()));
+        driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV, Drive.kA));
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
@@ -87,16 +86,16 @@ public class SimModule extends ISwerveModule {
     }
     
     @Override
-    public Translation2d getLocation() {
+    public Translation2d getOffset() {
         return location;
     }
     
     @Override
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getSpeed(), getAngle());
+        return new SwerveModuleState(getVelocity(), getAngle());
     }
     
-    private double getSpeed() {
+    private double getVelocity() {
         return driveSim.getOutput(1);
     }
 
@@ -128,16 +127,16 @@ public class SimModule extends ISwerveModule {
         // drive
         driveController.update(
             targetState.speedMetersPerSecond, 
-            getSpeed());
+            getVelocity());
 
         SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber(id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber(id + "/Angle Voltage", turnController.getOutput());
-        SmartDashboard.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber(id + "/Speed", getSpeed());
-        SmartDashboard.putNumber(id + "/Speed Error", driveController.getError());
-        SmartDashboard.putNumber(id + "/Speed Voltage", driveController.getOutput());
+        SmartDashboard.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber(id + "/Velocity", getVelocity());
+        SmartDashboard.putNumber(id + "/Velocity Error", driveController.getError());
+        SmartDashboard.putNumber(id + "/Velocity Voltage", driveController.getOutput());
     }
 
     @Override

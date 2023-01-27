@@ -5,12 +5,15 @@
 
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartAngle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -21,6 +24,20 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+
+    double DT = 0.02;
+
+    public interface Intake{
+        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
+        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
+
+        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 1);
+        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Back Roller Speed", 1);
+
+        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
+        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
+
+    }
 
     public interface Vision {
         double TOLERANCE = -1;
@@ -35,55 +52,50 @@ public interface Settings {
         }
     }
 
-    
-    
-    double DT = 0.02;
-
-
     public interface Swerve {
         double WIDTH = Units.inchesToMeters(30.0);
         double LENGTH = Units.inchesToMeters(24.0);
         double MAX_SPEED = 4.2;
 
         public interface Turn {
-            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 0);
-            SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0);
-            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0);
-
+            double kP = 0;
+            double kI = 0;
+            double kD = 0;
+            
             SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0);
             SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0);
         }
         public interface Drive {
-            SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0);
-            SmartNumber kI = new SmartNumber("Swerve/Drive/kI", 0);
-            SmartNumber kD = new SmartNumber("Swerve/Drive/kD", 0); 
+            double kP = 0;
+            double kI = 0;
+            double kD = 0; 
 
-            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0);
-            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);           
+            double kS = 0;
+            double kV = 0;
+            double kA = 0;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -98,10 +110,85 @@ public interface Settings {
             }
 
             public interface Turn {
-                double GEAR_RATIO = -1;
-                double POSITION_CONVERSION = GEAR_RATIO * 2 * Math.PI;
+                double POSITION_CONVERSION = 1;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
         } 
     } 
+
+    public interface Arm {
+    
+        public interface Shoulder {
+            double GEARING = 80;
+            double LENGTH = Units.inchesToMeters(42);
+            double MAX_ANGLE = 180; 
+            double MIN_ANGLE = -180;
+            double MASS = 0.01; 
+            double WEIGHT = MASS * 9.81; 
+            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+
+            double VEL_LIMIT = 0.5;
+            double ACCEL_LIMIT = 0.4;
+
+            double ANGLE_OFFSET = 0;
+
+            SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
+            double ANGLE_DEADZONE = 36;
+            double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
+            double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
+    
+            public interface PID {
+                SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
+                SmartNumber kI = new SmartNumber ("Shoulder/kI", 0);
+                SmartNumber kD = new SmartNumber("Shoulder/kD", 0);
+            }
+            
+            public interface Feedforward {
+                SmartNumber kS = new SmartNumber("Shoulder/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Shoulder/kA", 0.06);
+                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.24);
+                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.3);
+            }
+        }
+    
+        public interface Wrist {
+            double GEARING = 50;
+            double LENGTH = Units.inchesToMeters(17);
+            double MAX_ANGLE = Double.POSITIVE_INFINITY; 
+            double MIN_ANGLE = Double.NEGATIVE_INFINITY;
+            double MASS = 0.001;
+            double WEIGHT = MASS * 9.81;
+            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            
+            double VEL_LIMIT = 1.0;
+            double ACCEL_LIMIT = 0.8;
+
+            double ANGLE_OFFSET = 0;
+    
+            public interface PID {
+                SmartNumber kP = new SmartNumber("Wrist/kP", 8);
+                SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
+                SmartNumber kD = new SmartNumber("Wrist/kD", 0);
+            }
+    
+            public interface Feedforward {
+                SmartNumber kS = new SmartNumber("Wrist/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Wrist/kA", 0.05);
+                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.0);
+                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.1);
+            }
+        }
+    }
+
+    public interface LED {
+        double MANUAL_UPDATE_TIME = 0.75;
+        double BLINK_TIME = 0.5;
+    }
+        
+    public interface Wings {
+        SmartNumber LEFT_LATCH_DELAY = new SmartNumber("Wings/Left Latch Delay", 1.0);
+        SmartNumber RIGHT_LATCH_DELAY = new SmartNumber("Wings/Right Latch Delay", 1.0);
+        SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
+        SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
+    }
 }

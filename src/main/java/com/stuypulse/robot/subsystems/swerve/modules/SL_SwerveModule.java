@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.swerve;
+package com.stuypulse.robot.subsystems.swerve.modules;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -10,14 +10,12 @@ import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
-import com.stuypulse.robot.subsystems.ISwerveModule;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.network.SmartAngle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -37,7 +35,6 @@ public class SL_SwerveModule extends ISwerveModule {
     // turn
     private final CANSparkMax turnMotor;
     private final SparkMaxAbsoluteEncoder absoluteEncoder;
-    private final SmartAngle angleOffset;
 
     // drive
     private final CANSparkMax driveMotor;
@@ -47,7 +44,7 @@ public class SL_SwerveModule extends ISwerveModule {
     private Controller driveController;
     private AngleController turnController;
 
-    public SL_SwerveModule(String id, Translation2d location, int turnCANId, SmartAngle angleOffset, int driveCANId) {
+    public SL_SwerveModule(String id, Translation2d location, int turnCANId, Rotation2d angleOffset, int driveCANId) {
         
         // module data
         this.id = id;
@@ -55,15 +52,17 @@ public class SL_SwerveModule extends ISwerveModule {
 
         // turn 
         turnMotor = new CANSparkMax(turnCANId, MotorType.kBrushless);
-        Motors.Swerve.TURN.configure(turnMotor);
         
         // double check this
         absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        absoluteEncoder.setPositionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
+        absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
+        absoluteEncoder.setZeroOffset(angleOffset.getRotations());
+
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
-        Motors.Swerve.DRIVE.configure(turnMotor); 
         
         driveEncoder = driveMotor.getEncoder();
         driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
@@ -73,7 +72,9 @@ public class SL_SwerveModule extends ISwerveModule {
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
-        this.angleOffset = angleOffset;
+
+        Motors.Swerve.TURN.configure(turnMotor);
+        Motors.Swerve.DRIVE.configure(turnMotor);
     }   
     
     @Override
@@ -82,21 +83,21 @@ public class SL_SwerveModule extends ISwerveModule {
     }
     
     @Override
-    public Translation2d getLocation() {
+    public Translation2d getOffset() {
         return location;
     }
     
     @Override
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getSpeed(), getAngle());
+        return new SwerveModuleState(getVelocity(), getAngle());
     }
     
-    private double getSpeed() {
+    private double getVelocity() {
         return driveEncoder.getVelocity();
     }
     
     private Rotation2d getAngle() {
-        return Rotation2d.fromRotations(absoluteEncoder.getPosition()).minus(angleOffset.getRotation2d());
+        return Rotation2d.fromRotations(absoluteEncoder.getPosition());
     } 
 
     @Override 
@@ -119,16 +120,15 @@ public class SL_SwerveModule extends ISwerveModule {
         // drive
         driveMotor.setVoltage(driveController.update(
             targetState.speedMetersPerSecond, 
-            getSpeed()));
+            getVelocity()));
         
         SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber(id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber(id + "/Angle Voltage", turnController.getOutput());
-        SmartDashboard.putNumber(id + "/Absolute Angle", absoluteEncoder.getPosition() * 360);
-        SmartDashboard.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber(id + "/Speed", getSpeed());
-        SmartDashboard.putNumber(id + "/Speed Error", driveController.getError());
-        SmartDashboard.putNumber(id + "/Speed Voltage", driveController.getOutput());
+        SmartDashboard.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber(id + "/Velocity", getVelocity());
+        SmartDashboard.putNumber(id + "/Velocity Error", driveController.getError());
+        SmartDashboard.putNumber(id + "/Velocity Voltage", driveController.getOutput());
     }
 }
