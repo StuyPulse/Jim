@@ -26,6 +26,12 @@ public interface Motors {
         CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, 20, 0);
     }
 
+    public interface Arm {
+        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
+        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
+        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
+    }
+
     /** Classes to store all of the values a motor needs */
 
     public static class TalonSRXConfig {
