@@ -130,14 +130,6 @@ public class Arm extends IArm {
         return Math.abs(getWristAngle().minus(Rotation2d.fromDegrees(wristTargetAngle.get())).getDegrees()) < maxError.getDegrees();
     }
 
-    public void moveShoulder(double angle) {
-        shoulderTargetAngle.set(shoulderTargetAngle.get() + angle);
-    }
-
-    public void moveWrist(double angle) {
-        wristTargetAngle.set(wristTargetAngle.get() + angle);
-    }
-
     private void runShoulder(double voltage) {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);

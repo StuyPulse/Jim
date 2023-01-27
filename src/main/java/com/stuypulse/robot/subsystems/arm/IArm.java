@@ -1,7 +1,6 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -40,5 +39,13 @@ public abstract class IArm extends SubsystemBase {
 
     public final void addWristAngle(Rotation2d angle) {
         setTargetWristAngle(new Rotation2d(getWristAngle().getDegrees() + angle.getDegrees()));
+    }
+
+    public final void moveShoulder(Rotation2d angle) {
+        setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
+    }
+
+    public final void moveWrist(Rotation2d angle) {
+        setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
 }
