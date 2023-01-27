@@ -1,13 +1,8 @@
 package com.stuypulse.robot.subsystems.intake;
 
-import static com.stuypulse.robot.constants.Motors.Intake.BACK_MOTOR;
-import static com.stuypulse.robot.constants.Motors.Intake.FRONT_MOTOR;
-import static com.stuypulse.robot.constants.Settings.Intake.CONE_BACK_ROLLER;
-import static com.stuypulse.robot.constants.Settings.Intake.CONE_FRONT_ROLLER;
-import static com.stuypulse.robot.constants.Settings.Intake.CUBE_BACK_ROLLER;
-import static com.stuypulse.robot.constants.Settings.Intake.CUBE_FRONT_ROLLER;
-import static com.stuypulse.robot.constants.Settings.Intake.STALL_CURRENT;
-import static com.stuypulse.robot.constants.Settings.Intake.STALL_TIME;
+import static com.stuypulse.robot.constants.Motors.Intake.*;
+import static com.stuypulse.robot.constants.Settings.Intake.*;
+import static com.stuypulse.robot.constants.Ports.Intake.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -34,8 +29,8 @@ public class Intake extends IIntake{
 
     public Intake(){
        
-        frontMotor = new CANSparkMax(Ports.Intake.FRONT_MOTOR, MotorType.kBrushless);
-        backMotor = new CANSparkMax(Ports.Intake.BACK_MOTOR, MotorType.kBrushless);
+        frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
+        backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
@@ -44,16 +39,16 @@ public class Intake extends IIntake{
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT);
 
-        frontLeftSensor = new DigitalInput(Ports.Intake.FRONT_LEFT_SENSOR);
-        frontRightSensor = new DigitalInput(Ports.Intake.FRONT_RIGHT_SENSOR);
-        backLeftSensor = new DigitalInput(Ports.Intake.BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(Ports.Intake.BACK_RIGHT_SENSOR);
+        frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
+        frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
+        backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
+        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
 
     private boolean isMomentarilyStalling() {
-        return Math.abs(frontMotor.getOutputCurrent()) > STALL_CURRENT.doubleValue();
+        return frontMotor.getOutputCurrent() > STALL_CURRENT.doubleValue() || backMotor.getOutputCurrent() > STALL_CURRENT.doubleValue();
     }
 
     private boolean isStalling() {
@@ -127,6 +122,8 @@ public class Intake extends IIntake{
             frontMotor.stopMotor();
             backMotor.stopMotor();
         }
+        SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
         SmartDashboard.putBoolean("Intake/Is Stalling", isStalling());
         SmartDashboard.putBoolean("Intake/Has Cube", hasCube());

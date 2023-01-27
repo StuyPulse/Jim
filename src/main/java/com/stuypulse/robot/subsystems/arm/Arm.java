@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -9,19 +10,38 @@ import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Simulation.Wrist;
-import com.stuypulse.robot.subsystems.IArm;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+/*
+* X absolute encoder: conversion is not 360, this puts the range in 0, 360
+* X the range should be -180, +180, we can handle this manually and cleanly through a series of helper functions
+* X MathUtil.java is your best friend here
+**
+* X the angle of the joints are no longer linear, and we have to deal with the jump from 180 to -180 with rotation2d's
+* I think. 
+* 
+* because of that , we need to make sure the arm goes in the exact direction we expect every single time. we also need
+* to be careful of physical limits that consider the correct angle (e..g once you go past one full rotation you're at -180 and that's
+* probably a valid angle)
+* 
+* X also you need to consider zeroing the absolute encoder stuff 
+* also the starting wrist and shoulder angle must match the angle of the initial target values
+*
+* also we don't have constants right now that make the simulation work
+* X also can you put the sim mechanism2d stuff in its own class so we can use it for the actual robot. also add duplicate
+* X ligament so that the real vs target can be logged. 
+*/
 public class Arm extends IArm {
     
     private final CANSparkMax shoulderLeft;
@@ -43,73 +63,71 @@ public class Arm extends IArm {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderEncoder.setPositionConversionFactor(SHOULDER_CONVERSION);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
-        wristEncoder.setPositionConversionFactor(WRIST_CONVERSION);
+
+        shoulderEncoder.setZeroOffset(shoulderEncoder.getPosition());
+        wristEncoder.setZeroOffset(wristEncoder.getPosition());
+
+        configureMotors();
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
                                     .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
                                     .setSetpointFilter(new MotionProfile(SHOULDER_VEL_LIMIT, SHOULDER_ACC_LIMIT));
-                                    // .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));;
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kA, Wrist.Feedforward.kV).position()
                                     .add(new ArmFeedforward(Wrist.Feedforward.kG))
                                     .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
                                     .setSetpointFilter(new MotionProfile(WRIST_VEL_LIMIT, WRIST_ACC_LIMIT));
-                                    // .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle", 0);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle", 0);
-    
-        configure();
     }
 
-    private void configure() {
+    private void configureMotors() {
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
         WRIST_CONFIG.configure(wrist);
     }
 
     @Override
-    public double getShoulderDegrees() {
-        return shoulderEncoder.getPosition();
+    public Rotation2d getShoulderAngle() {
+        return Rotation2d.fromDegrees(SLMath.map(shoulderEncoder.getPosition(), 0, 1, -180, 180));
     }
 
     @Override
-    public double getWristDegrees() {
-        return wristEncoder.getPosition();
+    public Rotation2d getWristAngle() {
+        return Rotation2d.fromDegrees(SLMath.map(wristEncoder.getPosition(), 0, 1, -180, 180));
+    }
+
+    @Override
+    public double getShoulderTargetAngle() {
+        return shoulderTargetAngle.get();
+    }
+
+    @Override
+    public double getWristTargetAngle() {
+        return wristTargetAngle.get();
     }
 
     @Override
     public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
+        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
     }
 
     @Override
     public void setTargetWristAngle(double angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE)));
-    }
-
-    @Override
-    public void setTargetWristAngle(double angle, boolean clockwise) {
-        double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
-        
-        if (!clockwise) {
-            wristTargetAngle.set(-clamped);
-        } else {
-            wristTargetAngle.set(clamped);
-        }
-    }
+        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
+    } 
 
     @Override
     public boolean isShoulderAtAngle(double maxError) {
-        return Math.abs(getShoulderDegrees() - shoulderTargetAngle.get()) < maxError;
+        return Math.abs(getShoulderAngle().getDegrees() - shoulderTargetAngle.get()) < maxError;
     }
 
     @Override
     public boolean isWristAtAngle(double maxError) {
-        return Math.abs(getWristDegrees() - wristTargetAngle.get()) < maxError;
+        return Math.abs(getWristAngle().getDegrees() - wristTargetAngle.get()) < maxError;
     }
 
     public void moveShoulder(double angle) {
@@ -130,14 +148,14 @@ public class Arm extends IArm {
     }
 
     public void execute() {
-        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderDegrees());
-        double wristOutput = wristController.update(wristTargetAngle.get(), getWristDegrees());
+        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
+        double wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());
 
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().getDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);

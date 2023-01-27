@@ -23,11 +23,11 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
         SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
 
-        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 0.3);
-        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 0);
+        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 1);
+        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Back Roller Speed", 1);
 
-        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 0.3);
-        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.2);
+        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
+        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
 
     }
 

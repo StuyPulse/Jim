@@ -28,8 +28,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 
 public abstract class IIntake extends SubsystemBase {
+    //shut up amber
+    private static IIntake instance;
     public static IIntake getInstance() {
-        return RobotBase.isReal() ? new Intake() : new SimIntake();
+        if (instance == null) {
+            instance = new Intake();
+        }
+        return instance;
     }
     public abstract void cubeIntake();
     public abstract void coneIntake();
