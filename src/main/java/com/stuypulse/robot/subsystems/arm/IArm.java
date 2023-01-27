@@ -1,7 +1,6 @@
 package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.stuylib.math.Angle;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,16 +13,40 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class IArm extends SubsystemBase {
 
+    private static IArm instance;
+
     public static IArm getInstance() {
-        return RobotBase.isReal() ? new Arm() : new SimArm();
+        if (instance == null) {
+            return new Arm();
+        }
+        return getInstance();
     }
     
-    public abstract Angle getShoulderAngle();
-    public abstract Angle getWristAngle();
+    public abstract Rotation2d getShoulderAngle();
+    public abstract Rotation2d getWristAngle();
 
-    public abstract void setTargetShoulderAngle(Angle angle);
-    public abstract void setTargetWristAngle(Angle angle);
+<<<<<<< HEAD
+    public abstract void setTargetShoulderAngle(Rotation2d angle);
+    public final void setTargetWristAngle(Rotation2d angle) {
+        setTargetWristAngle(angle, false);
+    }
+    public abstract void setTargetWristAngle(Rotation2d angle, boolean longPath);
+=======
+    public abstract void setTargetShoulderAngle(double degrees);
+    public abstract void setTargetWristAngle(double degrees);
+>>>>>>> a1cc62a80922ef349e0a331aec0afd135a26a4de
 
     public abstract boolean isShoulderAtAngle(double maxError);
     public abstract boolean isWristAtAngle(double maxError);
+
+    public abstract Rotation2d getShoulderTargetAngle();
+    public abstract Rotation2d getWristTargetAngle();
+
+    public final void addShoulderAngle(Rotation2d angle) {
+        setTargetShoulderAngle(new Rotation2d(getShoulderAngle().getDegrees() + angle.getDegrees()));
+    }
+
+    public final void addWristAngle(Rotation2d angle) {
+        setTargetWristAngle(new Rotation2d(getWristAngle().getDegrees() + angle.getDegrees()));
+    }
 }

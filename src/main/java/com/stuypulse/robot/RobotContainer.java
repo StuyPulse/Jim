@@ -5,15 +5,9 @@
 
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.arm.ArmNeutral;
-import com.stuypulse.robot.commands.arm.TipInHighOppositeReady;
-import com.stuypulse.robot.commands.arm.TipInHighOppositeScore;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.subsystems.IArm;
-import com.stuypulse.robot.subsystems.arm.SimArm;
-import com.stuypulse.robot.subsystems.intake.IIntake;
-import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -29,8 +23,7 @@ public class RobotContainer {
     
     // Subsystem
     public final IArm arm = new SimArm();
-
-    public final IIntake intake = new Intake();
+    public final ArmVisualizer armVisualizer = new ArmVisualizer();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -54,9 +47,6 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getDPadUp().onTrue(new TipInHighOppositeScore(arm));
-        driver.getDPadRight().onTrue(new TipInHighOppositeReady(arm));
-        driver.getDPadDown().onTrue(new ArmNeutral(arm));
     }
 
     /**************/
