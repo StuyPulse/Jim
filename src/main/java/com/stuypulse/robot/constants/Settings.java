@@ -16,6 +16,9 @@ import com.stuypulse.stuylib.network.SmartNumber;
  */
 public interface Settings {
     public interface Wings {
-        double PANCAKE_DELAY = 0.0; // time takes for pancake to disengage
+        SmartNumber LEFT_LATCH_DELAY = new SmartNumber("Wings/Left Latch Delay", 1.0);
+        SmartNumber RIGHT_LATCH_DELAY = new SmartNumber("Wings/Right Latch Delay", 1.0);
+        SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
+        SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
     }
 }

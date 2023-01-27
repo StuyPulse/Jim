@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.wings;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

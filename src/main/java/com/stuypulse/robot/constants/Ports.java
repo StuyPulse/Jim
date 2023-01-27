@@ -14,9 +14,11 @@ public interface Ports {
     }
 
     public interface Wings {
-        int DEPLOY_1 = -1;
-        int DEPLOY_2 = -1;
-        int PANCAKE_1 = -1;
-        int PANCAKE_2 = -1;
+        int LEFT_DEPLOY_FORWARD = -1;
+        int LEFT_DEPLOY_REVERSE = -1;
+        int RIGHT_DEPLOY_FORWARD = -1;
+        int RIGHT_DEPLOY_REVERSE = -1;
+        int LEFT_LATCH = -1;
+        int RIGHT_LATCH = -1;
     }
 }
