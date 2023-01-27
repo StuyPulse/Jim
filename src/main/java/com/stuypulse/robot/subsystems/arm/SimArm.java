@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SimArm extends IArm {
 
     private final DoubleJointedArmSim armSim;
+    private final ArmVisualizer visualizer;
 
     private final Controller shoulderController; 
     private final Controller wristController;
@@ -36,8 +37,8 @@ public class SimArm extends IArm {
         setSubsystem("SimArm");
         
         // simulation
-        armSim = new DoubleJointedArmSim(new SingleJointedArmSim(DCMotor.getNEO(1), Shoulder.GEARING, Shoulder.JKG+Wrist.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MINANGLE, Shoulder.MAXANGLE, Shoulder.MASS, true), 
-            new SingleJointedArmSim(DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MINANGLE, Wrist.MAXANGLE, Wrist.MASS, true));
+        armSim = new DoubleJointedArmSim(new SingleJointedArmSim(DCMotor.getNEO(1), Shoulder.GEARING, Shoulder.JKG+Wrist.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, Shoulder.MASS, true), 
+            new SingleJointedArmSim(DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE, Wrist.MASS, true));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
@@ -53,6 +54,8 @@ public class SimArm extends IArm {
 
         shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle", 0);
         wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle", 0);
+
+        visualizer = new ArmVisualizer();
     }
 
     @Override
@@ -77,22 +80,14 @@ public class SimArm extends IArm {
 
     @Override
     public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
+        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
     }
 
     @Override
-    public void setTargetWristAngle(double angle, boolean longPath) {
-        double error = MathUtil.inputModulus(angle - getWristAngle().getDegrees(), -180, 180);
-        angle = getWristAngle().getDegrees() + error;
-
-        if (longPath) {
-            if (error < 0) angle += 360;
-            else           angle -= 360;
-        }
-
-        wristTargetAngle.set(angle);
+    public void setTargetWristAngle(double angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MIN_ANGLE), Math.toDegrees(Wrist.MAX_ANGLE)));
     }
-
+    
     // don't need methods below
     
     @Override
@@ -106,10 +101,13 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public void periodic() {        
+    public void periodic() {    
         armSim.setInput(shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees()), wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees()));
 
         armSim.update(Settings.DT);
+
+        visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
+        visualizer.setTargetAngles(getShoulderTargetAngle(), getWristTargetAngle());
 
         SmartDashboard.putNumber("Arm/Arm Angle", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());

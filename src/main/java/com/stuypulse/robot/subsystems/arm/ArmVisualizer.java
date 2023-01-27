@@ -13,9 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ArmVisualizer extends SubsystemBase {
-
-    private final IArm armSubsystem;
+public class ArmVisualizer {
 
     private final Mechanism2d arm;
 
@@ -35,8 +33,6 @@ public class ArmVisualizer extends SubsystemBase {
     private MechanismRoot2d pegRootTop;
 
     public ArmVisualizer() {
-
-        armSubsystem = IArm.getInstance();
 
         // ligament initialization
         arm = new Mechanism2d(16, 8);
@@ -60,10 +56,10 @@ public class ArmVisualizer extends SubsystemBase {
         baseLigament = new MechanismLigament2d("Base", 5.2, 0);
         swerveLigamentRight = new MechanismLigament2d("SwerveRight", (31)/10, 0);
 
-        wristLigament = new MechanismLigament2d("Wrist", Units.metersToInches(Wrist.LENGTH) / 10, armSubsystem.getWristAngle().getDegrees());
-        shoulderLigament = new MechanismLigament2d("Arm", Units.metersToInches(Shoulder.LENGTH) / 10, armSubsystem.getShoulderAngle().getDegrees());
-        targetWristLigament = new MechanismLigament2d("Target Wrist", Units.metersToInches(Wrist.LENGTH) / 10, armSubsystem.getWristTargetAngle());
-        targetShoulderLigament = new MechanismLigament2d("Target Arm", Units.metersToInches(Shoulder.LENGTH) / 10, armSubsystem.getShoulderTargetAngle());
+        wristLigament = new MechanismLigament2d("Wrist", Units.metersToInches(Wrist.LENGTH) / 10, 0);
+        shoulderLigament = new MechanismLigament2d("Arm", Units.metersToInches(Shoulder.LENGTH) / 10, 0);
+        targetWristLigament = new MechanismLigament2d("Target Wrist", Units.metersToInches(Wrist.LENGTH) / 10, 0);
+        targetShoulderLigament = new MechanismLigament2d("Target Arm", Units.metersToInches(Shoulder.LENGTH) / 10, 0);
         baseLigament.setColor(new Color8Bit(0, 255, 0));
         shoulderLigament.setColor(new Color8Bit(255, 0, 255));
         wristLigament.setColor(new Color8Bit(0, 0, 255));
@@ -80,18 +76,21 @@ public class ArmVisualizer extends SubsystemBase {
         shoulderRoot.append(targetShoulderLigament);
         wristRoot.append(targetWristLigament);
 
+        baseLigament.setAngle(-90);
+        
         SmartDashboard.putData("Arm Mech2d", arm);
     }
 
-    @Override
-    public void periodic() {
-        wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(armSubsystem.getShoulderAngle().getDegrees())),  
-                                5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(armSubsystem.getShoulderAngle().getDegrees())));
+    public void setTargetAngles(double shoulderAngle, double wristAngle) {
+        targetShoulderLigament.setAngle(shoulderAngle);
+        targetWristLigament.setAngle(wristAngle);
+    }
 
-        baseLigament.setAngle(-90);
-        shoulderLigament.setAngle(armSubsystem.getShoulderAngle().getDegrees());
-        wristLigament.setAngle(armSubsystem.getWristAngle().getDegrees());
-        targetShoulderLigament.setAngle(armSubsystem.getShoulderTargetAngle());
-        targetWristLigament.setAngle(armSubsystem.getWristTargetAngle());
+    public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
+        shoulderLigament.setAngle(shoulderAngle);
+        wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
+                                5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
+
+        wristLigament.setAngle(wristAngle);
     }
 }
