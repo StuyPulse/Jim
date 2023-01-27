@@ -23,6 +23,7 @@ public class SimArm extends IArm {
     private final DoubleJointedArmSim armSim;
     private final ArmVisualizer visualizer;
 
+    // TODO: Make AngleController
     private final Controller shoulderController; 
     private final Controller wristController;
 

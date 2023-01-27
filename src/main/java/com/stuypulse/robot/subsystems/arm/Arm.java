@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -51,6 +50,7 @@ public class Arm extends IArm {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
+    // TODO: Make AngleController
     private final Controller shoulderController;
     private final Controller wristController;
 
