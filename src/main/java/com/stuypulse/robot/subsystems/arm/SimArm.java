@@ -49,8 +49,8 @@ public class SimArm extends IArm {
                                     // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle", 0);
-        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle", 0);
+        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
+        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
 
         visualizer = new ArmVisualizer();
     }
@@ -106,8 +106,9 @@ public class SimArm extends IArm {
         visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         visualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
 
-        SmartDashboard.putNumber("Arm/Arm Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Arm Angle (deg)", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist Angle (deg)", getWristAngle().getDegrees());
+        
         SmartDashboard.putNumber("Arm/Arm Voltage", shoulderController.getOutput());
         SmartDashboard.putNumber("Arm/Wrist Voltage", wristController.getOutput());
     }

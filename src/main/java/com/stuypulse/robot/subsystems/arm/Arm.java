@@ -80,8 +80,8 @@ public class Arm extends IArm {
                                     .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
                                     .setSetpointFilter(new MotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle", 0);
-        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle", 0);
+        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
+        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
     }
 
     private void configureMotors() {
@@ -154,8 +154,8 @@ public class Arm extends IArm {
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
