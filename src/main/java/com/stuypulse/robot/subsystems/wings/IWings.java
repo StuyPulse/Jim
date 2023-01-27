@@ -6,7 +6,7 @@ public abstract class IWings extends SubsystemBase {
 
     private static IWings instance;
 
-    public static IWings getWings() {
+    public static IWings getInstance() {
         if (instance == null) {
             instance = new Wings();
         }
