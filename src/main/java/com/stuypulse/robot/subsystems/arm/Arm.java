@@ -19,6 +19,7 @@ import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
@@ -146,13 +147,13 @@ public class Arm extends IArm {
     @Override
     public void periodic() {
 
-        double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
+        double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput;
 
         if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
-            wristOutput = wristController.update(90, getWristAngle().getDegrees());
+            wristOutput = wristController.update(Angle.k90deg, Angle.fromRotation2d(getWristAngle()));
         } else {
-            wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());
+            wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
         }
 
         runShoulder(shoulderOutput);
