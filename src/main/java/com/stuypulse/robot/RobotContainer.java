@@ -23,7 +23,6 @@ public class RobotContainer {
     
     // Subsystem
     public final IArm arm = new SimArm();
-    public final ArmVisualizer armVisualizer = new ArmVisualizer();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
