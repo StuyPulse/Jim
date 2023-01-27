@@ -67,8 +67,8 @@ public class MAX_SwerveModule extends ISwerveModule {
         turnController.setD(Turn.kD);
 
         turnController.setPositionPIDWrappingEnabled(true);
-        turnController.setPositionPIDWrappingMinInput(-Math.PI);
-        turnController.setPositionPIDWrappingMaxInput(+Math.PI);
+        turnController.setPositionPIDWrappingMinInput(0);
+        turnController.setPositionPIDWrappingMaxInput(1);
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
