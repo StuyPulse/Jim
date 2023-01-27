@@ -13,6 +13,12 @@ public interface Ports {
         int DEBUGGER = 2;
     }
 
+    public interface Arm {
+        int SHOULDER_LEFT = 20;
+        int SHOULDER_RIGHT =  21;
+        int WRIST = 22;
+    }
+
     public interface LEDController {
         int PORT = 694; // PWM
     }
@@ -30,4 +36,5 @@ public interface Ports {
         int LEFT_LATCH = 7;
         int RIGHT_LATCH = 8;
     }
+
 }
