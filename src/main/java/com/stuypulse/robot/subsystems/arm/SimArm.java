@@ -8,15 +8,11 @@ import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
-import com.stuypulse.stuylib.math.interpolation.CubicInterpolator;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.spline.CubicHermiteSpline;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -69,34 +65,34 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public double getShoulderTargetAngle() {
-        return shoulderTargetAngle.get();
+    public Rotation2d getShoulderTargetAngle() {
+        return Rotation2d.fromDegrees(shoulderTargetAngle.get());
     }
 
     @Override
-    public double getWristTargetAngle() {
-        return wristTargetAngle.get();
+    public Rotation2d getWristTargetAngle() {
+        return Rotation2d.fromDegrees(wristTargetAngle.get());
     }
 
     @Override
-    public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
+    public void setTargetShoulderAngle(Rotation2d angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
     }
 
     @Override
-    public void setTargetWristAngle(double angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MIN_ANGLE), Math.toDegrees(Wrist.MAX_ANGLE)));
+    public void setTargetWristAngle(Rotation2d angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Math.toDegrees(Wrist.MIN_ANGLE), Math.toDegrees(Wrist.MAX_ANGLE)));
     }
     
     // don't need methods below
     
     @Override
-    public boolean isShoulderAtAngle(double maxError) {
+    public boolean isShoulderAtAngle(Rotation2d maxError) {
         return true;    
     }
 
     @Override
-    public boolean isWristAtAngle(double maxError) {
+    public boolean isWristAtAngle(Rotation2d maxError) {
         return true;
     }
 
@@ -107,7 +103,7 @@ public class SimArm extends IArm {
         armSim.update(Settings.DT);
 
         visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
-        visualizer.setTargetAngles(getShoulderTargetAngle(), getWristTargetAngle());
+        visualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
 
         SmartDashboard.putNumber("Arm/Arm Angle", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
