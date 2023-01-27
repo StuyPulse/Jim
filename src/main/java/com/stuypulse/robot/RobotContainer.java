@@ -31,11 +31,10 @@ public class RobotContainer {
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
     // Subsystem
-    public final IArm arm = new SimArm();
-    public final IIntake intake = new Intake();
-    private final SwerveDrive swerve = SwerveDrive.getInstance();
-    private final IVision vision = Vision.getInstance();
-    private final IOdometry odometry = Odometry.getInstance();
+    public final IIntake intake = IIntake.getInstance();
+    public final SwerveDrive swerve = SwerveDrive.getInstance();
+    public final IVision vision = Vision.getInstance();
+    public final IOdometry odometry = Odometry.getInstance();
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();

@@ -22,26 +22,20 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public interface Motors {
 
-    public interface Swerve {
-        CANSparkMaxConfig DRIVE = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 0);
-        CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, 20, 0);
-    }
-
     public interface Arm {
         CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
         CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
         CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
     }
-
 
     public interface Intake {
         CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake);
         CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake);
+    }
 
-    public interface Arm {
-        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
-        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
-        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
+    public interface Swerve {
+        CANSparkMaxConfig DRIVE = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 0);
+        CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, 20, 0);
     }
 
     /** Classes to store all of the values a motor needs */
