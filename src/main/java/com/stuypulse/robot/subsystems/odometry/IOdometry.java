@@ -21,10 +21,6 @@ public abstract class IOdometry extends SubsystemBase {
 
     public abstract Pose2d getPose();
 
-    public final Rotation2d getAngle(){
-        return getPose().getRotation();
-    };
-
     public final Translation2d getTranslation() {
         return getPose().getTranslation();
     }

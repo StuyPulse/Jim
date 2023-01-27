@@ -33,7 +33,6 @@ public interface Settings {
             Angle CAMERA_PITCH = Angle.fromDegrees(-1);
             double CAMERA_HEIGHT = Units.inchesToMeters(-1);
         }
-
     }
 
     

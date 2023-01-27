@@ -119,7 +119,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.y, -velocity.x,
                 -omega,
-                Odometry.getInstance().getAngle());
+                Odometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
             Settings.DT * velocity.x,
@@ -138,7 +138,7 @@ public class SwerveDrive extends SubsystemBase {
         if (fieldRelative) {
             robotSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
                 robotSpeed,
-                Odometry.getInstance().getAngle());
+                Odometry.getInstance().getRotation());
         }
 
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
@@ -183,8 +183,8 @@ public class SwerveDrive extends SubsystemBase {
         Pose2d pose = Odometry.getInstance().getPose();
         for (int i = 0; i < modules.length; ++i) {
             module2ds[i].setPose(new Pose2d(
-                pose.getTranslation().plus(modules[i].getLocation().rotateBy(Odometry.getInstance().getAngle())),
-                modules[i].getState().angle.plus(Odometry.getInstance().getAngle())
+                pose.getTranslation().plus(modules[i].getLocation().rotateBy(pose.getRotation())),
+                modules[i].getState().angle.plus(pose.getRotation())
             ));
         }
 
