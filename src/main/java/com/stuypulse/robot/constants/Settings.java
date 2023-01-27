@@ -6,12 +6,11 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.network.SmartAngle;
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,6 +56,12 @@ public interface Settings {
         double LENGTH = Units.inchesToMeters(24.0);
         double MAX_SPEED = 4.2;
 
+
+        public interface Motion {
+            PIDConstants XY = new PIDConstants(1, 0, 0.1);
+            PIDConstants THETA = new PIDConstants(10, 0, 0.1);
+        }
+        
         public interface Turn {
             double kP = 0;
             double kI = 0;
@@ -191,4 +196,57 @@ public interface Settings {
         SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
         SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
     }
+
+    public interface Driver {
+        
+        // If speed is below this, use quick turn
+        SmartNumber BASE_TURNING_SPEED = new SmartNumber("Driver Settings/Base Turn Speed", 0.45);
+
+        // Low Pass Filter and deadband for Driver Controls
+        SmartNumber SPEED_DEADBAND = new SmartNumber("Driver Settings/Speed Deadband", 0.00);
+        SmartNumber ANGLE_DEADBAND = new SmartNumber("Driver Settings/Turn Deadband", 0.00);
+
+        SmartNumber SPEED_POWER = new SmartNumber("Driver Settings/Speed Power", 2.0);
+        SmartNumber ANGLE_POWER = new SmartNumber("Driver Settings/Turn Power", 1.0);
+
+        SmartNumber SPEED_FILTER = new SmartNumber("DriPver Settings/Speed Filtering", 0.125);
+        SmartNumber ANGLE_FILTER = new SmartNumber("Driver Settings/Turn Filtering", 0.005);
+    
+        
+        SmartNumber DEADBAND = new SmartNumber("Driver Settings/Deadband", 0.05);
+        SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", 4.2);
+        SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 7);
+        SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 6.1);
+
+        public interface Drive {
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+        }
+
+        public interface Turn {
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+        }
+
+    }
+
+    public static Vector2D vpow(Vector2D vec, double power) {
+        return vec.mul(Math.pow(vec.magnitude(), power - 1));
+    }
+
+
+    public interface AlignmentCommand{
+        
+        public interface Translation {
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
+            SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
+            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
+        }
+        public interface Rotation {
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
+            SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
+        }
+    }
+    
 }
