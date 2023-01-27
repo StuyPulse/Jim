@@ -13,6 +13,15 @@ public interface Ports {
         int DEBUGGER = 2;
     }
 
+    public interface Intake {
+        int FRONT_MOTOR_PORT = 30;
+        int BACK_MOTOR_PORT = 31;
+        int FRONT_RIGHT_SENSOR = 0;
+        int FRONT_LEFT_SENSOR = 1;
+        int BACK_LEFT_SENSOR = 2;
+        int BACK_RIGHT_SENSOR = 3;
+    }
+    
     public interface Swerve {
         public interface FrontRight {
             int DRIVE = 10;

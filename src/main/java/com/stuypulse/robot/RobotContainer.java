@@ -7,6 +7,8 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
+\import com.stuypulse.robot.subsystems.arm.*;
+import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
@@ -28,13 +30,14 @@ public class RobotContainer {
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
     // Subsystem
+    public final IArm arm = new SimArm();
+    public final IIntake intake = new Intake();
     private final SwerveDrive swerve = SwerveDrive.getInstance();
     private final Vision vision = Vision.getInstance();
     private final Odometry odometry = Odometry.getInstance();
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
-
     public final Pump pump = new Pump();
 
     // Autons
@@ -58,7 +61,8 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+    }
 
     /**************/
     /*** AUTONS ***/

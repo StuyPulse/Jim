@@ -5,6 +5,9 @@
 
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartAngle;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -23,6 +26,18 @@ import edu.wpi.first.math.util.Units;
 public interface Settings {
 
     double DT = 0.02;
+
+    public interface Intake{
+        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
+        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
+
+        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 1);
+        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Back Roller Speed", 1);
+
+        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
+        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
+
+    }
 
     public interface Vision {
         double TOLERANCE = -1;

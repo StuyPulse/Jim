@@ -48,7 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 * X ligament so that the real vs target can be logged. 
 */
 public class Arm extends IArm {
-    
+
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
     private final CANSparkMax wrist;

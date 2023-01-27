@@ -2,9 +2,9 @@ package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.constants.Settings;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
-
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
+
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
@@ -52,7 +52,6 @@ public class SimArm extends IArm {
 
         shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
         wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
-
         visualizer = new ArmVisualizer();
     }
 
@@ -70,7 +69,7 @@ public class SimArm extends IArm {
     public Rotation2d getShoulderTargetAngle() {
         return Rotation2d.fromDegrees(shoulderTargetAngle.get());
     }
-
+    
     @Override
     public Rotation2d getWristTargetAngle() {
         return Rotation2d.fromDegrees(wristTargetAngle.get());
@@ -80,7 +79,7 @@ public class SimArm extends IArm {
     public void setTargetShoulderAngle(Rotation2d angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
     }
-
+    
     @Override
     public void setTargetWristAngle(Rotation2d angle) {
         wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
@@ -117,7 +116,7 @@ public class SimArm extends IArm {
 
         SmartDashboard.putNumber("Arm/Arm Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist Angle (deg)", getWristAngle().getDegrees());
-        
+
         SmartDashboard.putNumber("Arm/Arm Voltage", shoulderController.getOutput());
         SmartDashboard.putNumber("Arm/Wrist Voltage", wristController.getOutput());
     }

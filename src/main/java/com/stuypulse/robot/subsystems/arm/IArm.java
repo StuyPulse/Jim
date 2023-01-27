@@ -17,7 +17,8 @@ public abstract class IArm extends SubsystemBase {
 
     public static IArm getInstance() {
         if (instance == null) {
-            instance = RobotBase.isSimulation() ? new SimArm() : new Arm();
+            if (RobotBase.isSimulation()) return new SimArm();
+            return new Arm();
         }
         return getInstance();
     }
@@ -34,11 +35,11 @@ public abstract class IArm extends SubsystemBase {
     public abstract Rotation2d getShoulderTargetAngle();
     public abstract Rotation2d getWristTargetAngle();
 
-    public final void addShoulderAngle(Rotation2d angle) {
+    public final void moveShoulder(Rotation2d angle) {
         setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
     }
 
-    public final void addWristAngle(Rotation2d angle) {
+    public final void moveWrist(Rotation2d angle) {
         setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
 }
