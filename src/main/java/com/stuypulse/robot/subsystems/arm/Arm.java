@@ -65,8 +65,8 @@ public class Arm extends IArm {
         shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
-        shoulderEncoder.setZeroOffset(shoulderEncoder.getPosition());
-        wristEncoder.setZeroOffset(wristEncoder.getPosition());
+        shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
+        wristEncoder.setZeroOffset(Wrist.ANGLE_OFFSET);
 
         configureMotors();
 

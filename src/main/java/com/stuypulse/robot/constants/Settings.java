@@ -5,11 +5,9 @@
 
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -31,7 +29,6 @@ public interface Settings {
         public interface Shoulder {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(42);
-                
             double MAX_ANGLE = Units.degreesToRadians(180); 
             double MIN_ANGLE = Units.degreesToRadians(-180);
             double MASS = 0.01; 
@@ -40,6 +37,8 @@ public interface Settings {
 
             double VEL_LIMIT = 30;
             double ACCEL_LIMIT = 10;
+
+            double ANGLE_OFFSET = 0;
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Shoulder/kP", 0.2);
@@ -66,6 +65,8 @@ public interface Settings {
             
             double VEL_LIMIT = 4;
             double ACCEL_LIMIT = 2;
+
+            double ANGLE_OFFSET = 0;
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Wrist/kP", 0.6);
