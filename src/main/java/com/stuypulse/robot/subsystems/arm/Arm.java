@@ -12,11 +12,16 @@ import static com.stuypulse.robot.constants.Settings.Arm.*;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.angle.AngleController;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDCalculator;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.MathUtil;
@@ -50,9 +55,8 @@ public class Arm extends IArm {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
-    // TODO: Make AngleController
-    private final Controller shoulderController;
-    private final Controller wristController;
+    private final AngleController shoulderController;
+    private final AngleController wristController;
 
     private final SmartNumber shoulderTargetAngle;
     private final SmartNumber wristTargetAngle; 
@@ -70,15 +74,15 @@ public class Arm extends IArm {
 
         configureMotors();
 
-        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
-                                    .add(new ArmFeedforward(Shoulder.Feedforward.kG))
-                                    .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-                                    .setSetpointFilter(new MotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
+                                    .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
+                                    .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+                                    .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
         
-        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).position()
-                                    .add(new ArmFeedforward(Wrist.Feedforward.kG))
-                                    .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
-                                    .setSetpointFilter(new MotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
+        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
+                                    .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
+                                    .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+                                    .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
