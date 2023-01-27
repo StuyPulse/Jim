@@ -50,9 +50,7 @@ public class SimArm extends IArm {
 
         shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
         wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
-        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
-        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
-
+        
         visualizer = new ArmVisualizer();
     }
 
@@ -69,13 +67,10 @@ public class SimArm extends IArm {
     @Override
     public Rotation2d getShoulderTargetAngle() {
         return Rotation2d.fromDegrees(shoulderTargetAngle.get());
-    public Rotation2d getShoulderTargetAngle() {
-        return Rotation2d.fromDegrees(shoulderTargetAngle.get());
     }
 
+
     @Override
-    public Rotation2d getWristTargetAngle() {
-        return Rotation2d.fromDegrees(wristTargetAngle.get());
     public Rotation2d getWristTargetAngle() {
         return Rotation2d.fromDegrees(wristTargetAngle.get());
     }
@@ -83,16 +78,12 @@ public class SimArm extends IArm {
     @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    }
+   }
 
     @Override
     public void setTargetWristAngle(Rotation2d angle) {
         wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
-    }
+       }
     
     @Override
     public boolean isShoulderAtAngle(Rotation2d maxError) {
