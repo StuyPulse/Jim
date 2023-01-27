@@ -1,10 +1,11 @@
 package com.stuypulse.robot.subsystems.plant;
 
-import com.stuypulse.robot.constants.Ports;
+import static com.stuypulse.robot.constants.Ports.Plant.*;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
 * @author Samuel Chen
@@ -17,8 +18,8 @@ public class Plant extends IPlant {
     private final DoubleSolenoid solenoid;
 
     public Plant() {
-        this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Ports.Plant.FORWARD, Ports.Plant.REVERSE);
-
+        this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD, REVERSE);
+        disengage();
     }
 
     public void engage() {
@@ -28,8 +29,9 @@ public class Plant extends IPlant {
     public void disengage() {
         solenoid.set(Value.kReverse);
     }
-    
-    public void stop() {
-        solenoid.set(Value.kOff);
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kForward);
     }
 }
