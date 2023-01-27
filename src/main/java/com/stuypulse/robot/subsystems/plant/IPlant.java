@@ -13,6 +13,5 @@ public abstract class IPlant extends SubsystemBase {
     }
 
     public abstract void engage();
-    public abstract void disengage();
-    public abstract void stop();
+    public abstract void disengage(); 
 }
