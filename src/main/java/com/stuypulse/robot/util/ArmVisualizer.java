@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.arm;
+package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 

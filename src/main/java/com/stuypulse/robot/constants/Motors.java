@@ -28,6 +28,16 @@ public interface Motors {
         CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
     }
 
+    public interface Intake {
+        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake);
+        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake);
+    }
+
+    public interface Swerve {
+        CANSparkMaxConfig DRIVE = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 0);
+        CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, 20, 0);
+    }
+
     /** Classes to store all of the values a motor needs */
 
     public static class TalonSRXConfig {
