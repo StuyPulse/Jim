@@ -159,8 +159,8 @@ public class Arm extends IArm {
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
