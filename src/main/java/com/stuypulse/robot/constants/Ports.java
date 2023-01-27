@@ -12,4 +12,19 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Plant {
+        int FORWARD = 0;
+        int REVERSE = 1;
+    }
+    
+    public interface Wings {
+        int LEFT_DEPLOY_FORWARD = 2;
+        int LEFT_DEPLOY_REVERSE = 3;
+        int RIGHT_DEPLOY_FORWARD = 4;
+        int RIGHT_DEPLOY_REVERSE = 5;
+        int LEFT_LATCH = 7;
+        int RIGHT_LATCH = 8;
+    }
+
 }
