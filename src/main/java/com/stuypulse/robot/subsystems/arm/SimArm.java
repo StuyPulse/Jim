@@ -3,12 +3,9 @@ package com.stuypulse.robot.subsystems.arm;
 import com.stuypulse.robot.constants.Settings;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
-import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartNumber;
@@ -87,16 +84,14 @@ public class SimArm extends IArm {
         wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
     
-    // don't need methods below
-    
     @Override
     public boolean isShoulderAtAngle(Rotation2d maxError) {
-        return true;    
+        return Math.abs(shoulderTargetAngle.get() - getShoulderAngle().getDegrees()) < maxError.getDegrees();    
     }
 
     @Override
     public boolean isWristAtAngle(Rotation2d maxError) {
-        return true;
+        return Math.abs(wristTargetAngle.get() - getWristAngle().getDegrees()) < maxError.getDegrees();
     }
 
     @Override
