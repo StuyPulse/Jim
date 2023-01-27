@@ -8,6 +8,9 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.arm.*;
+import com.stuypulse.robot.subsystems.Pump;
+import com.stuypulse.robot.subsystems.plant.*;
+import com.stuypulse.robot.subsystems.wings.*;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -23,6 +26,10 @@ public class RobotContainer {
     
     // Subsystem
     public final IArm arm = IArm.getInstance();
+    public final IPlant plant = IPlant.getInstance();
+    public final IWings wings = IWings.getInstance();
+
+    public final Pump pump = new Pump();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
