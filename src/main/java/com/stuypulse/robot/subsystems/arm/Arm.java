@@ -147,7 +147,8 @@ public class Arm extends IArm {
         wrist.setVoltage(voltage);
     }
 
-    public void execute() {
+    @Override
+    public void periodic() {
         double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
         double wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());
 
