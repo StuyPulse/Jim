@@ -73,12 +73,12 @@ public class Arm extends IArm {
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
                                     .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-                                    .setSetpointFilter(new MotionProfile(SHOULDER_VEL_LIMIT, SHOULDER_ACC_LIMIT));
+                                    .setSetpointFilter(new MotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).position()
                                     .add(new ArmFeedforward(Wrist.Feedforward.kG))
                                     .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
-                                    .setSetpointFilter(new MotionProfile(WRIST_VEL_LIMIT, WRIST_ACC_LIMIT));
+                                    .setSetpointFilter(new MotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle", 0);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle", 0);

@@ -20,11 +20,6 @@ public interface Settings {
     double DT = 0.02;
 
     public interface Arm {
-
-        double SHOULDER_VEL_LIMIT = 1;
-        double SHOULDER_ACC_LIMIT = 1;
-        double WRIST_VEL_LIMIT = 1;
-        double WRIST_ACC_LIMIT = 1;
     
         public interface Shoulder {
             double GEARING = 80;
@@ -35,8 +30,8 @@ public interface Settings {
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
 
-            double VEL_LIMIT = 30;
-            double ACCEL_LIMIT = 10;
+            double VEL_LIMIT = 0.5;
+            double ACCEL_LIMIT = 0.4;
 
             double ANGLE_OFFSET = 0;
     
@@ -63,8 +58,8 @@ public interface Settings {
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
             
-            double VEL_LIMIT = 4;
-            double ACCEL_LIMIT = 2;
+            double VEL_LIMIT = 1.0;
+            double ACCEL_LIMIT = 0.8;
 
             double ANGLE_OFFSET = 0;
     
