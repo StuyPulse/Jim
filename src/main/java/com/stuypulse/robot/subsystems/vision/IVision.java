@@ -17,7 +17,7 @@ public abstract class IVision extends SubsystemBase {
         return instance; 
     }
     
-    private enum Error {
+    private enum Noise {
         LOW,
         MID,
         HIGH;

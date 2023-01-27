@@ -7,12 +7,15 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,8 +28,8 @@ public class RobotContainer {
     
     // Subsystem
     private final SwerveDrive swerve = SwerveDrive.getInstance();
-    private final Vision vision = Vision.getInstance();
-    private final Odometry odometry = Odometry.getInstance();
+    private final IVision vision = Vision.getInstance();
+    private final IOdometry odometry = Odometry.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -37,6 +40,8 @@ public class RobotContainer {
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
+        
+        CameraServer.startAutomaticCapture();
     }
 
     /****************/

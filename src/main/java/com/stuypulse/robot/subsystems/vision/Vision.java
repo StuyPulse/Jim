@@ -1,29 +1,22 @@
 package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
-import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
+import static com.stuypulse.robot.constants.Field.*;
+import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
+import static com.stuypulse.robot.constants.Settings.Vision.*;
 import com.stuypulse.stuylib.network.limelight.Limelight;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends IVision {
-
-    private static Vision instance;
-
-    public static Vision getInstance() {
-        if(instance == null) {
-            instance = new Vision();
-        } 
-        return instance; 
-    }
     
-    public enum Error {
+    public enum Noise {
         LOW,
         MID,
         HIGH;
@@ -32,12 +25,12 @@ public class Vision extends IVision {
     public class Result {
         private final Pose2d pose;
         private final double latency;
-        private final Error error;
+        private final Noise noise;
 
-        public Result(Pose2d pose, double latency, Error error) {
+        public Result(Pose2d pose, double latency, Noise error) {
             this.pose = pose;
             this.latency = latency;
-            this.error = error;
+            this.noise = error;
         }
 
         public Pose2d getPose() {
@@ -48,24 +41,23 @@ public class Vision extends IVision {
             return latency;
         }
 
-        public Error getError() {
-            return error;
+        public Noise getNoise() {
+            return noise;
         }
     }
 
     private final Limelight [] limelights;
 
     public Vision() {
-        String [] hostNames = Settings.Vision.Limelight.LIMELIGHTS;
+        String [] hostNames = LIMELIGHTS;
         limelights = new Limelight[hostNames.length];
 
         for(int i = 0; i < hostNames.length; i++){
             limelights[i] = Limelight.getInstance(hostNames[i]);
-            for (int port : Settings.Vision.Limelight.PORTS) {
+            for (int port : PORTS) {
                 PortForwarder.add(port, hostNames[i] + ".local", port);
             }
         }
-        CameraServer.startAutomaticCapture();
     }
 
     public List<Result> getResults() {
@@ -81,20 +73,20 @@ public class Vision extends IVision {
 
     private Result getResult(Limelight limelight) {
         double robotDistance = distToTarget(getPose2d(limelight), getTagPose2d(limelight));
-        boolean inZone = robotDistance <= Settings.Vision.COMMUNITY_DISTANCE;
-        boolean inTolerance = robotDistance <= Settings.Vision.TOLERANCE;
+        boolean inZone = robotDistance <= COMMUNITY_DISTANCE;
+        boolean inTolerance = robotDistance <= TOLERANCE;
 
         // defaults to high error
-        Error error = Error.HIGH;
+        Noise error = Noise.HIGH;
 
         if(inZone){
-            error = Error.LOW;
+            error = Noise.LOW;
         }
-        else if(!inZone && inTolerance){
-            error = Error.MID;
+        if(!inZone && inTolerance){
+            error = Noise.MID;
         }
-        else if(!inTolerance){
-            error = Error.HIGH;
+        if(!inTolerance){
+            error = Noise.HIGH;
         }
 
         return new Result(getPose2d(limelight), getLatency(limelight), error);
@@ -122,10 +114,10 @@ public class Vision extends IVision {
 
     private Pose2d getTagPose2d(Limelight limelight){
         if(!limelight.getValidTarget()){
-            return new Pose2d();
+            return null;
         }
         int id = (int) limelight.getTagID();
-        return Field.aprilTags[id-1].toPose2d();
+        return APRIL_TAGS[id-1].toPose2d();
     }
 
     @Override
@@ -133,10 +125,10 @@ public class Vision extends IVision {
         for (int i = 0; i < limelights.length; i ++){
             Limelight camera = limelights[i];
             Pose2d pose = getPose2d(limelights[i]);
-            String limelight = Settings.Vision.Limelight.LIMELIGHTS[i];
+            String limelight = LIMELIGHTS[i];
 
             if (!camera.isConnected()){
-                System.out.println("[WARNING] Limelight " + limelight + "is disconected.");
+                DriverStation.reportWarning("[WARNING] Limelight " + limelight + " Disconnected", null);
             }
 
             SmartDashboard.putNumber("Vision/" + limelight +  "/Pose X", pose.getX());

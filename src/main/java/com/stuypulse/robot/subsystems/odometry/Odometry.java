@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.odometry;
 
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.Vision.Result;
 
@@ -14,16 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 
 public class Odometry extends IOdometry {
-
-    private static Odometry instance;
-
-    public static Odometry getInstance(){
-        if(instance == null){
-            instance = new Odometry();
-        }
-        return instance;
-    }
-
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Field2d field;
 
@@ -38,10 +29,6 @@ public class Odometry extends IOdometry {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public Rotation2d getAngle() {
-        return getPose().getRotation();
-    }
-
     public Field2d getField() {
         return field;
     }
@@ -49,11 +36,11 @@ public class Odometry extends IOdometry {
     @Override
     public void periodic() {
         SwerveDrive drive = SwerveDrive.getInstance();
-        Vision vision = Vision.getInstance();
+        IVision vision = Vision.getInstance();
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
 
         for (Result result : vision.getResults()) {
-            switch (result.getError()) {
+            switch (result.getNoise()) {
                 case LOW:
                     // pose estimator reset
                     poseEstimator.resetPosition(
@@ -66,7 +53,9 @@ public class Odometry extends IOdometry {
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency());
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        VecBuilder.fill(0, 0, 0));
+                        // TODO: Fill in constants
                     break;
                 
                 case HIGH:
