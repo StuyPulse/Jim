@@ -10,7 +10,7 @@ import com.stuypulse.stuylib.network.SmartAngle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -47,44 +47,44 @@ public interface Settings {
         double MAX_SPEED = 4.2;
 
         public interface Turn {
-            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 0);
-            SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0);
-            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0);
+            double kP = 0;
+            double kI = 0;
+            double kD = 0;
             
             SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0);
             SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0);
         }
         public interface Drive {
-            SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0);
-            SmartNumber kI = new SmartNumber("Swerve/Drive/kI", 0);
-            SmartNumber kD = new SmartNumber("Swerve/Drive/kD", 0); 
+            double kP = 0;
+            double kI = 0;
+            double kD = 0; 
 
-            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0);
-            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0);        
+            double kS = 0;
+            double kV = 0;
+            double kA = 0;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            SmartAngle ABSOLUTE_OFFSET = new SmartAngle(ID + "/Absolute Offset", Angle.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -99,8 +99,7 @@ public interface Settings {
             }
 
             public interface Turn {
-                double GEAR_RATIO = -1;
-                double POSITION_CONVERSION = GEAR_RATIO * 2 * Math.PI;
+                double POSITION_CONVERSION = 1;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
         } 
