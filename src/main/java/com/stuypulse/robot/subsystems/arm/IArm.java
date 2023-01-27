@@ -17,6 +17,7 @@ public abstract class IArm extends SubsystemBase {
 
     public static IArm getInstance() {
         if (instance == null) {
+            if (RobotBase.isSimulation()) return new SimArm();
             return new Arm();
         }
         return getInstance();
@@ -25,11 +26,11 @@ public abstract class IArm extends SubsystemBase {
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
-    public abstract void setTargetShoulderAngle(double degrees);
-    public abstract void setTargetWristAngle(double degrees);
+    public abstract void setTargetShoulderAngle(Rotation2d angle);
+    public abstract void setTargetWristAngle(Rotation2d angle);
 
-    public abstract boolean isShoulderAtAngle(double maxError);
-    public abstract boolean isWristAtAngle(double maxError);
+    public abstract boolean isShoulderAtAngle(Rotation2d maxError);
+    public abstract boolean isWristAtAngle(Rotation2d maxError);
 
     public abstract Rotation2d getShoulderTargetAngle();
     public abstract Rotation2d getWristTargetAngle();
@@ -40,5 +41,13 @@ public abstract class IArm extends SubsystemBase {
 
     public final void addWristAngle(Rotation2d angle) {
         setTargetWristAngle(new Rotation2d(getWristAngle().getDegrees() + angle.getDegrees()));
+    }
+
+    public final void moveShoulder(Rotation2d angle) {
+        setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
+    }
+
+    public final void moveWrist(Rotation2d angle) {
+        setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
 }
