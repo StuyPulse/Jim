@@ -46,4 +46,5 @@ public abstract class IIntake extends SubsystemBase {
     public abstract void coneIntake();
     public abstract void cubeOuttake();
     public abstract void coneOuttake();
+    public abstract void stop();
 }

@@ -94,6 +94,11 @@ public class Intake extends IIntake{
 
     // INTAKING MODES
 
+    public void stop(){
+        frontMotor.stopMotor();
+        backMotor.stopMotor();
+    }
+
     @Override
     public void cubeIntake(){
         if (isFlipped()) {
@@ -137,12 +142,12 @@ public class Intake extends IIntake{
             backMotor.set(CONE_BACK_ROLLER.get());
         }
     }
+    
 
     @Override
     public void periodic(){
         if (isStalling() || hasCube()) {
-            frontMotor.stopMotor();
-            backMotor.stopMotor();
+            stop();
         }
 
         setGamePiece();

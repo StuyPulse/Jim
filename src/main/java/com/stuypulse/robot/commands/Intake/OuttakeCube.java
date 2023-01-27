@@ -2,9 +2,9 @@ package com.stuypulse.robot.commands.Intake;
 
 import com.stuypulse.robot.subsystems.intake.IIntake;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class OuttakeCube extends InstantCommand{
+public class OuttakeCube extends CommandBase{
     public IIntake intake;
     public OuttakeCube(IIntake intake) {
         this.intake = intake;
@@ -16,4 +16,13 @@ public class OuttakeCube extends InstantCommand{
         intake.cubeIntake();
     }
     
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        intake.stop();
+    }
 }
