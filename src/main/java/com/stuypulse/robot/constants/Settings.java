@@ -9,7 +9,6 @@ import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 
 /*-

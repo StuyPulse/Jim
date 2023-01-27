@@ -48,7 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 * X ligament so that the real vs target can be logged. 
 */
 public class Arm extends IArm {
-    
+
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
     private final CANSparkMax wrist;
@@ -159,8 +159,8 @@ public class Arm extends IArm {
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Angle", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist/Angle", getWristAngle().getDegrees());
         
         SmartDashboard.putNumber("Arm/Shoulder/Output", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output", wristOutput);
