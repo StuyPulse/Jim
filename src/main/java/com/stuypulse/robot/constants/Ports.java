@@ -15,7 +15,6 @@ public interface Ports {
 
     public interface Plant {
         int FORWARD = 0;
-        int REVERSE = 0;
-
+        int REVERSE = 1;
     }
 }
