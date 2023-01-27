@@ -101,29 +101,23 @@ public class Arm extends IArm {
     }
 
     @Override
-    public double getShoulderTargetAngle() {
-        return shoulderTargetAngle.get();
+    public Rotation2d getShoulderTargetAngle() {
+        return Rotation2d.fromDegrees(wristTargetAngle.get());
     }
 
     @Override
-    public double getWristTargetAngle() {
-        return wristTargetAngle.get();
+    public Rotation2d getWristTargetAngle() {
+        return Rotation2d.fromDegrees(wristTargetAngle.get());
     }
 
     @Override
-    public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
+    public void setTargetShoulderAngle(Rotation2d angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Math.toDegrees(Shoulder.MINANGLE), Math.toDegrees(Shoulder.MAXANGLE)));
     }
 
     @Override
-    public void setTargetWristAngle(double angle, boolean longPath) {
-        double clamped = MathUtil.clamp(angle, Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE));
-        
-        if (!longPath) {
-            wristTargetAngle.set(-clamped);
-        } else {
-            wristTargetAngle.set(clamped);
-        }
+    public void setTargetWristAngle(Rotation2d angle, boolean longPath) {
+        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Math.toDegrees(Wrist.MINANGLE), Math.toDegrees(Wrist.MAXANGLE)));
     }
 
     @Override

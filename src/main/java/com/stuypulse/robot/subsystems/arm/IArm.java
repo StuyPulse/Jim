@@ -13,22 +13,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class IArm extends SubsystemBase {
 
+    private static IArm instance;
+
     public static IArm getInstance() {
-        return RobotBase.isReal() ? new SimArm() : new SimArm();
+        if (instance == null) {
+            return new Arm();
+        }
+        return getInstance();
     }
     
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
-    public abstract void setTargetShoulderAngle(double degrees);
-    public final void setTargetWristAngle(double degrees) {
-        setTargetWristAngle(degrees, false);
+    public abstract void setTargetShoulderAngle(Rotation2d angle);
+    public final void setTargetWristAngle(Rotation2d angle) {
+        setTargetWristAngle(angle, false);
     }
-    public abstract void setTargetWristAngle(double degrees, boolean longPath);
+    public abstract void setTargetWristAngle(Rotation2d angle, boolean longPath);
 
     public abstract boolean isShoulderAtAngle(double maxError);
     public abstract boolean isWristAtAngle(double maxError);
 
-    public abstract double getShoulderTargetAngle();
-    public abstract double getWristTargetAngle();
+    public abstract Rotation2d getShoulderTargetAngle();
+    public abstract Rotation2d getWristTargetAngle();
+
+    public final void addShoulderAngle(Rotation2d angle) {
+        setTargetShoulderAngle(new Rotation2d(getShoulderAngle().getDegrees() + angle.getDegrees()));
+    }
+
+    public final void addWristAngle(Rotation2d angle) {
+        setTargetWristAngle(new Rotation2d(getWristAngle().getDegrees() + angle.getDegrees()));
+    }
 }

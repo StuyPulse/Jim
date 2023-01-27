@@ -32,8 +32,8 @@ public interface Settings {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(42);
                 
-            double MAXANGLE = Units.degreesToRadians(360); 
-            double MINANGLE = Units.degreesToRadians(-360);
+            double MAXANGLE = Units.degreesToRadians(180); 
+            double MINANGLE = Units.degreesToRadians(-180);
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
