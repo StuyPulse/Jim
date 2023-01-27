@@ -71,7 +71,7 @@ public class Intake extends IIntake{
 
     private boolean isFlipped() {
         IArm arm = IArm.getInstance();
-        return arm.getWristAngle().toRadians() > Math.PI /2 || arm.getWristAngle().toRadians() < 3 * Math.PI / 2;
+        return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
     }
 
     // INTAKING MODES
