@@ -34,7 +34,7 @@ public interface Ports {
             int TURN = 17; 
         }
     }
-    
+
     public interface Arm {
         int SHOULDER_LEFT = 20;
         int SHOULDER_RIGHT =  21;
@@ -58,5 +58,4 @@ public interface Ports {
         int LEFT_LATCH = 7;
         int RIGHT_LATCH = 8;
     }
-
 }
