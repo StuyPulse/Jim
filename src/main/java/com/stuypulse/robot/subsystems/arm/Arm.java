@@ -145,7 +145,7 @@ public class Arm extends IArm {
         double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
         double wristOutput;
 
-        if (Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
+        if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
             wristOutput = wristController.update(90, getWristAngle().getDegrees());
         } else {
             wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());

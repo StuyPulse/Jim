@@ -1,8 +1,7 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import static com.stuypulse.robot.constants.Settings.Arm.*;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
@@ -103,7 +102,7 @@ public class SimArm extends IArm {
         double shoulderOutput = shoulderController.update(shoulderTargetAngle.get(), getShoulderAngle().getDegrees());
         double wristOutput;
 
-        if (Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
+        if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
             wristOutput = wristController.update(90, getWristAngle().getDegrees());
         } else {
             wristOutput = wristController.update(wristTargetAngle.get(), getWristAngle().getDegrees());

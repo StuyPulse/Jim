@@ -35,6 +35,7 @@ public interface Settings {
 
             double ANGLE_OFFSET = 0;
 
+            SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
             double ANGLE_DEADZONE = 30;
             double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
             double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
