@@ -26,6 +26,8 @@ public class Intake extends IIntake{
 
     private BStream stalling;
 
+    public GamePiece gamePiece;
+
     public Intake(){
        
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
@@ -129,6 +131,13 @@ public class Intake extends IIntake{
             frontMotor.stopMotor();
             backMotor.stopMotor();
         }
+
+        if(hasCube()){
+            gamePiece = GamePiece.cube;
+        } else if(isStalling()){
+            gamePiece = GamePiece.cone;
+        }
+        
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
