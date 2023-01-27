@@ -122,7 +122,7 @@ public class Arm extends IArm {
 
     @Override
     public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
+        wristTargetAngle.set(MathUtil.clamp(calculateAngle(angle).getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
 
     @Override

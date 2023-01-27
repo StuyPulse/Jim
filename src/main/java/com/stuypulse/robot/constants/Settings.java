@@ -36,12 +36,12 @@ public interface Settings {
             double ANGLE_OFFSET = 0;
 
             SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 30;
+            double ANGLE_DEADZONE = 36;
             double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
             double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Shoulder/kP", 0.2);
+                SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
                 SmartNumber kI = new SmartNumber ("Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Shoulder/kD", 0);
             }
@@ -49,7 +49,7 @@ public interface Settings {
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Shoulder/kS", 0.1);
                 SmartNumber kA = new SmartNumber("Shoulder/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.18);
+                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.24);
                 SmartNumber kV = new SmartNumber("Shoulder/kV", 0.3);
             }
         }
@@ -69,7 +69,7 @@ public interface Settings {
             double ANGLE_OFFSET = 0;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 0.6);
+                SmartNumber kP = new SmartNumber("Wrist/kP", 8);
                 SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Wrist/kD", 0);
             }
