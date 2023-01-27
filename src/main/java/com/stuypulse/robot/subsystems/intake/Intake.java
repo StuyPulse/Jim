@@ -26,7 +26,7 @@ public class Intake extends IIntake{
 
     private BStream stalling;
 
-    public GamePiece gamePiece;
+    private GamePiece gamePiece;
 
     public Intake(){
        
@@ -70,6 +70,19 @@ public class Intake extends IIntake{
     }
     private boolean hasCube() {
         return isFlipped()? hasCubeBack() : hasCubeFront();
+    }
+
+    //cone or cube
+    private void setGamePiece(){
+        if(hasCube()){
+            gamePiece = GamePiece.cube;
+        } else if(isStalling()){
+            gamePiece = GamePiece.cone;
+        }
+    }
+
+    public GamePiece getGamePiece(){
+        return gamePiece;
     }
 
     // WRIST ORIENTATION
@@ -132,12 +145,9 @@ public class Intake extends IIntake{
             backMotor.stopMotor();
         }
 
-        if(hasCube()){
-            gamePiece = GamePiece.cube;
-        } else if(isStalling()){
-            gamePiece = GamePiece.cone;
-        }
-        
+        setGamePiece();
+
+    
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
