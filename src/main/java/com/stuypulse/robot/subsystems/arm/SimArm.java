@@ -8,15 +8,11 @@ import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
-import com.stuypulse.stuylib.math.interpolation.CubicInterpolator;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.spline.CubicHermiteSpline;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -27,6 +23,7 @@ public class SimArm extends IArm {
     private final DoubleJointedArmSim armSim;
     private final ArmVisualizer visualizer;
 
+    // TODO: Make AngleController
     private final Controller shoulderController; 
     private final Controller wristController;
 
@@ -40,20 +37,20 @@ public class SimArm extends IArm {
         armSim = new DoubleJointedArmSim(new SingleJointedArmSim(DCMotor.getNEO(1), Shoulder.GEARING, Shoulder.JKG+Wrist.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, Shoulder.MASS, true), 
             new SingleJointedArmSim(DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE, Wrist.MASS, true));
 
-        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kA, Shoulder.Feedforward.kV).position()
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
                                     .add(new ArmFeedforward(Shoulder.Feedforward.kG))
                                     .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
                                     // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));;
         
-        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kA, Wrist.Feedforward.kV).position()
+        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).position()
                                     .add(new ArmFeedforward(Wrist.Feedforward.kG))
                                     .add(new PIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
                                     // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle", 0);
-        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle", 0);
+        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
+        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
 
         visualizer = new ArmVisualizer();
     }
@@ -69,34 +66,34 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public double getShoulderTargetAngle() {
-        return shoulderTargetAngle.get();
+    public Rotation2d getShoulderTargetAngle() {
+        return Rotation2d.fromDegrees(shoulderTargetAngle.get());
     }
 
     @Override
-    public double getWristTargetAngle() {
-        return wristTargetAngle.get();
+    public Rotation2d getWristTargetAngle() {
+        return Rotation2d.fromDegrees(wristTargetAngle.get());
     }
 
     @Override
-    public void setTargetShoulderAngle(double angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Shoulder.MIN_ANGLE), Math.toDegrees(Shoulder.MAX_ANGLE)));
+    public void setTargetShoulderAngle(Rotation2d angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
     }
 
     @Override
-    public void setTargetWristAngle(double angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle, Math.toDegrees(Wrist.MIN_ANGLE), Math.toDegrees(Wrist.MAX_ANGLE)));
+    public void setTargetWristAngle(Rotation2d angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
     
     // don't need methods below
     
     @Override
-    public boolean isShoulderAtAngle(double maxError) {
+    public boolean isShoulderAtAngle(Rotation2d maxError) {
         return true;    
     }
 
     @Override
-    public boolean isWristAtAngle(double maxError) {
+    public boolean isWristAtAngle(Rotation2d maxError) {
         return true;
     }
 
@@ -107,10 +104,11 @@ public class SimArm extends IArm {
         armSim.update(Settings.DT);
 
         visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
-        visualizer.setTargetAngles(getShoulderTargetAngle(), getWristTargetAngle());
+        visualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
 
-        SmartDashboard.putNumber("Arm/Arm Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Arm Angle (deg)", getShoulderAngle().getDegrees());
+        SmartDashboard.putNumber("Arm/Wrist Angle (deg)", getWristAngle().getDegrees());
+        
         SmartDashboard.putNumber("Arm/Arm Voltage", shoulderController.getOutput());
         SmartDashboard.putNumber("Arm/Wrist Voltage", wristController.getOutput());
     }

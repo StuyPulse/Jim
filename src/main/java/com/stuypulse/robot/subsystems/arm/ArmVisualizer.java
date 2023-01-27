@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmVisualizer {
 
@@ -28,6 +27,7 @@ public class ArmVisualizer {
 
     private MechanismRoot2d shoulderRoot;
     private MechanismRoot2d wristRoot;
+    private MechanismRoot2d targetWristRoot;
     private MechanismRoot2d swerveRoot;
     private MechanismRoot2d pegRootMid;
     private MechanismRoot2d pegRootTop;
@@ -38,6 +38,7 @@ public class ArmVisualizer {
         arm = new Mechanism2d(16, 8);
         shoulderRoot = arm.getRoot("Arm Root", 8, 5.2);
         wristRoot = arm.getRoot("Wrist Root", 8, 4);
+        targetWristRoot = arm.getRoot("Target Wrist Root", 8, 4);
         swerveRoot = arm.getRoot("Swerve Root", 8-((12+3.5)/10), 0);
         pegRootMid = arm.getRoot("Peg Root Mid", (80+22.75+(12+3.5)) / 10, 0);
         pegRootTop = arm.getRoot("Peg Root Top", (80+36.75+(12+3.5)) / 10, 0);
@@ -74,7 +75,7 @@ public class ArmVisualizer {
         shoulderRoot.append(shoulderLigament);
         wristRoot.append(wristLigament);
         shoulderRoot.append(targetShoulderLigament);
-        wristRoot.append(targetWristLigament);
+        targetWristRoot.append(targetWristLigament);
 
         baseLigament.setAngle(-90);
         
@@ -82,15 +83,18 @@ public class ArmVisualizer {
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
+        targetWristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
+                                        5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
+
         targetShoulderLigament.setAngle(shoulderAngle);
         targetWristLigament.setAngle(wristAngle);
     }
 
     public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
-        shoulderLigament.setAngle(shoulderAngle);
         wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
+        shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
     }
 }
