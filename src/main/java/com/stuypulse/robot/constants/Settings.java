@@ -9,6 +9,7 @@ import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.stuylib.math.Angle;
 
@@ -58,8 +59,10 @@ public interface Settings {
 
 
         public interface Motion {
-            PIDConstants XY = new PIDConstants(1, 0, 0.1);
+            PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
+
+            PathConstraints CONSTRAINTS = new PathConstraints(3.5, 2.5);
         }
         
         public interface Turn {
