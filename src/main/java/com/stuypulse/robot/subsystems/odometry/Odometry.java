@@ -1,10 +1,13 @@
 package com.stuypulse.robot.subsystems.odometry;
 
+import java.util.List;
+
 import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.IVision.Result;
+import com.stuypulse.stuylib.network.limelight.LimelightConstants;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -46,13 +49,10 @@ public class Odometry extends IOdometry {
         return field;
     }
 
-    @Override
-    public void periodic() {
-        SwerveDrive drive = SwerveDrive.getInstance();
-        IVision vision = Vision.getInstance();
-        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
-
+    public void processResults(List<Result> results, SwerveDrive drive, IVision vision){
+        
         for (Result result : vision.getResults()) {
+            
             switch (result.getNoise()) {
                 case LOW:
                     // pose estimator reset
@@ -74,8 +74,27 @@ public class Odometry extends IOdometry {
                 case HIGH:
                     break; // DO NOT DO ANYTHING
             }
-        }    
-        field.setRobotPose(getPose());
+        }  
+    }
+
+    @Override
+    public void periodic() {
+
+        SwerveDrive drive = SwerveDrive.getInstance();
+        IVision vision = Vision.getInstance();
+        List<Result> results = vision.getResults();
+        
+        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        processResults(results, drive, vision);
+        
+
+        // logging from pose estimator
+        field.getObject("pose estimator").setPose(getPose());
+        // logging from vision data 
+        for(Result result: results){
+            field.getObject("vision" +result.getLimelight().getTableName() ).setPose(result.getPose());
+        }
+        // field.setRobotPose(getPose());
     }
 
 }

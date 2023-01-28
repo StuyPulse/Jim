@@ -34,16 +34,16 @@ public class Vision extends IVision {
         var results = new ArrayList<Result>();
 
         for (Limelight ll : limelights){
-            var data = ll.getPoseData();
+            Optional<AprilTagData> data = ll.getPoseData();
 
             if(data.isPresent()) {
-                results.add(process(data.get()));
+                results.add(process(data.get(),ll));
             }
         }
         return results;
     }
 
-    private Result process(AprilTagData data) {
+    private Result process(AprilTagData data, Limelight limelight) {
         double distance = distanceToTarget(data.pose, data.id);
         boolean inZone = distance <= COMMUNITY_DISTANCE;
         boolean inTolerance = distance <= TOLERANCE;
@@ -58,10 +58,11 @@ public class Vision extends IVision {
             error = Noise.MID;
         }
 
-        return new Result(data, error);
+        return new Result(data, error, limelight);
     }
 
 
+    // helper for process
     private double distanceToTarget(Pose2d pose, int id) {
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
@@ -74,10 +75,7 @@ public class Vision extends IVision {
         for (Limelight ll : limelights){
             String name = ll.getTableName();
             // TODO: check if camera is connected
-
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose X", pose.getX());
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose Y", pose.getY());
-            // SmartDashboard.putNumber("Vision/" + name + "/Pose Rotation", pose.getRotation().getDegrees());   
+            
         }
     }
 }
