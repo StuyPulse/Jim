@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -7,6 +14,11 @@
     },
     "windows": {
       "/SmartDashboard/Arm Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous": {
         "window": {
           "visible": true
         }

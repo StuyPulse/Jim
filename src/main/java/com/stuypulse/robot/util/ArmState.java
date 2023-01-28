@@ -2,11 +2,11 @@ package com.stuypulse.robot.util;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class ArmAngles {
+public class ArmState {
 
     private final double shoulderDegrees, wristDegrees;
 
-    public ArmAngles(double shoulderDegrees, double wristDegrees) {
+    public ArmState(double shoulderDegrees, double wristDegrees) {
         this.shoulderDegrees = shoulderDegrees;
         this.wristDegrees = wristDegrees;
     }

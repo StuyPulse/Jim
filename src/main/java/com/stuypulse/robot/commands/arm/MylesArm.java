@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.arm;
 
 import com.stuypulse.robot.subsystems.arm.IArm;
-import com.stuypulse.robot.util.ArmAngles;
+import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -10,10 +10,10 @@ public class MylesArm extends CommandBase {
     
     private final IArm arm;
 
-    private final ArmAngles[] setpoints;
+    private final ArmState[] setpoints;
     private int currentIdx;
 
-    public MylesArm(ArmAngles... setpoints) {
+    public MylesArm(ArmState... setpoints) {
         this.setpoints = setpoints;
         arm = IArm.getInstance();
         currentIdx = 0;
@@ -28,13 +28,13 @@ public class MylesArm extends CommandBase {
         arm.setTargetWristAngle(setpoints[0].getWristRotation());
     }
 
-    private ArmAngles getCurrentSetpoint() {
+    private ArmState getCurrentSetpoint() {
         return setpoints[currentIdx];
     }
 
     @Override
     public void execute() {
-        ArmAngles setpoint = getCurrentSetpoint();
+        ArmState setpoint = getCurrentSetpoint();
         arm.setTargetShoulderAngle(setpoint.getShoulderRotation());
         arm.setTargetWristAngle(setpoint.getWristRotation());
 

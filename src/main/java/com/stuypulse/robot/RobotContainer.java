@@ -9,8 +9,9 @@ import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
+import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
-import com.stuypulse.robot.util.ArmAngles;
+import com.stuypulse.robot.util.*;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
@@ -39,7 +40,8 @@ public class RobotContainer {
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
-
+    
+    public final Manager manager = Manager.getInstance();
     public final LEDController leds = new LEDController(this);
     public final Pump pump = new Pump();
 
@@ -67,12 +69,20 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getTopButton().onTrue(new ArmFollowPath(new ArmAngles[] {
-            new ArmAngles(-180, -90),
-            new ArmAngles(0, 0),
-        }));
+        // driver.getTopButton().onTrue(
+        //     new ArmFollowTrajectory(
+        //         new ArmTrajectory()
+        //             .addState(-180, -90)
+        //             .addState(0, 0)
+        //     ));
 
-        driver.getBottomButton().onTrue(new ArmFollowPath(new ArmAngles(-90, 90)));
+        driver.getBottomButton().onTrue(
+            new ArmFollowTrajectory(
+                new ArmTrajectory()
+                    .addState(-90, +90)
+            ));
+
+        driver.getTopButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.OPPOSITE, Level.HIGH, Piece.CUBE, Mode.READY)));
 
         // driver.getTopButton().onTrue(new MylesArm(new ArmAngles(-180, -90), new ArmAngles(0, 0)));
 
@@ -85,10 +95,6 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
-        // autonChooser.addOption("Arm", new ArmFollowPath(new ArmAngles[] {
-        //     new ArmAngles(-180, -90),
-        //     new ArmAngles(0, 0),
-        // }));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }
