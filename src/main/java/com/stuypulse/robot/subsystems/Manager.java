@@ -65,7 +65,11 @@ public class Manager {
         return currentMode;
     }
 
-        public ArmTrajectory getPath(Side side, Mode mode) {
+    public ArmTrajectory append(ArmTrajectory path, ArmTrajectory pathToAppend) {
+        return path.addState(pathToAppend);
+    }
+
+    public ArmTrajectory getPath(Side side, Mode mode) {
         currentSide = side;
         currentMode = mode;
 
@@ -78,7 +82,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -86,7 +89,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -97,7 +99,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -105,7 +106,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -116,7 +116,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -124,7 +123,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -138,7 +136,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -146,7 +143,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -157,7 +153,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -165,7 +160,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -176,7 +170,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CONE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
@@ -184,7 +177,6 @@ public class Manager {
                                 switch (currentMode) {
                                     case INTAKE:
                                     case READY:
-                                        return High.CUBE_READY;
                                     case SCORE:
                                     case NEUTRAL:
                                 }
