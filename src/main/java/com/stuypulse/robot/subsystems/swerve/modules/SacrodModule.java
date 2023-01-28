@@ -71,30 +71,30 @@ public class SacrodModule extends ISwerveModule {
 
     public static SacrodModule createFrontRight() {
         return new SacrodModule(
-            "FrontRight",
+            "Front Right",
             new Translation2d(Chassis.WIDTH * +0.5, Chassis.HEIGHT * -0.5),
-            10, 1, Angle.fromDegrees(143), 11);
+            11, 1, Angle.fromDegrees(143), 10);
     }
 
     public static SacrodModule createFrontLeft() {
         return new SacrodModule(
-            "FrontLeft",
+            "Front Left",
             new Translation2d(Chassis.WIDTH * +0.5, Chassis.HEIGHT * +0.5),
-            12, 3, Angle.fromDegrees(36), 13);
+            13, 3, Angle.fromDegrees(36), 12);
     }
 
     public static SacrodModule createBackLeft() {
         return new SacrodModule(
-            "BackLeft",
+            "Back Left",
             new Translation2d(Chassis.WIDTH * -0.5, Chassis.HEIGHT * +0.5),
-            14, 2, Angle.fromDegrees(-80.5), 15);
+            15, 2, Angle.fromDegrees(-80.5), 14);
     }
 
     public static SacrodModule createBackRight() {
         return new SacrodModule(
-            "BackRight",
+            "Back Right",
             new Translation2d(Chassis.WIDTH * -0.5, Chassis.HEIGHT * -0.5),
-            16, 0, Angle.fromDegrees(142.3), 17);
+            17, 0, Angle.fromDegrees(142.3), 16);
     }
 
     // module data
