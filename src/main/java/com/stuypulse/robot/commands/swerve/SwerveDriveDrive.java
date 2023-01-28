@@ -11,7 +11,6 @@ import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveDrive extends CommandBase {
@@ -21,12 +20,12 @@ public class SwerveDriveDrive extends CommandBase {
     private VStream speed;
     private IStream turn;
 
-    public SwerveDriveDrive(SwerveDrive swerve, Gamepad driver) {
-        this.swerve = swerve;
+    public SwerveDriveDrive(Gamepad driver) {
+        this.swerve = SwerveDrive.getInstance();
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
-                new VDeadZone(Settings.Driver.DEADBAND),
+                new VDeadZone(Settings.Driver.SPEED_DEADBAND),
                 x -> x.clamp(1.0),
                 x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
                 x -> x.mul(Settings.Driver.MAX_TELEOP_SPEED.get()),
@@ -36,7 +35,7 @@ public class SwerveDriveDrive extends CommandBase {
 
         turn = IStream.create(driver::getRightX)
             .filtered(
-                x -> SLMath.deadband(x, Settings.Driver.DEADBAND.get()),
+                x -> SLMath.deadband(x, Settings.Driver.ANGLE_DEADBAND.get()),
                 x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
                 x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
                 new LowPassFilter(Settings.Driver.Turn.RC)
@@ -47,10 +46,8 @@ public class SwerveDriveDrive extends CommandBase {
     
     @Override
     public void execute() {
-
-        swerve.setChassisSpeeds(
-            new ChassisSpeeds(speed.get().x, speed.get().y, turn.get()), 
-            true
-        );
+        double omega = turn.get();
+        System.out.println(omega);
+        swerve.drive(speed.get(), omega);
     }
 }

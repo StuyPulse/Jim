@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands.swerve;
 
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,15 +11,17 @@ public class LockWheels extends CommandBase {
     
     private SwerveDrive swerve;
     
-    public LockWheels(SwerveDrive swerve){
-        this.swerve = swerve;
+    public LockWheels(){
+        this.swerve = SwerveDrive.getInstance();
         
         addRequirements(swerve);
     }
     
     @Override
     public void execute(){
-        SwerveModuleState state = new SwerveModuleState(0, Rotation2d.fromDegrees(90));
+        SwerveModuleState state = new SwerveModuleState(
+            0,
+            IOdometry.getInstance().getRotation().minus(Rotation2d.fromDegrees(90)));
         swerve.setModuleStates(state, state, state, state);
     }
 
