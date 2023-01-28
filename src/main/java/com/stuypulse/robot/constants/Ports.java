@@ -51,7 +51,7 @@ public interface Ports {
     }
 
     public interface LEDController {
-        int PORT = 694; // PWM
+        int PORT = 8;
     }
     
     public interface Plant {
@@ -64,7 +64,7 @@ public interface Ports {
         int LEFT_DEPLOY_REVERSE = 3;
         int RIGHT_DEPLOY_FORWARD = 4;
         int RIGHT_DEPLOY_REVERSE = 5;
-        int LEFT_LATCH = 7;
-        int RIGHT_LATCH = 8;
+        int LEFT_LATCH = 6;
+        int RIGHT_LATCH = 7;
     }
 }
