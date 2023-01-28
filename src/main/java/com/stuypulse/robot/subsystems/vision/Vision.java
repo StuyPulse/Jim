@@ -63,6 +63,9 @@ public class Vision extends IVision {
 
 
     private double distanceToTarget(Pose2d pose, int id) {
+        if (id < 1)
+            return Double.POSITIVE_INFINITY;
+
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
         
