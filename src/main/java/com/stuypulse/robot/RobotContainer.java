@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.Wings.*;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
@@ -22,6 +23,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 public class RobotContainer {
 
