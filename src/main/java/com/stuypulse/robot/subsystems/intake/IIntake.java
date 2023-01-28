@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 
 public abstract class IIntake extends SubsystemBase {
-    //shut up amber
     private static IIntake instance;
     
     public enum GamePiece{
