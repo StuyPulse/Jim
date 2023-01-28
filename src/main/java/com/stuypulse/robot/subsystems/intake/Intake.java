@@ -38,7 +38,7 @@ public class Intake extends IIntake{
 
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
-            .polling(Settings.DT);
+            .polling(Settings.DT/2);
 
         frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
         frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
