@@ -2,14 +2,14 @@ package com.stuypulse.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class IIntake extends SubsystemBase {
-    private static IIntake instance;
+    private static Intake instance;
     
     public enum GamePiece{
         cone,
         cube;
     }
 
-    public static IIntake getInstance() {
+    public static Intake getInstance() {
         if (instance == null) {
             instance = new Intake();
         }
