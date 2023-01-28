@@ -92,7 +92,7 @@ public class Odometry extends IOdometry {
         field.getObject("pose estimator").setPose(getPose());
         // logging from vision data 
         for(Result result: results){
-            field.getObject("vision" +result.getLimelight().getTableName() ).setPose(result.getPose());
+            field.getObject("vision" + result.getAuthor()).setPose(result.getPose());
         }
         // field.setRobotPose(getPose());
     }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Vision extends IVision {
 
     private final Limelight[] limelights;
+    private final List<Result> results;
 
     public Vision() {
         String[] hostNames = LIMELIGHTS;
@@ -28,10 +29,12 @@ public class Vision extends IVision {
                 PortForwarder.add(port, hostNames[i] + ".local", port);
             }
         }
+
+        results = new ArrayList<>();
     }
 
     public List<Result> getResults() {
-        var results = new ArrayList<Result>();
+        results.clear();
 
         for (Limelight ll : limelights){
             Optional<AprilTagData> data = ll.getPoseData();
@@ -58,7 +61,7 @@ public class Vision extends IVision {
             error = Noise.MID;
         }
 
-        return new Result(data, error, limelight);
+        return new Result(data, error, limelight.getTableName());
     }
 
 
@@ -72,10 +75,10 @@ public class Vision extends IVision {
 
     @Override
     public void periodic(){
-        for (Limelight ll : limelights){
-            String name = ll.getTableName();
-            // TODO: check if camera is connected
-            
+        for (Result result : results) {
+            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/X", result.getPose().getX());
+            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/Y", result.getPose().getY());
+            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/Degrees", result.getPose().getRotation().getDegrees());
         }
     }
 }

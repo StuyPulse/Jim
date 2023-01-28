@@ -30,9 +30,9 @@ public abstract class IVision extends SubsystemBase {
     public static class Result {
         public final AprilTagData data;
         public final Noise noise;
-        public final Limelight author;
+        public final String author;
 
-        public Result(AprilTagData data, Noise error, Limelight author) {
+        public Result(AprilTagData data, Noise error, String author) {
             this.data = data;
             this.noise = error;
             this.author = author;
@@ -50,7 +50,7 @@ public abstract class IVision extends SubsystemBase {
             return noise;
         }
 
-        public Limelight getLimelight(){
+        public String getAuthor(){
             return author;
         }
     }

@@ -29,14 +29,14 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
-    // Subsystem
-    public final IIntake intake = IIntake.getInstance();
-    public final SwerveDrive swerve = SwerveDrive.getInstance();
-    public final IVision vision = Vision.getInstance();
-    public final IOdometry odometry = Odometry.getInstance();
-    public final IArm arm = IArm.getInstance();
-    public final IPlant plant = IPlant.getInstance();
-    public final IWings wings = IWings.getInstance();
+    // // Subsystem
+    // public final IIntake intake = IIntake.getInstance();
+    // public final SwerveDrive swerve = SwerveDrive.getInstance();
+    public final IVision vision = IVision.getInstance();
+    // // public final IOdometry odometry = Odometry.getInstance();
+    // public final IArm arm = IArm.getInstance();
+    // public final IPlant plant = IPlant.getInstance();
+    // public final IWings wings = IWings.getInstance();
 
     public final LEDController leds = new LEDController(this);
     public final Pump pump = new Pump();
