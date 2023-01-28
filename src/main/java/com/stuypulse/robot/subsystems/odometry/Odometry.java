@@ -9,7 +9,6 @@ import com.stuypulse.robot.subsystems.vision.IVision.Result;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -27,6 +26,7 @@ public class Odometry extends IOdometry {
         field = new Field2d();
 
         SmartDashboard.putData("Field", field);
+        swerve.initFieldObjects(field);
     }
 
     public Pose2d getPose() {

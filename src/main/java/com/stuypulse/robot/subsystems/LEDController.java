@@ -26,6 +26,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class LEDController extends SubsystemBase {
 
+    private static LEDController instance;
+
+    public static LEDController getInstance() {
+        if (instance == null) {
+            instance = new LEDController();
+        }
+        return instance;
+    }
+
     // Motor that controlls the LEDs
     private final PWMSparkMax controller;
 
@@ -33,16 +42,12 @@ public class LEDController extends SubsystemBase {
     private final StopWatch lastUpdate;
     private double manualTime;
 
-    // The robot container to get information from
-    private final RobotContainer robot;
-
     // The current color to set the LEDs to
     private LEDColor manualColor;
 
-    public LEDController(RobotContainer container) {
+    public LEDController() {
         this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
-        this.robot = container;
 
         setLEDConditions();
         setColor(LEDColor.OFF);
