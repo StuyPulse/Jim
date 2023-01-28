@@ -7,7 +7,7 @@ public abstract class IPlant extends SubsystemBase {
 
     public static IPlant getInstance() {
         if (instance == null) {
-            instance = new Plant();
+            instance = new NoPlant(); // new Plant();
         }
         return instance;
     }

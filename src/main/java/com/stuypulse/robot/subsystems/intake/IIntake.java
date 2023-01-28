@@ -32,7 +32,7 @@ public abstract class IIntake extends SubsystemBase {
     private static IIntake instance;
     public static IIntake getInstance() {
         if (instance == null) {
-            instance = new Intake();
+            instance = new NoIntake(); // new Intake();
         }
         return instance;
     }
