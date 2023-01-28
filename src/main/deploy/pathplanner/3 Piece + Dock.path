@@ -1,0 +1,174 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.77165,
+        "y": 4.9784
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.77165,
+        "y": 4.9784
+      },
+      "holonomicAngle": 180,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.669292425603397,
+        "y": 4.631360475274445
+      },
+      "prevControl": {
+        "x": 5.903116742039475,
+        "y": 4.734279596947211
+      },
+      "nextControl": {
+        "x": 5.903116742039475,
+        "y": 4.734279596947211
+      },
+      "holonomicAngle": 177.2736890060938,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.77165,
+        "y": 4.422775
+      },
+      "prevControl": {
+        "x": 4.5194263284389615,
+        "y": 4.665666849165367
+      },
+      "nextControl": {
+        "x": 4.5194263284389615,
+        "y": 4.665666849165367
+      },
+      "holonomicAngle": 180,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.783647005239803,
+        "y": 3.693652922255916
+      },
+      "prevControl": {
+        "x": 6.108954985385006,
+        "y": 4.585618643419883
+      },
+      "nextControl": {
+        "x": 6.108954985385006,
+        "y": 4.585618643419883
+      },
+      "holonomicAngle": 136.1691393279075,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.9133470563660104,
+        "y": 4.631360475274445
+      },
+      "prevControl": {
+        "x": 4.530491407753313,
+        "y": 4.681854104024315
+      },
+      "nextControl": {
+        "x": 2.655446680365544,
+        "y": 4.528441353601679
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.77165,
+        "y": 2.746375
+      },
+      "prevControl": {
+        "x": 1.726930054358594,
+        "y": 4.4940789892365665
+      },
+      "nextControl": {
+        "x": 1.774916417165216,
+        "y": 2.6187198736736983
+      },
+      "holonomicAngle": 180,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.250090494474854,
+        "y": 2.7216389953464644
+      },
+      "prevControl": {
+        "x": 2.5639630166564182,
+        "y": 2.6758971634919013
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": []
+}
