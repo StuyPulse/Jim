@@ -13,14 +13,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class IArm extends SubsystemBase {
 
-    private static IArm instance;
+    private static IArm instance = null;
 
     public static IArm getInstance() {
         if (instance == null) {
-            if (RobotBase.isSimulation()) return new SimArm();
-            return new Arm();
+            instance = RobotBase.isSimulation() ? new SimArm() : new Arm();
         }
-        return getInstance();
+        return instance;
     }
     
     public abstract Rotation2d getShoulderAngle();
