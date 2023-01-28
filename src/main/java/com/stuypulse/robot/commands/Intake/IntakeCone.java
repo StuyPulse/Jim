@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class IntakeCone extends CommandBase{
     private IIntake intake;
 
-    public IntakeCone(IIntake intake){
-        this.intake = intake;
+    public IntakeCone(){
+        intake = IIntake.getInstance();
         addRequirements(intake);
     }
 
