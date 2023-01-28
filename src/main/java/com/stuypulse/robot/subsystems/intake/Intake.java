@@ -94,6 +94,7 @@ public class Intake extends IIntake{
 
     // INTAKING MODES
 
+    @Override
     public void stop(){
         frontMotor.stopMotor();
         backMotor.stopMotor();
