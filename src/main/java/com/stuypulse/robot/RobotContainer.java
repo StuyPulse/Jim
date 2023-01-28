@@ -7,7 +7,10 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.manager.SetLevel;
+import com.stuypulse.robot.commands.manager.SetPiece;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.ArmTrajectories.OppositeSide.Mid;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
@@ -69,24 +72,17 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        // driver.getTopButton().onTrue(
-        //     new ArmFollowTrajectory(
-        //         new ArmTrajectory()
-        //             .addState(-180, -90)
-        //             .addState(0, 0)
-        //     ));
+        operator.getTopButton().onTrue(new SetPiece(Piece.CONE));
+        operator.getLeftButton().onTrue(new SetPiece(Piece.CUBE));
+        operator.getDPadUp().onTrue(new SetLevel(Level.HIGH));
+        operator.getDPadLeft().onTrue(new SetLevel(Level.MID));
+        operator.getDPadDown().onTrue(new SetLevel(Level.LOW));
 
-        driver.getBottomButton().onTrue(
-            new ArmFollowTrajectory(
-                new ArmTrajectory()
-                    .addState(-90, +90)
-            ));
+        operator.getLeftBumper().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.READY)));
+        operator.getRightBumper().onTrue(new ArmFollowTrajectory(manager.append(manager.getPath(Side.SAME, Mode.SCORE), 
+                                                                                manager.getPath(Side.SAME, Mode.NEUTRAL))));
 
-        driver.getTopButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.OPPOSITE, Level.HIGH, Piece.CUBE, Mode.READY)));
-
-        // driver.getTopButton().onTrue(new MylesArm(new ArmAngles(-180, -90), new ArmAngles(0, 0)));
-
-        // driver.getBottomButton().onTrue(new MylesArm(new ArmAngles(-90, 90)));
+        operator.getRightTriggerButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.INTAKE)));
     }
 
     /**************/
