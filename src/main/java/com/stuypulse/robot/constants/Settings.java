@@ -63,21 +63,22 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 0;
-            double kI = 0;
-            double kD = 0;
-
-            SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 1);
-            SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 1);
+            double kP = 3.5;
+            double kI = 0.0;
+            double kD = 0.1;
+            
+            SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0.25);
+            SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0.007);
         }
-        public interface Drive {
-            double kP = 0;
-            double kI = 0;
-            double kD = 0; 
 
-            double kS = 0;
-            double kV = 1;
-            double kA = 1;
+        public interface Drive {
+            double kP = 1.3;
+            double kI = 0.0;
+            double kD = 0.0; 
+
+            double kS = 0.17335;
+            double kV = 2.7274;
+            double kA = 0.456;
         }
 
         public interface FrontRight {
