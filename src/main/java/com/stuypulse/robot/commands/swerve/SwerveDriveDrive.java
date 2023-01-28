@@ -47,7 +47,6 @@ public class SwerveDriveDrive extends CommandBase {
     @Override
     public void execute() {
         double omega = turn.get();
-        System.out.println(omega);
         swerve.drive(speed.get(), omega);
     }
 }
