@@ -4,11 +4,11 @@ import com.stuypulse.robot.subsystems.plant.IPlant;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class PlantEngage extends InstantCommand{
+public class Engage extends InstantCommand{
     
     private IPlant plant;
 
-    public PlantEngage(){
+    public Engage(){
         plant = IPlant.getInstance();
         addRequirements(plant);
     }
