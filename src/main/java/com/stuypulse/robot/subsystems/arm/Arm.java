@@ -96,16 +96,6 @@ public class Arm extends IArm {
     }
 
     @Override
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    }
-
-    @Override
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
-    }
-
-    @Override
     public boolean isShoulderAtAngle(Rotation2d maxError) {
         return Math.abs(getShoulderAngle().minus(Rotation2d.fromDegrees(shoulderTargetAngle.get())).getDegrees()) < maxError.getDegrees();
     }
@@ -113,6 +103,16 @@ public class Arm extends IArm {
     @Override
     public boolean isWristAtAngle(Rotation2d maxError) {
         return Math.abs(getWristAngle().minus(Rotation2d.fromDegrees(wristTargetAngle.get())).getDegrees()) < maxError.getDegrees();
+    }
+
+    @Override
+    public void setTargetShoulderAngle(Rotation2d angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
+    }
+
+    @Override
+    public void setTargetWristAngle(Rotation2d angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
 
     private void runShoulder(double voltage) {

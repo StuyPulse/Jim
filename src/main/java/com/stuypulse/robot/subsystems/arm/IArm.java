@@ -4,13 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-/**
- * Tasks:
- * - Get Angle from arm and wrist joint
- * - Control arm and wrist joints
- * - Set target angle
- * - Go to target angle
- */
 public abstract class IArm extends SubsystemBase {
 
     private static IArm instance = null;
@@ -25,14 +18,14 @@ public abstract class IArm extends SubsystemBase {
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
-    public abstract void setTargetShoulderAngle(Rotation2d angle);
-    public abstract void setTargetWristAngle(Rotation2d angle);
+    public abstract Rotation2d getShoulderTargetAngle();
+    public abstract Rotation2d getWristTargetAngle();
 
     public abstract boolean isShoulderAtAngle(Rotation2d maxError);
     public abstract boolean isWristAtAngle(Rotation2d maxError);
 
-    public abstract Rotation2d getShoulderTargetAngle();
-    public abstract Rotation2d getWristTargetAngle();
+    public abstract void setTargetShoulderAngle(Rotation2d angle);
+    public abstract void setTargetWristAngle(Rotation2d angle);
 
     public final void moveShoulder(Rotation2d angle) {
         setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
