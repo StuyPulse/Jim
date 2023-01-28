@@ -34,7 +34,6 @@ public class SimArm extends IArm {
     public SimArm() { 
         setSubsystem("SimArm");
         
-        // simulation
         armSim = new DoubleJointedArmSim(new SingleJointedArmSim(DCMotor.getNEO(1), Shoulder.GEARING, Shoulder.JKG+Wrist.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, Shoulder.MASS, true), 
             new SingleJointedArmSim(DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE, Wrist.MASS, true));
 
@@ -76,16 +75,6 @@ public class SimArm extends IArm {
     }
 
     @Override
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    }
-    
-    @Override
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
-    }
-    
-    @Override
     public boolean isShoulderAtAngle(Rotation2d maxError) {
         return Math.abs(shoulderTargetAngle.get() - getShoulderAngle().getDegrees()) < maxError.getDegrees();    
     }
@@ -93,6 +82,16 @@ public class SimArm extends IArm {
     @Override
     public boolean isWristAtAngle(Rotation2d maxError) {
         return Math.abs(wristTargetAngle.get() - getWristAngle().getDegrees()) < maxError.getDegrees();
+    }
+
+    @Override
+    public void setTargetShoulderAngle(Rotation2d angle) {
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
+    }
+    
+    @Override
+    public void setTargetWristAngle(Rotation2d angle) {
+        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
 
     @Override

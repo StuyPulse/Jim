@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.odometry;
 
+import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
@@ -28,6 +29,18 @@ public class Odometry extends IOdometry {
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
+
+    @Override
+    public void reset(Pose2d pose) {
+        SwerveDrive drive = SwerveDrive.getInstance();
+        poseEstimator.resetPosition(
+                    drive.getGyroAngle(), 
+                    drive.getModulePositions(), 
+                    pose
+        );
+    }
+
+    
 
     public Field2d getField() {
         return field;
