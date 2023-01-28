@@ -9,44 +9,20 @@ import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDCalculator;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
-import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-/*
-* X absolute encoder: conversion is not 360, this puts the range in 0, 360
-* X the range should be -180, +180, we can handle this manually and cleanly through a series of helper functions
-* X MathUtil.java is your best friend here
-**
-* X the angle of the joints are no longer linear, and we have to deal with the jump from 180 to -180 with rotation2d's
-* I think. 
-* 
-* because of that , we need to make sure the arm goes in the exact direction we expect every single time. we also need
-* to be careful of physical limits that consider the correct angle (e..g once you go past one full rotation you're at -180 and that's
-* probably a valid angle)
-* 
-* X also you need to consider zeroing the absolute encoder stuff 
-* also the starting wrist and shoulder angle must match the angle of the initial target values
-*
-* also we don't have constants right now that make the simulation work
-* X also can you put the sim mechanism2d stuff in its own class so we can use it for the actual robot. also add duplicate
-* X ligament so that the real vs target can be logged. 
-*/
+
 public class Arm extends IArm {
 
     private final CANSparkMax shoulderLeft;
@@ -61,6 +37,8 @@ public class Arm extends IArm {
 
     private final SmartNumber shoulderTargetAngle;
     private final SmartNumber wristTargetAngle; 
+
+    private final ArmVisualizer armVisualizer;
 
     public Arm() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
@@ -87,6 +65,8 @@ public class Arm extends IArm {
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
+
+        armVisualizer = new ArmVisualizer();
     }
 
     private void configureMotors() {
@@ -158,6 +138,9 @@ public class Arm extends IArm {
 
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
+
+        armVisualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
+        armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
