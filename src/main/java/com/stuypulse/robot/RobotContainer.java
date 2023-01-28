@@ -32,11 +32,11 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
-    // Subsystem
-    public final IIntake intake = IIntake.getInstance();
-    public final SwerveDrive swerve = SwerveDrive.getInstance();
-    public final IVision vision = Vision.getInstance();
-    public final IOdometry odometry = Odometry.getInstance();
+    // // Subsystem
+    // public final IIntake intake = IIntake.getInstance();
+    // public final SwerveDrive swerve = SwerveDrive.getInstance();
+    // public final IVision vision = IVision.getInstance();
+    // public final IOdometry odometry = IOdometry.getInstance();
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
@@ -65,7 +65,18 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getTopButton().onTrue(new ArmFollowPath(new ArmAngles[] {
+            new ArmAngles(-180, -90),
+            new ArmAngles(0, 0),
+        }));
+
+        driver.getBottomButton().onTrue(new ArmFollowPath(new ArmAngles(-90, 90)));
+
+        // driver.getTopButton().onTrue(new MylesArm(new ArmAngles(-180, -90), new ArmAngles(0, 0)));
+
+        // driver.getBottomButton().onTrue(new MylesArm(new ArmAngles(-90, 90)));
+    }
 
     /**************/
     /*** AUTONS ***/
@@ -73,10 +84,10 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
-        autonChooser.addOption("Arm", new ArmFollowPath(new ArmAngles[] {
-            new ArmAngles(-180, -90),
-            new ArmAngles(0, 0),
-        }));
+        // autonChooser.addOption("Arm", new ArmFollowPath(new ArmAngles[] {
+        //     new ArmAngles(-180, -90),
+        //     new ArmAngles(0, 0),
+        // }));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }
