@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.swerve.FollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
@@ -17,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class ThreePiece extends SequentialCommandGroup {
 
     private HashMap<String, PathPlannerTrajectory> paths;
-    private static final double INTAKE_ACQUIRE_TIME = .2;
-    private static final double INTAKE_DEACQUIRE_TIME = .5;
+    private static final double INTAKE_ACQUIRE_TIME = 0.2;
+    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
     public ThreePiece() {
 
