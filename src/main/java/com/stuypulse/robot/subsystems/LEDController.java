@@ -14,6 +14,11 @@ import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*-
@@ -45,9 +50,19 @@ public class LEDController extends SubsystemBase {
     // The current color to set the LEDs to
     private LEDColor manualColor;
 
+    private final Mechanism2d ledMech;
+    private final MechanismLigament2d ledLigament;
+
     public LEDController() {
         this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
+
+        ledMech = new Mechanism2d(2, 2);
+        MechanismRoot2d root = ledMech.getRoot("LED", 0, 0);
+        ledLigament = new MechanismLigament2d("LED Ligament", 2, 2);
+        root.append(ledLigament);
+
+        SmartDashboard.putData("LED Mech2d", ledMech);
 
         setLEDConditions();
         setColor(LEDColor.OFF);
@@ -57,6 +72,8 @@ public class LEDController extends SubsystemBase {
         manualColor = color;
         manualTime = time;
         lastUpdate.reset();
+
+        ledLigament.setColor(new Color8Bit(0, 0, 0));
     }
 
     public void setColor(LEDColor color) {
