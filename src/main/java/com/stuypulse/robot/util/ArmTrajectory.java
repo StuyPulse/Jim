@@ -24,4 +24,17 @@ public class ArmTrajectory {
                         trajectory.getStates().get(0).getWristRotation().getDegrees());
         return this;
     }
+
+    public void updateState(int index, ArmState newState) {
+        this.getStates().set(index, newState);
+    }
+
+    public ArmTrajectory switchSides() {
+        for (int i = 0; i < states.size(); i++) {
+            updateState(i, new ArmState(
+                            -states.get(i).getShoulderRotation().getDegrees(), 
+                            -states.get(i).getWristRotation().getDegrees()));
+        }
+        return this;
+    }
 } 

@@ -1,6 +1,8 @@
 package com.stuypulse.robot.subsystems;
 
 import static com.stuypulse.robot.constants.ArmTrajectories.*;
+
+import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 public class Manager {
@@ -67,6 +69,14 @@ public class Manager {
 
     public ArmTrajectory append(ArmTrajectory path, ArmTrajectory pathToAppend) {
         return path.addState(pathToAppend);
+    }
+
+    public ArmTrajectory toHome() {
+        return NEUTRAL;
+    }
+
+    public ArmTrajectory switchSides(ArmTrajectory path) {
+        return path.switchSides();
     }
 
     public ArmTrajectory getPath(Side side, Mode mode) {
