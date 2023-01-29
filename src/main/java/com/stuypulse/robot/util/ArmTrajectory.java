@@ -20,8 +20,9 @@ public class ArmTrajectory {
     }
 
     public ArmTrajectory addState(ArmTrajectory trajectory) {
-        this.addState(trajectory.getStates().get(0).getShoulderRotation().getDegrees(), 
-                        trajectory.getStates().get(0).getWristRotation().getDegrees());
+        for (ArmState state: trajectory.getStates()) {
+            states.add(state);
+        }
         return this;
     }
 
