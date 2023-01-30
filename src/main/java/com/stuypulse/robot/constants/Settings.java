@@ -120,7 +120,7 @@ public interface Settings {
     
         public interface Shoulder {
             double GEARING = 80;
-            double LENGTH = Units.inchesToMeters(42);
+            double LENGTH = Units.inchesToMeters(43.75);
             double MAX_ANGLE = 180; 
             double MIN_ANGLE = -180;
             double MASS = 0.01; 
@@ -140,7 +140,7 @@ public interface Settings {
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Shoulder/kP", 16 / 4);
+                SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
                 SmartNumber kI = new SmartNumber ("Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Shoulder/kD", 0);
             }

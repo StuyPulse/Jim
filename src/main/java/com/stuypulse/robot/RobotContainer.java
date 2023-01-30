@@ -10,7 +10,6 @@ import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.manager.SetLevel;
 import com.stuypulse.robot.commands.manager.SetPiece;
 import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.ArmTrajectories.OppositeSide.Mid;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
@@ -28,6 +27,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
 
@@ -72,17 +73,29 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        operator.getTopButton().onTrue(new SetPiece(Piece.CONE));
-        operator.getLeftButton().onTrue(new SetPiece(Piece.CUBE));
-        operator.getDPadUp().onTrue(new SetLevel(Level.HIGH));
-        operator.getDPadLeft().onTrue(new SetLevel(Level.MID));
-        operator.getDPadDown().onTrue(new SetLevel(Level.LOW));
 
-        operator.getLeftBumper().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.READY)));
-        operator.getRightBumper().onTrue(new ArmFollowTrajectory(manager.append(manager.getPath(Side.SAME, Mode.SCORE), 
-                                                                                manager.getPath(Side.SAME, Mode.NEUTRAL))));
+        driver.getBottomButton().onTrue(new SequentialCommandGroup(
+                                        new SetPiece(Piece.CONE), 
+                                        new SetLevel(Level.HIGH), 
+                                        new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.READY))));
+        driver.getLeftButton().onTrue(new ArmFollowTrajectory(manager.toHome()));
+        driver.getRightButton().onTrue(new SequentialCommandGroup(
+                                        new SetPiece(Piece.CONE), 
+                                        new SetLevel(Level.HIGH), 
+                                        new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                        new WaitCommand(0.1),
+                                        new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        // operator.getTopButton().onTrue(new SetPiece(Piece.CONE));
+        // operator.getLeftButton().onTrue(new SetPiece(Piece.CUBE));
+        // operator.getDPadUp().onTrue(new SetLevel(Level.HIGH));
+        // operator.getDPadLeft().onTrue(new SetLevel(Level.MID));
+        // operator.getDPadDown().onTrue(new SetLevel(Level.LOW));
 
-        operator.getRightTriggerButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.INTAKE)));
+        // operator.getLeftBumper().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.READY)));
+        // operator.getRightBumper().onTrue(new ArmFollowTrajectory(manager.append(manager.getPath(Side.SAME, Mode.SCORE), 
+        //                                                                         manager.getPath(Side.SAME, Mode.NEUTRAL))));
+
+        // operator.getRightTriggerButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.INTAKE)));
     }
 
     /**************/
@@ -91,6 +104,78 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
+        autonChooser.addOption("High Cone Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.HIGH), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("High Cone Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.HIGH), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Mid Cone Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.MID), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Mid Cone Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.MID), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Low Cone Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.LOW), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Low Cone Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CONE), 
+                                            new SetLevel(Level.LOW), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("High Cube Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.HIGH), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("High Cube Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.HIGH), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Mid Cube Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.MID), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Mid Cube Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.MID), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Low Cube Ready", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.LOW), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
+        autonChooser.addOption("Low Cube Score", new SequentialCommandGroup(
+                                            new SetPiece(Piece.CUBE), 
+                                            new SetLevel(Level.LOW), 
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
+                                            new WaitCommand(0.1),
+                                            new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }
