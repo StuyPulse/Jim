@@ -7,8 +7,8 @@ public class ArmState {
     private final double shoulderDegrees, wristDegrees;
 
     public ArmState(double shoulderDegrees, double wristDegrees) {
-        this.shoulderDegrees = shoulderDegrees - 90;
-        this.wristDegrees = wristDegrees - 90;
+        this.shoulderDegrees = shoulderDegrees;
+        this.wristDegrees = wristDegrees;
     }
 
     public Rotation2d getShoulderRotation() {

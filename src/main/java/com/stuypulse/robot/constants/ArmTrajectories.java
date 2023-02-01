@@ -8,8 +8,8 @@ public interface ArmTrajectories {
     public interface SameSide {
         public interface High {
             public interface Cone {
-                ArmTrajectory READY = new ArmTrajectory().addState(75, 145);
-                ArmTrajectory SCORE = new ArmTrajectory().addState(75, 115);
+                ArmTrajectory READY = new ArmTrajectory().addState(-15, 55);
+                ArmTrajectory SCORE = new ArmTrajectory().addState(-15, 25);
                 ArmTrajectory INTAKE_TO_NEUTRAL = new ArmTrajectory().addState(0, 0);
                 ArmTrajectory SCORE_TO_NEUTRAL = new ArmTrajectory().addState(READY).addState(NEUTRAL);
             }
