@@ -33,8 +33,8 @@ public class ArmTrajectory {
     public ArmTrajectory switchSides() {
         for (int i = 0; i < states.size(); i++) {
             updateState(i, new ArmState(
-                            -states.get(i).getShoulderRotation().getDegrees(), 
-                            -states.get(i).getWristRotation().getDegrees()));
+                            -180 - states.get(i).getShoulderRotation().getDegrees(), 
+                            -180 - states.get(i).getWristRotation().getDegrees()));
         }
         return this;
     }
