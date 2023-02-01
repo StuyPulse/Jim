@@ -3,6 +3,8 @@ package com.stuypulse.robot.subsystems;
 import static com.stuypulse.robot.constants.ArmTrajectories.*;
 
 import com.stuypulse.robot.constants.ArmTrajectories.SameSide.*;
+import com.stuypulse.robot.subsystems.arm.IArm;
+import com.stuypulse.robot.subsystems.intake.IIntake;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 public class Manager {
@@ -32,6 +34,11 @@ public class Manager {
         OPPOSITE
     }
 
+    public enum IntakeSide {
+        FRONT, 
+        BACK
+    }
+
     public enum Mode {
         INTAKE,
         READY,
@@ -43,12 +50,14 @@ public class Manager {
     private Level level;
     private Side side;
     private Mode mode;
+    private IntakeSide lastIntakeSide;
 
     public Manager() {
         this.piece = Piece.CONE;
         this.level = Level.HIGH;
         this.side = Side.SAME;
         this.mode = Mode.NEUTRAL;
+        this.lastIntakeSide = IntakeSide.FRONT;
     }
 
     public Level getLevel() {
@@ -80,7 +89,6 @@ public class Manager {
     }
 
     public ArmTrajectory switchConeHigh() {
-        System.out.println("hello");
         switch (mode) {
             case INTAKE: 
             case READY: return High.Cone.READY;
@@ -157,13 +165,35 @@ public class Manager {
         this.side = side;
         this.mode = mode;
 
+        if (mode == Mode.INTAKE) {
+            IArm arm = IArm.getInstance();
+            if (arm.getShoulderAngle().getDegrees() < -90) {
+                this.lastIntakeSide = IntakeSide.BACK;
+            }
+            else {
+                this.lastIntakeSide = IntakeSide.FRONT;
+            }
+        }
+
         switch (side) {
             case SAME:
+                if (lastIntakeSide == IntakeSide.FRONT) {
+                    switch (piece) {
+                        case CONE: return switchCone();
+                        case CUBE: return switchCube();
+                    }
+                }
                 switch (piece) {
-                    case CONE: return switchCone();
-                    case CUBE: return switchCube();
+                    case CONE: return switchCone().switchSides();
+                    case CUBE: return switchCube().switchSides();
                 }
             case OPPOSITE:
+                if (lastIntakeSide == IntakeSide.FRONT) {
+                    switch (piece) {
+                        case CONE: return switchCone();
+                        case CUBE: return switchCube();
+                    }
+                }
                 switch (piece) {
                     case CONE: return switchCone().switchSides();
                     case CUBE: return switchCube().switchSides();
