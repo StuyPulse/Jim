@@ -121,7 +121,7 @@ public interface Settings {
         public interface Shoulder {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(43.75);
-            double MAX_ANGLE = 180; 
+            double MAX_ANGLE = 0; 
             double MIN_ANGLE = -180;
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
