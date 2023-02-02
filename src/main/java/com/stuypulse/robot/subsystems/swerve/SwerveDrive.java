@@ -62,12 +62,22 @@ public class SwerveDrive extends SubsystemBase {
     
     private final SwerveDriveKinematics kinematics;
 
+    private final FieldObject2d[] module2ds;
+
     public SwerveDrive(ISwerveModule... modules) {
         this.modules = modules;
 
         gyro = new AHRS(SPI.Port.kMXP);
 
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
+
+        module2ds = new FieldObject2d[modules.length];
+    }
+
+    public void initFieldObjects(Field2d field) {
+        for (int i = 0; i < modules.length; i++) {
+            module2ds[i] = field.getObject(modules[i].getID()+"-2d");
+        }
     }
     
     private Translation2d[] getModuleOffsets() {

@@ -12,7 +12,6 @@ import com.stuypulse.stuylib.network.limelight.LimelightConstants;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -27,6 +26,7 @@ public class Odometry extends IOdometry {
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
         field = new Field2d();
+        swerve.initFieldObjects(field);
     }
 
     public Pose2d getPose() {
@@ -92,7 +92,7 @@ public class Odometry extends IOdometry {
         field.getObject("pose estimator").setPose(getPose());
         // logging from vision data 
         for(Result result: results){
-            field.getObject("vision" +result.getLimelight().getTableName() ).setPose(result.getPose());
+            field.getObject("vision" + result.getAuthor()).setPose(result.getPose());
         }
         // field.setRobotPose(getPose());
     }
