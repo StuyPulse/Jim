@@ -1,29 +1,28 @@
-package com.stuypulse.robot.commands.Intake;
-
+package com.stuypulse.robot.commands.intake;
 import com.stuypulse.robot.subsystems.intake.IIntake;
 import com.stuypulse.robot.subsystems.intake.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class OuttakeCube extends CommandBase{
+public class IntakeCone extends CommandBase{
     private Intake intake;
-    public OuttakeCube() {
+
+    public IntakeCone(){
         intake = IIntake.getInstance();
         addRequirements(intake);
     }
 
     @Override
-    public void initialize() {
-        intake.cubeIntake();
+    public void initialize(){
+        intake.coneIntake();
     }
-    
     @Override
-    public boolean isFinished() {
+    public boolean isFinished(){
         return false;
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interrupted){
         intake.stop();
     }
 }

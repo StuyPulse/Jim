@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.Intake;
+package com.stuypulse.robot.commands.intake;
 
 import com.stuypulse.robot.subsystems.intake.IIntake;
 import com.stuypulse.robot.subsystems.intake.Intake;
