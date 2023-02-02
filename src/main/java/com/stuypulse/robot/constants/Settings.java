@@ -113,6 +113,9 @@ public interface Settings {
             public interface Turn {
                 double POSITION_CONVERSION = 1;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+
+                double MIN_PID_INPUT = 0;
+                double MAX_PID_INPUT = POSITION_CONVERSION;
             }
         } 
     } 
