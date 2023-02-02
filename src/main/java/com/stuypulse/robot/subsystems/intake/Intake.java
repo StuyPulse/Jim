@@ -26,8 +26,6 @@ public class Intake extends IIntake{
 
     private BStream stalling;
 
-    private GamePiece gamePiece;
-
     public Intake(){
        
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
@@ -70,19 +68,6 @@ public class Intake extends IIntake{
     }
     private boolean hasCube() {
         return isFlipped()? hasCubeBack() : hasCubeFront();
-    }
-
-    //cone or cube
-    private void setGamePiece(){
-        if(hasCube()){
-            gamePiece = GamePiece.cube;
-        } else if(isStalling()){
-            gamePiece = GamePiece.cone;
-        }
-    }
-
-    public GamePiece getGamePiece(){
-        return gamePiece;
     }
 
     // WRIST ORIENTATION
@@ -150,9 +135,6 @@ public class Intake extends IIntake{
         if (isStalling() || hasCube()) {
             stop();
         }
-
-        setGamePiece();
-
     
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
