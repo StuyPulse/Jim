@@ -46,12 +46,12 @@ public class Intake extends IIntake{
 
     // CONE DETECTION (stall detection)
 
-    private double maxCurrentDraw(){
-        return frontMotor.getOutputCurrent() > backMotor.getOutputCurrent()? frontMotor.getOutputCurrent() : backMotor.getOutputCurrent();
+    private double getMaxCurrent(){
+        return Math.max(frontMotor.getOutputCurrent(), backMotor.getOutputCurrent());
     }
 
     private boolean isMomentarilyStalling() {
-        return maxCurrentDraw() > STALL_CURRENT.doubleValue();
+        return getMaxCurrent() > STALL_CURRENT.doubleValue();
     }
 
     private boolean isStalling() {
