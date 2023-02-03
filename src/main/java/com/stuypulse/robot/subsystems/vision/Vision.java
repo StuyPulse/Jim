@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Vision extends IVision {
 
     private final Limelight[] limelights;
-    private final List<Result> results;
+    private List<Result> results;
 
     public Vision() {
         String[] hostNames = LIMELIGHTS;
@@ -75,10 +75,20 @@ public class Vision extends IVision {
 
     @Override
     public void periodic(){
+        // clears and updates results
+        results = getResults();
+
+        // store data in hashmap
+        HashMap<String, AprilTagData> data = new HashMap<>();
         for (Result result : results) {
-            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/X", result.getPose().getX());
-            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/Y", result.getPose().getY());
-            SmartDashboard.putNumber("Vision/" + result.getAuthor() + "/Degrees", result.getPose().getRotation().getDegrees());
+            data.put(result.getAuthor(),result.getData());
+        }
+
+        // log each limelight
+        for(String ll : data.keySet()){
+            SmartDashboard.putNumber("Vision/" +  ll + "/X", data.get(ll).pose.getX());
+            SmartDashboard.putNumber("Vision/" +  ll + "/Y", data.get(ll).pose.getX());
+            SmartDashboard.putNumber("Vision/" +  ll + "/Degrees", data.get(ll).pose.getRotation().getDegrees());
         }
     }
 }
