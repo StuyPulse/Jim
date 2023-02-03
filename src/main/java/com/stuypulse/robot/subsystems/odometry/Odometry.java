@@ -25,8 +25,8 @@ public class Odometry extends IOdometry {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
         field = new Field2d();
 
-        SmartDashboard.putData("Field", field);
         swerve.initFieldObjects(field);
+        SmartDashboard.putData("Field", field);
     }
 
     public Pose2d getPose() {

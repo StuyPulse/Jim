@@ -24,6 +24,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -190,6 +192,16 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
+        IOdometry odometry = IOdometry.getInstance();
+        Pose2d pose = odometry.getPose();
+        Rotation2d angle = odometry.getRotation();
+        for (int i = 0; i < modules.length; ++i) {
+            module2ds[i].setPose(new Pose2d(
+                pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
+                modules[i].getState().angle.plus(angle)
+            ));
+        }
+
         SmartDashboard.putNumber("Swerve/Gyro Angle", getGyroAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
