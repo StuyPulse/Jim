@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
+import com.stuypulse.robot.commands.intake.IntakeCube;
+import com.stuypulse.robot.commands.intake.OuttakeCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.swerve.FollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
@@ -32,11 +35,15 @@ public class ThreePieceDock extends SequentialCommandGroup {
         // Drive to first piece and intake
         addCommands(
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
-
+            
+            new ArmFollowTrajectory(),
+            new OuttakeCube(),
+            new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            
             new FollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative(),
-
+            new IntakeCube(),
             new WaitCommand(INTAKE_ACQUIRE_TIME)
         );
 
@@ -47,7 +54,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative(),
-
+            new ArmFollowTrajectory(),
+            new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
@@ -59,7 +67,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Intake Piece Two")
             ).fieldRelative(),
-
+            new IntakeCube(),
             new WaitCommand(INTAKE_ACQUIRE_TIME)
 
         );
@@ -73,7 +81,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Score Piece Two")
             ).fieldRelative(),
-
+            new ArmFollowTrajectory(),
+            new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
 
         );
