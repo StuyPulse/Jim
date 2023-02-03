@@ -40,8 +40,9 @@ public interface Settings {
     }
 
     public interface Vision {
-        double TOLERANCE = -1;
-        double COMMUNITY_DISTANCE = Field.PEG_TO_CHARGING_STATION_EDGE - Swerve.LENGTH/2;
+        double USABLE_DISTANCE = Units.feetToMeters(11);
+        double TRUST_DISTANCE = Units.feetToMeters(6);
+        double TRUST_ANGLE = 50;
 
         public interface Limelight {
             String [] LIMELIGHTS = {"limelight-front","limelight-back"};
@@ -62,7 +63,7 @@ public interface Settings {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
 
-            PathConstraints CONSTRAINTS = new PathConstraints(3.5, 2.5);
+            PathConstraints CONSTRAINTS = new PathConstraints(2, 1);
         }
         
         public interface Turn {
