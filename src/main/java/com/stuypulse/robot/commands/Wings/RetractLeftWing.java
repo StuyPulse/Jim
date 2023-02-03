@@ -1,8 +1,9 @@
-package com.stuypulse.robot.commands.Wings;
+package com.stuypulse.robot.commands.wings;
 import com.stuypulse.robot.subsystems.wings.IWings;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RetractLeftWing extends CommandBase{
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+public class RetractLeftWing extends InstantCommand{
     private IWings wings;
 
     public RetractLeftWing(){
@@ -14,10 +15,4 @@ public class RetractLeftWing extends CommandBase{
     public void initialize(){
         wings.retractLeft();
     }
-
-    @Override
-    public boolean isFinished(){
-        return true;
-    }
-
 }

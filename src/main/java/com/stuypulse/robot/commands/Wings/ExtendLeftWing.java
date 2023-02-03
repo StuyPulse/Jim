@@ -1,8 +1,9 @@
-package com.stuypulse.robot.commands.Wings;
-import com.stuypulse.robot.subsystems.wings.IWings;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+package com.stuypulse.robot.commands.wings;
 
-public class ExtendLeftWing extends CommandBase{
+import com.stuypulse.robot.subsystems.wings.IWings;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+public class ExtendLeftWing extends InstantCommand{
     private IWings wings;
 
     public ExtendLeftWing(){
@@ -13,11 +14,6 @@ public class ExtendLeftWing extends CommandBase{
     @Override
     public void initialize(){
         wings.extendLeft();
-    }
-
-    @Override
-    public boolean isFinished(){
-        return true;
     }
 
 }
