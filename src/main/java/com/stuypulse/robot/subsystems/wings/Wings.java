@@ -50,7 +50,6 @@ public class Wings extends IWings {
         if (leftLatch.get() && !isEngaged(leftDeploy)) {
             leftLatch.set(false);
             leftDeployTime = timer.getTime();
-            
         }
     }
 
@@ -85,15 +84,6 @@ public class Wings extends IWings {
         else{
             return false;
         }
-    }
-
-    @Override
-    public void setAll(){
-        System.out.println("POOPFUCKASAFLKHSAFLK");
-        rightLatch.set(true);
-        rightDeploy.set(DoubleSolenoid.Value.kForward);
-        leftLatch.set(true);
-        leftDeploy.set(DoubleSolenoid.Value.kForward);
     }
 
     @Override
