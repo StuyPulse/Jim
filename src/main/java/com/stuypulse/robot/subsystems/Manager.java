@@ -1,14 +1,14 @@
 package com.stuypulse.robot.subsystems;
 
-import static com.stuypulse.robot.constants.ArmTrajectories.*;
-
-import com.stuypulse.robot.constants.ArmTrajectories.SameSide.*;
-import com.stuypulse.robot.subsystems.arm.IArm;
-import com.stuypulse.robot.subsystems.intake.IIntake;
+import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
-public class Manager {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+public class Manager extends SubsystemBase {
+
+    // singleton
     private static Manager instance;
 
     public static Manager getInstance() {
@@ -18,203 +18,162 @@ public class Manager {
         return instance;
     }
 
-    public enum Piece {
+    // game piece to score
+    public enum GamePiece {
         CONE,
         CUBE
     }
 
-    public enum Level {
+    // level to score at
+    public enum NodeLevel {
         HIGH, 
         MID, 
         LOW
     }
 
-    public enum Side {
-        SAME,
-        OPPOSITE
-    }
-
+    // side to intake on
     public enum IntakeSide {
         FRONT, 
         BACK
     }
 
-    public enum Mode {
-        INTAKE,
-        READY,
-        SCORE,
-        NEUTRAL
+    // side to score on (relative to intake side)
+    public enum ScoreSide {
+        SAME,
+        OPPOSITE
     }
 
-    private Piece piece;
-    private Level level;
-    private Side side;
-    private Mode mode;
-    private IntakeSide lastIntakeSide;
+
+    private GamePiece gamePiece;
+    private NodeLevel nodeLevel;
+    private IntakeSide intakeSide;
+    private ScoreSide scoreSide;
 
     public Manager() {
-        this.piece = Piece.CONE;
-        this.level = Level.HIGH;
-        this.side = Side.SAME;
-        this.mode = Mode.NEUTRAL;
-        this.lastIntakeSide = IntakeSide.FRONT;
+        gamePiece = GamePiece.CUBE;
+        nodeLevel = NodeLevel.HIGH;
+        intakeSide = IntakeSide.FRONT;
+        scoreSide = ScoreSide.SAME;
     }
 
-    public Level getLevel() {
-        return level;
+    /** Generate Intake Trajectories **/
+
+    public ArmTrajectory getIntakeTrajectory() {
+        final ArmTrajectory intakeTrajectory = 
+            new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0));
+
+        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
     }
 
-    public Piece getPiece() {
-        return piece;
-    }
+    /** Generate Ready Trajectories **/
 
-    public Side getSide() {
-        return side;
-    }
+    /** puts the trajectory on the correct side */
+    private ArmTrajectory normalize(ArmTrajectory trajectory) {
+        boolean needsFlip = (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK) ||
+            (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK);
 
-    public Mode getMode() {
-        return mode;
+        return needsFlip ? trajectory.flipped() : trajectory;
     }
+    
 
-    public ArmTrajectory append(ArmTrajectory path, ArmTrajectory pathToAppend) {
-        return path.addState(pathToAppend);
-    }
+    public ArmTrajectory getReadyTrajectory() {
+        switch (nodeLevel) {
+            case LOW:
+                return getIntakeTrajectory();
 
-    public ArmTrajectory toHome() {
-        return NEUTRAL;
-    }
+            case MID:
+                return getMidReadyTrajectory();
 
-    public ArmTrajectory switchSides(ArmTrajectory path) {
-        return path.switchSides();
-    }
+            case HIGH:
+                return getHighReadyTrajectory();
 
-    public ArmTrajectory switchConeHigh() {
-        switch (mode) {
-            case INTAKE: 
-            case READY: return High.Cone.READY;
-            case SCORE: return High.Cone.SCORE;
-            case NEUTRAL: return High.Cone.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-    public ArmTrajectory switchConeMid() {
-        switch (mode) {
-            case INTAKE: 
-            case READY: return Mid.Cone.READY;
-            case SCORE: return Mid.Cone.SCORE;
-            case NEUTRAL: return Mid.Cone.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-    public ArmTrajectory switchConeLow() {
-        switch (mode) {
-            case INTAKE: 
-            case READY: return Low.Cone.READY;
-            case SCORE: return Low.Cone.SCORE;
-            case NEUTRAL: return Low.Cone.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-
-    public ArmTrajectory switchCubeHigh() {
-        switch (mode) {
-            case INTAKE:
-            case READY: return High.Cube.READY;
-            case SCORE: return High.Cube.SCORE;
-            case NEUTRAL: return High.Cube.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-    public ArmTrajectory switchCubeMid() {
-        switch (mode) {
-            case INTAKE:
-            case READY: return Mid.Cube.READY;
-            case SCORE: return Mid.Cube.SCORE;
-            case NEUTRAL: return Mid.Cube.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-    public ArmTrajectory switchCubeLow() {
-        switch (mode) {
-            case INTAKE:
-            case READY: return Low.Cube.READY;
-            case SCORE: return Low.Cube.SCORE;
-            case NEUTRAL: return Low.Cube.SCORE_TO_NEUTRAL;
-        }
-        return NEUTRAL;
-    }
-
-    public ArmTrajectory switchCone() {
-        switch (level) {
-            case HIGH: return switchConeHigh();
-            case MID: return switchConeMid();
-            case LOW: return switchConeLow();
-            default: return NEUTRAL;
-        }
-    }
-    public ArmTrajectory switchCube() {
-        switch (level) {
-            case HIGH: return switchCubeHigh();
-            case MID: return switchCubeMid();
-            case LOW: return switchCubeLow();
-            default: return NEUTRAL;
+            default:
+                return getNeutralTrajectory();
         }
     }
 
-    public ArmTrajectory getTrajectory(Side side, Mode mode) {
-        this.side = side;
-        this.mode = mode;
+    private ArmTrajectory getMidReadyTrajectory() {
+        switch (gamePiece) {
+            case CONE:
+                return normalize(ArmTrajectory.fromStates(
+                        ArmState.fromDegrees(-45, 90)));
 
-        if (mode == Mode.INTAKE) {
-            IArm arm = IArm.getInstance();
-            if (arm.getShoulderAngle().getDegrees() < -90) {
-                this.lastIntakeSide = IntakeSide.BACK;
-            }
-            else {
-                this.lastIntakeSide = IntakeSide.FRONT;
-            }
+            case CUBE:
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(0, -90)));
+
+            default:
+                return getNeutralTrajectory();
         }
-
-        switch (side) {
-            case SAME:
-                if (lastIntakeSide == IntakeSide.FRONT) {
-                    switch (piece) {
-                        case CONE: return switchCone();
-                        case CUBE: return switchCube();
-                    }
-                }
-                switch (piece) {
-                    case CONE: return switchCone().switchSides();
-                    case CUBE: return switchCube().switchSides();
-                }
-            case OPPOSITE:
-                if (lastIntakeSide == IntakeSide.FRONT) {
-                    switch (piece) {
-                        case CONE: return switchCone();
-                        case CUBE: return switchCube();
-                    }
-                }
-                switch (piece) {
-                    case CONE: return switchCone().switchSides();
-                    case CUBE: return switchCube().switchSides();
-                }
-            default: return NEUTRAL;
-        }        
     }
 
-    public void setLevel(Level level) {
-        this.level = level;
+    private ArmTrajectory getHighReadyTrajectory() {
+        switch (gamePiece) {
+            case CONE:
+                return normalize(ArmTrajectory.fromStates(
+                        ArmState.fromDegrees(0, 90)));
+
+            case CUBE:
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(0, -90)));
+
+            default:
+                return getNeutralTrajectory();
+        }
     }
 
-    public void setPiece(Piece piece) {
-        this.piece = piece;
+    /** Generate Score Trajectories **/
+
+    public ArmTrajectory getScoreTrajectory() {
+        return getNeutralTrajectory();
     }
 
-    public void setSide(Side side) {
-        this.side = side;
+    /** Generate Neutral Trajectories **/
+
+    public ArmTrajectory getNeutralTrajectory() {
+        return ArmTrajectory.fromStates(ArmState.fromDegrees(-90, +90));
     }
 
-    public void setMode(Mode mode) {
-        this.mode = mode;
+    /** Change and Read State **/
+    public GamePiece getGamePiece() {
+        return gamePiece;
+    }
+
+    public void setGamePiece(GamePiece gamePiece) {
+        this.gamePiece = gamePiece;
+    }
+
+    public NodeLevel getNodeLevel() {
+        return nodeLevel;
+    }
+
+    public void setNodeLevel(NodeLevel nodeLevel) {
+        this.nodeLevel = nodeLevel;
+    }
+
+    public IntakeSide getIntakeSide() {
+        return intakeSide;
+    }
+
+    public void setIntakeSide(IntakeSide intakeSide) {
+        this.intakeSide = intakeSide;
+    }
+
+    public ScoreSide getScoreSide() {
+        return scoreSide;
+    }
+
+    public void setScoreSide(ScoreSide scoreSide) {
+        this.scoreSide = scoreSide;
+    }
+
+
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
+        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
+        SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
+        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
     }
 }
