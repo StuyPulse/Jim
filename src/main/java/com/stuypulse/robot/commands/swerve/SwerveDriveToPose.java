@@ -4,9 +4,12 @@ import com.stuypulse.robot.constants.Settings.AlignmentCommand.Rotation;
 import com.stuypulse.robot.constants.Settings.AlignmentCommand.Translation;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
+import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,9 +26,12 @@ public class SwerveDriveToPose extends CommandBase{
         this.swerve = SwerveDrive.getInstance();
         this.targetPose = targetPose;
 
-        xPID = new PIDController(Translation.P,Translation.I,Translation.D);
-        yPID = new PIDController(Translation.P, Translation.I, Translation.D);
-        anglePID = new AnglePIDController(Rotation.P, Rotation.I, Rotation.D);
+        xPID =  (PIDController) new PIDController(Translation.P,Translation.I,Translation.D)
+            .setSetpointFilter(new MotionProfile(3, 2));
+        yPID = (PIDController) new PIDController(Translation.P, Translation.I, Translation.D)
+            .setSetpointFilter(new MotionProfile(3, 2));
+        anglePID = (AnglePIDController )new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
+            .setSetpointFilter(new AMotionProfile(5, 4));
 
         addRequirements(swerve);
     }
