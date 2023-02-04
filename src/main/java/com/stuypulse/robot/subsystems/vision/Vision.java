@@ -10,12 +10,14 @@ import static com.stuypulse.robot.constants.Field.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision extends IVision {
 
@@ -55,6 +57,7 @@ public class Vision extends IVision {
         return results;
     }
 
+    // assigns error to data and returns a result 
     private Result process(AprilTagData data) {
         double distance = distanceToTarget(data.pose, data.id);
         boolean inZone = distance <= COMMUNITY_DISTANCE;
@@ -91,6 +94,7 @@ public class Vision extends IVision {
 
         results.clear();
         for (int i = 0; i < limelights.length; ++i) {
+            String name = LIMELIGHTS[i];
             var ll = limelights[i];
             var pose2d = limelightPoses[i];
             
@@ -98,9 +102,15 @@ public class Vision extends IVision {
             var aprilTagData = ll.getAprilTagData();
             
             if (aprilTagData.isPresent()) {
+                SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
+                SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
+                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
                 pose2d.setPose(aprilTagData.get().pose);
                 results.add(process(aprilTagData.get()));
             } else {
+                SmartDashboard.putNumber("Vision/" + name + "/X" , Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name + "/Y" , Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
                 pose2d.setPose(kNoPose);
             }
         }

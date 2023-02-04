@@ -1,8 +1,28 @@
 {
   "NetworkTables": {
+    "retained": {
+      "limelight": {
+        "open": true
+      }
+    },
     "transitory": {
       "SmartDashboard": {
-        "Intake": {
+        "Odometry": {
+          "open": true
+        },
+        "Settings": {
+          "open": true
+        },
+        "Vision": {
+          "com.stuypulse.robot.util.Limelight@19d31f3": {
+            "open": true
+          },
+          "limelight": {
+            "open": true
+          },
+          "open": true
+        },
+        "Wrist": {
           "open": true
         },
         "open": true
@@ -25,6 +45,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -32,7 +57,7 @@
     "Clients": {
       "open": true
     },
-    "Connections": {
+    "NT3@10.6.94.97:57256": {
       "open": true
     },
     "Server": {
@@ -41,8 +66,7 @@
       },
       "Subscribers": {
         "open": true
-      },
-      "open": true
+      }
     },
     "visible": true
   },
