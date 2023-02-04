@@ -26,8 +26,6 @@ public class Intake extends IIntake{
 
     private BStream stalling;
 
-    private GamePiece gamePiece;
-
     public Intake(){
        
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
@@ -38,7 +36,7 @@ public class Intake extends IIntake{
 
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
-            .polling(Settings.DT);
+            .polling(Settings.DT/2);
 
         frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
         frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
@@ -48,12 +46,12 @@ public class Intake extends IIntake{
 
     // CONE DETECTION (stall detection)
 
-    private double maxCurrentDraw(){
-        return frontMotor.getOutputCurrent() > backMotor.getOutputCurrent()? frontMotor.getOutputCurrent() : backMotor.getOutputCurrent();
+    private double getMaxCurrent(){
+        return Math.max(frontMotor.getOutputCurrent(), backMotor.getOutputCurrent());
     }
 
     private boolean isMomentarilyStalling() {
-        return maxCurrentDraw() > STALL_CURRENT.doubleValue();
+        return getMaxCurrent() > STALL_CURRENT.doubleValue();
     }
 
     private boolean isStalling() {
@@ -72,19 +70,6 @@ public class Intake extends IIntake{
         return isFlipped()? hasCubeBack() : hasCubeFront();
     }
 
-    //cone or cube
-    private void setGamePiece(){
-        if(hasCube()){
-            gamePiece = GamePiece.cube;
-        } else if(isStalling()){
-            gamePiece = GamePiece.cone;
-        }
-    }
-
-    public GamePiece getGamePiece(){
-        return gamePiece;
-    }
-
     // WRIST ORIENTATION
 
     private boolean isFlipped() {
@@ -94,6 +79,7 @@ public class Intake extends IIntake{
 
     // INTAKING MODES
 
+    @Override
     public void stop(){
         frontMotor.stopMotor();
         backMotor.stopMotor();
@@ -149,9 +135,6 @@ public class Intake extends IIntake{
         if (isStalling() || hasCube()) {
             stop();
         }
-
-        setGamePiece();
-
     
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
