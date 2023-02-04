@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.arm.*;
+import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
@@ -85,7 +86,8 @@ public class RobotContainer {
 
 
         operator.getRightTriggerButton()
-            .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory(manager.getIntakeTrajectory())))
+            // .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory2(manager.getIntakeTrajectory())))
+            .onTrue(new ArmIntake())
             .onFalse(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-90, +90))))
         ;
 
@@ -93,7 +95,9 @@ public class RobotContainer {
         operator.getDPadLeft().onTrue(manager.runOnce(() -> manager.setIntakeSide(IntakeSide.BACK)));
 
         operator.getLeftTriggerButton()
-            .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory(manager.getReadyTrajectory())));
+            // .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory2(manager.getReadyTrajectory())))
+            .onTrue(new ArmReady())    
+        ;
 
         // operator.getRightTriggerButton()
         //     .onTrue(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0))))
