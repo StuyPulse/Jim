@@ -2,23 +2,24 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
+import com.stuypulse.stuylib.network.SmartNumber;
 
-import static com.stuypulse.robot.constants.Field.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision extends IVision {
 
     private final Limelight[] limelights;
+
+    private final Field2d cameraField2d;
 
     public Vision() {
         String[] hostNames = LIMELIGHTS;
@@ -30,6 +31,9 @@ public class Vision extends IVision {
                 PortForwarder.add(port, hostNames[i] + ".local", port);
             }
         }
+
+        cameraField2d = new Field2d();
+        SmartDashboard.putData(cameraField2d);
     }
 
     public List<Result> getResults() {
@@ -46,11 +50,16 @@ public class Vision extends IVision {
     }
 
     private Result process(AprilTagData data) {
+        cameraField2d.setRobotPose(data.pose);
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
-        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
-        SmartDashboard.putNumber("Vision/Distance", distance);
+        // SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
+        // SmartDashboard.putNumber("Vision/Distance", distance);
+        // SmartDashboard.putNumber("Vision/Pose Degrees", data.pose.getRotation().getDegrees());
+        // SmartDashboard.putNumber("Vision/Pose X", data.pose.getX());
+        // SmartDashboard.putNumber("Vision/Pose Y", data.pose.getY());
+
 
         if (Math.abs(angleDegrees) > TRUST_ANGLE)
             return new Result(data, Noise.HIGH);
@@ -67,7 +76,6 @@ public class Vision extends IVision {
         else if (inTolerance) {
             error = Noise.MID;
         }
-
         return new Result(data, error);
     }
 
@@ -100,13 +108,32 @@ public class Vision extends IVision {
 
     @Override
     public void periodic(){
-        for (Limelight ll : limelights){
-            String name = ll.getTableName();
-            // TODO: check if camera is connected
+        for (Limelight ll : limelights) {
+            // if (!ll.isConnected()) {
+            //     System.out.println("[Error] Limelight " + ll.getTableName() + " is not connected!");
+            //     continue;
+            // }
 
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose X", pose.getX());
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose Y", pose.getY());
-            // SmartDashboard.putNumber("Vision/" + name + "/Pose Rotation", pose.getRotation().getDegrees());   
+            String name = ll.getTableName();
+
+            Optional<AprilTagData> data = ll.getPoseData();
+
+            SmartDashboard.putBoolean("Vision/Is Connected", data.isPresent());
+
+            if (data.isPresent()) {
+                Pose2d pose = data.get().pose;
+
+                this.process(data.get());
+                SmartDashboard.putNumber("Vision/" + name +  "/Pose X", pose.getX());
+                SmartDashboard.putNumber("Vision/" + name +  "/Pose Y", pose.getY());
+                SmartDashboard.putNumber("Vision/" + name + "/Pose Rotation", pose.getRotation().getDegrees());
+                
+
+            } else {
+                SmartDashboard.putNumber("Vision/" + name +  "/Pose X", Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name +  "/Pose Y", Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name + "/Pose Rotation", Double.NaN);   
+            }
         }
     }
-}
+} 

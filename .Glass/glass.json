@@ -8,13 +8,21 @@
         "Arm": {
           "open": true
         },
+        "Vision": {
+          "limelight": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Arm Mech2d": "Mechanism2d",
-      "/SmartDashboard/Autonomous": "String Chooser"
+      "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/LED Mech2d": "Mechanism2d"
     },
     "windows": {
       "/SmartDashboard/Arm Mech2d": {
@@ -31,13 +39,14 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "127.0.0.1"
+    "serverTeam": "10.6.94.2",
+    "visible": false
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 448,
+          "height": 0,
           "series": [
             {
               "color": [

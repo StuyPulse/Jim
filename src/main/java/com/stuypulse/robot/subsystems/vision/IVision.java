@@ -28,7 +28,7 @@ public abstract class IVision extends SubsystemBase {
 
     public static class Result {
         public final AprilTagData data;
-        public final Noise noise;
+        public Noise noise;
 
         public Result(AprilTagData data, Noise error) {
             this.data = data;

@@ -10,6 +10,7 @@ import com.stuypulse.robot.subsystems.vision.IVision.Result;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -18,15 +19,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Odometry extends IOdometry {
     private final SwerveDrivePoseEstimator poseEstimator;
+    private final SwerveDriveOdometry odometry;
     private final Field2d field;
 
     public Odometry() {   
         var swerve = SwerveDrive.getInstance();
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
+        odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, Units.degreesToRadians(10)));
         field = new Field2d();
 
-        SmartDashboard.putData("Field", field);
+        SmartDashboard.putData("Field", field); 
         swerve.initFieldObjects(field);
     }
 
@@ -42,6 +45,9 @@ public class Odometry extends IOdometry {
                     drive.getModulePositions(), 
                     pose
         );
+        odometry.resetPosition(drive.getGyroAngle(), 
+        drive.getModulePositions(), 
+        pose);
     }
 
     
@@ -55,8 +61,10 @@ public class Odometry extends IOdometry {
         SwerveDrive drive = SwerveDrive.getInstance();
         IVision vision = Vision.getInstance();
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
 
         for (Result result : vision.getResults()) {
+            // result.noise = Noise.HIGH;
             switch (result.getNoise()) {
                 case LOW:
                     SmartDashboard.putString("Odometry/Noise", "LOW");
@@ -70,7 +78,9 @@ public class Odometry extends IOdometry {
                     // poseEstimator.resetPosition(
                     //     drive.getGyroAngle(), 
                     //     drive.getModulePositions(),
-                    //     result.getPose());
+                    //     result.getPose());[]\[]\
+
+                    
                     break;
 
                 case MID:
@@ -89,6 +99,15 @@ public class Odometry extends IOdometry {
             }
         }    
         field.setRobotPose(getPose());
+        SmartDashboard.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
+        SmartDashboard.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
+
+        
+        SmartDashboard.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        
     }
 
 }
