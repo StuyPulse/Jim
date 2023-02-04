@@ -6,7 +6,7 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OuttakeCone extends CommandBase{
-    private Intake intake;
+    private IIntake intake;
     public OuttakeCone(){
         intake = IIntake.getInstance();
         addRequirements(intake);

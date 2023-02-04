@@ -6,7 +6,7 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OuttakeCube extends CommandBase{
-    private Intake intake;
+    private IIntake intake;
     public OuttakeCube() {
         intake = IIntake.getInstance();
         addRequirements(intake);
