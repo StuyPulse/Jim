@@ -7,13 +7,12 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
-import com.stuypulse.robot.subsystems.arm.*;
-import com.stuypulse.robot.subsystems.Pump;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.wings.*;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -33,11 +32,13 @@ public class RobotContainer {
     // Subsystem
     public final IIntake intake = IIntake.getInstance();
     public final SwerveDrive swerve = SwerveDrive.getInstance();
-    public final IVision vision = Vision.getInstance();
-    public final IOdometry odometry = Odometry.getInstance();
+    public final IVision vision = IVision.getInstance();
+    public final IOdometry odometry = IOdometry.getInstance();
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
+
+    public final LEDController leds = LEDController.getInstance();
     public final Pump pump = new Pump();
 
     // Autons

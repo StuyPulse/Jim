@@ -19,6 +19,8 @@ public abstract class IOdometry extends SubsystemBase {
 
     public abstract Field2d getField();
 
+    public abstract void reset( Pose2d pose2d);
+    
     public abstract Pose2d getPose();
 
     public final Translation2d getTranslation() {

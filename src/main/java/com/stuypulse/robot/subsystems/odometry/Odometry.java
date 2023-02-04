@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.odometry;
 
+import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
@@ -8,7 +9,6 @@ import com.stuypulse.robot.subsystems.vision.IVision.Result;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,11 +23,24 @@ public class Odometry extends IOdometry {
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
         field = new Field2d();
+        swerve.initFieldObjects(field);
     }
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
+
+    @Override
+    public void reset(Pose2d pose) {
+        SwerveDrive drive = SwerveDrive.getInstance();
+        poseEstimator.resetPosition(
+                    drive.getGyroAngle(), 
+                    drive.getModulePositions(), 
+                    pose
+        );
+    }
+
+    
 
     public Field2d getField() {
         return field;

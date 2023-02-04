@@ -33,7 +33,7 @@ public class Wings extends IWings {
         leftRetractTime = -1.0;
         
         rightDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RIGHT_DEPLOY_FORWARD, RIGHT_DEPLOY_REVERSE);
-        rightLatch = new Solenoid(PneumaticsModuleType.CTREPCM, LEFT_LATCH);
+        rightLatch = new Solenoid(PneumaticsModuleType.CTREPCM, RIGHT_LATCH);
         rightDeployTime = -1.0;
         rightRetractTime = -1.0;
 
