@@ -16,6 +16,7 @@ import com.stuypulse.robot.commands.auton.TwoPieceDock;
 import com.stuypulse.robot.commands.odometry.OdometryReset;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveDriveToPose;
+import com.stuypulse.robot.commands.Wings.*;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
