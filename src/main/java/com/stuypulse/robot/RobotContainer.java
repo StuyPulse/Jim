@@ -99,7 +99,7 @@ public class RobotContainer {
 
         operator.getLeftTriggerButton()
             // .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory2(manager.getReadyTrajectory())))
-            .onTrue(new ArmReady())    
+            .onTrue(manager.runOnce(() -> manager.setScoreSide(ScoreSide.OPPOSITE)).andThen(new ArmReady()))
         ;
 
         // operator.getRightTriggerButton()
