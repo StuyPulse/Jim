@@ -71,7 +71,7 @@ public class Manager extends SubsystemBase {
     /** NOTE: trajectory that score "opposite side" must have angles between -90 and -180. **/
     private ArmTrajectory normalize(ArmTrajectory trajectory) {
         boolean needsFlip = (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK) ||
-            (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK);
+            (scoreSide == ScoreSide.OPPOSITE && intakeSide == IntakeSide.FRONT);
 
         return needsFlip ? trajectory.flipped() : trajectory;
     }
