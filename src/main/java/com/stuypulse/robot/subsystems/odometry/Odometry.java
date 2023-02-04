@@ -57,9 +57,10 @@ public class Odometry extends IOdometry {
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
 
         for (Result result : vision.getResults()) {
+            SmartDashboard.putString("Odometry/Noise", result.getNoise().name());
+
             switch (result.getNoise()) {
                 case LOW:
-                    SmartDashboard.putString("Odometry/Noise", "LOW");
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
@@ -74,7 +75,6 @@ public class Odometry extends IOdometry {
                     break;
 
                 case MID:
-                    SmartDashboard.putString("Odometry/Noise", "MID");
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
@@ -84,7 +84,6 @@ public class Odometry extends IOdometry {
                     break;
                 
                 case HIGH:
-                    SmartDashboard.putString("Odometry/Noise", "HIGH");
                     break; // DO NOT DO ANYTHING
             }
         }    
