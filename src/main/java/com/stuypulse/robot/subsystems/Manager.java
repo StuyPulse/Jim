@@ -68,6 +68,7 @@ public class Manager extends SubsystemBase {
     /** Generate Ready Trajectories **/
 
     /** puts the trajectory on the correct side */
+    /** NOTE: trajectory that score "opposite side" must have angles between -90 and -180. **/
     private ArmTrajectory normalize(ArmTrajectory trajectory) {
         boolean needsFlip = (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK) ||
             (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK);
@@ -166,8 +167,6 @@ public class Manager extends SubsystemBase {
     public void setScoreSide(ScoreSide scoreSide) {
         this.scoreSide = scoreSide;
     }
-
-
 
     @Override
     public void periodic() {
