@@ -49,7 +49,6 @@ public class RobotContainer {
 
     public final LEDController leds = LEDController.getInstance();
     public final Pump pump = new Pump();
-
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
