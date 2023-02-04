@@ -28,6 +28,7 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +53,8 @@ public class RobotContainer {
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
+
+    private static Alliance cachedAlliance;
 
     // Robot container
 
@@ -97,5 +100,13 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autonChooser.getSelected();
+    }
+
+    public static void setCachedAlliance(Alliance alliance) {
+        cachedAlliance = alliance;
+    }
+
+    public static Alliance getCachedAlliance() {
+        return cachedAlliance;
     }
 }
