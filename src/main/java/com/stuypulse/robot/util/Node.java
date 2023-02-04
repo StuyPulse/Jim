@@ -1,5 +1,7 @@
 package com.stuypulse.robot.util;
 
+import javax.crypto.spec.GCMParameterSpec;
+
 public class Node {
     private double g;
     private double h;
@@ -83,12 +85,24 @@ public class Node {
         setF(getG() + getH()); 
     }
 
-    // public boolean checkBetterPath(Node currNode, double cost) {
-    //     double ccost = currNode.getH();
-    // }
+    public void updateNode(Node currNode, double cost) {
+        double ccost = currNode.getG() + cost;
+        setParent(currNode);
+        setG(ccost);
+        calculateFinalCost();
+    }
+
+    public boolean checkBetterPath(Node currNode, double cost) {
+        double ccost = currNode.getG() + cost;
+        if (ccost < getG()) {
+            updateNode(currNode, cost);
+            return true;
+        }
+        return false;
+    }
     // calculate the cost 
     public void calculateH(Node endNode) {
-        
+        this.h = Math.pow(Math.pow(endNode.getRow() - getRow(), 2) + Math.pow(endNode.getColumn(), -getColumn()), 0.5);
     }
 
 }
