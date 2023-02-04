@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 
@@ -10,16 +11,24 @@ import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 
 public class Vision extends IVision {
 
+    private static final Pose2d kNoPose = 
+        new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
+
     private final Limelight[] limelights;
-    private List<Result> results;
+    private final List<Result> results;
+
+    private final FieldObject2d[] limelightPoses;
 
     public Vision() {
+        // setup limelight objects
         String[] hostNames = LIMELIGHTS;
         limelights = new Limelight[hostNames.length];
 
@@ -30,23 +39,23 @@ public class Vision extends IVision {
             }
         }
 
+        // constantly store results in array
         results = new ArrayList<>();
+
+        // store field objects to log poses from limelights
+        Field2d field = IOdometry.getInstance().getField();
+        limelightPoses = new FieldObject2d[limelights.length];
+        for (int i = 0; i < limelightPoses.length; ++i) {
+            limelightPoses[i] = field.getObject(hostNames[i] + " pose");
+        }
     }
 
+    @Override
     public List<Result> getResults() {
-        results.clear();
-
-        for (Limelight ll : limelights){
-            Optional<AprilTagData> data = ll.getPoseData();
-
-            if(data.isPresent()) {
-                results.add(process(data.get(),ll));
-            }
-        }
         return results;
     }
 
-    private Result process(AprilTagData data, Limelight limelight) {
+    private Result process(AprilTagData data) {
         double distance = distanceToTarget(data.pose, data.id);
         boolean inZone = distance <= COMMUNITY_DISTANCE;
         boolean inTolerance = distance <= TOLERANCE;
@@ -61,7 +70,7 @@ public class Vision extends IVision {
             error = Noise.MID;
         }
 
-        return new Result(data, error, limelight.getTableName());
+        return new Result(data, error);
     }
 
 
@@ -75,20 +84,25 @@ public class Vision extends IVision {
 
     @Override
     public void periodic(){
-        // clears and updates results
-        results = getResults();
+        // - clear results array
+        // - update cached data in limelights (nicer to do this once per robot loop)
+        // - update results array 
+        // - log pose onto field and network
 
-        // store data in hashmap
-        HashMap<String, AprilTagData> data = new HashMap<>();
-        for (Result result : results) {
-            data.put(result.getAuthor(),result.getData());
-        }
-
-        // log each limelight
-        for(String ll : data.keySet()){
-            SmartDashboard.putNumber("Vision/" +  ll + "/X", data.get(ll).pose.getX());
-            SmartDashboard.putNumber("Vision/" +  ll + "/Y", data.get(ll).pose.getX());
-            SmartDashboard.putNumber("Vision/" +  ll + "/Degrees", data.get(ll).pose.getRotation().getDegrees());
+        results.clear();
+        for (int i = 0; i < limelights.length; ++i) {
+            var ll = limelights[i];
+            var pose2d = limelightPoses[i];
+            
+            ll.updateAprilTagData();
+            var aprilTagData = ll.getAprilTagData();
+            
+            if (aprilTagData.isPresent()) {
+                pose2d.setPose(aprilTagData.get().pose);
+                results.add(process(aprilTagData.get()));
+            } else {
+                pose2d.setPose(kNoPose);
+            }
         }
     }
 }

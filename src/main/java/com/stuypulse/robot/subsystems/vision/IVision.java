@@ -31,12 +31,10 @@ public abstract class IVision extends SubsystemBase {
     public static class Result {
         public final AprilTagData data;
         public final Noise noise;
-        public final String author;
 
-        public Result(AprilTagData data, Noise error, String author) {
+        public Result(AprilTagData data, Noise error) {
             this.data = data;
             this.noise = error;
-            this.author = author;
         }
 
         public Pose2d getPose() {
@@ -49,10 +47,6 @@ public abstract class IVision extends SubsystemBase {
 
         public Noise getNoise() {
             return noise;
-        }
-
-        public String getAuthor(){
-            return author;
         }
 
         public AprilTagData getData(){

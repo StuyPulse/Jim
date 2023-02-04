@@ -29,6 +29,7 @@ public class Odometry extends IOdometry {
         swerve.initFieldObjects(field);
     }
 
+    @Override
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
@@ -43,8 +44,7 @@ public class Odometry extends IOdometry {
         );
     }
 
-    
-
+    @Override
     public Field2d getField() {
         return field;
     }
@@ -89,12 +89,7 @@ public class Odometry extends IOdometry {
         
 
         // logging from pose estimator
-        field.getObject("pose estimator").setPose(getPose());
-        // logging from vision data 
-        for(Result result: results){
-            field.getObject("vision" + result.getAuthor()).setPose(result.getPose());
-        }
-        // field.setRobotPose(getPose());
+        field.setRobotPose(getPose());
     }
 
 }
