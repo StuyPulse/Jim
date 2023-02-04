@@ -8,6 +8,7 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -45,7 +46,7 @@ public class RobotContainer {
     public final IWings wings = IWings.getInstance();
     
     public final Manager manager = Manager.getInstance();
-    public final LEDController leds = new LEDController(this);
+    public final LEDController leds = LEDController.getInstance();
     public final Pump pump = new Pump();
 
     // Autons
@@ -65,7 +66,9 @@ public class RobotContainer {
     /*** DEFAULTS ***/
     /****************/
 
-    private void configureDefaultCommands() {}
+    private void configureDefaultCommands() {
+        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
+    }
 
     /***************/
     /*** BUTTONS ***/

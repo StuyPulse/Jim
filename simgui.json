@@ -10,7 +10,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Arm Mech2d": "Mechanism2d",
-      "/SmartDashboard/Autonomous": "String Chooser"
+      "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
       "/SmartDashboard/Arm Mech2d": {
@@ -19,6 +20,11 @@
         }
       },
       "/SmartDashboard/Autonomous": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
         "window": {
           "visible": true
         }

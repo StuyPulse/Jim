@@ -62,12 +62,22 @@ public class SwerveDrive extends SubsystemBase {
     
     private final SwerveDriveKinematics kinematics;
 
+    private final FieldObject2d[] module2ds;
+
     public SwerveDrive(ISwerveModule... modules) {
         this.modules = modules;
 
         gyro = new AHRS(SPI.Port.kMXP);
 
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
+
+        module2ds = new FieldObject2d[modules.length];
+    }
+
+    public void initFieldObjects(Field2d field) {
+        for (int i = 0; i < modules.length; i++) {
+            module2ds[i] = field.getObject(modules[i].getID()+"-2d");
+        }
     }
     
     private Translation2d[] getModuleOffsets() {
@@ -182,6 +192,16 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
+        IOdometry odometry = IOdometry.getInstance();
+        Pose2d pose = odometry.getPose();
+        Rotation2d angle = odometry.getRotation();
+        for (int i = 0; i < modules.length; ++i) {
+            module2ds[i].setPose(new Pose2d(
+                pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
+                modules[i].getState().angle.plus(angle)
+            ));
+        }
+
         SmartDashboard.putNumber("Swerve/Gyro Angle", getGyroAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
