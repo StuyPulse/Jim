@@ -1,6 +1,7 @@
 '''
 fieldmap [red]
     generates from red origin
+
 by default generates from blue origin
 '''
 

@@ -29,8 +29,8 @@ public class Odometry extends IOdometry {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, Units.degreesToRadians(10)));
         field = new Field2d();
 
-        SmartDashboard.putData("Field", field); 
         swerve.initFieldObjects(field);
+        SmartDashboard.putData("Field", field);
     }
 
     public Pose2d getPose() {
@@ -64,10 +64,10 @@ public class Odometry extends IOdometry {
         odometry.update(drive.getGyroAngle(), drive.getModulePositions());
 
         for (Result result : vision.getResults()) {
-            // result.noise = Noise.HIGH;
+            SmartDashboard.putString("Odometry/Noise", result.getNoise().name());
+
             switch (result.getNoise()) {
                 case LOW:
-                    SmartDashboard.putString("Odometry/Noise", "LOW");
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
@@ -84,7 +84,6 @@ public class Odometry extends IOdometry {
                     break;
 
                 case MID:
-                    SmartDashboard.putString("Odometry/Noise", "MID");
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
@@ -94,7 +93,6 @@ public class Odometry extends IOdometry {
                     break;
                 
                 case HIGH:
-                    SmartDashboard.putString("Odometry/Noise", "HIGH");
                     break; // DO NOT DO ANYTHING
             }
         }    

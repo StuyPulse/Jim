@@ -41,7 +41,7 @@ public class MAX_SwerveModule extends ISwerveModule {
     // controller
     private final SparkMaxPIDController drivePID;
     private final SimpleMotorFeedforward driveFF;
-    private final SparkMaxPIDController turnController;
+    private final SparkMaxPIDController turnPID;
 
     private double prevVelocity;
     
@@ -58,17 +58,19 @@ public class MAX_SwerveModule extends ISwerveModule {
         absoluteEncoder.setPositionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
         absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         absoluteEncoder.setZeroOffset(angleOffset.getRotations());
+        absoluteEncoder.setInverted(true);
 
-        turnController = turnMotor.getPIDController();
-        turnController.setFeedbackDevice(absoluteEncoder);
+        turnPID = turnMotor.getPIDController();
+        turnPID.setFeedbackDevice(absoluteEncoder);
 
-        turnController.setP(Turn.kP);
-        turnController.setI(Turn.kI);
-        turnController.setD(Turn.kD);
+        turnPID.setP(Turn.kP);
+        turnPID.setI(Turn.kI);
+        turnPID.setD(Turn.kD);
+        turnPID.setOutputRange(-1, 1);
 
-        turnController.setPositionPIDWrappingEnabled(true);
-        turnController.setPositionPIDWrappingMinInput(0);
-        turnController.setPositionPIDWrappingMaxInput(1);
+        turnPID.setPositionPIDWrappingEnabled(true);
+        turnPID.setPositionPIDWrappingMinInput(Encoder.Turn.MIN_PID_INPUT);
+        turnPID.setPositionPIDWrappingMaxInput(Encoder.Turn.MAX_PID_INPUT);
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
@@ -83,6 +85,7 @@ public class MAX_SwerveModule extends ISwerveModule {
         drivePID.setP(Drive.kP);
         drivePID.setI(Drive.kI);
         drivePID.setD(Drive.kD);
+        drivePID.setOutputRange(-1, 1);
 
         driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
         
@@ -90,6 +93,8 @@ public class MAX_SwerveModule extends ISwerveModule {
 
         prevVelocity = 0;
 
+        driveMotor.enableVoltageCompensation(12.0);
+        turnMotor.enableVoltageCompensation(12.0);
         Motors.Swerve.TURN.configure(turnMotor);
         Motors.Swerve.DRIVE.configure(turnMotor);
     }   
@@ -132,12 +137,12 @@ public class MAX_SwerveModule extends ISwerveModule {
     @Override
     public void periodic() {
         // turn
-        turnController.setReference(targetState.angle.getRadians(), ControlType.kPosition);
+        turnPID.setReference(targetState.angle.getRadians(), ControlType.kPosition);
 
         // drive
         double vel = getVelocity();
         double ffVoltage = driveFF.calculate(prevVelocity, vel, Settings.DT);
-        drivePID.setReference(targetState.speedMetersPerSecond, ControlType.kPosition, 0, ffVoltage, ArbFFUnits.kVoltage);
+        drivePID.setReference(targetState.speedMetersPerSecond, ControlType.kVelocity, 0, ffVoltage, ArbFFUnits.kVoltage);
         
         prevVelocity = vel;
 

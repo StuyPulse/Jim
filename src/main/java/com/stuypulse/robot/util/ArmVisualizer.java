@@ -2,10 +2,13 @@ package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -31,6 +34,8 @@ public class ArmVisualizer {
     private MechanismRoot2d swerveRoot;
     private MechanismRoot2d pegRootMid;
     private MechanismRoot2d pegRootTop;
+
+    private FieldObject2d fieldObject;
 
     public ArmVisualizer() {
 
@@ -80,6 +85,8 @@ public class ArmVisualizer {
         baseLigament.setAngle(-90);
         
         SmartDashboard.putData("Arm Mech2d", arm);
+
+        fieldObject =  IOdometry.getInstance().getField().getObject("Field Arm");
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
@@ -88,6 +95,8 @@ public class ArmVisualizer {
 
         targetShoulderLigament.setAngle(shoulderAngle);
         targetWristLigament.setAngle(wristAngle);
+
+
     }
 
     public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
@@ -96,5 +105,15 @@ public class ArmVisualizer {
 
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
+
+        double distanceFromSwerveCenter = Math.cos(Math.toRadians(shoulderAngle)) * Shoulder.LENGTH + Math.cos(Math.toRadians(wristAngle)) * Wrist.LENGTH;
+
+        Pose2d swervePose = IOdometry.getInstance().getPose();
+        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
+        
+        fieldObject.setPose(new Pose2d(
+            topDownTranslation.plus(swervePose.getTranslation()),
+            swervePose.getRotation()
+        ));
     }
 }
