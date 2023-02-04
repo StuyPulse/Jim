@@ -18,7 +18,7 @@ public class OnePiece extends SequentialCommandGroup {
 
     public OnePiece() {
         addCommands(
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new FollowTrajectory(

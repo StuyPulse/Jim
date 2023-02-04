@@ -36,7 +36,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
         // score held piece, then drive to first game piece and intake
         addCommands(
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
 
@@ -56,7 +56,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative(),
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );

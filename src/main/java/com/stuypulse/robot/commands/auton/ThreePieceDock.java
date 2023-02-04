@@ -39,7 +39,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
             
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             
@@ -57,7 +57,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative(),
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -84,7 +84,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Score Piece Two")
             ).fieldRelative(),
-            new ArmFollowTrajectory(),
+            // new ArmFollowTrajectory(),
             new OuttakeCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
 
