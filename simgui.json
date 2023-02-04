@@ -40,6 +40,9 @@
         "Arm": {
           "open": true
         },
+        "Manager": {
+          "open": true
+        },
         "open": true
       }
     }
