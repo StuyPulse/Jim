@@ -40,16 +40,13 @@ public interface Settings {
     }
 
     public interface Vision {
-        double USABLE_DISTANCE = Units.feetToMeters(11);
-        double TRUST_DISTANCE = Units.feetToMeters(6);
+        double USABLE_DISTANCE = Units.feetToMeters(10);
+        double TRUST_DISTANCE = Units.feetToMeters(5);
         double TRUST_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight-front","limelight-back"};
+            String [] LIMELIGHTS = {"limelight"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
-            double CAMERA_TO_CENTER = Units.inchesToMeters(-1);
-            Angle CAMERA_PITCH = Angle.fromDegrees(-1);
-            double CAMERA_HEIGHT = Units.inchesToMeters(-1);
         }
     }
 
@@ -62,8 +59,6 @@ public interface Settings {
         public interface Motion {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
-
-            PathConstraints CONSTRAINTS = new PathConstraints(2, 1);
         }
         
         public interface Turn {
@@ -240,7 +235,13 @@ public interface Settings {
     }
 
 
-    public interface AlignmentCommand{
+    public interface Alignment {
+
+        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.3);
+
+        SmartNumber ALIGNED_THRESHOLD_X = new SmartNumber("Alignment/X Threshold", 0.2);
+        SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.2);
+        SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
         
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
