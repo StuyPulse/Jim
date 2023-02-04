@@ -200,6 +200,16 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
+        IOdometry odometry = IOdometry.getInstance();
+        Pose2d pose = odometry.getPose();
+        Rotation2d angle = odometry.getRotation();
+        for (int i = 0; i < modules.length; ++i) {
+            module2ds[i].setPose(new Pose2d(
+                pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
+                modules[i].getState().angle.plus(angle)
+            ));
+        }
+
         SmartDashboard.putNumber("Swerve/Gyro Angle", getGyroAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());

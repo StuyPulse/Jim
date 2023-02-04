@@ -40,8 +40,9 @@ public interface Settings {
     }
 
     public interface Vision {
-        double TOLERANCE = -1;
-        double COMMUNITY_DISTANCE = Field.PEG_TO_CHARGING_STATION_EDGE - Swerve.LENGTH/2;
+        double USABLE_DISTANCE = Units.feetToMeters(11);
+        double TRUST_DISTANCE = Units.feetToMeters(6);
+        double TRUST_ANGLE = 50;
 
         public interface Limelight {
             String [] LIMELIGHTS = {"limelight-front","limelight-back"};
@@ -62,7 +63,7 @@ public interface Settings {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
 
-            PathConstraints CONSTRAINTS = new PathConstraints(3.5, 2.5);
+            PathConstraints CONSTRAINTS = new PathConstraints(2, 1);
         }
         
         public interface Turn {
@@ -121,6 +122,9 @@ public interface Settings {
             public interface Turn {
                 double POSITION_CONVERSION = 1;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+
+                double MIN_PID_INPUT = 0;
+                double MAX_PID_INPUT = POSITION_CONVERSION;
             }
         } 
     } 
@@ -129,8 +133,8 @@ public interface Settings {
     
         public interface Shoulder {
             double GEARING = 80;
-            double LENGTH = Units.inchesToMeters(42);
-            double MAX_ANGLE = 180; 
+            double LENGTH = Units.inchesToMeters(43.75);
+            double MAX_ANGLE = 0; 
             double MIN_ANGLE = -180;
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
@@ -142,9 +146,11 @@ public interface Settings {
             double ANGLE_OFFSET = 0;
 
             SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 36;
+            double ANGLE_DEADZONE = 30;
             double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
             double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
+
+            double TOLERANCE = 3;
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
@@ -173,9 +179,11 @@ public interface Settings {
             double ACCEL_LIMIT = 0.8;
 
             double ANGLE_OFFSET = 0;
+
+            double TOLERANCE = 5;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 8);
+                SmartNumber kP = new SmartNumber("Wrist/kP", 10);
                 SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Wrist/kD", 0);
             }

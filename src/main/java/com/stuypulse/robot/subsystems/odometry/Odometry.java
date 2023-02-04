@@ -4,6 +4,7 @@ import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
+import com.stuypulse.robot.subsystems.vision.IVision.Noise;
 import com.stuypulse.robot.subsystems.vision.IVision.Result;
 
 import edu.wpi.first.math.VecBuilder;
@@ -25,8 +26,8 @@ public class Odometry extends IOdometry {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
         field = new Field2d();
 
-        SmartDashboard.putData("Field", field);
         swerve.initFieldObjects(field);
+        SmartDashboard.putData("Field", field);
     }
 
     public Pose2d getPose() {
@@ -58,23 +59,32 @@ public class Odometry extends IOdometry {
         for (Result result : vision.getResults()) {
             switch (result.getNoise()) {
                 case LOW:
-                    // pose estimator reset
-                    poseEstimator.resetPosition(
-                        drive.getGyroAngle(), 
-                        drive.getModulePositions(),
-                        result.getPose());
-                    break;
-
-                case MID:
+                    SmartDashboard.putString("Odometry/Noise", "LOW");
                     // pose estimator add vision measurement
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
                         Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(0, 0, 0));
+                        VecBuilder.fill(0.1, 0.1, Math.toRadians(5)));
+                        // TODO: Fill in constants
+                    // pose estimator reset
+                    // poseEstimator.resetPosition(
+                    //     drive.getGyroAngle(), 
+                    //     drive.getModulePositions(),
+                    //     result.getPose());
+                    break;
+
+                case MID:
+                    SmartDashboard.putString("Odometry/Noise", "MID");
+                    // pose estimator add vision measurement
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        VecBuilder.fill(5, 5, Math.toRadians(10)));
                         // TODO: Fill in constants
                     break;
                 
                 case HIGH:
+                    SmartDashboard.putString("Odometry/Noise", "HIGH");
                     break; // DO NOT DO ANYTHING
             }
         }    
