@@ -2,6 +2,7 @@ package com.stuypulse.robot.commands.auton;
 
 import java.util.HashMap;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.stuypulse.robot.commands.leds.LEDSet;
@@ -19,12 +20,14 @@ public class ThreePieceDock extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+
     public ThreePieceDock() {
 
 
         // load paths into hashmap
         paths = FollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece + Dock", Motion.CONSTRAINTS, Motion.CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
 
             "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two", "Dock"
         );
