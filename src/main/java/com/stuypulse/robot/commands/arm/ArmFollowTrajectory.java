@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class ArmFollowTrajectory extends SequentialCommandGroup {    
     public ArmFollowTrajectory(ArmTrajectory trajectory) {
         for (ArmState setpoint : trajectory.getStates()) {
-            addCommands(new UpdateArm(setpoint.getShoulderRotation(), 
-                                    setpoint.getWristRotation()));
+            addCommands(new ArmReachSetpoint(setpoint.getShoulderState(), setpoint.getWristState()));
         }
     }
 }
