@@ -17,5 +17,9 @@ public class NoIntake extends IIntake {
     @Override
     public void coneOuttake() {
     }
+
+    @Override
+    public void stop() {
+    }
     
 }

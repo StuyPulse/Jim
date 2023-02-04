@@ -2,9 +2,9 @@ package com.stuypulse.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class IIntake extends SubsystemBase {
-    private static Intake instance;
+    private static IIntake instance;
     
-    public static Intake getInstance() {
+    public static IIntake getInstance() {
         if (instance == null) {
             instance = new NoIntake(); // new Intake();
         }
