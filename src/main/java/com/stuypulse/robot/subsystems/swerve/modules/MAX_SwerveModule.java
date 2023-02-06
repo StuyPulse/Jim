@@ -114,7 +114,7 @@ public class MAX_SwerveModule extends ISwerveModule {
 
         driveMotor.enableVoltageCompensation(12.0);
         turnMotor.enableVoltageCompensation(12.0);
-
+        
         Motors.Swerve.TURN.configure(turnMotor);
         Motors.Swerve.DRIVE.configure(turnMotor);
     }   

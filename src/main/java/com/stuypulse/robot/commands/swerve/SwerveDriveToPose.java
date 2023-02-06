@@ -4,11 +4,11 @@ import com.stuypulse.robot.constants.Settings.AlignmentCommand.Rotation;
 import com.stuypulse.robot.constants.Settings.AlignmentCommand.Translation;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
@@ -47,7 +47,7 @@ public class SwerveDriveToPose extends CommandBase{
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
             xController.update(targetPose.getX(), currentState.getX()),
             yController.update(targetPose.getY(), currentState.getY()),
-            angleController.update( Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()))
+            angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()))
         );
 
         swerve.setChassisSpeeds(chassisSpeeds, true);

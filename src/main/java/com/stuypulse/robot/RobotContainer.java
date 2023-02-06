@@ -5,9 +5,13 @@
 
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.arm.*;
+import com.stuypulse.robot.commands.arm.routines.*;
+import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.*;
+import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
@@ -29,7 +33,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public class RobotContainer {
 
@@ -45,7 +48,6 @@ public class RobotContainer {
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
-
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();

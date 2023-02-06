@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -37,6 +44,9 @@
       },
       "SmartDashboard": {
         "Arm": {
+          "open": true
+        },
+        "Manager": {
           "open": true
         },
         "open": true
