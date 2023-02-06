@@ -129,8 +129,8 @@ public interface Settings {
     
         public interface Shoulder {
             double GEARING = 80;
-            double LENGTH = Units.inchesToMeters(42);
-            double MAX_ANGLE = 180; 
+            double LENGTH = Units.inchesToMeters(43.75);
+            double MAX_ANGLE = 0; 
             double MIN_ANGLE = -180;
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
@@ -142,9 +142,11 @@ public interface Settings {
             double ANGLE_OFFSET = 0;
 
             SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 36;
+            double ANGLE_DEADZONE = 30;
             double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
             double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
+
+            double TOLERANCE = 3;
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
@@ -173,9 +175,11 @@ public interface Settings {
             double ACCEL_LIMIT = 0.8;
 
             double ANGLE_OFFSET = 0;
+
+            double TOLERANCE = 5;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 8);
+                SmartNumber kP = new SmartNumber("Wrist/kP", 10);
                 SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Wrist/kD", 0);
             }
