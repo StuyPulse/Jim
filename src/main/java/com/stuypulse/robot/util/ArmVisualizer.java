@@ -35,8 +35,6 @@ public class ArmVisualizer {
     private MechanismRoot2d pegRootMid;
     private MechanismRoot2d pegRootTop;
 
-    private FieldObject2d fieldObject;
-
     public ArmVisualizer() {
 
         // ligament initialization
@@ -85,8 +83,6 @@ public class ArmVisualizer {
         baseLigament.setAngle(-90);
         
         SmartDashboard.putData("Arm Mech2d", arm);
-
-        fieldObject =  IOdometry.getInstance().getField().getObject("Field Arm");
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
@@ -105,15 +101,5 @@ public class ArmVisualizer {
 
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
-
-        double distanceFromSwerveCenter = Math.cos(Math.toRadians(shoulderAngle)) * Shoulder.LENGTH + Math.cos(Math.toRadians(wristAngle)) * Wrist.LENGTH;
-
-        Pose2d swervePose = IOdometry.getInstance().getPose();
-        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
-        
-        fieldObject.setPose(new Pose2d(
-            topDownTranslation.plus(swervePose.getTranslation()),
-            swervePose.getRotation()
-        ));
     }
 }
