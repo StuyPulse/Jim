@@ -36,7 +36,7 @@ public class Intake extends IIntake{
 
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
-            .polling(Settings.DT);
+            .polling(Settings.DT/2);
 
         frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
         frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
@@ -46,12 +46,12 @@ public class Intake extends IIntake{
 
     // CONE DETECTION (stall detection)
 
-    private double maxCurrentDraw(){
-        return frontMotor.getOutputCurrent() > backMotor.getOutputCurrent()? frontMotor.getOutputCurrent() : backMotor.getOutputCurrent();
+    private double getMaxCurrent(){
+        return Math.max(frontMotor.getOutputCurrent(), backMotor.getOutputCurrent());
     }
 
     private boolean isMomentarilyStalling() {
-        return maxCurrentDraw() > STALL_CURRENT.doubleValue();
+        return getMaxCurrent() > STALL_CURRENT.doubleValue();
     }
 
     private boolean isStalling() {
@@ -80,7 +80,13 @@ public class Intake extends IIntake{
     // INTAKING MODES
 
     @Override
-    public void cubeIntake(){
+    public void stop(){
+        frontMotor.stopMotor();
+        backMotor.stopMotor();
+    }
+
+    @Override
+    public void acquireCube(){
         if (isFlipped()) {
             frontMotor.set(-CUBE_FRONT_ROLLER.get());
             backMotor.set(-CUBE_BACK_ROLLER.get());
@@ -91,7 +97,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void coneIntake() {
+    public void acquireCone() {
         if (isFlipped()) {
             frontMotor.set(-CONE_FRONT_ROLLER.get());
             backMotor.set(CONE_BACK_ROLLER.get());
@@ -102,7 +108,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void cubeOuttake(){
+    public void deacquireCube(){
         if (isFlipped()) {
             frontMotor.set(CUBE_FRONT_ROLLER.get());
             backMotor.set(CUBE_BACK_ROLLER.get());
@@ -113,7 +119,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void coneOuttake(){
+    public void deacquireCone(){
         if (isFlipped()) {
             frontMotor.set(CONE_FRONT_ROLLER.get());
             backMotor.set(-CONE_BACK_ROLLER.get());
@@ -122,13 +128,14 @@ public class Intake extends IIntake{
             backMotor.set(CONE_BACK_ROLLER.get());
         }
     }
+    
 
     @Override
     public void periodic(){
         if (isStalling() || hasCube()) {
-            frontMotor.stopMotor();
-            backMotor.stopMotor();
+            stop();
         }
+    
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
