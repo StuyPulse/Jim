@@ -111,7 +111,6 @@ public class SimArm extends Arm {
         Pose2d swervePose = Odometry.getInstance().getPose();
         Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
         
-        System.out.println(distanceFromSwerveCenter);
         fieldObject.setPose(new Pose2d(
             topDownTranslation.plus(swervePose.getTranslation()),
             swervePose.getRotation()
