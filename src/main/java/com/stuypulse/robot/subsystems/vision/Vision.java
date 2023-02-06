@@ -93,18 +93,19 @@ public class Vision extends IVision {
 
         results.clear();
         for (int i = 0; i < limelights.length; ++i) {
-            String name = LIMELIGHTS[i];
-            var ll = limelights[i];
-            var pose2d = limelightPoses[i];
+            Limelight ll = limelights[i];
+            String name = ll.getTableName();
+            FieldObject2d pose2d = limelightPoses[i];
             
             ll.updateAprilTagData();
-            var aprilTagData = ll.getAprilTagData();
+            Optional<AprilTagData> aprilTagData = ll.getAprilTagData();
             
             if (aprilTagData.isPresent()) {
                 SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
                 SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
                 SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
                 pose2d.setPose(aprilTagData.get().pose);
+
                 results.add(process(aprilTagData.get()));
             } else {
                 SmartDashboard.putNumber("Vision/" + name + "/X" , Double.NaN);
