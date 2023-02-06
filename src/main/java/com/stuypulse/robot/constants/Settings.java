@@ -51,9 +51,11 @@ public interface Settings {
     }
 
     public interface Swerve {
-        double WIDTH = Units.inchesToMeters(30.0);
-        double LENGTH = Units.inchesToMeters(24.0);
+        double WIDTH = Units.inchesToMeters(26.504);
+        double LENGTH = Units.inchesToMeters(20.508);
+        
         double MAX_SPEED = 4.2;
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
 
 
         public interface Motion {

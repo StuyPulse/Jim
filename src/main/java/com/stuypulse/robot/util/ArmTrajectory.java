@@ -4,6 +4,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ArmTrajectory {
+    public static ArmTrajectory fromStates(ArmState... states) {
+        ArmTrajectory trajectory = new ArmTrajectory();
+        for (ArmState state : states) {
+            trajectory.addState(state);
+        }
+        return trajectory;
+    }
+
     private final List<ArmState> states;
 
     public ArmTrajectory() {
@@ -14,28 +22,27 @@ public class ArmTrajectory {
         return states;
     }
 
-    public ArmTrajectory addState(double shoulderDegrees, double armDegrees) {
-        states.add(new ArmState(shoulderDegrees, armDegrees));
+    public ArmTrajectory addState(ArmState state) {
+        states.add(state);
         return this;
     }
 
-    public ArmTrajectory addState(ArmTrajectory trajectory) {
+    // public ArmTrajectory addState(double shoulderDegrees, double wristDegrees) {
+    //     return addState(new ArmState(shoulderDegrees, wristDegrees));
+    // }
+
+    public ArmTrajectory append(ArmTrajectory trajectory) {
         for (ArmState state: trajectory.getStates()) {
             states.add(state);
         }
         return this;
     }
 
-    public void updateState(int index, ArmState newState) {
-        this.getStates().set(index, newState);
-    }
-
-    public ArmTrajectory switchSides() {
-        for (int i = 0; i < states.size(); i++) {
-            updateState(i, new ArmState(
-                            -180 - states.get(i).getShoulderRotation().getDegrees(), 
-                            -180 - states.get(i).getWristRotation().getDegrees()));
+    public ArmTrajectory flipped() {
+        ArmTrajectory flipped = new ArmTrajectory();
+        for (ArmState state : states) {
+            flipped.addState(state.flip());
         }
-        return this;
+        return flipped;
     }
 } 

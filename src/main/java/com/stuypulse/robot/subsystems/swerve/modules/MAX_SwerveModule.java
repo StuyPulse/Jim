@@ -10,11 +10,13 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -43,6 +45,9 @@ public class MAX_SwerveModule extends ISwerveModule {
     private SimpleMotorFeedforward driveFF;
     private SparkMaxPIDController turnPID;
 
+
+    private final SlewRateLimiter turnRateLimit;
+
     private double prevVelocity;
     
     public MAX_SwerveModule(String id, Translation2d location, int turnCANId, Rotation2d angleOffset, int driveCANId) {
@@ -54,6 +59,8 @@ public class MAX_SwerveModule extends ISwerveModule {
         // turn 
         turnMotor = new CANSparkMax(turnCANId, MotorType.kBrushless);
         configureTurnMotor(angleOffset);
+
+        turnRateLimit = new SlewRateLimiter(Swerve.MAX_TURNING.get());
         
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
@@ -155,7 +162,9 @@ public class MAX_SwerveModule extends ISwerveModule {
     @Override
     public void periodic() {
         // turn
-        turnPID.setReference(targetState.angle.getRadians(), ControlType.kPosition);
+        turnPID.setReference(
+            turnRateLimit.calculate(targetState.angle.getRadians()),
+            ControlType.kPosition);
 
         // drive
         double vel = getVelocity();

@@ -5,12 +5,14 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.VStream;
 import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveDrive extends CommandBase {
@@ -19,6 +21,7 @@ public class SwerveDriveDrive extends CommandBase {
 
     private VStream speed;
     private IStream turn;
+    private BStream robotRelative;
 
     public SwerveDriveDrive(Gamepad driver) {
         this.swerve = SwerveDrive.getInstance();
@@ -40,12 +43,21 @@ public class SwerveDriveDrive extends CommandBase {
                 x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
+        
+        robotRelative = BStream.create(driver::getRightTriggerPressed);
 
         addRequirements(swerve);
     }
     
     @Override
     public void execute() {
-        swerve.drive(speed.get(), turn.get());
+        if (robotRelative.get()) {
+            var s = speed.get();
+            swerve.setChassisSpeeds(
+                new ChassisSpeeds(s.y, -s.x, -turn.get()),
+                false);
+        } else {
+            swerve.drive(speed.get(), turn.get());
+        }
     }
 }

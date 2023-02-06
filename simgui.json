@@ -1,6 +1,5 @@
 {
   "HALProvider": {
-    "Timing": {
     "Other Devices": {
       "window": {
         "visible": false
@@ -10,14 +9,6 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/Plant": "Subsystem",
-      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
-      "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
-      "/LiveWindow/Ungrouped/DigitalInput[2]": "Digital Input",
-      "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
-      "/LiveWindow/Ungrouped/PWMSparkMax[8]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/SmartDashboard/Arm Mech2d": "Mechanism2d",
       "/SmartDashboard/Autonomous": "String Chooser",
       "/SmartDashboard/Field": "Field2d"
@@ -41,12 +32,6 @@
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
-    "Retained Values": {
-      "open": false
-    },
     "transitory": {
       "FMSInfo": {
         "open": true
@@ -61,7 +46,7 @@
         "Arm": {
           "open": true
         },
-        "Intake": {
+        "Manager": {
           "open": true
         },
         "open": true

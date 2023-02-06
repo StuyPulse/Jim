@@ -1,11 +1,28 @@
 {
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
+    "retained": {
+      "limelight": {
+        "open": true
+      }
     },
     "transitory": {
       "SmartDashboard": {
-        "Arm": {
+        "Odometry": {
+          "open": true
+        },
+        "Settings": {
+          "open": true
+        },
+        "Vision": {
+          "com.stuypulse.robot.util.Limelight@19d31f3": {
+            "open": true
+          },
+          "limelight": {
+            "open": true
+          },
+          "open": true
+        },
+        "Wrist": {
           "open": true
         },
         "Vision": {
@@ -34,13 +51,37 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "NT3@10.6.94.97:57256": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      }
+    },
+    "visible": true
+  },
+  "NetworkTables Log": {
+    "visible": true
+  },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "10.6.94.2",
-    "visible": false
+    "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
@@ -86,7 +127,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
