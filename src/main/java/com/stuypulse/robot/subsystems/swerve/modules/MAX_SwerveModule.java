@@ -45,6 +45,7 @@ public class MAX_SwerveModule extends ISwerveModule {
     private final SimpleMotorFeedforward driveFF;
     private final SparkMaxPIDController turnPID;
 
+
     private final SlewRateLimiter turnRateLimit;
 
     private double prevVelocity;
@@ -63,6 +64,18 @@ public class MAX_SwerveModule extends ISwerveModule {
         absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         absoluteEncoder.setZeroOffset(angleOffset.getRotations());
         absoluteEncoder.setInverted(true);
+
+        turnPID = turnMotor.getPIDController();
+        turnPID.setFeedbackDevice(absoluteEncoder);
+
+        turnPID.setP(Turn.kP);
+        turnPID.setI(Turn.kI);
+        turnPID.setD(Turn.kD);
+        turnPID.setOutputRange(-1, 1);
+
+        turnPID.setPositionPIDWrappingEnabled(true);
+        turnPID.setPositionPIDWrappingMinInput(Encoder.Turn.MIN_PID_INPUT);
+        turnPID.setPositionPIDWrappingMaxInput(Encoder.Turn.MAX_PID_INPUT);
 
         turnPID = turnMotor.getPIDController();
         turnPID.setFeedbackDevice(absoluteEncoder);
@@ -101,6 +114,7 @@ public class MAX_SwerveModule extends ISwerveModule {
 
         driveMotor.enableVoltageCompensation(12.0);
         turnMotor.enableVoltageCompensation(12.0);
+
         Motors.Swerve.TURN.configure(turnMotor);
         Motors.Swerve.DRIVE.configure(turnMotor);
     }   

@@ -45,10 +45,12 @@ public class RobotContainer {
     public final IArm arm = IArm.getInstance();
     public final IPlant plant = IPlant.getInstance();
     public final IWings wings = IWings.getInstance();
+
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
     public final Pump pump = new Pump();
+  
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 

@@ -21,6 +21,8 @@ public class Limelight {
     private final DoubleEntry latencyEntry;
     private final IntegerEntry idEntry;
 
+    private Optional<AprilTagData> data;
+
     public Limelight(String tableName) {
         this.tableName = tableName;
 
@@ -29,24 +31,31 @@ public class Limelight {
         latencyEntry = limelight.getDoubleTopic("tl").getEntry(0);
         botposeEntry = limelight.getDoubleArrayTopic("botpose").getEntry(new double[] {});
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
+    
+        data = Optional.empty();
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public Optional<AprilTagData> getPoseData() {
+    public Optional<AprilTagData> getAprilTagData() {
+        return data;
+    }
+
+    public void updateAprilTagData() {
         double[] botposeData = botposeEntry.get();
         
         if (botposeData.length != 6) {
-            return Optional.empty();
+            data = Optional.empty();
+            return;
         }
 
         Pose2d botpose = new Pose2d(botposeData[0], botposeData[1], Rotation2d.fromDegrees(botposeData[5]));
         double latency = Units.millisecondsToSeconds(latencyEntry.get() + kCaptureDelayMs);
         int id = (int) idEntry.get();
         
-        return Optional.of(new AprilTagData(botpose, latency, id));
+        data = Optional.of(new AprilTagData(botpose, latency, id));
     }
 
 }
