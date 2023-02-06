@@ -10,11 +10,12 @@ public abstract class IIntake extends SubsystemBase {
         }
         return instance;
     }
-    
-    public abstract void cubeIntake();
-    public abstract void coneIntake();
-    public abstract void cubeOuttake();
-    public abstract void coneOuttake();
+
+    public abstract void acquireCube();
+    public abstract void acquireCone();
+
+    public abstract void deacquireCube();
+    public abstract void deacquireCone();
 
     public abstract void stop();
 }
