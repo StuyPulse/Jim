@@ -14,8 +14,9 @@ import com.stuypulse.robot.commands.auton.ThreePiece;
 import com.stuypulse.robot.commands.auton.ThreePieceDock;
 import com.stuypulse.robot.commands.auton.TwoPieceDock;
 import com.stuypulse.robot.commands.odometry.OdometryReset;
+import com.stuypulse.robot.commands.swerve.AlignToPose;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
-import com.stuypulse.robot.commands.swerve.SwerveDriveToPose;
+import com.stuypulse.robot.commands.swerve.SwerveDriveToPoseY;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public class RobotContainer {
 
@@ -85,12 +87,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driver.getTopButton().onTrue(new OdometryReset());
 
-        driver.getLeftButton().whileTrue(
-            new SwerveDriveToPose(new Pose2d(2.25,1.1 , new Rotation2d(Units.degreesToRadians(0) ))));
+        driver.getLeftButton().whileTrue(new AlignToPose(new Pose2d(2.25,1.1 , new Rotation2d(Units.degreesToRadians(0) ))));
 
-        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(2.25,2.725, new Rotation2d(Units.degreesToRadians(0)))));
+        driver.getRightButton().whileTrue(new AlignToPose(new Pose2d(2.25,2.725, new Rotation2d(Units.degreesToRadians(0)))));
 
-        driver.getBottomButton().whileTrue(new SwerveDriveToPose(new Pose2d(2.25,4.4
+        driver.getBottomButton().whileTrue(new AlignToPose(new Pose2d(2.25,4.4
         ,new Rotation2d(Units.degreesToRadians(0)))));
 
         
@@ -126,7 +127,7 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("One Piece", new OnePiece());
-        autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());

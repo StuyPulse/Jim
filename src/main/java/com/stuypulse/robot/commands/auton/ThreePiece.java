@@ -22,7 +22,7 @@ public class ThreePiece extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
 
     public ThreePiece() {
 
@@ -36,10 +36,10 @@ public class ThreePiece extends SequentialCommandGroup {
 
         // Scores held piece, drive to first piece and intake
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.ORANGE),
-            // new ArmFollowTrajectory(),
-            new OuttakeCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            // new LEDSet(LEDController.getInstance(), LEDColor.ORANGE),
+            // // new ArmFollowTrajectory(),
+            // new OuttakeCube(),
+            // new WaitCommand(INTAKE_DEACQUIRE_TIME),
             
             new FollowTrajectory(
                 paths.get("Intake Piece")
@@ -50,26 +50,26 @@ public class ThreePiece extends SequentialCommandGroup {
 
         // Drive to grid and score one piece
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            // new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
 
             new FollowTrajectory(
                 paths.get("Score Piece")
-            ).fieldRelative(),
-            // new ArmFollowTrajectory(),
-            new OuttakeCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
+            ).fieldRelative()
+            // // new ArmFollowTrajectory(),
+            // new OuttakeCube(),
+            // new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
         // Drive to second game piece and intake 
         addCommands(
 
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            // new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
             new FollowTrajectory(
                 paths.get("Intake Piece Two")
-            ).fieldRelative(),
-            new IntakeCube(),
-            new WaitCommand(INTAKE_ACQUIRE_TIME)
+            ).fieldRelative()
+            // new IntakeCube(),
+            // new WaitCommand(INTAKE_ACQUIRE_TIME)
 
         );
 

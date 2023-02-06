@@ -23,7 +23,7 @@ public class OnePieceDock extends SequentialCommandGroup {
         paths = FollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
 
-            "Mobility", "Dock"
+            "Mobility"
         );
 
         addCommands(

@@ -72,7 +72,7 @@ public class Odometry extends IOdometry {
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
                         Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(0.1, 0.1, Math.toRadians(5)));
+                        VecBuilder.fill(3, 3, Math.toRadians(10)));
                         // TODO: Fill in constants
                     // pose estimator reset
                     // poseEstimator.resetPosition(
@@ -88,15 +88,17 @@ public class Odometry extends IOdometry {
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
                         Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(5, 5, Math.toRadians(10)));
+                        VecBuilder.fill(10, 10, Math.toRadians(15)));
                         // TODO: Fill in constants
                     break;
                 
                 case HIGH:
                     break; // DO NOT DO ANYTHING
             }
-        }    
+        }
+
         field.setRobotPose(getPose());
+
         SmartDashboard.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
         SmartDashboard.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());

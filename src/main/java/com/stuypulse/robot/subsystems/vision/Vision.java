@@ -50,12 +50,13 @@ public class Vision extends IVision {
     }
 
     private Result process(AprilTagData data) {
-        cameraField2d.setRobotPose(data.pose);
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
-        // SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
-        // SmartDashboard.putNumber("Vision/Distance", distance);
+        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
+        SmartDashboard.putNumber("Vision/Distance", distance);
+        SmartDashboard.putNumber("Vision/Tag ID", data.id);
+        
         // SmartDashboard.putNumber("Vision/Pose Degrees", data.pose.getRotation().getDegrees());
         // SmartDashboard.putNumber("Vision/Pose X", data.pose.getX());
         // SmartDashboard.putNumber("Vision/Pose Y", data.pose.getY());

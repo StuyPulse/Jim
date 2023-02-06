@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveToPose extends CommandBase{
+public class SwerveDriveToPoseY extends CommandBase{
     private final SwerveDrive swerve;
     private final Pose2d targetPose;
     private final Controller xPID;
@@ -25,12 +25,12 @@ public class SwerveDriveToPose extends CommandBase{
 
     private final BStream aligned;
     
-    public SwerveDriveToPose(Pose2d targetPose){
+    public SwerveDriveToPoseY(Pose2d targetPose){
         this.swerve = SwerveDrive.getInstance();
         this.targetPose = targetPose;
 
-        xPID = new PIDController(Translation.P,Translation.I,Translation.D).setSetpointFilter(new MotionProfile(3, 2));
-        yPID = new PIDController(Translation.P, Translation.I, Translation.D).setSetpointFilter(new MotionProfile(3, 2));
+        xPID = new PIDController(Translation.P,Translation.I,Translation.D).setSetpointFilter(new MotionProfile(1, 1));
+        yPID = new PIDController(Translation.P, Translation.I, Translation.D).setSetpointFilter(new MotionProfile(1, 1 ));
         anglePID = new AnglePIDController(Rotation.P, Rotation.I, Rotation.D);
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
@@ -39,9 +39,9 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     private boolean isAligned() {
-        return Math.abs(xPID.getError()) < Alignment.ALIGNED_THRESHOLD_X.get()
-            && Math.abs(yPID.getError()) < Alignment.ALIGNED_THRESHOLD_Y.get()
-            && Math.abs(anglePID.getError().toDegrees()) < Alignment.ALIGNED_THRESHOLD_ANGLE.get();
+        return xPID.isDone(Alignment.ALIGNED_THRESHOLD_X.get())
+            && yPID.isDone(Alignment.ALIGNED_THRESHOLD_Y.get())
+            && anglePID.isDoneDegrees(Alignment.ALIGNED_THRESHOLD_ANGLE.get());
     }
 
     @Override
@@ -50,7 +50,8 @@ public class SwerveDriveToPose extends CommandBase{
         Pose2d currentState = IOdometry.getInstance().getPose();
     
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
-            xPID.update(targetPose.getX(), currentState.getX()),
+            // xPID.update(targetPose.getX(), currentState.getX()),
+            0,
             yPID.update(targetPose.getY(), currentState.getY()),
             anglePID.update( Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()))
         );

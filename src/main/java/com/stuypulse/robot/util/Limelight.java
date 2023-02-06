@@ -46,7 +46,8 @@ public class Limelight {
         tyEntry = limelight.getDoubleTopic("ty").getEntry(0);
 
 
-        alliance = DriverStation.getAlliance();
+        botposeEntry = limelight.getDoubleArrayTopic("botpose").getEntry(new double[] {});
+        // alliance = DriverStation.getAlliance();
     }
 
     private void updateAlliance() {
@@ -82,8 +83,8 @@ public class Limelight {
     }
 
     public Optional<AprilTagData> getPoseData() {
-        if (RobotContainer.getCachedAlliance() != alliance)
-            updateAlliance();
+        // if (RobotContainer.getCachedAlliance() != alliance)
+        //     updateAlliance();
 
         double[] botposeData = botposeEntry.get();
         
