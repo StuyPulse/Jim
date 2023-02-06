@@ -2,7 +2,6 @@ package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 
 import edu.wpi.first.math.util.Units;
@@ -88,6 +87,8 @@ public class ArmVisualizer {
 
         targetShoulderLigament.setAngle(shoulderAngle);
         targetWristLigament.setAngle(wristAngle);
+
+
     }
 
     public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
