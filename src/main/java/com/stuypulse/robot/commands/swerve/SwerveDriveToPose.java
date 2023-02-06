@@ -4,6 +4,7 @@ import com.stuypulse.robot.constants.Settings.AlignmentCommand.Rotation;
 import com.stuypulse.robot.constants.Settings.AlignmentCommand.Translation;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
@@ -18,19 +19,21 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SwerveDriveToPose extends CommandBase{
     private final SwerveDrive swerve;
     private final Pose2d targetPose;
-    private final PIDController xPID;
-    private final PIDController yPID;
-    private final AnglePIDController anglePID;
+
+    // Holonomic control
+    private final Controller xController;
+    private final Controller yController;
+    private final AngleController angleController;
     
     public SwerveDriveToPose(Pose2d targetPose){
         this.swerve = SwerveDrive.getInstance();
         this.targetPose = targetPose;
 
-        xPID =  (PIDController) new PIDController(Translation.P,Translation.I,Translation.D)
+        xController = new PIDController(Translation.P,Translation.I,Translation.D)
             .setSetpointFilter(new MotionProfile(3, 2));
-        yPID = (PIDController) new PIDController(Translation.P, Translation.I, Translation.D)
+        yController = new PIDController(Translation.P, Translation.I, Translation.D)
             .setSetpointFilter(new MotionProfile(3, 2));
-        anglePID = (AnglePIDController )new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
+        angleController =new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
             .setSetpointFilter(new AMotionProfile(5, 4));
 
         addRequirements(swerve);
@@ -42,9 +45,9 @@ public class SwerveDriveToPose extends CommandBase{
         Pose2d currentState = IOdometry.getInstance().getPose();
     
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
-            xPID.update(targetPose.getX(), currentState.getX()),
-            yPID.update(targetPose.getY(), currentState.getY()),
-            anglePID.update( Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()))
+            xController.update(targetPose.getX(), currentState.getX()),
+            yController.update(targetPose.getY(), currentState.getY()),
+            angleController.update( Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()))
         );
 
         swerve.setChassisSpeeds(chassisSpeeds, true);
