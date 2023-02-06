@@ -10,13 +10,20 @@ public class DoubleJointedArmSim {
    
     public DoubleJointedArmSim(DCMotor shoulderDCMotorGearbox, double shoulderGearing, 
         double shoulderMomentOfInertia, double shoulderArmLengthMeters, double shoulderMinAngleRads, 
-        double shoulderMaxAngleRads, double shoulderArmMass, 
+        double shoulderMaxAngleRads, 
         DCMotor wristDCMotorGearbox, double wristGearing, double wristMomentOfIntertia,
         double wristArmLengthMeters, double wristMinAngleRads, double wristMaxAngleRads,
         double wristArmMass) {
 
-        shoulderSim = new SingleJointedArmSim(shoulderDCMotorGearbox, shoulderGearing, shoulderMomentOfInertia + wristMomentOfIntertia, shoulderArmLengthMeters + wristArmLengthMeters, shoulderMinAngleRads, shoulderMaxAngleRads, shoulderArmMass+wristArmMass, true);
-        wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, wristArmMass, true);
+        shoulderSim = new SingleJointedArmSim(
+            shoulderDCMotorGearbox, 
+            shoulderGearing, 
+            shoulderMomentOfInertia + wristMomentOfIntertia, 
+            shoulderArmLengthMeters + wristArmLengthMeters, 
+            shoulderMinAngleRads, shoulderMaxAngleRads,
+             true);
+
+        wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, true);
     }
 
     public DoubleJointedArmSim(SingleJointedArmSim shoulder, SingleJointedArmSim wrist) {
