@@ -6,6 +6,7 @@ import com.stuypulse.stuylib.util.StopWatch;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wings extends IWings {
 
@@ -39,11 +40,14 @@ public class Wings extends IWings {
 
         leftLatch.set(true);
         rightLatch.set(true);
+
+        rightDeploy.set(DoubleSolenoid.Value.kReverse);
+        leftDeploy.set(DoubleSolenoid.Value.kReverse);
     }
 
     @Override
     public void extendLeft() {
-        if (leftLatch.get() && leftDeploy.get() == DoubleSolenoid.Value.kOff) {
+        if (leftLatch.get() && !isEngaged(leftDeploy)) {
             leftLatch.set(false);
             leftDeployTime = timer.getTime();
         }
@@ -51,7 +55,7 @@ public class Wings extends IWings {
 
     @Override
     public void retractLeft() {
-        if (!leftLatch.get() && leftDeploy.get() == DoubleSolenoid.Value.kForward) {
+        if (!leftLatch.get() && isEngaged(leftDeploy)) {
             leftDeploy.set(DoubleSolenoid.Value.kReverse);
             leftRetractTime = timer.getTime();
         }
@@ -59,7 +63,7 @@ public class Wings extends IWings {
 
     @Override
     public void extendRight() {
-        if(rightLatch.get() && rightDeploy.get() == DoubleSolenoid.Value.kOff){
+        if(rightLatch.get() && !isEngaged(rightDeploy)){
             rightLatch.set(false);
             rightDeployTime = timer.getTime();
         }
@@ -67,20 +71,29 @@ public class Wings extends IWings {
 
     @Override
     public void retractRight() {
-        if(!rightLatch.get() && rightDeploy.get() == DoubleSolenoid.Value.kForward){
+        if(!rightLatch.get() && isEngaged(rightDeploy)){
             rightDeploy.set(DoubleSolenoid.Value.kReverse);
             rightRetractTime = timer.getTime();
+        }
+    }
+
+    public boolean isEngaged(DoubleSolenoid solenoid){
+        if(solenoid.get() == DoubleSolenoid.Value.kForward){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
     @Override
     public void periodic() {
         if(leftDeployTime > 0 && timer.getTime() - leftDeployTime >= LEFT_LATCH_DELAY.get()){
-            leftDeploy.set(DoubleSolenoid.Value.kOff);
+            leftDeploy.set(DoubleSolenoid.Value.kForward); // dont set off
             leftDeployTime = -1.0;
         }
         if(rightDeployTime > 0 && timer.getTime() - rightDeployTime >= RIGHT_LATCH_DELAY.get()){
-            rightDeploy.set(DoubleSolenoid.Value.kOff);
+            rightDeploy.set(DoubleSolenoid.Value.kForward);
             rightDeployTime = -1.0;
         }
         if(leftRetractTime > 0 && timer.getTime() - leftRetractTime >= LEFT_RETRACT_DELAY.get()){
@@ -91,5 +104,16 @@ public class Wings extends IWings {
             rightLatch.set(true);
             rightRetractTime = -1.0;
         }
+
+        SmartDashboard.putBoolean("Wings/Right Latch Engaged", rightLatch.get());
+        SmartDashboard.putBoolean("Wings/Right Deploy Engaged", isEngaged(rightDeploy));
+        SmartDashboard.putBoolean("Wings/Left Latch Engaged", leftLatch.get());
+        SmartDashboard.putBoolean("Wings/Left Deploy Engaged", isEngaged(leftDeploy));
+
+        SmartDashboard.putNumber("Wings/Current Time", timer.getTime());
+        SmartDashboard.putNumber("Wings/Left Deploy Time",leftDeployTime);
+        SmartDashboard.putNumber("Wings/Right Deploy Time",rightDeployTime);
+        SmartDashboard.putNumber("Wings/Left Retract Time",leftRetractTime);
+        SmartDashboard.putNumber("Wings/Right Retract Time",rightRetractTime);
     }
 }

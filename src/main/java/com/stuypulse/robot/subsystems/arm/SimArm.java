@@ -1,6 +1,8 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
+
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.DoubleJointedArmSim;
@@ -13,11 +15,14 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimArm extends IArm {
@@ -30,6 +35,8 @@ public class SimArm extends IArm {
 
     private final SmartNumber shoulderTargetAngle;
     private final SmartNumber wristTargetAngle;
+
+    private final FieldObject2d fieldObject;
 
     public SimArm() { 
         setSubsystem("SimArm");
@@ -52,6 +59,8 @@ public class SimArm extends IArm {
         shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
         wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
         visualizer = new ArmVisualizer();
+
+        fieldObject = IOdometry.getInstance().getField().getObject("Field Arm");
     }
 
     @Override
@@ -94,6 +103,19 @@ public class SimArm extends IArm {
         wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
 
+    private void updateFieldObject() {
+        double distanceFromSwerveCenter = getShoulderAngle().getCos() * Shoulder.LENGTH + getWristAngle().getCos() * Wrist.LENGTH;
+
+        Pose2d swervePose = IOdometry.getInstance().getPose();
+        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
+        
+        System.out.println(distanceFromSwerveCenter);
+        fieldObject.setPose(new Pose2d(
+            topDownTranslation.plus(swervePose.getTranslation()),
+            swervePose.getRotation()
+        ));
+    }
+
     @Override
     public void periodic() {
 
@@ -112,6 +134,8 @@ public class SimArm extends IArm {
 
         visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         visualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
+
+        updateFieldObject();
 
         SmartDashboard.putNumber("Arm/Arm Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist Angle (deg)", getWristAngle().getDegrees());

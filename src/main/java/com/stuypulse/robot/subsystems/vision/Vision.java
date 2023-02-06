@@ -2,23 +2,34 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 
-import static com.stuypulse.robot.constants.Field.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision extends IVision {
 
+    private static final Pose2d kNoPose = 
+        new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
+
     private final Limelight[] limelights;
+    private final List<Result> results;
+
+    private final FieldObject2d[] limelightPoses;
 
     public Vision() {
+        // setup limelight objects
         String[] hostNames = LIMELIGHTS;
         limelights = new Limelight[hostNames.length];
 
@@ -28,21 +39,24 @@ public class Vision extends IVision {
                 PortForwarder.add(port, hostNames[i] + ".local", port);
             }
         }
+
+        // constantly store results in array
+        results = new ArrayList<>();
+
+        // store field objects to log poses from limelights
+        Field2d field = IOdometry.getInstance().getField();
+        limelightPoses = new FieldObject2d[limelights.length];
+        for (int i = 0; i < limelightPoses.length; ++i) {
+            limelightPoses[i] = field.getObject(hostNames[i] + " pose");
+        }
     }
 
+    @Override
     public List<Result> getResults() {
-        var results = new ArrayList<Result>();
-
-        for (Limelight ll : limelights){
-            var data = ll.getPoseData();
-
-            if(data.isPresent()) {
-                results.add(process(data.get()));
-            }
-        }
         return results;
     }
 
+    // assigns error to data and returns a result 
     private Result process(AprilTagData data) {
         double distance = distanceToTarget(data.pose, data.id);
         boolean inZone = distance <= COMMUNITY_DISTANCE;
@@ -62,6 +76,7 @@ public class Vision extends IVision {
     }
 
 
+    // helper for process
     private double distanceToTarget(Pose2d pose, int id) {
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
@@ -71,13 +86,33 @@ public class Vision extends IVision {
 
     @Override
     public void periodic(){
-        for (Limelight ll : limelights){
-            String name = ll.getTableName();
-            // TODO: check if camera is connected
+        // - clear results array
+        // - update cached data in limelights (nicer to do this once per robot loop)
+        // - update results array 
+        // - log pose onto field and network
 
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose X", pose.getX());
-            // SmartDashboard.putNumber("Vision/" + name +  "/Pose Y", pose.getY());
-            // SmartDashboard.putNumber("Vision/" + name + "/Pose Rotation", pose.getRotation().getDegrees());   
+        results.clear();
+        for (int i = 0; i < limelights.length; ++i) {
+            Limelight ll = limelights[i];
+            String name = ll.getTableName();
+            FieldObject2d pose2d = limelightPoses[i];
+            
+            ll.updateAprilTagData();
+            Optional<AprilTagData> aprilTagData = ll.getAprilTagData();
+            
+            if (aprilTagData.isPresent()) {
+                SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
+                SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
+                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
+                pose2d.setPose(aprilTagData.get().pose);
+
+                results.add(process(aprilTagData.get()));
+            } else {
+                SmartDashboard.putNumber("Vision/" + name + "/X" , Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name + "/Y" , Double.NaN);
+                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
+                pose2d.setPose(kNoPose);
+            }
         }
     }
 }

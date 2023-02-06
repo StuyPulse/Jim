@@ -46,6 +46,10 @@ public abstract class IVision extends SubsystemBase {
         public Noise getNoise() {
             return noise;
         }
+
+        public AprilTagData getData(){
+            return data;
+        }
     }
 
     /** ABSTRACT METHODS **/

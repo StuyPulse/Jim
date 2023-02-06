@@ -6,6 +6,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
@@ -16,6 +17,7 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.streams.angles.filters.ARateLimit;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -59,7 +61,8 @@ public class SL_SwerveModule extends ISwerveModule {
         absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         absoluteEncoder.setZeroOffset(angleOffset.getRotations());
 
-        turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
+        turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
+            .setSetpointFilter(new ARateLimit(Swerve.MAX_TURNING));
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);

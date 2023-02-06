@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.odometry;
 
-import com.stuypulse.robot.constants.Motors.Swerve;
+import java.util.List;
+
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
@@ -23,12 +24,14 @@ public class Odometry extends IOdometry {
         var swerve = SwerveDrive.getInstance();
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
+        
         field = new Field2d();
 
         swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
     }
 
+    @Override
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
@@ -43,19 +46,14 @@ public class Odometry extends IOdometry {
         );
     }
 
-    
-
+    @Override
     public Field2d getField() {
         return field;
     }
 
-    @Override
-    public void periodic() {
-        SwerveDrive drive = SwerveDrive.getInstance();
-        IVision vision = Vision.getInstance();
-        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
-
+    private void processResults(List<Result> results, SwerveDrive drive, IVision vision){  
         for (Result result : vision.getResults()) {
+            
             switch (result.getNoise()) {
                 case LOW:
                     // pose estimator reset
@@ -77,7 +75,21 @@ public class Odometry extends IOdometry {
                 case HIGH:
                     break; // DO NOT DO ANYTHING
             }
-        }    
+        }  
+    }
+
+    @Override
+    public void periodic() {
+
+        SwerveDrive drive = SwerveDrive.getInstance();
+        IVision vision = Vision.getInstance();
+        List<Result> results = vision.getResults();
+        
+        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        processResults(results, drive, vision);
+        
+
+        // logging from pose estimator
         field.setRobotPose(getPose());
     }
 

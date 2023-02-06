@@ -43,7 +43,7 @@ public interface Settings {
         double COMMUNITY_DISTANCE = Field.PEG_TO_CHARGING_STATION_EDGE - Swerve.LENGTH/2;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight-front","limelight-back"};
+            String [] LIMELIGHTS = {"limelight"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             double CAMERA_TO_CENTER = Units.inchesToMeters(-1);
             Angle CAMERA_PITCH = Angle.fromDegrees(-1);
@@ -52,10 +52,11 @@ public interface Settings {
     }
 
     public interface Swerve {
-        double WIDTH = Units.inchesToMeters(30.0);
-        double LENGTH = Units.inchesToMeters(24.0);
+        double WIDTH = Units.inchesToMeters(26.504);
+        double LENGTH = Units.inchesToMeters(20.508);
+        
         double MAX_SPEED = 4.2;
-
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
 
         public interface Motion {
             PIDConstants XY = new PIDConstants(1, 0, 0.1);

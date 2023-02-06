@@ -9,6 +9,7 @@ import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
+import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -20,7 +21,10 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm extends IArm {
@@ -39,6 +43,8 @@ public class Arm extends IArm {
     private final SmartNumber wristTargetAngle; 
 
     private final ArmVisualizer armVisualizer;
+
+    private final FieldObject2d fieldObject;
 
     public Arm() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
@@ -67,6 +73,8 @@ public class Arm extends IArm {
         wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
 
         armVisualizer = new ArmVisualizer();
+
+        fieldObject = IOdometry.getInstance().getField().getObject("Field Arm");
     }
 
     private void configureMotors() {
@@ -122,11 +130,23 @@ public class Arm extends IArm {
 
     private void runWrist(double voltage) {
         wrist.setVoltage(voltage);
-    } 
+    }
+
+    private void updateFieldObject() {
+        double distanceFromSwerveCenter = getShoulderAngle().getCos() * Shoulder.LENGTH + getWristAngle().getCos() * Wrist.LENGTH;
+
+        Pose2d swervePose = IOdometry.getInstance().getPose();
+        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
+        
+        System.out.println(distanceFromSwerveCenter);
+        fieldObject.setPose(new Pose2d(
+            topDownTranslation.plus(swervePose.getTranslation()),
+            swervePose.getRotation()
+        ));
+    }
 
     @Override
     public void periodic() {
-
         double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
 
@@ -141,6 +161,8 @@ public class Arm extends IArm {
 
         armVisualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
+
+        updateFieldObject();
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
