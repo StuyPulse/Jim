@@ -86,7 +86,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void cubeIntake(){
+    public void acquireCube(){
         if (isFlipped()) {
             frontMotor.set(-CUBE_FRONT_ROLLER.get());
             backMotor.set(-CUBE_BACK_ROLLER.get());
@@ -97,7 +97,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void coneIntake() {
+    public void acquireCone() {
         if (isFlipped()) {
             frontMotor.set(-CONE_FRONT_ROLLER.get());
             backMotor.set(CONE_BACK_ROLLER.get());
@@ -108,7 +108,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void cubeOuttake(){
+    public void deacquireCube(){
         if (isFlipped()) {
             frontMotor.set(CUBE_FRONT_ROLLER.get());
             backMotor.set(CUBE_BACK_ROLLER.get());
@@ -119,7 +119,7 @@ public class Intake extends IIntake{
     }
 
     @Override
-    public void coneOuttake(){
+    public void deacquireCone(){
         if (isFlipped()) {
             frontMotor.set(CONE_FRONT_ROLLER.get());
             backMotor.set(-CONE_BACK_ROLLER.get());
