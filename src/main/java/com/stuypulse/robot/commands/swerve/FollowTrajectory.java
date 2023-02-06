@@ -9,7 +9,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
-import com.stuypulse.robot.subsystems.odometry.IOdometry;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -39,7 +39,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 
 		super(
 			path,
-			IOdometry.getInstance()::getPose,
+			Odometry.getInstance()::getPose,
 			SwerveDrive.getInstance().getKinematics(),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
@@ -86,7 +86,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 				path.getInitialState(),
 				DriverStation.getAlliance());
 			
-			IOdometry.getInstance().reset(new Pose2d(
+			Odometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),
 				initialState.holonomicRotation
 			));

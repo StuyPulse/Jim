@@ -3,7 +3,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.robot.subsystems.odometry.IOdometry;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -86,7 +86,7 @@ public class ArmVisualizer {
         
         SmartDashboard.putData("Arm Mech2d", arm);
 
-        fieldObject =  IOdometry.getInstance().getField().getObject("Field Arm");
+        fieldObject =  Odometry.getInstance().getField().getObject("Field Arm");
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
@@ -108,7 +108,7 @@ public class ArmVisualizer {
 
         double distanceFromSwerveCenter = Math.cos(Math.toRadians(shoulderAngle)) * Shoulder.LENGTH + Math.cos(Math.toRadians(wristAngle)) * Wrist.LENGTH;
 
-        Pose2d swervePose = IOdometry.getInstance().getPose();
+        Pose2d swervePose = Odometry.getInstance().getPose();
         Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
         
         fieldObject.setPose(new Pose2d(

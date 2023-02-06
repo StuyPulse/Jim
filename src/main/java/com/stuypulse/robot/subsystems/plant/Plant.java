@@ -1,37 +1,17 @@
 package com.stuypulse.robot.subsystems.plant;
 
-import static com.stuypulse.robot.constants.Ports.Plant.*;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+public abstract class Plant extends SubsystemBase {
+    private static Plant instance;
 
-/*
-* @author Samuel Chen
-* @author Carmin Vuong
-* @author Jiayu Yan
-* @author Tracey Lin
-*
-*/
-public class Plant extends IPlant {
-    private final DoubleSolenoid solenoid;
-
-    public Plant() {
-        this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD, REVERSE);
-        disengage();
+    public static Plant getInstance() {
+        if (instance == null) {
+            instance = new PlantImpl();
+        }
+        return instance;
     }
 
-    public void engage() {
-        solenoid.set(Value.kForward);
-    }
-
-    public void disengage() {
-        solenoid.set(Value.kReverse);
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kForward);
-    }
+    public abstract void engage();
+    public abstract void disengage(); 
 }

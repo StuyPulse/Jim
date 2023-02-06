@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
-public class SL_SwerveModule extends ISwerveModule {
+public class SL_SwerveModule extends SwerveModule {
 
     // module data
     private final String id;

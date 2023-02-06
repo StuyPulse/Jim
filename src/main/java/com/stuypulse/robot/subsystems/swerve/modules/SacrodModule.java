@@ -21,7 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SacrodModule extends ISwerveModule {
+public class SacrodModule extends SwerveModule {
 
     private interface Turn {
         double kP = 3.5;

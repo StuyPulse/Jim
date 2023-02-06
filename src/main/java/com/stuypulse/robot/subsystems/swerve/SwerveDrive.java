@@ -1,11 +1,11 @@
 package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.stuypulse.robot.subsystems.swerve.modules.ISwerveModule;
+import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.MAX_SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SacrodModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
-import com.stuypulse.robot.subsystems.odometry.IOdometry;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports;
@@ -63,7 +63,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     /** MODULES */
-    private final ISwerveModule[] modules;
+    private final SwerveModule[] modules;
 
     /** SENSORS */
     private final AHRS gyro;
@@ -72,7 +72,7 @@ public class SwerveDrive extends SubsystemBase {
 
     private final FieldObject2d[] module2ds;
 
-    public SwerveDrive(ISwerveModule... modules) {
+    public SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
         gyro = new AHRS(SPI.Port.kMXP);
@@ -114,8 +114,8 @@ public class SwerveDrive extends SubsystemBase {
         return states;
     }
 
-    private ISwerveModule getModule(String id) {
-        for (ISwerveModule module : modules) 
+    private SwerveModule getModule(String id) {
+        for (SwerveModule module : modules) 
             if (module.getID().equals(id)) {
                 return module;
         }
@@ -133,7 +133,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.y, -velocity.x,
                 -omega,
-                IOdometry.getInstance().getRotation());
+                Odometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
             Settings.DT * speeds.vxMetersPerSecond,
@@ -152,7 +152,7 @@ public class SwerveDrive extends SubsystemBase {
         if (fieldRelative) {
             robotSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
                 robotSpeed,
-                IOdometry.getInstance().getRotation());
+                Odometry.getInstance().getRotation());
         }
 
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
@@ -200,7 +200,7 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        IOdometry odometry = IOdometry.getInstance();
+        Odometry odometry = Odometry.getInstance();
         Pose2d pose = odometry.getPose();
         Rotation2d angle = odometry.getRotation();
         for (int i = 0; i < modules.length; ++i) {

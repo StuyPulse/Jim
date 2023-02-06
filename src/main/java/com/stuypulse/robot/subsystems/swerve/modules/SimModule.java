@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
-public class SimModule extends ISwerveModule {
+public class SimModule extends SwerveModule {
     
     private static LinearSystem<N2, N1, N2> identifyVelocityPositionSystem(double kV, double kA) {
         if (kV <= 0.0) {

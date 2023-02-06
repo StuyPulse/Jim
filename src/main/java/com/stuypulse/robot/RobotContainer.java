@@ -53,13 +53,13 @@ public class RobotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     
     // // Subsystem
-    public final IIntake intake = IIntake.getInstance();
+    public final Intake intake = Intake.getInstance();
     public final SwerveDrive swerve = SwerveDrive.getInstance();
-    public final IVision vision = IVision.getInstance();
-    public final IOdometry odometry = IOdometry.getInstance();
-    public final IArm arm = IArm.getInstance();
-    public final IPlant plant = IPlant.getInstance();
-    public final IWings wings = IWings.getInstance();
+    public final Vision vision = Vision.getInstance();
+    public final Odometry odometry = Odometry.getInstance();
+    public final Arm arm = Arm.getInstance();
+    public final Plant plant = Plant.getInstance();
+    public final Wings wings = Wings.getInstance();
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();

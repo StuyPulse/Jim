@@ -1,6 +1,6 @@
 package com.stuypulse.robot.subsystems.intake;
 
-public class NoIntake extends IIntake {
+public class NoIntake extends Intake {
 
     @Override
     public void acquireCube() {

@@ -2,7 +2,7 @@ package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.*;
-import com.stuypulse.robot.subsystems.odometry.IOdometry;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -47,7 +47,7 @@ public class SwerveDriveToPoseX extends CommandBase{
     @Override
     public void execute() {
 
-        Pose2d currentState = IOdometry.getInstance().getPose();
+        Pose2d currentState = Odometry.getInstance().getPose();
     
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
             xPID.update(targetPose.getX(), currentState.getX()),

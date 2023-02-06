@@ -1,6 +1,6 @@
 package com.stuypulse.robot.subsystems.wings;
 
-public class NoWings extends IWings {
+public class NoWings extends Wings {
 
     @Override
     public void extendLeft() {

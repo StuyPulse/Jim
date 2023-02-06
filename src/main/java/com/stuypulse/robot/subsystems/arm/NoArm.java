@@ -2,7 +2,7 @@ package com.stuypulse.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class NoArm extends IArm {
+public class NoArm extends Arm {
 
     @Override
     public Rotation2d getShoulderAngle() {

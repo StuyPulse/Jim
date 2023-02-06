@@ -1,6 +1,6 @@
 package com.stuypulse.robot.commands.arm;
 
-import com.stuypulse.robot.subsystems.arm.IArm;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.streams.IStream;
 
@@ -8,12 +8,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ManuallyDriveArm extends CommandBase {
-    private final IArm arm;
+    private final Arm arm;
 
     private final IStream shoulder, wrist;
 
     public ManuallyDriveArm(Gamepad gamepad) {
-        this.arm = IArm.getInstance();
+        this.arm = Arm.getInstance();
         this.shoulder = IStream.create(() -> gamepad.getDPadX()).filtered(
             x -> x * 5
         );

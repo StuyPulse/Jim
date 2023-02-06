@@ -1,13 +1,13 @@
 package com.stuypulse.robot.commands.wings;
-import com.stuypulse.robot.subsystems.wings.IWings;
+import com.stuypulse.robot.subsystems.wings.Wings;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class WingExtendRight extends InstantCommand{
-    private IWings wings;
+    private Wings wings;
 
     public WingExtendRight(){
-        wings = IWings.getInstance();
+        wings = Wings.getInstance();
         addRequirements(wings);
     }
 

@@ -1,20 +1,20 @@
 package com.stuypulse.robot.commands.arm;
 
 import static com.stuypulse.robot.constants.Settings.Arm.*;
-import com.stuypulse.robot.subsystems.arm.IArm;
+import com.stuypulse.robot.subsystems.arm.Arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmReachSetpoint extends CommandBase {
 
-    private final IArm arm;
+    private final Arm arm;
 
     private final Rotation2d targetShoulderAngle;
     private final Rotation2d targetWristAngle;
 
     public ArmReachSetpoint(Rotation2d targetShoulderAngle, Rotation2d targetWristAngle) {
-        arm = IArm.getInstance();
+        arm = Arm.getInstance();
 
         this.targetShoulderAngle = targetShoulderAngle;
         this.targetWristAngle = targetWristAngle;

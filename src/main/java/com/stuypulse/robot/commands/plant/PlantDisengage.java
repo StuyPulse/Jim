@@ -1,15 +1,15 @@
 package com.stuypulse.robot.commands.plant;
 
-import com.stuypulse.robot.subsystems.plant.IPlant;
+import com.stuypulse.robot.subsystems.plant.Plant;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class PlantDisengage extends InstantCommand {
     
-    private IPlant plant;
+    private Plant plant;
 
     public PlantDisengage(){
-        plant = IPlant.getInstance();
+        plant = Plant.getInstance();
         addRequirements(plant);
     }
 
