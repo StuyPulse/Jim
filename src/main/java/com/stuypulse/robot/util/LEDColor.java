@@ -8,6 +8,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
  * Class that stores all of the different PWM values for the LED Controller.
@@ -43,6 +44,10 @@ public class LEDColor {
         } else {
             return this.color;
         }
+    }
+
+    public Color8Bit getColor8Bit() {
+        return new Color8Bit(0, 0, 0);
     }
 
     /***********************/

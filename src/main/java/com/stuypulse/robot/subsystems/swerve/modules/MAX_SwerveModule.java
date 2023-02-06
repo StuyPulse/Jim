@@ -28,22 +28,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MAX_SwerveModule extends ISwerveModule {
 
     // module data
-    private final String id;
-    private final Translation2d location;
+    private String id;
+    private Translation2d location;
     private SwerveModuleState targetState;
 
     // turn
-    private final CANSparkMax turnMotor;
-    private final SparkMaxAbsoluteEncoder absoluteEncoder;
+    private CANSparkMax turnMotor;
+    private SparkMaxAbsoluteEncoder absoluteEncoder;
 
     // drive
-    private final CANSparkMax driveMotor;
-    private final RelativeEncoder driveEncoder;
+    private CANSparkMax driveMotor;
+    private RelativeEncoder driveEncoder;
 
     // controller
-    private final SparkMaxPIDController drivePID;
-    private final SimpleMotorFeedforward driveFF;
-    private final SparkMaxPIDController turnPID;
+    private SparkMaxPIDController drivePID;
+    private SimpleMotorFeedforward driveFF;
+    private SparkMaxPIDController turnPID;
 
 
     private final SlewRateLimiter turnRateLimit;
@@ -58,6 +58,24 @@ public class MAX_SwerveModule extends ISwerveModule {
 
         // turn 
         turnMotor = new CANSparkMax(turnCANId, MotorType.kBrushless);
+        configureTurnMotor(angleOffset);
+
+        turnRateLimit = new SlewRateLimiter(Swerve.MAX_TURNING.get());
+        
+        // drive
+        driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
+        configureDriveMotor();
+        
+        driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
+
+        targetState = new SwerveModuleState();
+
+        prevVelocity = 0;
+    }   
+
+    private void configureTurnMotor(Rotation2d angleOffset) {
+
+        turnMotor.restoreFactoryDefaults();
         
         absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
         absoluteEncoder.setPositionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
@@ -73,26 +91,19 @@ public class MAX_SwerveModule extends ISwerveModule {
         turnPID.setD(Turn.kD);
         turnPID.setOutputRange(-1, 1);
 
-        turnPID.setPositionPIDWrappingEnabled(true);
-        turnPID.setPositionPIDWrappingMinInput(Encoder.Turn.MIN_PID_INPUT);
-        turnPID.setPositionPIDWrappingMaxInput(Encoder.Turn.MAX_PID_INPUT);
-
-        turnPID = turnMotor.getPIDController();
-        turnPID.setFeedbackDevice(absoluteEncoder);
-
-        turnPID.setP(Turn.kP);
-        turnPID.setI(Turn.kI);
-        turnPID.setD(Turn.kD);
-        turnPID.setOutputRange(-1, 1);
 
         turnPID.setPositionPIDWrappingEnabled(true);
         turnPID.setPositionPIDWrappingMinInput(Encoder.Turn.MIN_PID_INPUT);
         turnPID.setPositionPIDWrappingMaxInput(Encoder.Turn.MAX_PID_INPUT);
 
-        turnRateLimit = new SlewRateLimiter(Swerve.MAX_TURNING.get());
+        turnMotor.enableVoltageCompensation(12.0);
 
-        // drive
-        driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
+        Motors.Swerve.TURN.configure(turnMotor);
+    }
+
+    private void configureDriveMotor() {
+
+        driveMotor.restoreFactoryDefaults();
         
         driveEncoder = driveMotor.getEncoder();
         driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
@@ -106,18 +117,12 @@ public class MAX_SwerveModule extends ISwerveModule {
         drivePID.setD(Drive.kD);
         drivePID.setOutputRange(-1, 1);
 
-        driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
-        
-        targetState = new SwerveModuleState();
-
-        prevVelocity = 0;
-
         driveMotor.enableVoltageCompensation(12.0);
-        turnMotor.enableVoltageCompensation(12.0);
-        
-        Motors.Swerve.TURN.configure(turnMotor);
-        Motors.Swerve.DRIVE.configure(turnMotor);
-    }   
+        Motors.Swerve.DRIVE.configure(driveMotor);
+        driveEncoder.setPosition(0);
+    }
+
+
     
     @Override
     public String getID() {

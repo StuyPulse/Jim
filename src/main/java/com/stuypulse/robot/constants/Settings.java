@@ -9,6 +9,7 @@ import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.stuylib.math.Angle;
 
@@ -39,15 +40,13 @@ public interface Settings {
     }
 
     public interface Vision {
-        double TOLERANCE = -1;
-        double COMMUNITY_DISTANCE = Field.PEG_TO_CHARGING_STATION_EDGE - Swerve.LENGTH/2;
+        double USABLE_DISTANCE = Units.feetToMeters(10);
+        double TRUST_DISTANCE = Units.feetToMeters(5);
+        double TRUST_ANGLE = 50;
 
         public interface Limelight {
             String [] LIMELIGHTS = {"limelight"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
-            double CAMERA_TO_CENTER = Units.inchesToMeters(-1);
-            Angle CAMERA_PITCH = Angle.fromDegrees(-1);
-            double CAMERA_HEIGHT = Units.inchesToMeters(-1);
         }
     }
 
@@ -58,8 +57,9 @@ public interface Settings {
         double MAX_SPEED = 4.2;
         SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
 
+
         public interface Motion {
-            PIDConstants XY = new PIDConstants(1, 0, 0.1);
+            PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
         }
         
@@ -244,7 +244,13 @@ public interface Settings {
     }
 
 
-    public interface AlignmentCommand{
+    public interface Alignment {
+
+        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.3);
+
+        SmartNumber ALIGNED_THRESHOLD_X = new SmartNumber("Alignment/X Threshold", 0.1);
+        SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
+        SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
         
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);

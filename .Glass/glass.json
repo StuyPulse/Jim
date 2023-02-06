@@ -25,6 +25,12 @@
         "Wrist": {
           "open": true
         },
+        "Vision": {
+          "limelight": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     },

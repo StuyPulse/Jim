@@ -5,6 +5,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
@@ -58,9 +59,23 @@ public class Vision extends IVision {
 
     // assigns error to data and returns a result 
     private Result process(AprilTagData data) {
+        double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
-        boolean inZone = distance <= COMMUNITY_DISTANCE;
-        boolean inTolerance = distance <= TOLERANCE;
+
+        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
+        SmartDashboard.putNumber("Vision/Distance", distance);
+        SmartDashboard.putNumber("Vision/Tag ID", data.id);
+        
+        // SmartDashboard.putNumber("Vision/Pose Degrees", data.pose.getRotation().getDegrees());
+        // SmartDashboard.putNumber("Vision/Pose X", data.pose.getX());
+        // SmartDashboard.putNumber("Vision/Pose Y", data.pose.getY());
+
+
+        if (Math.abs(angleDegrees) > TRUST_ANGLE)
+            return new Result(data, Noise.HIGH);
+        
+        boolean inZone = distance <= TRUST_DISTANCE;
+        boolean inTolerance = distance <= USABLE_DISTANCE;
 
         // defaults to high error
         Noise error = Noise.HIGH;
@@ -71,18 +86,36 @@ public class Vision extends IVision {
         else if (inTolerance) {
             error = Noise.MID;
         }
-
         return new Result(data, error);
     }
 
 
     // helper for process
     private double distanceToTarget(Pose2d pose, int id) {
+        if (id < 1)
+            return Double.POSITIVE_INFINITY;
+
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
         
         return robot.getDistance(tag);
     }
+
+    private double absDegToTarget(Pose2d pose, int id) {
+        if (id < 1)
+            return Double.POSITIVE_INFINITY;
+
+        Translation2d robot = pose.getTranslation();
+        Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
+
+        double deg = robot.minus(tag).getAngle().getDegrees();
+
+        if (Math.abs(deg) > 90)
+            deg += 180;
+
+        return deg;
+    }
+
 
     @Override
     public void periodic(){
@@ -115,4 +148,4 @@ public class Vision extends IVision {
             }
         }
     }
-}
+} 

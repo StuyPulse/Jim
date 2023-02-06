@@ -1,7 +1,8 @@
 package com.stuypulse.robot.subsystems;
 
-import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
+
+import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

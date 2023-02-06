@@ -17,10 +17,10 @@ public class Limelight {
 
     private String tableName;
 
-    private final DoubleArrayEntry botposeEntry;
     private final DoubleEntry latencyEntry;
     private final IntegerEntry idEntry;
-
+    private final DoubleArrayEntry botposeEntry;
+    
     private Optional<AprilTagData> data;
 
     public Limelight(String tableName) {
@@ -29,8 +29,8 @@ public class Limelight {
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
 
         latencyEntry = limelight.getDoubleTopic("tl").getEntry(0);
-        botposeEntry = limelight.getDoubleArrayTopic("botpose").getEntry(new double[] {});
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
+        botposeEntry = limelight.getDoubleArrayTopic("botpose").getEntry(new double[0]);
     
         data = Optional.empty();
     }
