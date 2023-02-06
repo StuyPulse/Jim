@@ -10,11 +10,13 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -42,6 +44,8 @@ public class MAX_SwerveModule extends ISwerveModule {
     private final SparkMaxPIDController drivePID;
     private final SimpleMotorFeedforward driveFF;
     private final SparkMaxPIDController turnPID;
+
+    private final SlewRateLimiter turnRateLimit;
 
     private double prevVelocity;
     
@@ -71,6 +75,8 @@ public class MAX_SwerveModule extends ISwerveModule {
         turnPID.setPositionPIDWrappingEnabled(true);
         turnPID.setPositionPIDWrappingMinInput(Encoder.Turn.MIN_PID_INPUT);
         turnPID.setPositionPIDWrappingMaxInput(Encoder.Turn.MAX_PID_INPUT);
+
+        turnRateLimit = new SlewRateLimiter(Swerve.MAX_TURNING.get());
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
@@ -137,7 +143,9 @@ public class MAX_SwerveModule extends ISwerveModule {
     @Override
     public void periodic() {
         // turn
-        turnPID.setReference(targetState.angle.getRadians(), ControlType.kPosition);
+        turnPID.setReference(
+            turnRateLimit.calculate(targetState.angle.getRadians()),
+            ControlType.kPosition);
 
         // drive
         double vel = getVelocity();
