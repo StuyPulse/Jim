@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.robot.constants.Settings.AlignmentCommand.Rotation;
-import com.stuypulse.robot.constants.Settings.AlignmentCommand.Translation;
+import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
+import com.stuypulse.robot.constants.Settings.Alignment.Translation;
 import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;

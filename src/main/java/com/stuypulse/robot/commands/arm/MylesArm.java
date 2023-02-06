@@ -24,8 +24,8 @@ public class MylesArm extends CommandBase {
     @Override
     public void initialize() {
         currentIdx = 0;
-        arm.setTargetShoulderAngle(setpoints[0].getShoulderRotation());
-        arm.setTargetWristAngle(setpoints[0].getWristRotation());
+        arm.setTargetShoulderAngle(setpoints[0].getShoulderState());
+        arm.setTargetWristAngle(setpoints[0].getWristState());
     }
 
     private ArmState getCurrentSetpoint() {
@@ -35,8 +35,8 @@ public class MylesArm extends CommandBase {
     @Override
     public void execute() {
         ArmState setpoint = getCurrentSetpoint();
-        arm.setTargetShoulderAngle(setpoint.getShoulderRotation());
-        arm.setTargetWristAngle(setpoint.getWristRotation());
+        arm.setTargetShoulderAngle(setpoint.getShoulderState());
+        arm.setTargetWristAngle(setpoint.getWristState());
 
         if (arm.isShoulderAtAngle(Rotation2d.fromDegrees(4)) && arm.isWristAtAngle(Rotation2d.fromDegrees(4))) {
             currentIdx++;

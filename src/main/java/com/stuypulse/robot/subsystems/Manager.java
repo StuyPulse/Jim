@@ -1,10 +1,5 @@
 package com.stuypulse.robot.subsystems;
 
-import static com.stuypulse.robot.constants.ArmTrajectories.*;
-
-import com.stuypulse.robot.constants.ArmTrajectories.SameSide.*;
-import com.stuypulse.robot.subsystems.arm.IArm;
-import com.stuypulse.robot.subsystems.intake.IIntake;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 import com.stuypulse.robot.util.ArmState;

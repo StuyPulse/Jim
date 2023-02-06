@@ -12,7 +12,7 @@ public abstract class IArm extends SubsystemBase {
 
     public static IArm getInstance() {
         if (instance == null) {
-            instance = new NoArm(); // RobotBase.isSimulation() ? new SimArm() : new Arm();
+            instance = RobotBase.isSimulation() ? new SimArm() : new Arm();
         }
         return instance;
     }

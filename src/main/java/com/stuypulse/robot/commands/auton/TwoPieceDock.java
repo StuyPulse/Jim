@@ -6,8 +6,8 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
-import com.stuypulse.robot.commands.intake.IntakeCube;
-import com.stuypulse.robot.commands.intake.OuttakeCube;
+import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
+import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.swerve.FollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
@@ -37,7 +37,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
         // score held piece, then drive to first game piece and intake
         addCommands(
             // new ArmFollowTrajectory(),
-            new OuttakeCube(),
+            new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
 
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
@@ -45,7 +45,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new FollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative(),
-            new IntakeCube(),
+            new IntakeAcquireCube(),
             new WaitCommand(INTAKE_ACQUIRE_TIME)
         );
         
@@ -57,7 +57,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
                 paths.get("Score Piece")
             ).fieldRelative(),
             // new ArmFollowTrajectory(),
-            new OuttakeCube(),
+            new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 

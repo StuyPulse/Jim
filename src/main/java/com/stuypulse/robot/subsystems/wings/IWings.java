@@ -8,7 +8,7 @@ public abstract class IWings extends SubsystemBase {
 
     public static IWings getInstance() {
         if (instance == null) {
-            instance = new NoWings(); // new Wings();
+            instance = new Wings();
         }
         return instance;
     }

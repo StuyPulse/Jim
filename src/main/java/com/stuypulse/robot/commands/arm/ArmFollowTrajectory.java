@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.arm;
 
-import com.stuypulse.robot.constants.Settings.Swerve.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Swerve.Arm.Wrist;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.IArm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;

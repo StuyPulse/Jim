@@ -19,8 +19,7 @@ public class Limelight {
 
     private final DoubleEntry latencyEntry;
     private final IntegerEntry idEntry;
-    
-    private DoubleArrayEntry botposeEntry;
+    private final DoubleArrayEntry botposeEntry;
     
     private Optional<AprilTagData> data;
 
@@ -31,6 +30,7 @@ public class Limelight {
 
         latencyEntry = limelight.getDoubleTopic("tl").getEntry(0);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
+        botposeEntry = limelight.getDoubleArrayTopic("botpose").getEntry(new double[0]);
     
         data = Optional.empty();
     }

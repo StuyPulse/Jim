@@ -3,7 +3,7 @@ package com.stuypulse.robot.commands.auton;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
-import com.stuypulse.robot.commands.intake.OuttakeCube;
+import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.swerve.FollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
@@ -19,7 +19,7 @@ public class OnePiece extends SequentialCommandGroup {
     public OnePiece() {
         addCommands(
             // new ArmFollowTrajectory(),
-            new OuttakeCube(),
+            new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new FollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Mobility", CONSTRAINTS)

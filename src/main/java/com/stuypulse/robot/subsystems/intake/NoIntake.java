@@ -3,19 +3,19 @@ package com.stuypulse.robot.subsystems.intake;
 public class NoIntake extends IIntake {
 
     @Override
-    public void cubeIntake() {
+    public void acquireCube() {
     }
 
     @Override
-    public void coneIntake() {
+    public void acquireCone() {
     }
 
     @Override
-    public void cubeOuttake() {
+    public void deacquireCube() {
     }
 
     @Override
-    public void coneOuttake() {
+    public void deacquireCone() {
     }
 
     @Override
