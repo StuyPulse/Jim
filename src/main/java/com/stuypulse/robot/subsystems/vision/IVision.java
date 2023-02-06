@@ -3,9 +3,7 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.List;
 
 import com.stuypulse.robot.util.AprilTagData;
-import com.stuypulse.robot.util.Limelight;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

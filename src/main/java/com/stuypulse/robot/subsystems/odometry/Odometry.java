@@ -2,12 +2,10 @@ package com.stuypulse.robot.subsystems.odometry;
 
 import java.util.List;
 
-import com.stuypulse.robot.constants.Motors.Swerve;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.IVision;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.IVision.Result;
-import com.stuypulse.stuylib.network.limelight.LimelightConstants;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -26,9 +24,10 @@ public class Odometry extends IOdometry {
         var swerve = SwerveDrive.getInstance();
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.01, 0.1, Units.degreesToRadians(3)));
+        
         field = new Field2d();
-        SmartDashboard.putData(field);
         swerve.initFieldObjects(field);
+        SmartDashboard.putData("Field", field);
     }
 
     @Override
@@ -51,8 +50,7 @@ public class Odometry extends IOdometry {
         return field;
     }
 
-    public void processResults(List<Result> results, SwerveDrive drive, IVision vision){
-        
+    private void processResults(List<Result> results, SwerveDrive drive, IVision vision){  
         for (Result result : vision.getResults()) {
             
             switch (result.getNoise()) {

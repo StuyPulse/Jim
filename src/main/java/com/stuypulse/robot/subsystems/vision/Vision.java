@@ -6,7 +6,6 @@ import com.stuypulse.robot.subsystems.odometry.IOdometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 
-import static com.stuypulse.robot.constants.Field.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
