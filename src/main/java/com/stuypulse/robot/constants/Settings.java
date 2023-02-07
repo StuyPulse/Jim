@@ -136,6 +136,7 @@ public interface Settings {
             double MASS = 0.01; 
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            SmartNumber shoulderSpeedDegrees = new SmartNumber("Arm/Shoulder/maxSpeed", 15); // degrees per second
 
             double VEL_LIMIT = 0.5;
             double ACCEL_LIMIT = 0.4;
@@ -171,6 +172,7 @@ public interface Settings {
             double MASS = 0.001;
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            SmartNumber wristSpeedDegrees = new SmartNumber("Arm/Wrist/Speed", 15); // degrees per second
             
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
