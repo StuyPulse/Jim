@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class FollowTrajectory extends PPSwerveControllerCommand {
+public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	public static HashMap<String, PathPlannerTrajectory> getSeparatedPaths(List<PathPlannerTrajectory> paths, String... names) {
 		if (paths.size() != names.length)
@@ -35,7 +35,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 	private boolean robotRelative;
 	private PathPlannerTrajectory path;
 
-	public FollowTrajectory(PathPlannerTrajectory path) {
+	public SwerveDriveFollowTrajectory(PathPlannerTrajectory path) {
 
 		super(
 			path,
@@ -53,12 +53,12 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 		this.path = path;
 	}
 
-	public FollowTrajectory robotRelative() {
+	public SwerveDriveFollowTrajectory robotRelative() {
 		robotRelative = true;
 		return this;
 	}
 
-	public FollowTrajectory fieldRelative() {
+	public SwerveDriveFollowTrajectory fieldRelative() {
 		robotRelative = false;
 		return this;
 	}

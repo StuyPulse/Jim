@@ -9,7 +9,7 @@ import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.swerve.FollowTrajectory;
+import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.util.LEDColor;
@@ -28,7 +28,7 @@ public class ThreePiece extends SequentialCommandGroup {
 
 
         // load paths into hashmap
-        HashMap<String, PathPlannerTrajectory> paths = FollowTrajectory.getSeparatedPaths(
+        HashMap<String, PathPlannerTrajectory> paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("3 Piece", CONSTRAINTS, CONSTRAINTS),
 
             "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two"
@@ -41,7 +41,7 @@ public class ThreePiece extends SequentialCommandGroup {
             // new OuttakeCube(),
             // new WaitCommand(INTAKE_DEACQUIRE_TIME),
             
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative(),
             new IntakeAcquireCube(),
@@ -52,7 +52,7 @@ public class ThreePiece extends SequentialCommandGroup {
         addCommands(
             // new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative()
             // // new ArmFollowTrajectory(),
@@ -65,7 +65,7 @@ public class ThreePiece extends SequentialCommandGroup {
 
             // new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two")
             ).fieldRelative()
             // new IntakeCube(),
@@ -79,7 +79,7 @@ public class ThreePiece extends SequentialCommandGroup {
 
             new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two")
             ).fieldRelative(),
             // new ArmFollowTrajectory(),

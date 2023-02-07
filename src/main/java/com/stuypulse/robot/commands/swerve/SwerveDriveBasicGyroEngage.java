@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BasicGyroEngage extends CommandBase {
+public class SwerveDriveBasicGyroEngage extends CommandBase {
         
     private Controller control;
 
@@ -21,7 +21,7 @@ public class BasicGyroEngage extends CommandBase {
 
     SwerveDrive swerve;
 
-    public BasicGyroEngage() {
+    public SwerveDriveBasicGyroEngage() {
 
         swerve = SwerveDrive.getInstance();
 
