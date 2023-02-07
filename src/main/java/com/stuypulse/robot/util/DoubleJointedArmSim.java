@@ -25,11 +25,6 @@ public class DoubleJointedArmSim {
         wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, true);
     }
 
-    private DoubleJointedArmSim(SingleJointedArmSim shoulder, SingleJointedArmSim wrist) {
-        this.shoulderSim = shoulder;
-        this.wristSim = wrist;
-    }
-
     public double getShoulderAngleDegrees() {
         return Math.toDegrees(shoulderSim.getOutput(0));
     }
