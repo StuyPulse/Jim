@@ -14,9 +14,7 @@ import com.stuypulse.robot.commands.auton.ThreePiece;
 import com.stuypulse.robot.commands.auton.ThreePieceDock;
 import com.stuypulse.robot.commands.auton.TwoPieceDock;
 import com.stuypulse.robot.commands.odometry.OdometryReset;
-import com.stuypulse.robot.commands.swerve.AlignToPose;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
-import com.stuypulse.robot.commands.swerve.SwerveDriveToPoseY;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.commands.arm.routines.*;
@@ -93,73 +91,6 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getTopButton().onTrue(new OdometryReset());
-
-        driver.getLeftButton().whileTrue(new AlignToPose(new Pose2d(2.25,1.1 , new Rotation2d(Units.degreesToRadians(0) ))));
-
-        driver.getRightButton().whileTrue(new AlignToPose(new Pose2d(2.25,2.725, new Rotation2d(Units.degreesToRadians(0)))));
-
-        driver.getBottomButton().whileTrue(new AlignToPose(new Pose2d(2.25,4.4
-        ,new Rotation2d(Units.degreesToRadians(0)))));
-
-        
-        // driver.getBottomButton().onTrue(new SequentialCommandGroup(
-        //                                 new SetPiece(Piece.CONE), 
-        //                                 new SetLevel(Level.HIGH), 
-        //                                 new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.READY))));
-        // driver.getLeftButton().onTrue(new ArmFollowTrajectory(manager.toHome()));
-        // driver.getRightButton().onTrue(new SequentialCommandGroup(
-        //                                 new SetPiece(Piece.CONE), 
-        //                                 new SetLevel(Level.HIGH), 
-        //                                 new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.SCORE)),
-        //                                 new WaitCommand(0.1),
-        //                                 new ArmFollowTrajectory(manager.getTrajectory(Side.SAME, Mode.NEUTRAL))));
-        // operator.getTopButton().onTrue(new SetPiece(Piece.CONE));
-        // operator.getLeftButton().onTrue(new SetPiece(Piece.CUBE));
-
-        
-        operator.getTopButton()
-            .onTrue(manager.runOnce(() -> manager.setGamePiece(GamePiece.CONE)));
-        operator.getBottomButton()
-            .onTrue(manager.runOnce(() -> manager.setGamePiece(GamePiece.CUBE)));
-
-        operator.getLeftButton()
-            .onTrue(manager.runOnce(() -> manager.setNodeLevel(NodeLevel.HIGH)));
-        operator.getRightButton()
-            .onTrue(manager.runOnce(() -> manager.setNodeLevel(NodeLevel.MID)));
-
-
-        operator.getRightTriggerButton()
-            // .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory2(manager.getIntakeTrajectory())))
-            .onTrue(new ArmIntake())
-            .onFalse(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-90, +90))))
-        ;
-
-        operator.getDPadRight().onTrue(manager.runOnce(() -> manager.setIntakeSide(IntakeSide.FRONT)));
-        operator.getDPadLeft().onTrue(manager.runOnce(() -> manager.setIntakeSide(IntakeSide.BACK)));
-
-        operator.getLeftTriggerButton()
-            // .onTrue(new ProxyCommand(() -> new ArmFollowTrajectory2(manager.getReadyTrajectory())))
-            .onTrue(manager.runOnce(() -> manager.setScoreSide(ScoreSide.OPPOSITE)).andThen(new ArmReady()))
-        ;
-
-        // operator.getRightTriggerButton()
-        //     .onTrue(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0))))
-        //     .onFalse(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-90, +90))));
-        // operator.getLeftTriggerButton()
-        //     .onTrue(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0)).flipped()))
-        //     .onFalse(new ArmFollowTrajectory(new ArmTrajectory().addState(ArmState.fromDegrees(-90, +90))));
-
-
-        // operator.getDPadUp().onTrue(new SetLevel(Level.HIGH));
-        // operator.getDPadLeft().onTrue(new SetLevel(Level.MID));
-        // operator.getDPadDown().onTrue(new SetLevel(Level.LOW));
-
-        // operator.getLeftBumper().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.READY)));
-        // operator.getRightBumper().onTrue(new ArmFollowTrajectory(manager.append(manager.getPath(Side.SAME, Mode.SCORE), 
-        //                                                                         manager.getPath(Side.SAME, Mode.NEUTRAL))));
-
-        // operator.getRightTriggerButton().onTrue(new ArmFollowTrajectory(manager.getPath(Side.SAME, Mode.INTAKE)));
     }
 
     /**************/
