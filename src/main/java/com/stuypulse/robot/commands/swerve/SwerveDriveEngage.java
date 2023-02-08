@@ -1,41 +1,39 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.odometry.OdometryImpl;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.network.SmartString;
 import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveBasicGyroEngage extends CommandBase {
+public class SwerveDriveEngage extends CommandBase {
         
     private Controller control;
 
-    private SmartNumber MAX_TILT, MAX_ENGAGE_SPEED;
+    private static SmartNumber kMaxTilt = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
+    private static SmartNumber kMaxEngageSpeed = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.45);
 
-    SwerveDrive swerve;
+    private SwerveDrive swerve;
+    private Odometry odometry;
 
-    public SwerveDriveBasicGyroEngage() {
+    public SwerveDriveEngage() {
 
         swerve = SwerveDrive.getInstance();
+        odometry = Odometry.getInstance();
 
-        MAX_TILT = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0);
-        MAX_ENGAGE_SPEED = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.25);
-
-        control = new PIDController(IStream.create(() -> MAX_ENGAGE_SPEED.get() / MAX_TILT.get()).number(), 0, 0);
+        Number kP = IStream.create(() -> kMaxEngageSpeed.get() / kMaxTilt.get()).number();
+        control = new PIDController(kP, 0, 0);
     }
 
     private Rotation2d getBalanceAngle() {
-
         Rotation2d pitch = swerve.getGyroPitch();
         Rotation2d roll = swerve.getGyroRoll();
-        Rotation2d yaw = swerve.getGyroAngle();
+        Rotation2d yaw = odometry.getRotation();
         
         double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
         double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
@@ -49,12 +47,13 @@ public class SwerveDriveBasicGyroEngage extends CommandBase {
             0,
             -1 * getBalanceAngle().getDegrees());
         
-        swerve.setChassisSpeeds(new ChassisSpeeds(speed, 0, 0), true);
+        swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
+            speed, 0, 0, odometry.getRotation()));
     }
 
     @Override
     public void end(boolean interrupted) {
-        swerve.setChassisSpeeds(new ChassisSpeeds(), true);
+        swerve.stop();
     }
 
 }

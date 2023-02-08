@@ -145,16 +145,10 @@ public class SwerveDrive extends SubsystemBase {
             twistVel.dx / Settings.DT,
             twistVel.dy / Settings.DT,
             twistVel.dtheta / Settings.DT
-        ), false);
+        ));
     }
     
-    public void setChassisSpeeds(ChassisSpeeds robotSpeed, boolean fieldRelative) {
-        if (fieldRelative) {
-            robotSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
-                robotSpeed,
-                Odometry.getInstance().getRotation());
-        }
-
+    public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
     
@@ -171,10 +165,8 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void stop() {
-        setChassisSpeeds(new ChassisSpeeds(), true);
+        setChassisSpeeds(new ChassisSpeeds());
     }
-    
-
 
     /** GYRO API **/
     public Rotation2d getGyroAngle() {
@@ -188,15 +180,11 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getGyroRoll() {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
-    
-
 
     /** KINEMATICS **/
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
-    
-
 
     @Override
     public void periodic() {

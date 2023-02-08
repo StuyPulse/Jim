@@ -79,6 +79,6 @@ public class SwerveDriveToPose extends CommandBase {
             pose.getRotation()
         );
 
-        swerve.setChassisSpeeds(speeds, false);
+        swerve.setChassisSpeeds(speeds);
     }
 }
