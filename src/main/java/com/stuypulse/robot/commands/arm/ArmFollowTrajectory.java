@@ -68,6 +68,5 @@ public class ArmFollowTrajectory extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        System.out.println("THIS COMMAND HAS ENDED");
     }
 }

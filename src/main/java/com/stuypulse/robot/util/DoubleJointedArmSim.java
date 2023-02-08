@@ -8,12 +8,11 @@ public class DoubleJointedArmSim {
     private final SingleJointedArmSim shoulderSim;
     private final SingleJointedArmSim wristSim; 
    
-    public DoubleJointedArmSim(DCMotor shoulderDCMotorGearbox, double shoulderGearing, 
-        double shoulderMomentOfInertia, double shoulderArmLengthMeters, double shoulderMinAngleRads, 
-        double shoulderMaxAngleRads, 
+    public DoubleJointedArmSim(
+        DCMotor shoulderDCMotorGearbox, double shoulderGearing, double shoulderMomentOfInertia, double shoulderArmLengthMeters, double shoulderMinAngleRads, double shoulderMaxAngleRads, 
+        
         DCMotor wristDCMotorGearbox, double wristGearing, double wristMomentOfIntertia,
-        double wristArmLengthMeters, double wristMinAngleRads, double wristMaxAngleRads,
-        double wristArmMass) {
+        double wristArmLengthMeters, double wristMinAngleRads, double wristMaxAngleRads) {
 
         shoulderSim = new SingleJointedArmSim(
             shoulderDCMotorGearbox, 
@@ -26,7 +25,7 @@ public class DoubleJointedArmSim {
         wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, true);
     }
 
-    public DoubleJointedArmSim(SingleJointedArmSim shoulder, SingleJointedArmSim wrist) {
+    private DoubleJointedArmSim(SingleJointedArmSim shoulder, SingleJointedArmSim wrist) {
         this.shoulderSim = shoulder;
         this.wristSim = wrist;
     }
