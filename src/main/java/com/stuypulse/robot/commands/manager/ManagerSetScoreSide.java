@@ -2,9 +2,9 @@ package com.stuypulse.robot.commands.manager;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class ManagerSetScoreSide extends CommandBase {
+public class ManagerSetScoreSide extends InstantCommand {
     private final Manager manager;
     private final ScoreSide scoreSide; 
 
