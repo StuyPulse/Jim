@@ -54,8 +54,7 @@ public class SwerveDriveDrive extends CommandBase {
         if (robotRelative.get()) {
             var s = speed.get();
             swerve.setChassisSpeeds(
-                new ChassisSpeeds(s.y, -s.x, -turn.get()),
-                false);
+                new ChassisSpeeds(s.y, -s.x, -turn.get()));
         } else {
             swerve.drive(speed.get(), turn.get());
         }

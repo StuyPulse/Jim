@@ -14,9 +14,7 @@ import com.stuypulse.robot.commands.auton.ThreePiece;
 import com.stuypulse.robot.commands.auton.ThreePieceDock;
 import com.stuypulse.robot.commands.auton.TwoPieceDock;
 import com.stuypulse.robot.commands.odometry.OdometryReset;
-import com.stuypulse.robot.commands.swerve.AlignToPose;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
-import com.stuypulse.robot.commands.swerve.SwerveDriveToPoseY;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.commands.arm.routines.*;
@@ -94,7 +92,6 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        
     }
 
     /**************/

@@ -7,11 +7,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LockWheels extends CommandBase {
+public class SwerveDriveLockWheels extends CommandBase {
     
     private SwerveDrive swerve;
     
-    public LockWheels(){
+    public SwerveDriveLockWheels(){
         this.swerve = SwerveDrive.getInstance();
         
         addRequirements(swerve);
