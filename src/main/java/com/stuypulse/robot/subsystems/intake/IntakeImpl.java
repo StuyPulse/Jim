@@ -141,6 +141,9 @@ public class IntakeImpl extends Intake{
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
         SmartDashboard.putBoolean("Intake/Is Stalling", isStalling());
         SmartDashboard.putBoolean("Intake/Has Cube", hasCube());
+
+        SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
+        SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
     }
 
 }
