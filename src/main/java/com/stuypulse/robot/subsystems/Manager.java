@@ -1,9 +1,13 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.util.ArmTrajectory;
-
+import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.util.ArmState;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,8 +25,21 @@ public class Manager extends SubsystemBase {
 
     // game piece to score
     public enum GamePiece {
-        CONE,
-        CUBE
+        CONE(false),
+        CUBE(true);
+
+        private final boolean cube;
+        private GamePiece(boolean cube) {
+            this.cube = cube;
+        }
+
+        public boolean isCube() {
+            return cube;
+        }
+
+        public boolean isCone() {
+            return !isCube();
+        }
     }
 
     // level to score at
@@ -44,17 +61,29 @@ public class Manager extends SubsystemBase {
         OPPOSITE
     }
 
+    public enum Direction {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
 
     private GamePiece gamePiece;
     private NodeLevel nodeLevel;
     private IntakeSide intakeSide;
     private ScoreSide scoreSide;
 
+    private Direction gridSection;
+    private Direction gridColumn;
+
     public Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         intakeSide = IntakeSide.FRONT;
         scoreSide = ScoreSide.SAME;
+
+        gridSection = Direction.CENTER;
+        gridColumn = Direction.CENTER;
     }
 
     /** Generate Intake Trajectories **/
@@ -136,6 +165,18 @@ public class Manager extends SubsystemBase {
         return ArmTrajectory.fromStates(ArmState.fromDegrees(-90, +90));
     }
 
+    /** Generate Score Pose **/
+
+    public Pose2d getScorePose() {
+        int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
+        
+        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
+            return Field.BLUE_ALIGN_POSES[index];
+        } else {
+            return Field.RED_ALIGN_POSES[index];
+        }
+    }
+
     /** Change and Read State **/
     public GamePiece getGamePiece() {
         return gamePiece;
@@ -167,6 +208,22 @@ public class Manager extends SubsystemBase {
 
     public void setScoreSide(ScoreSide scoreSide) {
         this.scoreSide = scoreSide;
+    }
+
+    public Direction getGridSection() {
+        return gridSection;
+    }
+
+    public void setGridSection(Direction gridSection) {
+        this.gridSection = gridSection;
+    }
+
+    public Direction getGridColumn() {
+        return gridColumn;
+    }
+
+    public void setGridColumn(Direction gridColumn) {
+        this.gridColumn = gridColumn;
     }
 
     @Override

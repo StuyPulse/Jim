@@ -20,6 +20,10 @@ public abstract class Arm extends SubsystemBase {
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
+    public final ArmState getState() {
+        return new ArmState(getShoulderAngle(), getWristAngle());
+    }
+
     public abstract Rotation2d getShoulderTargetAngle();
     public abstract Rotation2d getWristTargetAngle();
 

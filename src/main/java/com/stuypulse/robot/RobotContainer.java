@@ -6,49 +6,43 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.arm.*;
-import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.MobilityAuton;
-import com.stuypulse.robot.commands.auton.OnePiece;
-import com.stuypulse.robot.commands.auton.OnePieceDock;
-import com.stuypulse.robot.commands.auton.ThreePiece;
-import com.stuypulse.robot.commands.auton.ThreePieceDock;
-import com.stuypulse.robot.commands.auton.TwoPieceDock;
-import com.stuypulse.robot.commands.odometry.OdometryReset;
-import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.commands.arm.routines.*;
+import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.manager.*;
+import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.commands.wings.*;
+import com.stuypulse.robot.commands.intake.*;
+
+import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
-import com.stuypulse.robot.util.*;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.wings.*;
+
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.*;
+
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
-import com.stuypulse.stuylib.input.gamepads.Xbox;
+import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public class RobotContainer {
 
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
+    public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
     // // Subsystem
     public final Intake intake = Intake.getInstance();
@@ -92,6 +86,70 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+        configureOperatorBindings();
+        configureDriverBindings();
+        configureChooserBindings();
+    }
+
+    private void configureDriverBindings() {
+        // wing
+        driver.getDPadLeft().onTrue(new WingRetractLeft());
+        driver.getDPadUp().onTrue(new WingRetractRight());
+
+        // arm
+        driver.getBottomButton().onTrue(new ArmScore().andThen(new IntakeScore()));
+        driver.getTopButton().onTrue(new ArmReady());
+
+        // swerve
+        driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
+        // right trigger -> robotrelative override
+    }
+
+    private void configureOperatorBindings() {
+        // intaking
+        operator.getRightTriggerButton()
+            .onTrue(new IntakeAcquire())
+            .onTrue(new ArmIntake())
+            .onFalse(new IntakeStop())
+            .onFalse(new ArmNeutral());
+
+        // outtake
+        operator.getLeftTriggerButton()
+            .onTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .onFalse(new IntakeStop())
+            .onFalse(new ArmNeutral());
+
+        // ready & score
+        operator.getLeftBumper().onTrue(new ArmReady());
+        // operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
+
+        // set level to score at
+        operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
+        operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
+        operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
+    
+        // set game piece
+        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
+        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
+        // TODO: CONE_TIP_OUT
+
+        // flip intake side
+        operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
+
+        // arm to 
+        operator.getDPadRight().onTrue(new ArmNeutral());
+
+    }
+
+    private void configureChooserBindings() {
+        chooser.getDPadLeft().onTrue(new ManagerSetGridSection(Direction.LEFT));
+        chooser.getDPadUp().onTrue(new ManagerSetGridSection(Direction.CENTER));
+        chooser.getDPadRight().onTrue(new ManagerSetGridSection(Direction.RIGHT));
+        
+        chooser.getLeftButton().onTrue(new ManagerSetGridColumn(Direction.LEFT));
+        chooser.getTopButton().onTrue(new ManagerSetGridColumn(Direction.CENTER));
+        chooser.getRightButton().onTrue(new ManagerSetGridColumn(Direction.RIGHT));
     }
 
     /**************/
