@@ -9,6 +9,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -63,6 +64,7 @@ public class SwerveDriveToPose extends CommandBase {
 
         timer.restart();
 
+        // Create translational profiles
         var constraints = new Constraints(Alignment.MAX_VELOCITY.get(), Alignment.MAX_ACCELERATION.get());
 
         xProfile = new TrapezoidProfile(
@@ -75,12 +77,17 @@ public class SwerveDriveToPose extends CommandBase {
             new State(target.getY(), 0), 
             new State(pose.getY(), speeds.vyMetersPerSecond));
 
-        var angleConstraints = new Constraints(Alignment.MAX_VELOCITY.get(), Alignment.MAX_ACCELERATION.get());
+        // Create angle profile
+        var angleConstraints = new Constraints(Alignment.MAX_ANGULAR_VELOCITY.get(), Alignment.MAX_ANGULAR_ACCELERATION.get());
 
-        // angleProfile = new TrapezoidProfile(
-        //     constraints,
+        var measurement = odometry.getRotation();
+        double goalMinDistance = target.getRotation().minus(measurement).getRadians();
+        
+        angleProfile = new TrapezoidProfile(
+            angleConstraints, 
+            new State(goalMinDistance + measurement.getRadians(), 0),
+            new State(measurement.getRadians(), speeds.omegaRadiansPerSecond));
 
-        // );
     }
 
     public void execute() {
@@ -89,11 +96,12 @@ public class SwerveDriveToPose extends CommandBase {
         final double time = timer.get();
         var xState = xProfile.calculate(time);
         var yState = yProfile.calculate(time);
+        var angleState = angleProfile.calculate(time);
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             xState.velocity + xFeedback.update(xState.position, pose.getX()),
             yState.velocity + yFeedback.update(yState.position, pose.getY()),
-            0,
+            angleState.velocity,
             pose.getRotation()
         );
 
