@@ -5,52 +5,48 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
-import com.stuypulse.robot.constants.Settings.Swerve.Motion;
-import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.util.LEDColor;
 
+import com.stuypulse.robot.subsystems.LEDController;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class ThreePiece extends SequentialCommandGroup {
-
+public class TwoPieceDockWire extends SequentialCommandGroup {
+    private HashMap<String, PathPlannerTrajectory> paths;
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
 
-    public ThreePiece() {
+    public TwoPieceDockWire(){
 
-
-        // load paths into hashmap
-        HashMap<String, PathPlannerTrajectory> paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", CONSTRAINTS, CONSTRAINTS),
-
-            "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two"
+        paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("2 Piece + Dock Wire", CONSTRAINTS, CONSTRAINTS),
+            
+            "Intake Piece", "Score Piece", "Dock"
         );
 
-        // Scores held piece, drive to first piece and intake
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.ORANGE),
             // new ArmFollowTrajectory(),
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            
+
+            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative(),
             new IntakeAcquireCube(),
             new WaitCommand(INTAKE_ACQUIRE_TIME)
         );
-
-        // Drive to grid and score one piece
+        
+        // drive to grid and score game piece
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")
@@ -60,33 +56,15 @@ public class ThreePiece extends SequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
-        // Drive to second game piece and intake 
+        // drive to charging station and dock
         addCommands(
-
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece Two")
-            ).fieldRelative(),
-            new IntakeAcquireCube(),
-            new WaitCommand(INTAKE_ACQUIRE_TIME)
+                paths.get("Dock")
+            ).fieldRelative()
 
+            // new BasicGyroEngage()
         );
-
-        // Drive to grid and score second piece
-
-        addCommands(
-
-            new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
-
-            new SwerveDriveFollowTrajectory(
-                paths.get("Score Piece Two")
-            ).fieldRelative(),
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
-
-        );      
     }
-
 }

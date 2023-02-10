@@ -18,8 +18,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ThreePieceDock extends SequentialCommandGroup {
-
-    private HashMap<String, PathPlannerTrajectory> paths;
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
@@ -29,7 +27,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
 
         // load paths into hashmap
-        paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+        HashMap<String, PathPlannerTrajectory> paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("3 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
 
             "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two", "Dock"

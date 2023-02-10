@@ -17,29 +17,29 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class ThreePiece extends SequentialCommandGroup {
+public class ThreePieceWire extends SequentialCommandGroup {
 
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
 
-    public ThreePiece() {
+    public ThreePieceWire() {
 
 
         // load paths into hashmap
         HashMap<String, PathPlannerTrajectory> paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", CONSTRAINTS, CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece Wire", CONSTRAINTS, CONSTRAINTS),
 
             "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two"
         );
 
         // Scores held piece, drive to first piece and intake
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.ORANGE),
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            //new LEDSet(LEDController.getInstance(), LEDColor.ORANGE),
+            // // new ArmFollowTrajectory(),
+            // new OuttakeCube(),
+            // new WaitCommand(INTAKE_DEACQUIRE_TIME),
             
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
@@ -55,7 +55,7 @@ public class ThreePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative(),
-            // new ArmFollowTrajectory(),
+            // // new ArmFollowTrajectory(),
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -67,9 +67,9 @@ public class ThreePiece extends SequentialCommandGroup {
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two")
-            ).fieldRelative(),
-            new IntakeAcquireCube(),
-            new WaitCommand(INTAKE_ACQUIRE_TIME)
+            ).fieldRelative()
+            // new IntakeCube(),
+            // new WaitCommand(INTAKE_ACQUIRE_TIME)
 
         );
 
