@@ -8,6 +8,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -101,7 +102,7 @@ public class SwerveDriveToPose extends CommandBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             xState.velocity + xFeedback.update(xState.position, pose.getX()),
             yState.velocity + yFeedback.update(yState.position, pose.getY()),
-            angleState.velocity,
+            angleState.velocity + angleFeedback.update(Angle.fromRadians(angleState.position), Angle.fromRadians(pose.getRotation().getRadians())),
             pose.getRotation()
         );
 
