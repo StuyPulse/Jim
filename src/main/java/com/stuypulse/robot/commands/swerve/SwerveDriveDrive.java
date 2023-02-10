@@ -13,6 +13,7 @@ import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveDrive extends CommandBase {
@@ -31,7 +32,8 @@ public class SwerveDriveDrive extends CommandBase {
                 new VDeadZone(Settings.Driver.SPEED_DEADBAND),
                 x -> x.clamp(1.0),
                 x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
-                x -> x.mul(Settings.Driver.MAX_TELEOP_SPEED.get()),
+                // x -> x.mul(Settings.Driver.MAX_TELEOP_SPEED.get()),
+                x -> x.mul(Units.inchesToMeters(10)),
                 new VLowPassFilter(Settings.Driver.Drive.RC),
                 new VRateLimit(Settings.Driver.MAX_TELEOP_ACCEL)
             );
@@ -40,7 +42,8 @@ public class SwerveDriveDrive extends CommandBase {
             .filtered(
                 x -> SLMath.deadband(x, Settings.Driver.ANGLE_DEADBAND.get()),
                 x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
-                x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
+                // x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
+                x -> x * Units.inchesToMeters(10),
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
         

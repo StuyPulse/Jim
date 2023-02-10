@@ -6,7 +6,8 @@ public abstract class Intake extends SubsystemBase {
     
     public static Intake getInstance() {
         if (instance == null) {
-            instance = new IntakeImpl();
+            // instance = new IntakeImpl();
+            instance = new NoIntake();
         }
         return instance;
     }

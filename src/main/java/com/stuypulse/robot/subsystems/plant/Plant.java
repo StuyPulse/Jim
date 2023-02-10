@@ -7,7 +7,8 @@ public abstract class Plant extends SubsystemBase {
 
     public static Plant getInstance() {
         if (instance == null) {
-            instance = new PlantImpl();
+            // instance = new PlantImpl();
+            instance = new NoPlant();
         }
         return instance;
     }

@@ -12,7 +12,8 @@ public abstract class Arm extends SubsystemBase {
 
     public static Arm getInstance() {
         if (instance == null) {
-            instance = RobotBase.isSimulation() ? new SimArm() : new ArmImpl();
+            // instance = RobotBase.isSimulation() ? new SimArm() : new ArmImpl();
+            instance = new NoArm();
         }
         return instance;
     }
