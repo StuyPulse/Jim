@@ -109,10 +109,6 @@ public class SimArm extends Arm {
         ));
     }
 
-    public void setFeedbackEnabled(boolean enabled) {
-        
-    }
-
     public ArmVisualizer getVisualizer() {
         return visualizer;
     }

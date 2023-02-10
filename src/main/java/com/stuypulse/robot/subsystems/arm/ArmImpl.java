@@ -138,10 +138,6 @@ public class ArmImpl extends Arm {
         ));
     }
 
-    public void setFeedbackEnabled(boolean enabled) {
-        feedbackEnable.set(enabled ? 1 : 0);
-    }
-
     public ArmVisualizer getVisualizer() {
         return armVisualizer;
     }
