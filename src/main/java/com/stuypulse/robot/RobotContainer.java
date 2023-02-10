@@ -32,6 +32,7 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -69,6 +70,7 @@ public class RobotContainer {
         configureButtonBindings();
         configureAutons();
         
+        DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
     }
 
