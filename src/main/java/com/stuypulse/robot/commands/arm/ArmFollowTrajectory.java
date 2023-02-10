@@ -5,6 +5,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
+import com.stuypulse.robot.util.AsstarImp;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,6 +21,16 @@ public class ArmFollowTrajectory extends CommandBase {
         arm = Arm.getInstance();
         
         this.trajectory = trajectory;
+        currentIdx = 0;
+
+        addRequirements(arm);
+    }
+
+    public ArmFollowTrajectory(Rotation2d finalShoulderAngle, Rotation2d finalWristAngle) {
+        arm = Arm.getInstance();
+
+        this.trajectory = AsstarImp.generateTrajectory(30, 120, arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), finalShoulderAngle.getDegrees(), finalWristAngle.getDegrees())
+        ;
         currentIdx = 0;
 
         addRequirements(arm);

@@ -27,6 +27,13 @@ public class ArmTrajectory {
         return this;
     }
 
+    public ArmTrajectory addStates(List<ArmState> states) {
+        for (ArmState state : states) {
+            states.add(state);
+        }
+        return this;
+    }
+
     // public ArmTrajectory addState(double shoulderDegrees, double wristDegrees) {
     //     return addState(new ArmState(shoulderDegrees, wristDegrees));
     // }
