@@ -116,17 +116,6 @@ public class ArmVisualizer {
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
 
-        double front = SmartDashboard.getNumber("Intake/Front Roller Speed", 0);
-        double back = SmartDashboard.getNumber("Intake/Front Roller Speed", 0);
-        if (front == 0 && back == 0)
-            intakeDirection.setLength(0);
-        else if (front == back)
-            intakeDirection.setLength(front * -1);
-        else
-            intakeDirection.setLength(back * 1);
-
-        intakeDirection.setAngle(wristAngle + 90);
-
         double distanceFromSwerveCenter = Math.cos(Math.toRadians(shoulderAngle)) * Shoulder.LENGTH + Math.cos(Math.toRadians(wristAngle)) * Wrist.LENGTH;
 
         Pose2d swervePose = Odometry.getInstance().getPose();
@@ -136,5 +125,17 @@ public class ArmVisualizer {
             topDownTranslation.plus(swervePose.getTranslation()),
             swervePose.getRotation()
         ));
+    }
+
+    public void setIntakingDirection(double frontDirection, double backDirection) {
+        if (frontDirection == 0 && backDirection == 0)
+            intakeDirection.setLength(0);
+        else if (frontDirection == backDirection)
+            intakeDirection.setLength(-frontDirection);
+        else
+            intakeDirection.setLength(+backDirection);
+
+        intakeDirection.setAngle(wristLigament.getAngle() + 90);
+
     }
 }

@@ -26,9 +26,6 @@ public class IntakeImpl extends Intake{
     private DigitalInput frontRightSensor;
     private DigitalInput backLeftSensor;
     private DigitalInput backRightSensor;
-    
-    SmartNumber front = new SmartNumber("Intake/Front Roller Speed", 0);
-    SmartNumber back = new SmartNumber("Intake/Back Roller Speed", 0);
 
     private BStream stalling;
 
@@ -141,9 +138,11 @@ public class IntakeImpl extends Intake{
         if (isStalling() || hasCube()) {
             stop();
         }
+
+        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
-        // SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
-        // SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
+        SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
+        SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());

@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmVisualizer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -45,4 +46,6 @@ public abstract class Arm extends SubsystemBase {
     public final void moveWrist(Rotation2d angle) {
         setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
+
+    public abstract ArmVisualizer getVisualizer();
 }
