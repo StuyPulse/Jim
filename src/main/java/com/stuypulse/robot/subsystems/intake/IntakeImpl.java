@@ -7,7 +7,10 @@ import static com.stuypulse.robot.constants.Ports.Intake.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
@@ -23,6 +26,9 @@ public class IntakeImpl extends Intake{
     private DigitalInput frontRightSensor;
     private DigitalInput backLeftSensor;
     private DigitalInput backRightSensor;
+    
+    SmartNumber front = new SmartNumber("Intake/Front Roller Speed", 0);
+    SmartNumber back = new SmartNumber("Intake/Back Roller Speed", 0);
 
     private BStream stalling;
 
@@ -120,7 +126,7 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void deacquireCone(){
-        if (isFlipped()) {
+        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
             frontMotor.set(CONE_FRONT_ROLLER.get());
             backMotor.set(-CONE_BACK_ROLLER.get());
         } else {
@@ -136,6 +142,8 @@ public class IntakeImpl extends Intake{
             stop();
         }
     
+        // SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
+        // SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
