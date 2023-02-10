@@ -266,6 +266,13 @@ public interface Settings {
         SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
         SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
         
+        SmartNumber MAX_VELOCITY = new SmartNumber("Alignment/Max Velocity (m per s)", 3);
+        SmartNumber MAX_ACCELERATION = new SmartNumber("Alignment/Max Acceleration (m per s ^ 2)", 2);
+
+        // TODO: switch to degrees
+        SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Alignment/Max Angular Velocity (rad per s)", 5);
+        SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Alignment/Max Angular Acceleration (rad per s ^ 2)", 4);
+
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);

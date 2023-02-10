@@ -2,23 +2,21 @@ package com.stuypulse.robot.commands.swerve;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.util.AngleFeedthrough;
-import com.stuypulse.robot.util.Feedthrough;
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
+
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
-import com.stuypulse.stuylib.streams.filters.Derivative;
-import com.stuypulse.stuylib.streams.vectors.filters.VMotionProfile;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.Timer;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveToPose extends CommandBase {
@@ -26,14 +24,18 @@ public class SwerveDriveToPose extends CommandBase {
     private final Odometry odometry;
 
     private final Supplier<Pose2d> references;
-
     private Pose2d target;
 
-    private VMotionProfile motionProfile;
-    private Controller xController;
-    private Controller yController;
+    private Timer timer;
 
-    private AngleController angleController;
+    private TrapezoidProfile xProfile;
+    private PIDController xFeedback;
+    
+    private TrapezoidProfile yProfile;
+    private PIDController yFeedback;
+
+    private TrapezoidProfile angleProfile;
+    private AnglePIDController angleFeedback;
 
     public SwerveDriveToPose(Supplier<Pose2d> references) {
         this.references = references;
@@ -41,13 +43,11 @@ public class SwerveDriveToPose extends CommandBase {
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
 
-        motionProfile = new VMotionProfile(3, 2);
-        xController = new Feedthrough().add(new PIDController(0, 0, 0));
-        yController = new Feedthrough().add(new PIDController(0, 0, 0));
+        timer = new Timer();
 
-        angleController = new AngleFeedthrough()
-            .add(new AnglePIDController(0, 0, 0))
-            .setSetpointFilter(new AMotionProfile(5, 4));
+        xFeedback = new PIDController(Alignment.Translation.P, 0, Alignment.Translation.D);
+        yFeedback = new PIDController(Alignment.Translation.P, 0, Alignment.Translation.D);
+        angleFeedback = new AnglePIDController(Alignment.Rotation.P, 0, Alignment.Rotation.D);
 
         addRequirements(swerve);// odometry
     }
@@ -58,24 +58,42 @@ public class SwerveDriveToPose extends CommandBase {
 
     public void initialize() {
         target = references.get();
+        var pose = odometry.getTranslation();
+        var speeds = swerve.getChassisSpeeds();
+
+        timer.restart();
+
+        var constraints = new Constraints(Alignment.MAX_VELOCITY.get(), Alignment.MAX_ACCELERATION.get());
+
+        xProfile = new TrapezoidProfile(
+            constraints, 
+            new State(target.getX(), 0), 
+            new State(pose.getX(), speeds.vxMetersPerSecond));
+
+        yProfile = new TrapezoidProfile(
+            constraints, 
+            new State(target.getY(), 0), 
+            new State(pose.getY(), speeds.vyMetersPerSecond));
+
+        var angleConstraints = new Constraints(Alignment.MAX_VELOCITY.get(), Alignment.MAX_ACCELERATION.get());
+
+        // angleProfile = new TrapezoidProfile(
+        //     constraints,
+
+        // );
     }
 
     public void execute() {
-
         Pose2d pose = odometry.getPose();
 
-        Vector2D profiledTarget = motionProfile.get(new Vector2D(target.getTranslation()));
-
-        xController.update(profiledTarget.x, pose.getX());
-        yController.update(profiledTarget.y, pose.getY());
-        angleController.update(
-            Angle.fromRotation2d(target.getRotation()), 
-            Angle.fromRotation2d(pose.getRotation()));
+        final double time = timer.get();
+        var xState = xProfile.calculate(time);
+        var yState = yProfile.calculate(time);
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            xController.getOutput(),
-            yController.getOutput(),
-            angleController.getOutput(),
+            xState.velocity + xFeedback.update(xState.position, pose.getX()),
+            yState.velocity + yFeedback.update(yState.position, pose.getY()),
+            0,
             pose.getRotation()
         );
 
