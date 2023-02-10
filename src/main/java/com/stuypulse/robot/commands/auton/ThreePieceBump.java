@@ -17,14 +17,14 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class ThreePieceWire extends SequentialCommandGroup {
+public class ThreePieceBump extends SequentialCommandGroup {
 
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
 
-    public ThreePieceWire() {
+    public ThreePieceBump() {
 
 
         // load paths into hashmap

@@ -15,14 +15,14 @@ import com.stuypulse.robot.subsystems.LEDController;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TwoPieceDockWire extends SequentialCommandGroup {
+public class TwoPieceDockBump extends SequentialCommandGroup {
     private HashMap<String, PathPlannerTrajectory> paths;
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
 
-    public TwoPieceDockWire(){
+    public TwoPieceDockBump(){
 
         paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece + Dock Wire", CONSTRAINTS, CONSTRAINTS),
