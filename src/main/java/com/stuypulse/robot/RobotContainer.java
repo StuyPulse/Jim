@@ -111,8 +111,7 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // intaking
         operator.getRightTriggerButton()
-            .onTrue(new IntakeAcquire())
-            .onTrue(new ArmIntake())
+            .onTrue(new ArmIntake().andThen(new IntakeAcquire()))
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
