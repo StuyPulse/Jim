@@ -5,17 +5,8 @@ import com.stuypulse.robot.subsystems.Manager;
 
 public class ArmIntake extends ArmFollowTrajectory {
     
-    private Manager manager;
-
     public ArmIntake() {
-        manager = Manager.getInstance();
-        // add manager?
-    }
-
-    @Override
-    public void initialize() {
-        super.initialize(); // sus
-        setTrajectory(manager.getIntakeTrajectory());
+        super(() -> Manager.getInstance().getIntakeTrajectory());
     }
     
 }

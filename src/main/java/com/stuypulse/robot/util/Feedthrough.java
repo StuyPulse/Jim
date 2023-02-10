@@ -7,6 +7,10 @@ public class Feedthrough extends Controller {
 
     private Derivative derivative;
 
+    public Feedthrough() {
+        derivative = new Derivative();
+    }
+
     @Override
     protected double calculate(double setpoint, double measurement) {
         return derivative.get(setpoint);

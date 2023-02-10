@@ -104,16 +104,6 @@ public class ArmImpl extends Arm {
     }
 
     @Override
-    public boolean isShoulderAtAngle(Rotation2d maxError) {
-        return Math.abs(getShoulderAngle().minus(Rotation2d.fromDegrees(shoulderTargetAngle.get())).getDegrees()) < maxError.getDegrees();
-    }
-
-    @Override
-    public boolean isWristAtAngle(Rotation2d maxError) {
-        return Math.abs(getWristAngle().minus(Rotation2d.fromDegrees(wristTargetAngle.get())).getDegrees()) < maxError.getDegrees();
-    }
-
-    @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
     }
@@ -142,6 +132,10 @@ public class ArmImpl extends Arm {
             topDownTranslation.plus(swervePose.getTranslation()),
             swervePose.getRotation()
         ));
+    }
+
+    public ArmVisualizer getVisualizer() {
+        return armVisualizer;
     }
 
     @Override
