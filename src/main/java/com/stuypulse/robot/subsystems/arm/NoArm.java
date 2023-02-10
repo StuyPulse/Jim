@@ -36,17 +36,6 @@ public class NoArm extends Arm {
         return null;
     }
 
-    @Override
-    public boolean isShoulderAtAngle(Rotation2d maxError) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isWristAtAngle(Rotation2d maxError) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
     @Override
     public void setTargetShoulderAngle(Rotation2d angle) {

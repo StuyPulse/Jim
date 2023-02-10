@@ -28,8 +28,12 @@ public abstract class Arm extends SubsystemBase {
     public abstract Rotation2d getShoulderTargetAngle();
     public abstract Rotation2d getWristTargetAngle();
 
-    public abstract boolean isShoulderAtAngle(Rotation2d maxError);
-    public abstract boolean isWristAtAngle(Rotation2d maxError);
+    public final boolean isShoulderAtAngle(Rotation2d maxError) {
+        return Math.abs(getShoulderTargetAngle().minus(getShoulderAngle()).getDegrees()) < maxError.getDegrees();
+    }
+    public final boolean isWristAtAngle(Rotation2d maxError) {
+        return Math.abs(getWristTargetAngle().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
+    }
 
     public final boolean isArmAtState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
         return isShoulderAtAngle(shoulderEpsilon) && isWristAtAngle(wristEpsilon);

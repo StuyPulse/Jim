@@ -63,7 +63,4 @@ public class ArmFollowTrajectory extends CommandBase {
         return currentIdx >= trajectory.getStates().size();
     }
 
-    @Override
-    public void end(boolean i) {
-    }
 }

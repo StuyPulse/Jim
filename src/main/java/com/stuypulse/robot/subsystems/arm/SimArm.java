@@ -88,16 +88,6 @@ public class SimArm extends Arm {
     }
 
     @Override
-    public boolean isShoulderAtAngle(Rotation2d maxError) {
-        return Math.abs(shoulderTargetAngle.get() - getShoulderAngle().getDegrees()) < maxError.getDegrees();    
-    }
-
-    @Override
-    public boolean isWristAtAngle(Rotation2d maxError) {
-        return Math.abs(wristTargetAngle.get() - getWristAngle().getDegrees()) < maxError.getDegrees();
-    }
-
-    @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
         shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
     }
