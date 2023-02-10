@@ -110,8 +110,10 @@ public class ArmVisualizer {
         wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
-        intakeDirectionRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
-                                5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
+        intakeDirectionRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)) +
+                                Units.metersToInches(Wrist.LENGTH / 2)/10*Math.cos(Units.degreesToRadians(wristAngle)),  
+                                5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)) +
+                                Units.metersToInches(Wrist.LENGTH / 2)/10*Math.sin(Units.degreesToRadians(wristAngle)));
 
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
@@ -130,10 +132,8 @@ public class ArmVisualizer {
     public void setIntakingDirection(double frontDirection, double backDirection) {
         if (frontDirection == 0 && backDirection == 0)
             intakeDirection.setLength(0);
-        else if (frontDirection == backDirection)
-            intakeDirection.setLength(-frontDirection);
         else
-            intakeDirection.setLength(+backDirection);
+            intakeDirection.setLength(+frontDirection * 2);
 
         intakeDirection.setAngle(wristLigament.getAngle() + 90);
 
