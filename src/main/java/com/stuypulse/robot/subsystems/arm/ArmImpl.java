@@ -46,6 +46,8 @@ public class ArmImpl extends Arm {
 
     private final FieldObject2d fieldObject;
 
+    private SmartNumber feedbackEnable;
+
     public ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
@@ -61,12 +63,12 @@ public class ArmImpl extends Arm {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
-                                    .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+                                    .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD).setOutputFilter(x -> x * feedbackEnable.get()))
                                     .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
-                                    .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+                                    .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> x * feedbackEnable.get()))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
@@ -75,6 +77,8 @@ public class ArmImpl extends Arm {
         armVisualizer = new ArmVisualizer();
 
         fieldObject = Odometry.getInstance().getField().getObject("Field Arm");
+
+        feedbackEnable = new SmartNumber("Arm/Feedback Enable", 1);
     }
 
     private void configureMotors() {
@@ -135,8 +139,7 @@ public class ArmImpl extends Arm {
     }
 
     public void setFeedbackEnabled(boolean enabled) {
-        // TODO: if feedback is enabled return the setpoint
-        // from the get measurement methods
+        feedbackEnable.set(enabled ? 1 : 0);
     }
 
     public ArmVisualizer getVisualizer() {
