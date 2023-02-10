@@ -55,5 +55,14 @@ public abstract class Arm extends SubsystemBase {
         setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
 
+    public abstract void setFeedbackEnabled(boolean enabled);
+
+    public final void enableFeedback() {
+        setFeedbackEnabled(true);
+    }
+    public final void disasbleFeedback() {
+        setFeedbackEnabled(false);
+    }
+
     public abstract ArmVisualizer getVisualizer();
 }

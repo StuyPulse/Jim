@@ -134,6 +134,11 @@ public class ArmImpl extends Arm {
         ));
     }
 
+    public void setFeedbackEnabled(boolean enabled) {
+        // TODO: if feedback is enabled return the setpoint
+        // from the get measurement methods
+    }
+
     public ArmVisualizer getVisualizer() {
         return armVisualizer;
     }
