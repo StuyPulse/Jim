@@ -27,6 +27,7 @@ public class ArmVisualizer {
     private MechanismLigament2d swerveLigamentRight;
     private MechanismLigament2d pegMid;
     private MechanismLigament2d pegTop;
+    private MechanismLigament2d intakeDirection;
 
     private MechanismRoot2d shoulderRoot;
     private MechanismRoot2d wristRoot;
@@ -34,6 +35,7 @@ public class ArmVisualizer {
     private MechanismRoot2d swerveRoot;
     private MechanismRoot2d pegRootMid;
     private MechanismRoot2d pegRootTop;
+    private MechanismRoot2d intakeDirectionRoot;
 
     private FieldObject2d fieldObject;
 
@@ -47,6 +49,7 @@ public class ArmVisualizer {
         swerveRoot = arm.getRoot("Swerve Root", 8-((12+3.5)/10), 0);
         pegRootMid = arm.getRoot("Peg Root Mid", (80+22.75+(12+3.5)) / 10, 0);
         pegRootTop = arm.getRoot("Peg Root Top", (80+36.75+(12+3.5)) / 10, 0);
+        intakeDirectionRoot = arm.getRoot("Intake Direction Root", 8, 4);
         // Low Peg: 2 ft 10 inch
         // High Peg: 3 ft 10 inch
         // Height of base: 48.245 inches done
@@ -73,6 +76,9 @@ public class ArmVisualizer {
         targetShoulderLigament.setColor(new Color8Bit(255, 100, 255));
         targetWristLigament.setColor(new Color8Bit(0, 100, 255));
 
+        intakeDirection = new MechanismLigament2d("Intake Direction", 0, 90);
+        intakeDirection.setColor(new Color8Bit(200, 0, 0));
+
         pegRootMid.append(pegMid);
         pegRootTop.append(pegTop);
         swerveRoot.append(swerveLigamentRight);
@@ -81,6 +87,7 @@ public class ArmVisualizer {
         wristRoot.append(wristLigament);
         shoulderRoot.append(targetShoulderLigament);
         targetWristRoot.append(targetWristLigament);
+        intakeDirectionRoot.append(intakeDirection);
 
         baseLigament.setAngle(-90);
         
@@ -103,6 +110,9 @@ public class ArmVisualizer {
         wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
+        intakeDirectionRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
+                                5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
+
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
 
@@ -115,5 +125,17 @@ public class ArmVisualizer {
             topDownTranslation.plus(swervePose.getTranslation()),
             swervePose.getRotation()
         ));
+    }
+
+    public void setIntakingDirection(double frontDirection, double backDirection) {
+        if (frontDirection == 0 && backDirection == 0)
+            intakeDirection.setLength(0);
+        else if (frontDirection == backDirection)
+            intakeDirection.setLength(-frontDirection);
+        else
+            intakeDirection.setLength(+backDirection);
+
+        intakeDirection.setAngle(wristLigament.getAngle() + 90);
+
     }
 }

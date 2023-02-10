@@ -119,6 +119,10 @@ public class SimArm extends Arm {
         ));
     }
 
+    public ArmVisualizer getVisualizer() {
+        return visualizer;
+    }
+
     @Override
     public void periodic() {
 

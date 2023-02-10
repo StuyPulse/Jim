@@ -144,6 +144,10 @@ public class ArmImpl extends Arm {
         ));
     }
 
+    public ArmVisualizer getVisualizer() {
+        return armVisualizer;
+    }
+
     @Override
     public void periodic() {
         double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
