@@ -2,83 +2,85 @@ package com.stuypulse.robot.commands.swerve;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.constants.Settings.Alignment;
+import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
+import com.stuypulse.robot.constants.Settings.Alignment.Translation;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.util.AngleFeedthrough;
-import com.stuypulse.robot.util.Feedthrough;
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.math.Vector2D;
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
-import com.stuypulse.stuylib.streams.filters.Derivative;
-import com.stuypulse.stuylib.streams.vectors.filters.VMotionProfile;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
+import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveToPose extends CommandBase {
+public class SwerveDriveToPose extends CommandBase{
     private final SwerveDrive swerve;
-    private final Odometry odometry;
+    private final Supplier<Pose2d> targetPoses;
 
-    private final Supplier<Pose2d> references;
+    // Holonomic control
+    private final Controller xController;
+    private final Controller yController;
+    private final AngleController angleController;
 
-    private Pose2d target;
+    private final BStream aligned;
+    
+    public SwerveDriveToPose(Supplier<Pose2d> targetPoses){
+        this.swerve = SwerveDrive.getInstance();
+        this.targetPoses = targetPoses;
 
-    private VMotionProfile motionProfile;
-    private Controller xController;
-    private Controller yController;
-
-    private AngleController angleController;
-
-    public SwerveDriveToPose(Supplier<Pose2d> references) {
-        this.references = references;
-
-        swerve = SwerveDrive.getInstance();
-        odometry = Odometry.getInstance();
-
-        motionProfile = new VMotionProfile(3, 2);
-        xController = new Feedthrough().add(new PIDController(0, 0, 0));
-        yController = new Feedthrough().add(new PIDController(0, 0, 0));
-
-        angleController = new AngleFeedthrough()
-            .add(new AnglePIDController(0, 0, 0))
+        xController = new PIDController(Translation.P,Translation.I,Translation.D)
+            .setSetpointFilter(new MotionProfile(3, 2));
+        yController = new PIDController(Translation.P, Translation.I, Translation.D)
+            .setSetpointFilter(new MotionProfile(3, 2));
+        angleController =new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
             .setSetpointFilter(new AMotionProfile(5, 4));
-
-        addRequirements(swerve);// odometry
+        
+        aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
+        
+        addRequirements(swerve);
     }
 
-    public SwerveDriveToPose(Pose2d reference) {
-        this(() -> reference);
+    private boolean isAligned() {
+        return xController.isDone(Alignment.ALIGNED_THRESHOLD_X.get())
+            && xController.isDone(Alignment.ALIGNED_THRESHOLD_Y.get())
+            && angleController.isDoneDegrees(Alignment.ALIGNED_THRESHOLD_ANGLE.get());
     }
 
-    public void initialize() {
-        target = references.get();
-    }
-
+    @Override
     public void execute() {
 
-        Pose2d pose = odometry.getPose();
+        Pose2d currentState = Odometry.getInstance().getPose();
+        Pose2d targetPose = targetPoses.get();
 
-        Vector2D profiledTarget = motionProfile.get(new Vector2D(target.getTranslation()));
+        boolean alignY = xController.isDone(Units.inchesToMeters(6));
 
-        xController.update(profiledTarget.x, pose.getX());
-        yController.update(profiledTarget.y, pose.getY());
-        angleController.update(
-            Angle.fromRotation2d(target.getRotation()), 
-            Angle.fromRotation2d(pose.getRotation()));
-
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            xController.getOutput(),
-            yController.getOutput(),
-            angleController.getOutput(),
-            pose.getRotation()
+        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            xController.update(targetPose.getX(), currentState.getX()),
+            alignY ? yController.update(targetPose.getY(), currentState.getY()) : 0,
+            angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation())),
+            currentState.getRotation()
         );
 
-        swerve.setChassisSpeeds(speeds);
+        swerve.setChassisSpeeds(chassisSpeeds);
     }
+
+
+    @Override
+    public boolean isFinished(){
+        return aligned.get();
+    }
+
+    public void end(boolean interuppted) {
+        swerve.stop();
+    }
+    
 }
