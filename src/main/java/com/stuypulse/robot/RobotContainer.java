@@ -123,7 +123,7 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper().onTrue(new ArmReady());
-        // operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
+        operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
