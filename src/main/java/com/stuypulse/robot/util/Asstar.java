@@ -86,8 +86,8 @@ public class Asstar {
     }
 
     private void addAdjacentLowerRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
+        int row = currentNode.getShoulderAngle();
+        int col = currentNode.getWristAngle();
         int lowerRow = row + 1;
         if (lowerRow < getSearchArea().length) {
             if (col - 1 >= 0) {
@@ -101,8 +101,8 @@ public class Asstar {
     }
 
     private void addAdjacentMiddleRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
+        int row = currentNode.getShoulderAngle();
+        int col = currentNode.getWristAngle();
         int middleRow = row;
         if (col - 1 >= 0) {
             checkNode(currentNode, col - 1, middleRow, getHCost());
@@ -113,8 +113,8 @@ public class Asstar {
     }
 
     private void addAdjacentUpperRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
+        int row = currentNode.getShoulderAngle();
+        int col = currentNode.getWristAngle();
         int upperRow = row - 1;
         if (upperRow >= 0) {
             if (col - 1 >= 0) {

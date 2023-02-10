@@ -4,14 +4,14 @@ public class Node {
     private double g;
     private double h;
     private double f;
-    private int row;
-    private int column;
+    private int shoulderAngle; // row
+    private int wristAngle; // col
     private boolean isBarrier;
     private Node parent;
 
-    public Node(int row, int column) {
-        this.row = row;
-        this.column = column;
+    public Node(int shoulderAngle, int wristAngle) {
+        this.shoulderAngle = shoulderAngle;
+        this.wristAngle = wristAngle;
     }
     
     /*
@@ -34,12 +34,12 @@ public class Node {
         return this.parent;
     }
 
-    public int getRow() {
-        return this.row;
+    public int getShoulderAngle() {
+        return this.shoulderAngle;
     }
 
-    public int getCol() {
-        return this.column;
+    public int getWristAngle() {
+        return this.wristAngle;
     }
 
     public boolean isBarrier() {
@@ -47,7 +47,7 @@ public class Node {
     }
 
     public String toString() {
-        return "Node [row=" + row + ", col=" + column + "]";
+        return "Node [row=" + shoulderAngle + ", col=" + wristAngle + "]";
     }
 
     /*
@@ -73,18 +73,18 @@ public class Node {
         this.isBarrier = isbarrier;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setShoulderAngle(int row) {
+        this.shoulderAngle = row;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
+    public void setWristAngle(int column) {
+        this.wristAngle = column;
     }
 
     @Override
     public boolean equals(Object o) {
         Node node = (Node) o;
-        return this.row == node.getRow() && this.column == node.getCol();
+        return this.shoulderAngle == node.getShoulderAngle() && this.wristAngle == node.getWristAngle();
     }
 
     public void calculateFinalCost() {
@@ -108,7 +108,7 @@ public class Node {
     }
     // calculate the cost 
     public void calculateH(Node endNode) {
-        this.h = Math.pow(Math.pow(endNode.getRow() - getRow(), 2) + Math.pow(endNode.getCol(), -getCol()), 0.5);
+        this.h = Math.pow(Math.pow(endNode.getShoulderAngle() - getShoulderAngle(), 2) + Math.pow(endNode.getWristAngle(), -getWristAngle()), 0.5);
     }
 
 }
