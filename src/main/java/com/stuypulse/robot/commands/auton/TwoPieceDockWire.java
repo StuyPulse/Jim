@@ -16,6 +16,7 @@ import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.ManagerSetGamePiece;
 import com.stuypulse.robot.commands.manager.ManagerSetNodeLevel;
 import com.stuypulse.robot.commands.manager.ManagerSetScoreSide;
+import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
@@ -26,7 +27,7 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TwoPieceWire extends SequentialCommandGroup {
+public class TwoPieceDockWire extends SequentialCommandGroup {
     private HashMap <String , PathPlannerTrajectory> paths;
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
@@ -34,7 +35,12 @@ public class TwoPieceWire extends SequentialCommandGroup {
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints( 2.5, 1);
 
-    public TwoPieceWire(){
+    public TwoPieceDockWire(){
+
+        paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("2 Piece + Dock Wire", CONSTRAINTS, CONSTRAINTS),
+        "Intake Piece" , "Score Piece", "Dock"
+        );
 
         addCommands(
             new ManagerSetGamePiece(GamePiece.CONE),
@@ -45,11 +51,6 @@ public class TwoPieceWire extends SequentialCommandGroup {
             new ArmScore(), 
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new ArmNeutral()
-        );
-
-        paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece Wire", CONSTRAINTS, CONSTRAINTS),
-        "Intake Piece" , "Score Piece"
         );
 
         // score held piece, then drive to first game piece and intake
@@ -77,6 +78,14 @@ public class TwoPieceWire extends SequentialCommandGroup {
                 ).fieldRelative(),
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
+        );
+
+        addCommands(
+            new SwerveDriveFollowTrajectory(
+                paths.get("Dock")
+            ).fieldRelative(),
+
+            new SwerveDriveEngage()
         );
     }
 }

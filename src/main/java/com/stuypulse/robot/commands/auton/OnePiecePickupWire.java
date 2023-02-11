@@ -13,14 +13,15 @@ import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class OnePieceWire extends SequentialCommandGroup{
+public class OnePiecePickupWire extends SequentialCommandGroup{
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private HashMap<String, PathPlannerTrajectory> paths;
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
-    public OnePieceWire(){
+    public OnePiecePickupWire(){
         paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1.5 Piece + Wire", CONSTRAINTS, CONSTRAINTS)
+            PathPlanner.loadPathGroup("1.5 Piece + Wire", CONSTRAINTS, CONSTRAINTS),
+            "1.5 Piece + Wire"
         );
 
         addCommands(

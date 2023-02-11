@@ -9,6 +9,7 @@ import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCone;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.util.LEDColor;
@@ -17,13 +18,13 @@ import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TwoPiecePickup extends SequentialCommandGroup {
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+public class TwoPiecePickupDock extends SequentialCommandGroup {
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
     private HashMap<String, PathPlannerTrajectory> paths;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double INTAKE_ACQUIRE_TIME = 1.0;
     
-    public TwoPiecePickup() {
+    public TwoPiecePickupDock() {
 
         paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2.5 Piece + Dock", CONSTRAINTS, CONSTRAINTS),

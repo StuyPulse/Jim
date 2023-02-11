@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePiece extends SequentialCommandGroup {
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
     public OnePiece() {
         addCommands(

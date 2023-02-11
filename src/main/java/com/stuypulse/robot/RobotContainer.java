@@ -32,6 +32,7 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -106,6 +107,9 @@ public class RobotContainer {
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
         // right trigger -> robotrelative override
+
+        driver.getRightBumper().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
+        driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {
@@ -166,9 +170,16 @@ public class RobotContainer {
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("One Piece", new OnePiece());
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
-        autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
+        autonChooser.addOption("One Piece Wire", new OnePiecePickupWire());
+        autonChooser.addOption("One Piece + Dock Flattened", new OnePieceDock());
+        autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
+        autonChooser.addOption("Two Piece", new TwoPiece());
+        autonChooser.addOption("Two Piece Wire", new TwoPieceDockWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
+        autonChooser.addOption("2.5 Piece", new TwoPiecePickup());
+        autonChooser.addOption("2.5 Piece Dock", new TwoPiecePickupDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
+        autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
 
         

@@ -25,7 +25,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
 
     public TwoPieceDock() {
