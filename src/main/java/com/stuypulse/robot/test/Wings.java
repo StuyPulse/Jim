@@ -1,4 +1,4 @@
-package com.stuypulse.robot.test.subsystems;
+package com.stuypulse.robot.test;
 
 
 import static com.stuypulse.robot.constants.Ports.Wings.*;
@@ -34,21 +34,37 @@ public class Wings extends SubsystemBase {
         leftDeploy.set(DoubleSolenoid.Value.kReverse);
     }
 
-    public void extendLeft() {
+    public void extendLeftLatch() {
+        leftLatch.set(true);
+    }
+
+    public void retractLeftLatch() {
         leftLatch.set(false);
     }
 
-    public void retractLeft() {
+    public void extendLeftDeploy() {
+        leftDeploy.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void retractLeftDeploy() {
         leftDeploy.set(DoubleSolenoid.Value.kReverse);
     }
 
-    public void extendRight() {
+    
+    public void extendRightLatch() {
+        rightLatch.set(true);
+    }
+
+    public void retractRightLatch() {
         rightLatch.set(false);
     }
 
-    public void retractRight() {
+    public void extendRightDeploy() {
+        rightDeploy.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void retractRightDeploy() {
         rightDeploy.set(DoubleSolenoid.Value.kReverse);
-        
     }
 
     @Override

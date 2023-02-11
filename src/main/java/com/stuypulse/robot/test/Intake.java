@@ -1,14 +1,18 @@
-package com.stuypulse.robot.test.subsystems;
+package com.stuypulse.robot.test;
 import static com.stuypulse.robot.constants.Motors.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase{
+
+    private SmartNumber frontDutyCycle;
+    private SmartNumber backDutyCycle;
     
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
@@ -18,7 +22,10 @@ public class Intake extends SubsystemBase{
     private DigitalInput backLeftSensor;
     private DigitalInput backRightSensor;
 
-    public Intake(){
+    public Intake() {
+        frontDutyCycle = new SmartNumber("Intake/Front Duty Cycle", 0.0);
+        backDutyCycle = new SmartNumber("Intake/Back Duty Cycle", 0.0);
+
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
 
@@ -28,17 +35,17 @@ public class Intake extends SubsystemBase{
         frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
         frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
         backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);        
+        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
     }
 
-    public void setFrontMotor(double speed){
-        frontMotor.set(speed);
-    }  
-
-    public void setBackMotor(double speed){
-        backMotor.set(speed);
+    public void runFront() {
+        frontMotor.set(frontDutyCycle.get());
     }
 
+    public void runBack() {
+        backMotor.set(backDutyCycle.get());
+    }
+    
     public void stop() {
         frontMotor.set(0);
         backMotor.set(0);

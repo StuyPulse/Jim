@@ -1,4 +1,4 @@
-package com.stuypulse.robot.test.subsystems;
+package com.stuypulse.robot.test;
 
 import static com.stuypulse.robot.constants.Ports.Plant.*;
 

@@ -1,6 +1,8 @@
-package com.stuypulse.robot.test.subsystems;
+package com.stuypulse.robot.test;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import static com.stuypulse.robot.constants.Motors.Swerve.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -8,8 +10,13 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Ports.Swerve.*;
+import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 public class SwerveDrive extends SubsystemBase {
+
+    private SmartNumber turningVoltage;
+    private SmartNumber drivingVoltage;
 
     private CANSparkMax turnMotorBL;
     private CANSparkMax turnMotorFR;
@@ -30,6 +37,10 @@ public class SwerveDrive extends SubsystemBase {
     private RelativeEncoder driveEncoderFR;
 
     public SwerveDrive() {
+
+        turningVoltage = new SmartNumber("Swerve/Turning Voltage", 0.0);
+        drivingVoltage = new SmartNumber("Swerve/Drive Voltage", 0.0);
+
         /** turn motors */
     
         turnMotorBL = new CANSparkMax(BackLeft.TURN, MotorType.kBrushless);
@@ -51,44 +62,74 @@ public class SwerveDrive extends SubsystemBase {
 
         // drive encoders
         driveEncoderBL = driveMotorBL.getEncoder();
+        driveEncoderBL.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
+        driveEncoderBL.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+
         driveEncoderBR = driveMotorBR.getEncoder();
+        driveEncoderBR.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
+        driveEncoderBR.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+
         driveEncoderFL = driveMotorFL.getEncoder();
+        driveEncoderFL.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
+        driveEncoderFL.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+
         driveEncoderFR = driveMotorFR.getEncoder();
+        driveEncoderFR.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
+        driveEncoderFR.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+        
+        // configure motors
+        TURN.configure(turnMotorBL);
+        TURN.configure(turnMotorBR);
+        TURN.configure(turnMotorFL);
+        TURN.configure(turnMotorFR);
 
-
+        DRIVE.configure(driveMotorBL);
+        DRIVE.configure(driveMotorBR);
+        DRIVE.configure(driveMotorFL);
+        DRIVE.configure(driveMotorFR);
     }
 
-    public void turnMotorBL(double voltage) {
-        turnMotorBL.setVoltage(voltage);
+    public void turnMotorBL() {
+        turnMotorBL.setVoltage(turningVoltage.get());
     }
 
-    public void turnMotorBR(double voltage) {
-        turnMotorBR.setVoltage(voltage);
+    public void turnMotorBR() {
+        turnMotorBR.setVoltage(turningVoltage.get());
     }
-    public void turnMotorFL(double voltage) {
-        turnMotorFL.setVoltage(voltage);
+    public void turnMotorFL() {
+        turnMotorFL.setVoltage(turningVoltage.get());
     }
     
-    public void turnMotorFR(double voltage) {
-        turnMotorFR.setVoltage(voltage);
+    public void turnMotorFR() {
+        turnMotorFR.setVoltage(turningVoltage.get());
     }
 
-    public void driveMotorBL(double voltage) {
-        driveMotorBL.setVoltage(voltage);
+    public void driveMotorBL() {
+        driveMotorBL.setVoltage(drivingVoltage.get());
     }
 
-    public void driveMotorBR(double voltage) {
-        driveMotorBR.setVoltage(voltage);
+    public void driveMotorBR() {
+        driveMotorBR.setVoltage(drivingVoltage.get());
     }
 
-    public void driveMotorFL(double voltage) {
-        driveMotorFL.setVoltage(voltage);
+    public void driveMotorFL() {
+        driveMotorFL.setVoltage(drivingVoltage.get());
     }
 
-    public void driveMotorFR(double voltage) {
-        driveMotorFR.setVoltage(voltage);
+    public void driveMotorFR() {
+        driveMotorFR.setVoltage(drivingVoltage.get());
     }
 
+    public void stop() {
+        turnMotorBL.stopMotor();
+        turnMotorBR.stopMotor();
+        turnMotorFL.stopMotor();
+        turnMotorFR.stopMotor();
+        driveMotorBL.stopMotor();
+        driveMotorBR.stopMotor();
+        driveMotorFL.stopMotor();
+        driveMotorFR.stopMotor();
+    }
 
     @Override
     public void periodic() {

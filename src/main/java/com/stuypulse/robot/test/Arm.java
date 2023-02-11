@@ -1,4 +1,4 @@
-package com.stuypulse.robot.test.subsystems;
+package com.stuypulse.robot.test;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
-
+    
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
     private final CANSparkMax wrist;
@@ -23,7 +23,7 @@ public class Arm extends SubsystemBase {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
-    public Arm() {
+    public Arm() {        
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -51,9 +51,10 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderLeft.get() * 12);
+        SmartDashboard.putNumber("Arm/Wrist Voltage", wrist.get() * 12);
+
         SmartDashboard.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
-        
-
     }
 }
