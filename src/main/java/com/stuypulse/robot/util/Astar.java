@@ -7,7 +7,20 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class Asstar {
+
+public class Astar {
+
+    public static final int DEGREE_RANGE = 360;
+
+    public static int normDegrees(int deg) {
+        return deg - DEGREE_RANGE * (int)Math.round((double)(deg - (DEGREE_RANGE / 2)) / DEGREE_RANGE);
+    }
+    
+    public static int normDegreesDistance(int deg) {
+        return deg - DEGREE_RANGE * (int)Math.round((double)deg / DEGREE_RANGE);
+    }
+
+
     private int hCost;
     private int diagCost;
     private Node[][] searchArea;
@@ -15,42 +28,50 @@ public class Asstar {
     private Set<Node> closedSet;
     private Node initialNode;
     private Node finalNode;
+    private Constraint constraint; 
 
-    public Asstar(int rows, int cols, Node initialNode, Node finalNode, int hvCost, int diagonalCost) {
+    public static void main(String[] args) {
+        for (int i = -400; i < 400; i+=5) {
+            System.out.println(normDegrees(i) + " hhe" + i);
+        }
+    }
+
+    public Astar(Node initialNode, Node finalNode, int hvCost, int diagonalCost) {
         this.hCost = hCost;
         this.diagCost = diagonalCost;
         setInitialNode(initialNode);
         setFinalNode(finalNode);
-        this.searchArea = new Node[rows][cols];
-        this.openList = new PriorityQueue<Node>(new Comparator<Node>() {
-            @Override
-            public int compare(Node node0, Node node1) {
-                return Double.compare(node0.getF(), node1.getF());
-            }
-        });
+        this.searchArea = new Node[DEGREE_RANGE][DEGREE_RANGE];
+        this.openList = new PriorityQueue<Node>();
         setNodes();
         this.closedSet = new HashSet<>();
+        constraint = (s, w) -> false;
     }
 
-    public Asstar(int rows, int cols, Node initialNode, Node finalNode) {
-        this(rows, cols, initialNode, finalNode, 1, 1);
+    public Astar(Node initialNode, Node finalNode) {
+        this(initialNode, finalNode, 1, 1);
+    }
+
+    public Astar addConstraint(Constraint newConstraint) {
+        constraint = constraint.add(newConstraint);
+        return this;
+    }
+
+    public Node getNode(int shoulderDeg, int wristDeg) {
+        return searchArea[normDegrees(shoulderDeg)][normDegrees(wristDeg)];
+    }
+
+    public void setNode(int shoulderDeg, int wristDeg, Node node) {
+        searchArea[normDegrees(shoulderDeg)][normDegrees(wristDeg)] = node;
     }
 
     private void setNodes() {
-        for (int i = 0; i < searchArea.length; i++) {
-            for (int j = 0; j < searchArea[0].length; j++) {
+        for (int i = 0; i < DEGREE_RANGE; i++) {
+            for (int j = 0; j < DEGREE_RANGE; j++) {
                 Node node = new Node(i, j);
                 node.calculateH((getFinalNode()));
-                this.searchArea[i][j] = node;
+                setNode(i, j, node);
             }
-        }
-    }
-
-    public void setBlocks(int[][] blocksArray) {
-        for (int i = 0; i < blocksArray.length; i++) {
-            int row = blocksArray[i][0];
-            int col = blocksArray[i][1];
-            setBlock(row, col);
         }
     }
 
@@ -86,50 +107,34 @@ public class Asstar {
     }
 
     private void addAdjacentLowerRow(Node currentNode) {
-        int row = currentNode.getShoulderAngle();
-        int col = currentNode.getWristAngle();
-        int lowerRow = row + 1;
-        if (lowerRow < getSearchArea().length) {
-            if (col - 1 >= 0) {
-                checkNode(currentNode, col - 1, lowerRow, getDiagonalCost()); // Comment if diagonal not allowed
-            }
-            if (col + 1 < getSearchArea()[0].length) {
-                checkNode(currentNode, col + 1, lowerRow, getDiagonalCost()); // Comment if diagonal not allowed
-            }
-            checkNode(currentNode, col, lowerRow, getHCost());
-        }
+        int shoulder = currentNode.getShoulderAngle();
+        int wrist = currentNode.getWristAngle();
+        int lowerRow = shoulder + 1;
+        checkNode(currentNode, wrist - 1, lowerRow, getDiagonalCost()); // Comment if diagonal not allowed
+        checkNode(currentNode, wrist, lowerRow, getHCost());
+        checkNode(currentNode, wrist + 1, lowerRow, getDiagonalCost()); // Comment if diagonal not allowed
     }
 
     private void addAdjacentMiddleRow(Node currentNode) {
-        int row = currentNode.getShoulderAngle();
-        int col = currentNode.getWristAngle();
-        int middleRow = row;
-        if (col - 1 >= 0) {
-            checkNode(currentNode, col - 1, middleRow, getHCost());
-        }
-        if (col + 1 < getSearchArea()[0].length) {
-            checkNode(currentNode, col + 1, middleRow, getHCost());
-        }
+        int shoulder = currentNode.getShoulderAngle();
+        int wrist = currentNode.getWristAngle();
+        int middleRow = shoulder;
+        checkNode(currentNode, wrist - 1, middleRow, getHCost());
+        checkNode(currentNode, wrist + 1, middleRow, getHCost());
     }
 
     private void addAdjacentUpperRow(Node currentNode) {
-        int row = currentNode.getShoulderAngle();
-        int col = currentNode.getWristAngle();
-        int upperRow = row - 1;
-        if (upperRow >= 0) {
-            if (col - 1 >= 0) {
-                checkNode(currentNode, col - 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
-            }
-            if (col + 1 < getSearchArea()[0].length) {
-                checkNode(currentNode, col + 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
-            }
-            checkNode(currentNode, col, upperRow, getHCost());
-        }
+        int shoulder = currentNode.getShoulderAngle();
+        int wrist = currentNode.getWristAngle();
+        int upperRow = shoulder - 1;
+        checkNode(currentNode, wrist - 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+        checkNode(currentNode, wrist, upperRow, getHCost());
+        checkNode(currentNode, wrist + 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
     }
 
-    private void checkNode(Node currentNode, int col, int row, int cost) {
-        Node adjacentNode = getSearchArea()[row][col];
-        if (!adjacentNode.isBarrier() && !getClosedSet().contains(adjacentNode)) {
+    private void checkNode(Node currentNode, int wrist, int shoulder, int cost) {
+        Node adjacentNode = getNode(shoulder, wrist);
+        if (!constraint.isInvalid(normDegreesDistance(shoulder), normDegreesDistance(wrist)) && !getClosedSet().contains(adjacentNode)) {
             if (!getOpenList().contains(adjacentNode)) {
                 adjacentNode.updateNode(currentNode, cost);
                 getOpenList().add(adjacentNode);
@@ -167,10 +172,6 @@ public class Asstar {
         this.finalNode = finalNode;
     }
 
-    public Node[][] getSearchArea() {
-        return searchArea;
-    }
-
     public PriorityQueue<Node> getOpenList() {
         return openList;
     }
@@ -181,10 +182,6 @@ public class Asstar {
 
     public Set<Node> getClosedSet() {
         return closedSet;
-    }
-
-    private void setBlock(int row, int col) {
-        this.searchArea[row][col].setBarrier(true);
     }
 
     public void setClosedSet(Set<Node> closedSet) {

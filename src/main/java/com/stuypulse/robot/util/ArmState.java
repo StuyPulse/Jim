@@ -1,8 +1,11 @@
 package com.stuypulse.robot.util;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.stuypulse.robot.constants.Motors.Arm;
 
-public class ArmState {
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+
+public class ArmState implements Interpolatable<ArmState> {
 
     public static final ArmState fromDegrees(double shoulderDegrees, double wristDegrees) {
         return new ArmState(Rotation2d.fromDegrees(shoulderDegrees), Rotation2d.fromDegrees(wristDegrees));
@@ -26,5 +29,12 @@ public class ArmState {
 
     public ArmState flip() {
         return fromDegrees(-180 - shoulder.getDegrees(), -180 - wrist.getDegrees());
+    }
+
+    public ArmState interpolate(ArmState other, double t) {
+        return new ArmState(
+            shoulder.interpolate(other.shoulder, t),
+            wrist.interpolate(other.wrist, t)
+        );
     }
 }

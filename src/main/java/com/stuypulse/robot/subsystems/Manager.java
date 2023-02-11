@@ -1,7 +1,8 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.util.ArmTrajectory;
-import com.stuypulse.robot.util.AsstarImp;
+import com.stuypulse.robot.util.Astar;
+import com.stuypulse.robot.util.AstarImp;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
@@ -9,6 +10,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -101,9 +103,23 @@ public class Manager extends SubsystemBase {
     /** Generate Ready Trajectories **/
 
     public ArmTrajectory getSampleTrajectory(Arm arm) {
-        ArmTrajectory sampleTrajectory = AsstarImp.generateTrajectory((int) Settings.Arm.AStar.RESOLUTIONX.get(), (int) Settings.Arm.AStar.RESOLUTIONY.get(), -arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), 55, 40);
-        System.out.println(arm.getShoulderAngle().getDegrees());
-        return intakeSide == IntakeSide.FRONT ? sampleTrajectory : sampleTrajectory.flipped();
+        ArmState start = Arm.getInstance().getState();
+        ArmState[] states = { 
+            Arm.getInstance().getState(),
+            // new ArmState(start.getShoulderState(), Rotation2d.fromDegrees(90)),
+            // ArmState.fromDegrees(-60, 90),
+            // ArmState.fromDegrees(-60, 0)
+            ArmState.fromDegrees(-130, -90)
+        };
+
+        ArmTrajectory intakeTrajectory = new ArmTrajectory();
+
+        for (int i = 0; i < states.length - 1; ++i) {
+            intakeTrajectory.append(AstarImp.generateTrajectory(
+                states[i], states[i+1]));
+        }
+        
+        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
     }
 
     /** puts the trajectory on the correct side */

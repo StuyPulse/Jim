@@ -1,6 +1,8 @@
 package com.stuypulse.robot.util;
 
-public class Node {
+import edu.wpi.first.math.geometry.Rotation2d;
+
+public class Node implements Comparable<Node> {
     private double g;
     private double h;
     private double f;
@@ -10,8 +12,12 @@ public class Node {
     private Node parent;
 
     public Node(int shoulderAngle, int wristAngle) {
-        this.shoulderAngle = shoulderAngle;
-        this.wristAngle = wristAngle;
+        this.shoulderAngle = Astar.normDegrees(shoulderAngle);
+        this.wristAngle = Astar.normDegrees(wristAngle);
+    }
+
+    public Node(double shoulderAngle, double wristAngle) {
+        this((int) shoulderAngle, (int) wristAngle);
     }
     
     /*
@@ -87,6 +93,11 @@ public class Node {
         return this.shoulderAngle == node.getShoulderAngle() && this.wristAngle == node.getWristAngle();
     }
 
+    @Override 
+    public int compareTo(Node other) {
+        return Double.compare(this.f, other.f);
+    }
+
     public void calculateFinalCost() {
         setF(getG() + getH()); 
     }
@@ -108,7 +119,17 @@ public class Node {
     }
     // calculate the cost 
     public void calculateH(Node endNode) {
-        this.h = Math.pow(Math.pow(endNode.getShoulderAngle() - getShoulderAngle(), 2) + Math.pow(endNode.getWristAngle(), -getWristAngle()), 0.5);
+        this.h = Math.hypot(
+            Astar.normDegreesDistance(endNode.getShoulderAngle() - getShoulderAngle()),
+            Astar.normDegreesDistance(endNode.getWristAngle() - getWristAngle())
+        );
+    }
+
+    public ArmState toArmState() {
+        return new ArmState(
+            Rotation2d.fromDegrees(getShoulderAngle()).minus(Rotation2d.fromDegrees(0)), 
+            Rotation2d.fromDegrees(getWristAngle()).minus(Rotation2d.fromDegrees(0))
+        );
     }
 
 }

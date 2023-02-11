@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Astar",
+      "request": "launch",
+      "mainClass": "com.stuypulse.robot.util.Astar",
+      "projectName": "Jim"
+    },
+    {
+      "type": "java",
       "name": "Launch AsstarTest",
       "request": "launch",
       "mainClass": "com.stuypulse.robot.util.AsstarTest",

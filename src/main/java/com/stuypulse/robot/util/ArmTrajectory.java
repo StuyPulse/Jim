@@ -1,6 +1,14 @@
 package com.stuypulse.robot.util;
 
 import java.util.List;
+import java.util.Optional;
+
+import com.stuypulse.robot.constants.Settings;
+
+import edu.wpi.first.math.InterpolatingMatrixTreeMap;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
+import edu.wpi.first.util.InterpolatingTreeMap;
+
 import java.util.ArrayList;
 
 public class ArmTrajectory {
@@ -12,24 +20,31 @@ public class ArmTrajectory {
         return trajectory;
     }
 
-    private final List<ArmState> states;
+    private double time;
+    private final TimeInterpolatableBuffer<ArmState> trajectory;
+    private final List<ArmState> trajectoryList;
 
     public ArmTrajectory() {
-        states = new ArrayList<>();
+        time = 0;
+        trajectory = TimeInterpolatableBuffer.createBuffer(Double.MAX_VALUE);
+        trajectoryList = new ArrayList<>();
     }
 
-    public List<ArmState> getStates() {
-        return states;
+    public Optional<ArmState> calculate(double time) { 
+        return trajectory.getSample(time);
     }
 
     public ArmTrajectory addState(ArmState state) {
-        states.add(state);
+        trajectory.addSample(time, state);
+        trajectoryList.add(state);
+
+        time += 1.0 / Settings.Arm.DEGREES_PER_SECOND;
         return this;
     }
 
     public ArmTrajectory addStates(List<ArmState> states) {
         for (ArmState state : states) {
-            this.states.add(state);
+            addState(state);
         }
         return this;
     }
@@ -38,16 +53,14 @@ public class ArmTrajectory {
     //     return addState(new ArmState(shoulderDegrees, wristDegrees));
     // }
 
-    public ArmTrajectory append(ArmTrajectory trajectory) {
-        for (ArmState state: trajectory.getStates()) {
-            states.add(state);
-        }
+    public ArmTrajectory append(ArmTrajectory other) {
+        addStates(other.trajectoryList);
         return this;
     }
 
     public ArmTrajectory flipped() {
         ArmTrajectory flipped = new ArmTrajectory();
-        for (ArmState state : states) {
+        for (ArmState state : trajectoryList) {
             flipped.addState(state.flip());
         }
         return flipped;
