@@ -21,7 +21,8 @@ public class Limelight {
 
     private final DoubleEntry latencyEntry;
     private final IntegerEntry idEntry;
-    private final DoubleArrayEntry botposeEntry;
+    private final DoubleArrayEntry blueBotposeEntry;
+    private final DoubleArrayEntry redBotposeEntry;
     
     private Optional<AprilTagData> data;
 
@@ -33,13 +34,9 @@ public class Limelight {
         latencyEntry = limelight.getDoubleTopic("tl").getEntry(0);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
 
-        if (DriverStation.getAlliance() == Alliance.Blue) {
-            botposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
-        } else {
-            botposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
-        }
+        blueBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
+        redBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
 
-    
         data = Optional.empty();
     }
 
@@ -52,8 +49,13 @@ public class Limelight {
     }
 
     public void updateAprilTagData() {
-        double[] botposeData = botposeEntry.get();
-        
+        double[] botposeData;
+        if (DriverStation.getAlliance() == Alliance.Blue) {
+            botposeData = blueBotposeEntry.get();
+        } else {
+            botposeData = redBotposeEntry.get();
+        }
+
         if (botposeData.length != 6) {
             data = Optional.empty();
             return;
