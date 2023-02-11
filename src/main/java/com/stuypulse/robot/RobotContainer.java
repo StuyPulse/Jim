@@ -166,6 +166,7 @@ public class RobotContainer {
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("One Piece", new OnePiece());
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
