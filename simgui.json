@@ -47,7 +47,16 @@
         "Arm": {
           "open": true
         },
+        "Intake": {
+          "open": true
+        },
         "Manager": {
+          "open": true
+        },
+        "Wings": {
+          "open": true
+        },
+        "Wrist": {
           "open": true
         },
         "open": true

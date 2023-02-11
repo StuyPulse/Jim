@@ -7,8 +7,10 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
+import com.stuypulse.robot.commands.intake.IntakeDeacquireCone;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 import com.stuypulse.robot.subsystems.LEDController;
@@ -40,7 +42,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
             
             // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
+            new IntakeDeacquireCone(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             
             new SwerveDriveFollowTrajectory(
@@ -97,9 +99,10 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock")
-            ).fieldRelative()
+            ).fieldRelative(),
 
-            // new BasicGyroEngage()
+            new SwerveDriveEngage()
+
         );
                 
     }
