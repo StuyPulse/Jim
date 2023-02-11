@@ -11,6 +11,7 @@ import com.stuypulse.robot.subsystems.vision.Vision.Result;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,9 +26,9 @@ public class OdometryImpl extends Odometry {
 
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
-        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d(2.94, 0.82, Rotation2d.fromDegrees(0)));
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, Units.degreesToRadians(10)));
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
         swerve.initFieldObjects(field);
@@ -62,11 +63,12 @@ public class OdometryImpl extends Odometry {
             
             switch (result.getNoise()) {
                 case LOW:
+                    
                     // pose estimator add vision measurement
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(3, 3, Math.toRadians(10)));
+                    // poseEstimator.addVisionMeasurement(
+                    //     result.getPose(),
+                    //     Timer.getFPGATimestamp() - result.getLatency());
+                        // VecBuilder.fill(3, 3, Math.toRadians(10)));
                         // TODO: Fill in constants
                     // pose estimator reset
                     // poseEstimator.resetPosition(
@@ -78,11 +80,12 @@ public class OdometryImpl extends Odometry {
                     break;
 
                 case MID:
+
                     // pose estimator add vision measurement
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(10, 10, Math.toRadians(15)));
+                    // poseEstimator.addVisionMeasurement(
+                    //     result.getPose(),
+                    //     Timer.getFPGATimestamp() - result.getLatency());
+                        // VecBuilder.fill(10, 10, Math.toRadians(15)));
                         // TODO: Fill in constants
                     break;
                 
@@ -101,14 +104,18 @@ public class OdometryImpl extends Odometry {
         
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
         processResults(results, drive, vision);
+
+        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
         
 
         // logging from pose estimator
         field.setRobotPose(getPose());
 
-        SmartDashboard.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
-        SmartDashboard.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
+        Pose2d pose = odometry.getPoseMeters();
+        field.getRobotObject().setPose(pose);
+        SmartDashboard.putNumber("Odometry/Odometry Pose X", pose.getX());
+        SmartDashboard.putNumber("Odometry/Odometry Pose Y", pose.getY());
+        SmartDashboard.putNumber("Odometry/Odometry Rotation", pose.getRotation().getDegrees());
 
         
         SmartDashboard.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());

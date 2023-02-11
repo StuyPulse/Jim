@@ -6,13 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.arm.*;
-import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.auton.MobilityAuton;
-import com.stuypulse.robot.commands.auton.OnePiece;
-import com.stuypulse.robot.commands.auton.OnePieceDock;
-import com.stuypulse.robot.commands.auton.ThreePiece;
-import com.stuypulse.robot.commands.auton.ThreePieceDock;
-import com.stuypulse.robot.commands.auton.TwoPieceDock;
+import com.stuypulse.robot.commands.auton.*;
 import com.stuypulse.robot.commands.odometry.OdometryReset;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
@@ -42,6 +36,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public class RobotContainer {
@@ -92,6 +87,7 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+        driver.getTopButton().onTrue(new OdometryReset(new Pose2d(2.94, 0.82, Rotation2d.fromDegrees(0))));
     }
 
     /**************/
@@ -102,7 +98,7 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("One Piece", new OnePiece());
-        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());

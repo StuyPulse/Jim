@@ -5,7 +5,6 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
@@ -65,11 +64,6 @@ public class VisionImpl extends Vision {
         SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
         SmartDashboard.putNumber("Vision/Distance", distance);
         SmartDashboard.putNumber("Vision/Tag ID", data.id);
-        
-        // SmartDashboard.putNumber("Vision/Pose Degrees", data.pose.getRotation().getDegrees());
-        // SmartDashboard.putNumber("Vision/Pose X", data.pose.getX());
-        // SmartDashboard.putNumber("Vision/Pose Y", data.pose.getY());
-
 
         if (Math.abs(angleDegrees) > TRUST_ANGLE)
             return new Result(data, Noise.HIGH);

@@ -8,7 +8,8 @@ public abstract class Wings extends SubsystemBase {
 
     public static Wings getInstance() {
         if (instance == null) {
-            instance = new WingsImpl();
+            // instance = new WingsImpl();
+            instance = new NoWings();
         }
         return instance;
     }

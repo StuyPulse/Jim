@@ -22,8 +22,7 @@ public class OnePieceDock extends SequentialCommandGroup {
     public OnePieceDock() {
         paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
-
-            "Mobility"
+            "1 Piece + Dock"
         );
 
         addCommands(
@@ -31,16 +30,16 @@ public class OnePieceDock extends SequentialCommandGroup {
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new SwerveDriveFollowTrajectory(
-                paths.get("Mobility")
+                paths.get("1 Piece + Dock")
             ).robotRelative()
         );
 
-        addCommands(
-            new SwerveDriveFollowTrajectory(
-                paths.get("Dock")
-            ).fieldRelative()
-            // new BasicGyroEngage(robot.swerve); 
-        );
+        // addCommands(
+        //     new SwerveDriveFollowTrajectory(
+        //         paths.get("Dock")
+        //     ).fieldRelative()
+        //     // new (robot.swerve); 
+        // );
     
     }
 
