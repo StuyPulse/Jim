@@ -1,9 +1,12 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
@@ -32,8 +35,7 @@ public class SwerveDriveDrive extends CommandBase {
                 new VDeadZone(Settings.Driver.SPEED_DEADBAND),
                 x -> x.clamp(1.0),
                 x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
-                // x -> x.mul(Settings.Driver.MAX_TELEOP_SPEED.get()),
-                x -> x.mul(Units.inchesToMeters(10)),
+                x -> x.mul(Settings.Driver.MAX_TELEOP_SPEED.get()),
                 new VLowPassFilter(Settings.Driver.Drive.RC),
                 new VRateLimit(Settings.Driver.MAX_TELEOP_ACCEL)
             );
@@ -42,8 +44,7 @@ public class SwerveDriveDrive extends CommandBase {
             .filtered(
                 x -> SLMath.deadband(x, Settings.Driver.ANGLE_DEADBAND.get()),
                 x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
-                // x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
-                x -> x * Units.inchesToMeters(10),
+                x -> x * Settings.Driver.MAX_TELEOP_TURNING.get(),
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
         
@@ -55,9 +56,15 @@ public class SwerveDriveDrive extends CommandBase {
     @Override
     public void execute() {
         if (robotRelative.get()) {
-            var s = speed.get();
+            Vector2D s = speed.get();
+            Vector2D translation = new Vector2D(s.y, -s.x);
+
+            if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+                translation = translation.negative();
+            }
+
             swerve.setChassisSpeeds(
-                new ChassisSpeeds(s.y, -s.x, -turn.get()));
+                new ChassisSpeeds(translation.x, translation.y, -turn.get()));
         } else {
             swerve.drive(speed.get(), turn.get());
         }

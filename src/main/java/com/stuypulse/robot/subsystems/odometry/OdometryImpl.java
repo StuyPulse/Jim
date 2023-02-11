@@ -4,22 +4,57 @@ import java.util.List;
 
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
-import com.stuypulse.robot.subsystems.vision.VisionImpl;
 import com.stuypulse.robot.subsystems.vision.Vision.Noise;
 import com.stuypulse.robot.subsystems.vision.Vision.Result;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class OdometryImpl extends Odometry {
+
+    static class StandardDeviations {
+        public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
+        public static final Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
+
+        public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
+        public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
+
+        private StandardDeviations() {}
+
+        public static Vector<N3> get(Noise noise) {
+            if (DriverStation.isAutonomous()) {
+                switch (noise) {
+                    case LOW:
+                        return AUTO_LOW;
+                    case MID:
+                        return AUTO_MID;
+                    default:
+                        return null;
+                }
+            } else {
+                switch (noise) {
+                    case LOW:
+                        return TELE_LOW;
+                    case MID:
+                        return TELE_MID;
+                    default:
+                        return null;
+                }
+            }
+        }
+    }
+
     private final SwerveDrivePoseEstimator poseEstimator;
     private final SwerveDriveOdometry odometry;
     private final Field2d field;
@@ -58,39 +93,28 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
-    private void processResults(List<Result> results, SwerveDrive drive, Vision vision){  
-        for (Result result : vision.getResults()) {
-            
+    private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
+        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
+
+        for (Result result : results) {
             switch (result.getNoise()) {
                 case LOW:
-                    
-                    // pose estimator add vision measurement
-                    // poseEstimator.addVisionMeasurement(
-                    //     result.getPose(),
-                    //     Timer.getFPGATimestamp() - result.getLatency());
-                        // VecBuilder.fill(3, 3, Math.toRadians(10)));
-                        // TODO: Fill in constants
-                    // pose estimator reset
-                    // poseEstimator.resetPosition(
-                    //     drive.getGyroAngle(), 
-                    //     drive.getModulePositions(),
-                    //     result.getPose());
-
-                    
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        StandardDeviations.get(result.getNoise()));
                     break;
 
                 case MID:
-
-                    // pose estimator add vision measurement
-                    // poseEstimator.addVisionMeasurement(
-                    //     result.getPose(),
-                    //     Timer.getFPGATimestamp() - result.getLatency());
-                        // VecBuilder.fill(10, 10, Math.toRadians(15)));
-                        // TODO: Fill in constants
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        StandardDeviations.get(result.getNoise()));
                     break;
-                
+
                 case HIGH:
-                    break; // DO NOT DO ANYTHING
+                    break;
             }
         }  
     }
@@ -99,16 +123,10 @@ public class OdometryImpl extends Odometry {
     public void periodic() {
 
         SwerveDrive drive = SwerveDrive.getInstance();
-        Vision vision = VisionImpl.getInstance();
+        Vision vision = Vision.getInstance();
         List<Result> results = vision.getResults();
-        
-        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
-        processResults(results, drive, vision);
+        processResults(results, drive, vision);        
 
-        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
-        
-
-        // logging from pose estimator
         field.setRobotPose(getPose());
 
         Pose2d pose = odometry.getPoseMeters();

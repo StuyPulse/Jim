@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmVisualizer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -21,11 +22,19 @@ public abstract class Arm extends SubsystemBase {
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
+    public final ArmState getState() {
+        return new ArmState(getShoulderAngle(), getWristAngle());
+    }
+
     public abstract Rotation2d getShoulderTargetAngle();
     public abstract Rotation2d getWristTargetAngle();
 
-    public abstract boolean isShoulderAtAngle(Rotation2d maxError);
-    public abstract boolean isWristAtAngle(Rotation2d maxError);
+    public final boolean isShoulderAtAngle(Rotation2d maxError) {
+        return Math.abs(getShoulderTargetAngle().minus(getShoulderAngle()).getDegrees()) < maxError.getDegrees();
+    }
+    public final boolean isWristAtAngle(Rotation2d maxError) {
+        return Math.abs(getWristTargetAngle().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
+    }
 
     public final boolean isArmAtState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
         return isShoulderAtAngle(shoulderEpsilon) && isWristAtAngle(wristEpsilon);
@@ -46,4 +55,16 @@ public abstract class Arm extends SubsystemBase {
     public final void moveWrist(Rotation2d angle) {
         setTargetWristAngle(getWristTargetAngle().plus(angle));
     }
+
+    public abstract void setFeedbackEnabled(boolean enabled);
+
+    public final void enableFeedback() {
+        setFeedbackEnabled(true);
+    }
+
+    public final void disableFeedback() {
+        setFeedbackEnabled(false);
+    }
+
+    public abstract ArmVisualizer getVisualizer();
 }
