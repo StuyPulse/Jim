@@ -22,16 +22,16 @@ public class ThreePiece extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
-
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(4, 3);
+    private static final PathConstraints SLOW_CONSTRAINTS = new PathConstraints(3, 2);
     public ThreePiece() {
 
 
         // load paths into hashmap
         HashMap<String, PathPlannerTrajectory> paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", CONSTRAINTS, CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece", CONSTRAINTS, CONSTRAINTS,SLOW_CONSTRAINTS,SLOW_CONSTRAINTS),
 
-            "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two"
+            "Intake Piece", "Score Piece", "Intake Piece Two", "To Piece Two", "Score Piece Two"
         );
 
         // Scores held piece, drive to first piece and intake
@@ -80,8 +80,12 @@ public class ThreePiece extends SequentialCommandGroup {
             new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
 
             new SwerveDriveFollowTrajectory(
-                paths.get("Score Piece Two")
+                paths.get("To Piece Two")
             ).fieldRelative(),
+
+            new SwerveDriveFollowTrajectory(
+                paths.get("Score Piece Two")
+            ),
             // new ArmFollowTrajectory(),
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)

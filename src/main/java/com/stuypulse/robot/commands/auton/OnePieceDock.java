@@ -7,6 +7,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
+import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 
@@ -26,12 +27,14 @@ public class OnePieceDock extends SequentialCommandGroup {
         );
 
         addCommands(
-            // new ArmFollowTrajectory(null),
-            new IntakeDeacquireCube(),
+            // new ArmFollowTrajectory(),
+            // new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new SwerveDriveFollowTrajectory(
                 paths.get("1 Piece + Dock")
-            ).robotRelative()
+            ).robotRelative(),
+
+            new SwerveDriveEngage()
         );
 
         // addCommands(
