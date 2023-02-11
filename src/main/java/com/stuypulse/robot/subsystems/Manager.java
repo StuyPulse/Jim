@@ -101,7 +101,7 @@ public class Manager extends SubsystemBase {
     /** Generate Ready Trajectories **/
 
     public ArmTrajectory getSampleTrajectory(Arm arm) {
-        ArmTrajectory sampleTrajectory = AsstarImp.generateTrajectory((int) Settings.Arm.AStar.RESOLUTIONX.get(), (int) Settings.Arm.AStar.RESOLUTIONY.get(), -arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), 60, 80);
+        ArmTrajectory sampleTrajectory = AsstarImp.generateTrajectory((int) Settings.Arm.AStar.RESOLUTIONX.get(), (int) Settings.Arm.AStar.RESOLUTIONY.get(), -arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), 70, 40);
         System.out.println(arm.getShoulderAngle().getDegrees());
         return intakeSide == IntakeSide.FRONT ? sampleTrajectory : sampleTrajectory.flipped();
     }
