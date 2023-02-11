@@ -45,7 +45,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.THETA.kP, Motion.THETA.kI, Motion.THETA.kD),
 			SwerveDrive.getInstance()::setModuleStates,
-			false,
+			true,
 			SwerveDrive.getInstance()
 		);
 		
@@ -82,7 +82,8 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 	@Override
 	public void initialize() {
 		if (robotRelative) {
-			PathPlannerState initialState = path.getInitialState();
+			PathPlannerState initialState = PathPlannerTrajectory.transformStateForAlliance(
+				path.getInitialState(), DriverStation.getAlliance());
 			
 			Odometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),
