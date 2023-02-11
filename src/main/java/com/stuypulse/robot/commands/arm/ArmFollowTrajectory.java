@@ -1,5 +1,7 @@
 package com.stuypulse.robot.commands.arm;
 
+import java.util.function.Supplier;
+
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -13,14 +15,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ArmFollowTrajectory extends CommandBase {
     
     private final Arm arm;
+    private Supplier<ArmTrajectory> trajectorySupplier;
 
     private ArmTrajectory trajectory;
     private int currentIdx;
 
-    public ArmFollowTrajectory(ArmTrajectory trajectory) {
+    public ArmFollowTrajectory(Supplier<ArmTrajectory> trajectorySupplier) {
         arm = Arm.getInstance();
         
-        this.trajectory = trajectory;
+        this.trajectorySupplier = trajectorySupplier;
         currentIdx = 0;
 
         addRequirements(arm);
@@ -36,12 +39,8 @@ public class ArmFollowTrajectory extends CommandBase {
         addRequirements(arm);
     }
 
-    public ArmFollowTrajectory() {
-        this(new ArmTrajectory());
-    }
-
-    protected void setTrajectory(ArmTrajectory trajectory) {
-        this.trajectory = trajectory;
+    public ArmFollowTrajectory(ArmTrajectory trajectory) {
+        this(() -> trajectory);
     }
     
     protected ArmTrajectory getTrajectory() {
@@ -61,6 +60,8 @@ public class ArmFollowTrajectory extends CommandBase {
     @Override
     public void initialize() {
         currentIdx = 0;
+
+        trajectory = trajectorySupplier.get();
     }
 
     @Override
@@ -77,7 +78,4 @@ public class ArmFollowTrajectory extends CommandBase {
         return currentIdx >= trajectory.getStates().size();
     }
 
-    @Override
-    public void end(boolean i) {
-    }
 }

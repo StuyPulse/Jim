@@ -2,6 +2,8 @@ package com.stuypulse.robot.util;
 
 import java.util.List;
 
+
+// TODO: REMOVE
 public class AsstarTest {
 
     public static void main(String[] args) {
@@ -13,6 +15,8 @@ public class AsstarTest {
         int[][] blocksArray = new int[][]{{1, 3}, {2, 3}, {3, 3}};
         aStar.setBlocks(blocksArray);
         List<Node> path = aStar.findPath();
+        System.out.println(path.size());
+
         for (Node node : path) {
             System.out.println(node);
         }

@@ -127,7 +127,16 @@ public interface Settings {
     } 
 
     public interface Arm {
-    
+
+        // Currently assuming Shoulder cannot go > 0 degrees
+        public interface AStar {
+            SmartNumber RESOLUTIONX = new SmartNumber("AStar/ResolutionX", 90); // 1 degree increments, lower to increase speed
+            SmartNumber RESOLUTIONY = new SmartNumber("AStar/ResolutionY", 360);
+            double MAX_RESOLUTIONX = 90;
+            double MAX_RESOLUTIONY = 360;
+            double RESOLUTION_MULTIPLIER = RESOLUTIONX.get() / MAX_RESOLUTIONX;
+        }
+
         public interface Shoulder {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(43.75);
@@ -150,16 +159,16 @@ public interface Settings {
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Shoulder/kP", 16);
-                SmartNumber kI = new SmartNumber ("Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Shoulder/kD", 0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 16);
+                SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Shoulder/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Shoulder/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.24);
-                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.3);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.06);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.24);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.3);
             }
         }
     
@@ -171,6 +180,7 @@ public interface Settings {
             double MASS = 0.001;
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            SmartNumber wristSpeedDegrees = new SmartNumber("Arm/Wrist/Speed", 15); // degrees per second
             
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
@@ -186,10 +196,10 @@ public interface Settings {
             }
     
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Wrist/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Wrist/kA", 0.05);
-                SmartNumber kG = new SmartNumber("Shoulder/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Shoulder/kV", 0.1);
+                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.1);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.05);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.1);
             }
         }
     }
@@ -204,6 +214,16 @@ public interface Settings {
         SmartNumber RIGHT_LATCH_DELAY = new SmartNumber("Wings/Right Latch Delay", 1.0);
         SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
         SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
+    }
+
+    public interface Operator {
+        SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.05);
+
+        SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 25); // deg per second
+        SmartNumber WRIST_FILTERING = new SmartNumber("Operator Settings/Wrist Filtering", 0.1);
+        
+        SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 25); // deg per second
+        SmartNumber SHOULDER_FILTERING = new SmartNumber("Operator Settings/Shoulder Filtering", 0.1);
     }
 
     public interface Driver {
@@ -226,6 +246,9 @@ public interface Settings {
         SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", 4.2);
         SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 7);
         SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 6.1);
+
+        SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
+        SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
 
         public interface Drive {
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);

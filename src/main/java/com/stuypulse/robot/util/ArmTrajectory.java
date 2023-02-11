@@ -29,7 +29,7 @@ public class ArmTrajectory {
 
     public ArmTrajectory addStates(List<ArmState> states) {
         for (ArmState state : states) {
-            states.add(state);
+            this.states.add(state);
         }
         return this;
     }

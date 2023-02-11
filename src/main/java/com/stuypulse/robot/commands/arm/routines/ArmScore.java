@@ -6,17 +6,8 @@ import com.stuypulse.robot.subsystems.Manager;
 
 public class ArmScore extends ArmFollowTrajectory {
 
-    private Manager manager;
-
     public ArmScore() {
-        manager = Manager.getInstance();
-        // add manager?
+        super(() -> Manager.getInstance().getScoreTrajectory());
     }
 
-    @Override
-    public void initialize() {
-        super.initialize(); // sus
-        setTrajectory(manager.getScoreTrajectory());
-    }
-    
 }

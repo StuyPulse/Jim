@@ -4,7 +4,8 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
-import com.stuypulse.robot.commands.swerve.FollowTrajectory;
+import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
+import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -20,7 +21,7 @@ public class OnePiece extends SequentialCommandGroup {
             // new ArmFollowTrajectory(),
             new IntakeDeacquireCube(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Mobility", CONSTRAINTS)
             ).robotRelative()
         );

@@ -37,19 +37,19 @@ public class SwerveDrive extends SubsystemBase {
     public static SwerveDrive getInstance() {
         if (instance == null) {
             if (RobotBase.isReal()) {
-                // instance = new SwerveDrive(
-                //     new MAX_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
-                //     new MAX_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
-                //     new MAX_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
-                //     new MAX_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
-                // );
-
                 instance = new SwerveDrive(
-                    SacrodModule.createFrontRight(),
-                    SacrodModule.createFrontLeft(),
-                    SacrodModule.createBackLeft(),
-                    SacrodModule.createBackRight()
+                    new MAX_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
+                    new MAX_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
+                    new MAX_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
+                    new MAX_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
                 );
+
+                // instance = new SwerveDrive(
+                //     SacrodModule.createFrontRight(),
+                //     SacrodModule.createFrontLeft(),
+                //     SacrodModule.createBackLeft(),
+                //     SacrodModule.createBackRight()
+                // );
             } else {
                 instance = new SwerveDrive(
                     new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
@@ -145,16 +145,10 @@ public class SwerveDrive extends SubsystemBase {
             twistVel.dx / Settings.DT,
             twistVel.dy / Settings.DT,
             twistVel.dtheta / Settings.DT
-        ), false);
+        ));
     }
     
-    public void setChassisSpeeds(ChassisSpeeds robotSpeed, boolean fieldRelative) {
-        if (fieldRelative) {
-            robotSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(
-                robotSpeed,
-                Odometry.getInstance().getRotation());
-        }
-
+    public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
     
@@ -171,10 +165,8 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void stop() {
-        setChassisSpeeds(new ChassisSpeeds(), true);
+        setChassisSpeeds(new ChassisSpeeds());
     }
-    
-
 
     /** GYRO API **/
     public Rotation2d getGyroAngle() {
@@ -188,15 +180,11 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getGyroRoll() {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
-    
-
 
     /** KINEMATICS **/
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
-    
-
 
     @Override
     public void periodic() {

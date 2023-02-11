@@ -6,27 +6,27 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class OdometryReset extends InstantCommand {
+public class OdometryRealign extends InstantCommand {
     private final Odometry odometry;
-    private final Supplier<Pose2d> references;
+    private final Supplier<Rotation2d> references;
 
-    public OdometryReset(Supplier<Pose2d> references) {
+    public OdometryRealign(Supplier<Rotation2d> references) {
         odometry = Odometry.getInstance();
         this.references = references;
 
         // addRequirements(null);
     }
 
-    public OdometryReset(Pose2d reference) {
+    public OdometryRealign(Rotation2d reference) {
         this(() -> reference);
     }
 
     @Override
     public void initialize() {
-        odometry.reset(references.get());
+        Pose2d pose = odometry.getPose();
+        odometry.reset(new Pose2d(pose.getTranslation(), references.get()));
     }
 
 }

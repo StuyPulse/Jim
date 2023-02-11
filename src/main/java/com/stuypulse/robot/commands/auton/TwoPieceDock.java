@@ -8,7 +8,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
 import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.swerve.FollowTrajectory;
+import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.util.LEDColor;
@@ -27,7 +27,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
     public TwoPieceDock() {
 
-        paths = FollowTrajectory.getSeparatedPaths(
+        paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
 
             "Intake Piece", "Score Piece", "Dock"
@@ -41,7 +41,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative(),
             new IntakeAcquireCube(),
@@ -52,7 +52,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")
             ).fieldRelative(),
             // new ArmFollowTrajectory(),
@@ -64,7 +64,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
-            new FollowTrajectory(
+            new SwerveDriveFollowTrajectory(
                 paths.get("Dock")
             ).fieldRelative()
 
