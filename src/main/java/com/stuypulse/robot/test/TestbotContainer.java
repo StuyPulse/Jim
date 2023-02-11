@@ -34,11 +34,11 @@ public class TestbotContainer {
             .onTrue(swerve.runOnce(swerve::turnMotorFL))
             .onFalse(swerve.runOnce(swerve::stop));
 
-        driver.getDPadUp()
+        driver.getDPadRight()
             .onTrue(swerve.runOnce(swerve::turnMotorFR))
             .onFalse(swerve.runOnce(swerve::stop));
 
-        driver.getDPadUp()
+        driver.getDPadDown()
             .onTrue(swerve.runOnce(swerve::turnMotorBR))
             .onFalse(swerve.runOnce(swerve::stop));
         
