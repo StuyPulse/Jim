@@ -1,4 +1,4 @@
-package com.stuypulse.robot.test.subsystems.plant;
+package com.stuypulse.robot.test.subsystems;
 
 import static com.stuypulse.robot.constants.Ports.Plant.*;
 
@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 * @author Tracey Lin
 *
 */
-public class Plant extends SubsystemBase{
+public class Plant extends SubsystemBase {
+    
     private final DoubleSolenoid solenoid;
 
     public Plant() {

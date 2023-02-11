@@ -1,4 +1,5 @@
 package com.stuypulse.robot.test.subsystems;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
@@ -6,9 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.stuypulse.robot.constants.Ports;
-
-
+import com.stuypulse.robot.constants.Ports.Swerve.*;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -29,23 +28,20 @@ public class SwerveDrive extends SubsystemBase {
     private RelativeEncoder driveEncoderBR;
     private RelativeEncoder driveEncoderFL;
     private RelativeEncoder driveEncoderFR;
-    
-
-
 
     public SwerveDrive() {
         /** turn motors */
     
-        turnMotorBL = new CANSparkMax(Ports.Swerve.BackLeft.TURN, MotorType.kBrushless);
-        turnMotorBR = new CANSparkMax(Ports.Swerve.BackRight.TURN, MotorType.kBrushless);
-        turnMotorFL = new CANSparkMax(Ports.Swerve.FrontLeft.TURN, MotorType.kBrushless);
-        turnMotorFR = new CANSparkMax(Ports.Swerve.FrontRight.TURN, MotorType.kBrushless);
+        turnMotorBL = new CANSparkMax(BackLeft.TURN, MotorType.kBrushless);
+        turnMotorBR = new CANSparkMax(BackRight.TURN, MotorType.kBrushless);
+        turnMotorFL = new CANSparkMax(FrontLeft.TURN, MotorType.kBrushless);
+        turnMotorFR = new CANSparkMax(FrontRight.TURN, MotorType.kBrushless);
 
         /** drive motors */
-        driveMotorBL = new CANSparkMax(Ports.Swerve.BackLeft.DRIVE, MotorType.kBrushless);
-        driveMotorBR = new CANSparkMax(Ports.Swerve.BackRight.DRIVE, MotorType.kBrushless);
-        driveMotorFL = new CANSparkMax(Ports.Swerve.FrontLeft.DRIVE, MotorType.kBrushless);
-        driveMotorFR = new CANSparkMax(Ports.Swerve.FrontRight.DRIVE, MotorType.kBrushless);
+        driveMotorBL = new CANSparkMax(BackLeft.DRIVE, MotorType.kBrushless);
+        driveMotorBR = new CANSparkMax(BackRight.DRIVE, MotorType.kBrushless);
+        driveMotorFL = new CANSparkMax(FrontLeft.DRIVE, MotorType.kBrushless);
+        driveMotorFR = new CANSparkMax(FrontRight.DRIVE, MotorType.kBrushless);
 
         /** turn encoders */
         absoluteEncoderBL = turnMotorBL.getAbsoluteEncoder(Type.kDutyCycle);
@@ -96,7 +92,16 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // log encoder stuff
+        SmartDashboard.putNumber("Swerve/Turn/Back Left", absoluteEncoderBL.getPosition());
+        SmartDashboard.putNumber("Swerve/Turn/Back Right", absoluteEncoderBR.getPosition());
+        SmartDashboard.putNumber("Swerve/Turn/Front Left", absoluteEncoderFL.getPosition());
+        SmartDashboard.putNumber("Swerve/Turn/Front Right", absoluteEncoderFR.getPosition());
 
-        // 
+        SmartDashboard.putNumber("Swerve/Drive/Back Left Rotations", driveEncoderBL.getPosition());
+        SmartDashboard.putNumber("Swerve/Drive/Back Right Rotations", driveEncoderBR.getPosition());
+        SmartDashboard.putNumber("Swerve/Drive/Front Left Rotations", driveEncoderFL.getPosition());
+        SmartDashboard.putNumber("Swerve/Drive/Front Right Rotations", driveEncoderFR.getPosition());
+
     }
 }

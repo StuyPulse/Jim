@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Wings extends SubsystemBase {
 
-
-
     // left solenoids
     private final DoubleSolenoid leftDeploy;
     private final Solenoid leftLatch;
@@ -55,9 +53,11 @@ public class Wings extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
         SmartDashboard.putBoolean("Wings/Right Latch Engaged", rightLatch.get());
         SmartDashboard.putBoolean("Wings/Left Latch Engaged", leftLatch.get());
+
+        SmartDashboard.putBoolean("Wings/Right Deployed", rightDeploy.get() == DoubleSolenoid.Value.kForward);
+        SmartDashboard.putBoolean("Wings/Left Deployed", leftDeploy.get() == DoubleSolenoid.Value.kForward);
 
     }
 }
