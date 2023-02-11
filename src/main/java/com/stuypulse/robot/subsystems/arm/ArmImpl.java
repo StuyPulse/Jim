@@ -17,6 +17,7 @@ import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
@@ -46,7 +47,7 @@ public class ArmImpl extends Arm {
 
     private final FieldObject2d fieldObject;
 
-    private SmartNumber feedbackEnable;
+    private SmartBoolean feedbackEnable;
 
     public ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
@@ -63,12 +64,12 @@ public class ArmImpl extends Arm {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
-                                    .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD).setOutputFilter(x -> x * feedbackEnable.get()))
+                                    .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
-                                    .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> x * feedbackEnable.get()))
+                                    .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
@@ -78,7 +79,7 @@ public class ArmImpl extends Arm {
 
         fieldObject = Odometry.getInstance().getField().getObject("Field Arm");
 
-        feedbackEnable = new SmartNumber("Arm/Feedback Enable", 1);
+        feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
     }
 
     private void configureMotors() {
@@ -139,7 +140,7 @@ public class ArmImpl extends Arm {
     }
 
     public void setFeedbackEnabled(boolean enabled) {
-        feedbackEnable.set(enabled ? 1 : 0);
+        feedbackEnable.set(enabled);
     }
 
     public ArmVisualizer getVisualizer() {
