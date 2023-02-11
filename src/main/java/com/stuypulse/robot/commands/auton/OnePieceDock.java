@@ -5,11 +5,15 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.stuypulse.robot.commands.intake.IntakeDeacquireCone;
 import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
+import com.stuypulse.robot.subsystems.LEDController;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,8 +31,8 @@ public class OnePieceDock extends SequentialCommandGroup {
         );
 
         addCommands(
-            // new ArmFollowTrajectory(),
-            // new IntakeDeacquireCube(),
+            new IntakeDeacquireCone(),
+            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new SwerveDriveFollowTrajectory(
                 paths.get("1 Piece + Dock")
@@ -36,13 +40,6 @@ public class OnePieceDock extends SequentialCommandGroup {
 
             new SwerveDriveEngage()
         );
-
-        // addCommands(
-        //     new SwerveDriveFollowTrajectory(
-        //         paths.get("Dock")
-        //     ).fieldRelative()
-        //     // new (robot.swerve); 
-        // );
     
     }
 
