@@ -143,6 +143,10 @@ public class ArmImpl extends Arm {
         return armVisualizer;
     }
 
+    public void setFeedbackEnabled(boolean enabled) {
+        feedbackEnable.set(enabled);
+    }
+
     @Override
     public void periodic() {
         double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
