@@ -47,7 +47,12 @@ public class AsstarImp {
                                           {60, 21}, {60, 22}, {60, 23},{60, 24}, {60, 25}, {60, 26}, {60, 27}, {60, 28}, {60, 29},{60, 30},
                                           {60, 31}, {60, 32}, {60, 33},{60, 34}, {60, 35}, {60, 36}, {60, 37}, {60, 38}, {60, 39},{60, 40},
                                           {60, 41}, {60, 42}, {60, 43},{60, 44}, {60, 45}, {60, 46}, {60, 47}, {60, 48}, {60, 49},{60, 50},
-                                          {61, 50}, {62, 50}, {63, 50}, {64, 50}, {65, 50}, {66, 50}, {67, 50}, {68, 50}, {69, 50}
+                                          {61, 50}, {62, 50}, {63, 50}, {64, 50}, {65, 50}, {66, 50}, {67, 50}, {68, 50}, {69, 50},
+                                          {70, 0}, {70, 1}, {70, 2}, {70, 3},{70, 4}, {70, 5}, {70, 6}, {70, 7}, {70, 8}, {70, 9},{70, 10}, 
+                                          {70, 11}, {70, 12}, {70, 13},{70, 14}, {70, 15}, {70, 16}, {70, 17}, {70, 18}, {70, 19},{70, 20},
+                                          {70, 21}, {70, 22}, {70, 23},{70, 24}, {70, 25}, {70, 26}, {70, 27}, {70, 28}, {70, 29},{70, 30},
+                                          {70, 31}, {70, 32}, {70, 33},{70, 34}, {70, 35}, {70, 36}, {70, 37}, {70, 38}, {70, 39},{70, 40},
+                                          {70, 41}, {70, 42}, {70, 43},{70, 44}, {70, 45}, {70, 46}, {70, 47}, {70, 48}, {70, 49},{70, 50},
                                         };
         astar.setBlocks(blocksArray);
         List<Node> path = new ArrayList<Node>();
@@ -58,7 +63,7 @@ public class AsstarImp {
         List<ArmState> armstates = new ArrayList<>(path.size());
         for (Node node : path) {
             // DIVIDE BY RES MULTIPLIER TDLR
-            armstates.add(new ArmState(new Rotation2d(Math.toRadians(-node.getShoulderAngle())), new Rotation2d(Math.toRadians(node.getShoulderAngle())))); // CHANGE IMPORTANT
+            armstates.add(new ArmState(new Rotation2d(Math.toRadians(-node.getShoulderAngle())), new Rotation2d(Math.toRadians(node.getWristAngle())))); // CHANGE IMPORTANT
         }
         return new ArmTrajectory().addStates(armstates);
     }

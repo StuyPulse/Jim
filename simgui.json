@@ -90,6 +90,9 @@
       },
       "SmartDashboard": {
         "Arm": {
+          "Wrist": {
+            "open": true
+          },
           "open": true
         },
         "Manager": {
