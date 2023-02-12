@@ -40,7 +40,7 @@ public class AstarImp {
 
 
         astar.addConstraint((s, w) -> 0 <= s && s <= 180);
-        astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10) || (w >= 170)));
+        astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));
 
         List<Node> path = astar.findPath();
         for (Node node : path) {

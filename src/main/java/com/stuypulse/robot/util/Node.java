@@ -119,10 +119,12 @@ public class Node implements Comparable<Node> {
     }
     // calculate the cost 
     public void calculateH(Node endNode) {
-        this.h = Math.hypot(
-            Astar.normDegreesDistance(endNode.getShoulderAngle() - getShoulderAngle()),
-            Astar.normDegreesDistance(endNode.getWristAngle() - getWristAngle())
-        );
+        // this.h = Math.hypot(
+        //     Astar.normDegreesDistance(endNode.getShoulderAngle() - getShoulderAngle()),
+        //     Astar.normDegreesDistance(endNode.getWristAngle() - getWristAngle())
+        // );
+        this.h = Math.abs(Astar.normDegreesDistance(endNode.getShoulderAngle() - getShoulderAngle())) 
+               + Math.abs(Astar.normDegreesDistance(endNode.getWristAngle() - getWristAngle()));
     }
 
     public ArmState toArmState() {

@@ -123,7 +123,7 @@ public class RobotContainer {
 
         // ready & score
         // operator.getLeftBumper().onTrue(new ArmReady());
-        operator.getLeftBumper().onTrue(new ArmSample(arm));
+        operator.getLeftButton().onTrue(new ArmSample(arm));
 
 
         operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
@@ -134,7 +134,7 @@ public class RobotContainer {
         // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
         // set game piece
-        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
+        // operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
         operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
         // TODO: CONE_TIP_OUT
 

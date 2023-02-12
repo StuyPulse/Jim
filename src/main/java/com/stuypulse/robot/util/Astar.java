@@ -3,8 +3,10 @@ package com.stuypulse.robot.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 
@@ -24,7 +26,7 @@ public class Astar {
     private int hCost;
     private int diagCost;
     private Node[][] searchArea;
-    private PriorityQueue<Node> openList;
+    private Queue<Node> openList;
     private Set<Node> closedSet;
     private Node initialNode;
     private Node finalNode;
@@ -42,14 +44,14 @@ public class Astar {
         setInitialNode(initialNode);
         setFinalNode(finalNode);
         this.searchArea = new Node[DEGREE_RANGE][DEGREE_RANGE];
-        this.openList = new PriorityQueue<Node>();
+        this.openList = new LinkedList<Node>();
         setNodes();
         this.closedSet = new HashSet<>();
         constraint = (s, w) -> false;
     }
 
     public Astar(Node initialNode, Node finalNode) {
-        this(initialNode, finalNode, 1, 1);
+        this(initialNode, finalNode, 10, 14);
     }
 
     public Astar addConstraint(Constraint newConstraint) {
@@ -128,8 +130,9 @@ public class Astar {
         int wrist = currentNode.getWristAngle();
         int upperRow = shoulder - 1;
         checkNode(currentNode, wrist - 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
-        checkNode(currentNode, wrist, upperRow, getHCost());
         checkNode(currentNode, wrist + 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+        checkNode(currentNode, wrist, upperRow, getHCost());
+
     }
 
     private void checkNode(Node currentNode, int wrist, int shoulder, int cost) {
@@ -152,7 +155,7 @@ public class Astar {
         return currentNode.equals(finalNode);
     }
 
-    private boolean isEmpty(PriorityQueue<Node> openList) {
+    private boolean isEmpty(Queue<Node> openList) {
         return openList.size() == 0;
     }
 
@@ -172,7 +175,7 @@ public class Astar {
         this.finalNode = finalNode;
     }
 
-    public PriorityQueue<Node> getOpenList() {
+    public Queue<Node> getOpenList() {
         return openList;
     }
 

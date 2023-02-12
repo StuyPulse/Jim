@@ -106,10 +106,11 @@ public class Manager extends SubsystemBase {
         ArmState start = Arm.getInstance().getState();
         ArmState[] states = { 
             Arm.getInstance().getState(),
+            // ArmState.fromDegrees(-10, 0),
             // new ArmState(start.getShoulderState(), Rotation2d.fromDegrees(90)),
             // ArmState.fromDegrees(-60, 90),
             // ArmState.fromDegrees(-60, 0)
-            ArmState.fromDegrees(-130, -90)
+            ArmState.fromDegrees(-130, -170)
         };
 
         ArmTrajectory intakeTrajectory = new ArmTrajectory();
