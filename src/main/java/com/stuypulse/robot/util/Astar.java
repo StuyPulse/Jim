@@ -39,7 +39,7 @@ public class Astar {
     }
 
     public Astar(Node initialNode, Node finalNode, int hvCost, int diagonalCost) {
-        this.hCost = hCost;
+        this.hCost = hvCost;
         this.diagCost = diagonalCost;
         setInitialNode(initialNode);
         setFinalNode(finalNode);
