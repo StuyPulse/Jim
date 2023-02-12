@@ -95,10 +95,7 @@ public class VisionImpl extends Vision {
             return Double.POSITIVE_INFINITY;
 
         Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.APRIL_TAGS_BLUE[id-1].toPose2d().getTranslation();
-        if (DriverStation.getAlliance() == Alliance.Red) {
-            tag = new Translation2d(Field.WIDTH - tag.getX(), Field.HEIGHT - tag.getY());
-        }
+        Translation2d tag = Field.getAprilTagFromId(id).toPose2d().getTranslation();
         
         return robot.getDistance(tag);
     }
@@ -108,13 +105,9 @@ public class VisionImpl extends Vision {
             return Double.POSITIVE_INFINITY;
 
         Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.APRIL_TAGS_BLUE[id-1].toPose2d().getTranslation();
-        if (DriverStation.getAlliance() == Alliance.Red) {
-            tag = new Translation2d(Field.WIDTH - tag.getX(), Field.HEIGHT - tag.getY());
-        }
-
+        Translation2d tag = Field.getAprilTagFromId(id).toPose2d().getTranslation();
+        
         double deg = robot.minus(tag).getAngle().getDegrees();
-
         if (Math.abs(deg) > 90)
             deg += 180;
 

@@ -15,20 +15,24 @@ public interface Field {
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
 
-    // FIX BASED ON ALLIANCE SIDE
-    Pose3d APRIL_TAGS_BLUE[] = {
-        new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(42.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 180)),
-        new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 180)),
-        new Pose3d(Units.inchesToMeters(610.77), Units.inchesToMeters(174.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 180)),
-        new Pose3d(Units.inchesToMeters(636.96), Units.inchesToMeters(265.74), Units.inchesToMeters(27.38), new Rotation3d(0, 0 , 180)),
-        
-
-        // blue side
+    Pose3d APRIL_TAGS[] = {
         new Pose3d(Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), Units.inchesToMeters(27.38), new Rotation3d(0, 0 , 0)),
         new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(174.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
         new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
         new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
     };
+
+    public static boolean isAprilTagBlueFromId(int id) {
+        return id >= 5 || id <= 8;
+    }
+
+    public static Pose3d getAprilTagFromId(int id) {
+        if (isAprilTagBlueFromId(id)) {
+            return APRIL_TAGS[8 - id];
+        } else {
+            return AllianceUtil.getMirroredPose(APRIL_TAGS[id - 1]);
+        }
+    }
 
     // blue left to right
     public interface ScorePoses {
@@ -56,15 +60,15 @@ public interface Field {
     };
 
     Pose2d RED_ALIGN_POSES[] = {
-        AllianceUtil.mirroredPose(ScorePoses.NINE),
-        AllianceUtil.mirroredPose(ScorePoses.EIGHT),
-        AllianceUtil.mirroredPose(ScorePoses.SEVEN),
-        AllianceUtil.mirroredPose(ScorePoses.SIX),
-        AllianceUtil.mirroredPose(ScorePoses.FIVE),
-        AllianceUtil.mirroredPose(ScorePoses.FOUR),
-        AllianceUtil.mirroredPose(ScorePoses.THREE),
-        AllianceUtil.mirroredPose(ScorePoses.TWO),
-        AllianceUtil.mirroredPose(ScorePoses.ONE)
+        AllianceUtil.getMirroredPose(ScorePoses.NINE),
+        AllianceUtil.getMirroredPose(ScorePoses.EIGHT),
+        AllianceUtil.getMirroredPose(ScorePoses.SEVEN),
+        AllianceUtil.getMirroredPose(ScorePoses.SIX),
+        AllianceUtil.getMirroredPose(ScorePoses.FIVE),
+        AllianceUtil.getMirroredPose(ScorePoses.FOUR),
+        AllianceUtil.getMirroredPose(ScorePoses.THREE),
+        AllianceUtil.getMirroredPose(ScorePoses.TWO),
+        AllianceUtil.getMirroredPose(ScorePoses.ONE)
     };
 
 }
