@@ -20,7 +20,9 @@ odometry_x_values = []
 odometry_y_values = []
 odometry_r_values = []
 
-with open('csv/StandardDeviationsLow.csv', 'r') as f:
+import sys
+
+with open(sys.argv[1], 'r') as f:
     for l in f.readlines()[1:]:
         timestamp, name, value = parse_line(l)
         
