@@ -57,17 +57,14 @@ public class ArmFollowTrajectory extends CommandBase {
     @Override
     public void execute() {
         Optional<ArmState> state = trajectory.calculate(timer.getTime());
-
         if (state.isPresent()) {
             arm.setTargetState(state.get());
-        } else {
-            System.out.println("DONE");
         }
     }
 
     @Override
     public boolean isFinished() {
-        return trajectory.calculate(timer.getTime()).isEmpty();
+        return trajectory.isDone(timer.getTime());
     }
 
 }

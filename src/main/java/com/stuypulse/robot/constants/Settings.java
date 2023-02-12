@@ -144,7 +144,7 @@ public interface Settings {
             double LENGTH = Units.inchesToMeters(43.75);
             double MAX_ANGLE = 0; 
             double MIN_ANGLE = -180;
-            double MASS = 0.01; 
+            double MASS = 4.5; 
             double WEIGHT = MASS * 9.81; 
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
 
@@ -179,7 +179,7 @@ public interface Settings {
             double LENGTH = Units.inchesToMeters(17);
             double MAX_ANGLE = Double.POSITIVE_INFINITY; 
             double MIN_ANGLE = Double.NEGATIVE_INFINITY;
-            double MASS = 0.001;
+            double MASS = 2.5;
             double WEIGHT = MASS * 9.81;
             double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
             SmartNumber wristSpeedDegrees = new SmartNumber("Arm/Wrist/Speed", 15); // degrees per second

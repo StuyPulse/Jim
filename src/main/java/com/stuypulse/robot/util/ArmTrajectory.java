@@ -42,6 +42,14 @@ public class ArmTrajectory {
         return this;
     }
 
+    public double getTotalTime() {
+        return time;
+    }
+
+    public boolean isDone(double time) {
+        return trajectoryList.isEmpty() || (time < 0 || getTotalTime() < time);
+    }
+
     public ArmTrajectory addStates(List<ArmState> states) {
         for (ArmState state : states) {
             addState(state);
