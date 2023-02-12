@@ -1,8 +1,5 @@
 package com.stuypulse.robot.subsystems.wings;
 
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Robot;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Wings extends SubsystemBase {
@@ -11,7 +8,7 @@ public abstract class Wings extends SubsystemBase {
 
     public static Wings getInstance() {
         if (instance == null) {
-            instance = Settings.ROBOT == Robot.JIM ? new WingsImpl() : new NoWings();
+            instance = new WingsImpl();
         }
         return instance;
     }

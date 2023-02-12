@@ -25,13 +25,6 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
-    public enum Robot {
-        JIM,
-        SACROD
-    }
-
-    Robot ROBOT = Robot.JIM;
-
     double DT = 0.02;
 
     public interface Intake{
