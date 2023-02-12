@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.arm;
 
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
 
@@ -13,7 +15,12 @@ public abstract class Arm extends SubsystemBase {
 
     public static Arm getInstance() {
         if (instance == null) {
-            instance = RobotBase.isSimulation() ? new SimArm() : new ArmImpl();
+            if (RobotBase.isSimulation())
+                instance = new SimArm();
+            else if (Settings.ROBOT == Robot.JIM)
+                instance = new ArmImpl();
+            else
+                instance = new NoArm();
         }
         return instance;
     }
