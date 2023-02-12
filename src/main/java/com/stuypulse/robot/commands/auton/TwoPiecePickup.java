@@ -35,7 +35,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
             // Score 1 piece
             new IntakeDeacquireCone(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
             // Drive to ball
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake One")
@@ -55,7 +55,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
         );
 
         addCommands (
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Two")
             ).fieldRelative(),

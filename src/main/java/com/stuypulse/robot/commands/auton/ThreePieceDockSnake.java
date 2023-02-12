@@ -35,7 +35,7 @@ public class ThreePieceDockSnake extends SequentialCommandGroup {
 
         // Drive to first piece and intake
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
             
             // new ArmFollowTrajectory(),
             new IntakeDeacquireCube(),
@@ -50,7 +50,7 @@ public class ThreePieceDockSnake extends SequentialCommandGroup {
 
         // Drive to grid and score one piece
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            new LEDSet(LEDColor.BLUE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")
@@ -63,7 +63,7 @@ public class ThreePieceDockSnake extends SequentialCommandGroup {
         // Drive to second game piece and intake 
         addCommands(
 
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two")
@@ -77,7 +77,7 @@ public class ThreePieceDockSnake extends SequentialCommandGroup {
 
         addCommands(
 
-            new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
+            new LEDSet(LEDColor.GREEN),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two")
@@ -91,7 +91,7 @@ public class ThreePieceDockSnake extends SequentialCommandGroup {
         // Drive to charging station and dock
         addCommands(
 
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            new LEDSet(LEDColor.BLUE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock")

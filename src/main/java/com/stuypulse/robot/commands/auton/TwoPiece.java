@@ -35,7 +35,7 @@ public class TwoPiece extends SequentialCommandGroup{
             new IntakeDeacquireCone(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
 
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
@@ -46,7 +46,7 @@ public class TwoPiece extends SequentialCommandGroup{
         
         // drive to grid and score game piece
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")

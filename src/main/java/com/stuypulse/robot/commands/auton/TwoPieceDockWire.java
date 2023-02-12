@@ -59,7 +59,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new WaitCommand(PARTNER_WAIT_TIME),
             
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
@@ -71,7 +71,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
         // drive to grid and score game piece
 
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new LEDSet(LEDColor.PURPLE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece")

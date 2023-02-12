@@ -52,10 +52,6 @@ public interface Ports {
 
     public interface LEDController {
         int PORT = 8; // PWM
-
-        static com.stuypulse.robot.subsystems.LEDController getInstance() {
-            return null;
-        }
     }
     
     public interface Plant {

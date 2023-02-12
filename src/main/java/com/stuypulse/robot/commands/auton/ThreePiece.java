@@ -77,7 +77,7 @@ public class ThreePiece extends SequentialCommandGroup {
 
         addCommands(
 
-            new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
+            new LEDSet(LEDColor.GREEN),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("To Piece Two")
