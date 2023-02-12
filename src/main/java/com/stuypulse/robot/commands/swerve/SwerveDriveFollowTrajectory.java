@@ -34,6 +34,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private PathPlannerTrajectory path;
+	private HashMap<String, Command> events;
 
 	public SwerveDriveFollowTrajectory(PathPlannerTrajectory path) {
 
@@ -51,6 +52,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		
 		robotRelative = false;
 		this.path = path;
+		events = new HashMap<String, Command>();
 	}
 
 	public SwerveDriveFollowTrajectory robotRelative() {
@@ -63,15 +65,13 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		return this;
 	}
 
-	public FollowPathWithEvents withEvents(Map<String, Command> events) {
-		return new FollowPathWithEvents(
-			this,
-			path.getMarkers(),
-			new HashMap<String, Command>(events)
-		);
+	public SwerveDriveFollowTrajectory addEvent(String name, Command command) {
+		events.put(name, command);
+		return this;
 	}
 
-	public FollowPathWithEvents withEvents(HashMap<String, Command> events) {
+	// FINISHES AT END OF PATH FOLLOWING, NOT AFTER ALL EVENTS DONE
+	public FollowPathWithEvents withEvents() {
 		return new FollowPathWithEvents(
 			this,
 			path.getMarkers(),
