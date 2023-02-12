@@ -2,17 +2,22 @@ package com.stuypulse.robot.commands.auton;
 
 import java.util.HashMap;
 
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
-import com.stuypulse.robot.commands.intake.IntakeDeacquireCone;
-import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
-import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.arm.routines.ArmNeutral;
+import com.stuypulse.robot.commands.arm.routines.ArmReady;
+import com.stuypulse.robot.commands.arm.routines.ArmScore;
+import com.stuypulse.robot.commands.intake.IntakeScore;
+import com.stuypulse.robot.commands.intake.IntakeStop;
+import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
-import com.stuypulse.robot.util.LEDColor;
-import com.stuypulse.robot.subsystems.LEDController;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
+import com.stuypulse.robot.subsystems.Manager.IntakeSide;
+import com.stuypulse.robot.subsystems.Manager.NodeLevel;
+import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -29,10 +34,25 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
         );
 
         addCommands(
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCone(),
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetGamePiece(GamePiece.CONE),
+            new ManagerSetIntakeSide(IntakeSide.FRONT),
+            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            
+            // new ManagerSetGridSection()
+            // new ManagerSetGridColumn()
+        );
+
+        addCommands(
+            new ArmReady(),
+            new ArmScore(),
+            new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            new IntakeStop(),
+            new ArmNeutral()
+        );
+        
+        addCommands(
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece")
             ).robotRelative()
