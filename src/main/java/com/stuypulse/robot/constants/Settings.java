@@ -37,6 +37,7 @@ public interface Settings {
         SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
         SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
 
+        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Settings/Intake/New Gamepiece Time (Falling)", 0.5);
     }
 
     public interface Vision {

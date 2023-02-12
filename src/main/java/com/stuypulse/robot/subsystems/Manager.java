@@ -8,6 +8,10 @@ import com.stuypulse.robot.util.ArmState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -76,6 +80,8 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
+    private Rotation2d intakedHeading;
+
     public Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
@@ -84,6 +90,8 @@ public class Manager extends SubsystemBase {
 
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
+
+        intakedHeading = new Rotation2d();
     }
 
     /** Generate Intake Trajectories **/
@@ -167,14 +175,18 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
+    private ScoreSide getMeasuredScoreSide() {
+        
+    }
+
     public Pose2d getScorePose() {
         int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
+
+        Pose2d pose = RobotContainer.getCachedAlliance() == Alliance.Blue
+            ? Field.BLUE_ALIGN_POSES[index]
+            : Field.RED_ALIGN_POSES[index];
         
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            return Field.BLUE_ALIGN_POSES[index];
-        } else {
-            return Field.RED_ALIGN_POSES[index];
-        }
+        
     }
 
     /** Change and Read State **/
@@ -226,8 +238,20 @@ public class Manager extends SubsystemBase {
         this.gridColumn = gridColumn;
     }
 
+    public Rotation2d getIntakedHeading() {
+        return intakedHeading;
+    }
+
+    public void setIntakedHeading(Rotation2d intakedHeading) {
+        this.intakedHeading = intakedHeading;
+    }
+
     @Override
     public void periodic() {
+        if (Intake.getInstance().hasNewGamepiece()) {
+            setIntakedHeading(SwerveDrive.getInstance().getGyroAngle());
+        }
+
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());

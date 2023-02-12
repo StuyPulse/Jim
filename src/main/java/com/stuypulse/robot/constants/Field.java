@@ -4,6 +4,7 @@ import com.stuypulse.robot.util.AllianceUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -12,6 +13,8 @@ public interface Field {
     Translation2d CHARGING_STATION_CENTER = new Translation2d(172.631, 0);
 
     double PEG_TO_CHARGING_STATION_EDGE = Units.inchesToMeters(60.69);
+
+    double GRID_DEPTH = Units.inchesToMeters(54.25);
 
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
@@ -33,15 +36,17 @@ public interface Field {
 
     // blue left to right
     public interface ScorePoses {
-        Pose2d ONE = new Pose2d();
-        Pose2d TWO = new Pose2d();
-        Pose2d THREE = new Pose2d();
-        Pose2d FOUR = new Pose2d();
-        Pose2d FIVE = new Pose2d();
-        Pose2d SIX = new Pose2d();
-        Pose2d SEVEN = new Pose2d();
-        Pose2d EIGHT = new Pose2d();
-        Pose2d NINE = new Pose2d();
+        double DEFAULT_X_DIST = GRID_DEPTH + Units.inchesToMeters(37) / 2.0;
+
+        Pose2d ONE =   new Pose2d(Units.inchesToMeters(196), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d TWO =   new Pose2d(Units.inchesToMeters(174.125), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d THREE = new Pose2d(Units.inchesToMeters(152), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d FOUR =  new Pose2d(Units.inchesToMeters(130), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d FIVE =  new Pose2d(Units.inchesToMeters(108.125), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d SIX =   new Pose2d(Units.inchesToMeters(86), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d SEVEN = new Pose2d(Units.inchesToMeters(64), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d EIGHT = new Pose2d(Units.inchesToMeters(42.125), DEFAULT_X_DIST, new Rotation2d());
+        Pose2d NINE =  new Pose2d(Units.inchesToMeters(20), DEFAULT_X_DIST, new Rotation2d());
     }
 
     Pose2d BLUE_ALIGN_POSES[] = {

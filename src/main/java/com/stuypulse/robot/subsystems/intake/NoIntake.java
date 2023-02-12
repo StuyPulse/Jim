@@ -19,6 +19,11 @@ public class NoIntake extends Intake {
     }
 
     @Override
+    public boolean hasNewGamepiece() {
+        return false;
+    }
+
+    @Override
     public void stop() {
     }
     

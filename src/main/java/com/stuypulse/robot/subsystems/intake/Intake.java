@@ -17,5 +17,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract void deacquireCube();
     public abstract void deacquireCone();
 
+    public abstract boolean hasNewGamepiece();
+
     public abstract void stop();
 }
