@@ -1,4 +1,6 @@
-package com.stuypulse.robot.util;
+package com.stuypulse.robot.util.AStar;
+
+import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

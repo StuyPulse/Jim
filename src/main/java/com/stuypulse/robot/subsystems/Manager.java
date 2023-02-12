@@ -1,8 +1,8 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.util.ArmTrajectory;
-import com.stuypulse.robot.util.Astar;
-import com.stuypulse.robot.util.AstarImp;
+import com.stuypulse.robot.util.AStar.*;
+import com.stuypulse.robot.util.AStar.AstarImp;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;

@@ -8,7 +8,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
-import com.stuypulse.robot.util.AstarImp;
+import com.stuypulse.robot.util.AStar.AstarImp;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.math.geometry.Rotation2d;

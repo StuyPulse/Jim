@@ -128,16 +128,7 @@ public interface Settings {
 
     public interface Arm {
 
-        double DEGREES_PER_SECOND = 30;
-
-        // Currently assuming Shoulder cannot go > 0 degrees
-        public interface AStar {
-            SmartNumber RESOLUTIONX = new SmartNumber("AStar/ResolutionX", 180); // 1 degree increments, lower to increase speed
-            SmartNumber RESOLUTIONY = new SmartNumber("AStar/ResolutionY", 360);
-            double MAX_RESOLUTIONX = 180;
-            double MAX_RESOLUTIONY = 360;
-            double RESOLUTION_MULTIPLIER = RESOLUTIONX.get() / MAX_RESOLUTIONX;
-        }
+        double MAX_DEGREES_PER_SECOND = 30;
 
         public interface Shoulder {
             double GEARING = 80;

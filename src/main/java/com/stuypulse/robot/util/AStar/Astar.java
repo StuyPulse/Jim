@@ -1,4 +1,5 @@
-package com.stuypulse.robot.util;
+package com.stuypulse.robot.util.AStar;
+
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+
+import com.stuypulse.robot.util.AStar.Constraint;
 
 
 public class Astar {

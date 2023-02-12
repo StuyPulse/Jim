@@ -38,7 +38,7 @@ public class ArmTrajectory {
         trajectory.addSample(time, state);
         trajectoryList.add(state);
 
-        time += 1.0 / Settings.Arm.DEGREES_PER_SECOND;
+        time += 1.0 / Settings.Arm.MAX_DEGREES_PER_SECOND;
         return this;
     }
 

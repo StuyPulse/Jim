@@ -1,4 +1,4 @@
-package com.stuypulse.robot.util;
+package com.stuypulse.robot.util.AStar;
 
 public interface Constraint {
 

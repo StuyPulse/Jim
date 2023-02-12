@@ -1,23 +1,11 @@
-package com.stuypulse.robot.util;
+package com.stuypulse.robot.util.AStar;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.stuypulse.robot.constants.Settings;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-
-public class AstarImp {
-
-    public AstarImp(int resolutionx, int resolutiony, double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle) {
-    }
+import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmTrajectory;
 
 
-
-
-    public void addConstraints() {
-        // todo finish
-    }
+public class AstarUtil {
 
     public static ArmTrajectory generateTrajectory(ArmState start, ArmState end) {
         return generateTrajectory(
@@ -28,17 +16,14 @@ public class AstarImp {
         );
     }
 
-    // TODO: Take in resolution multiplier
     public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle) {
-        // convert a negative angle into a usable angle
         
         Astar astar = new Astar(
                 new Node(initialShoulderAngle, initialWristAngle), 
                 new Node(finalShoulderAngle, finalWristAngle)
             );
         
-
-
+        // add constraints to astar path
         astar.addConstraint((s, w) -> 0 <= s && s <= 180);
         astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));
 
@@ -47,11 +32,10 @@ public class AstarImp {
             System.out.println(node);
         }
         
-        
         ArmTrajectory trajectory = new ArmTrajectory();
 
         for (Node node : path) {
-            trajectory.addState(node.toArmState()); // CHANGE IMPORTANT
+            trajectory.addState(node.toArmState());
         }
         return trajectory;
     }
