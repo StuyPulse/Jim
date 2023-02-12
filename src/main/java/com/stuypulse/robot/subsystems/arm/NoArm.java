@@ -15,25 +15,25 @@ public class NoArm extends Arm {
     @Override
     public Rotation2d getShoulderAngle() {
         // TODO Auto-generated method stub
-        return null;
+        return new Rotation2d();
     }
 
     @Override
     public Rotation2d getWristAngle() {
         // TODO Auto-generated method stub
-        return null;
+        return new Rotation2d();
     }
 
     @Override
     public Rotation2d getShoulderTargetAngle() {
         // TODO Auto-generated method stub
-        return null;
+        return new Rotation2d();
     }
 
     @Override
     public Rotation2d getWristTargetAngle() {
         // TODO Auto-generated method stub
-        return null;
+        return new Rotation2d();
     }
 
 
