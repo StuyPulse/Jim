@@ -40,14 +40,14 @@ public class OnePieceDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmNeutral()
+            new IntakeStop()
         );
 
         addCommands(
             new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1 Piece + Mobility + Dock", CONSTRAINTS)
-            ).robotRelative(),
+                PathPlanner.loadPath("1 Piece + Mobility + Dock", CONSTRAINTS))
+                    .robotRelative()
+                    .alongWith(new ArmNeutral()),
 
             new SwerveDriveEngage()
         );
