@@ -8,22 +8,27 @@ import com.stuypulse.robot.util.ArmTrajectory;
 
 public class AstarUtil {
 
-    public static ArmTrajectory generateTrajectory(ArmState start, ArmState end) {
+    public static ArmTrajectory generateTrajectory(ArmState start, ArmState end, Constraint... constraints) {
         return generateTrajectory(
             start.getShoulderState().getDegrees(),
             start.getWristState().getDegrees(),
             end.getShoulderState().getDegrees(),
-            end.getWristState().getDegrees()
+            end.getWristState().getDegrees(),
+            constraints
         );
     }
 
-    public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle) {
+    public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle, Constraint... constraints) {
         
         Astar astar = new Astar(
                 new Node(initialShoulderAngle, initialWristAngle), 
                 new Node(finalShoulderAngle, finalWristAngle)
             );
         
+
+        for (Constraint constraint : constraints) {
+            astar.addConstraint(constraint);
+        }
         // add constraints to astar path
         astar.addConstraint((s, w) -> 0 <= s && s <= 180);
         astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));

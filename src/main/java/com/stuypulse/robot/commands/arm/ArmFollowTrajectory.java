@@ -31,15 +31,6 @@ public class ArmFollowTrajectory extends CommandBase {
         addRequirements(arm);
     }
 
-    public ArmFollowTrajectory(Rotation2d finalShoulderAngle, Rotation2d finalWristAngle) {
-        arm = Arm.getInstance();
-
-        timer =  new StopWatch();
-        this.trajectory = AstarUtil.generateTrajectory(arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), finalShoulderAngle.getDegrees(), finalWristAngle.getDegrees());
-
-        addRequirements(arm);
-    }
-
     public ArmFollowTrajectory(ArmTrajectory trajectory) {
         this(() -> trajectory);
     }
