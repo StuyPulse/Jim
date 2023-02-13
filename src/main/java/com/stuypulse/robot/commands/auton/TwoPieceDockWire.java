@@ -66,7 +66,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
                     .fieldRelative()
                     .alongWith(new ArmReady()),
 
-            new ManagerSetScoreIndex(1),
+            new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new ArmScore(),
             new IntakeDeacquire(),
