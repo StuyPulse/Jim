@@ -113,6 +113,10 @@ public class SimArm extends Arm {
         return visualizer;
     }
 
+    public void setFeedbackEnabled(boolean enabled) {
+
+    }
+
     @Override
     public void periodic() {
 

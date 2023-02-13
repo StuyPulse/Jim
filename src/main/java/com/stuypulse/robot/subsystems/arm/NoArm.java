@@ -48,5 +48,10 @@ public class NoArm extends Arm {
         // TODO Auto-generated method stub
         
     }
+
+
+    public void setFeedbackEnabled(boolean enabled) {
+        
+    }
     
 }

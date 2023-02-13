@@ -141,8 +141,12 @@ public class RobotContainer {
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
-        // arm to 
+        // arm to neutral
         operator.getDPadRight().onTrue(new ArmNeutral());
+
+        // manual overrides
+        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
+        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
 
     }
 
