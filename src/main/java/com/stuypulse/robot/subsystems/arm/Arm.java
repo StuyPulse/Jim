@@ -21,7 +21,7 @@ public abstract class Arm extends SubsystemBase {
             else if (Settings.ROBOT == Robot.JIM)
                 instance = new ArmImpl();
             else
-                instance = new NoArm();
+                instance = new PerfectArm();
         }
         return instance;
     }
