@@ -73,5 +73,18 @@
   "maxVelocity": 2.5,
   "maxAcceleration": 1.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.5381818181817876,
+      "names": [
+        "ReadyIntakeOne"
+      ]
+    },
+    {
+      "position": 1.4109090909090116,
+      "names": [
+        "ReadyArm"
+      ]
+    }
+  ]
 }
