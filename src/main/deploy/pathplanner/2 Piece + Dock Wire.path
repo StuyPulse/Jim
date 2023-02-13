@@ -95,5 +95,19 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 1.2727272727272747,
+      "names": [
+        "ArmReady",
+        "ArmReady"
+      ]
+    },
+    {
+      "position": 0.41818181818187816,
+      "names": [
+        "StartIntaking"
+      ]
+    }
+  ]
 }
