@@ -2,18 +2,12 @@ package com.stuypulse.robot.commands.auton;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.stuypulse.robot.commands.arm.routines.ArmNeutral;
-import com.stuypulse.robot.commands.arm.routines.ArmReady;
-import com.stuypulse.robot.commands.arm.routines.ArmScore;
-import com.stuypulse.robot.commands.intake.IntakeScore;
-import com.stuypulse.robot.commands.intake.IntakeStop;
+import com.stuypulse.robot.commands.arm.routines.*;
+import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
-import com.stuypulse.robot.commands.swerve.SwerveDriveEngage;
-import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
-import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
-import com.stuypulse.robot.subsystems.Manager.NodeLevel;
-import com.stuypulse.robot.subsystems.Manager.ScoreSide;
+import com.stuypulse.robot.commands.plant.PlantEngage;
+import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -21,10 +15,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePieceDock extends SequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
+    private static final double ENGAGE_TIME = 3.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
     public OnePieceDock() {
+
+        // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
             new ManagerSetGamePiece(GamePiece.CONE),
@@ -35,6 +32,7 @@ public class OnePieceDock extends SequentialCommandGroup {
             // new ManagerSetGridColumn()
         );
 
+        // score first piece
         addCommands(
             new ArmReady(),
             new ArmScore(),
@@ -43,13 +41,15 @@ public class OnePieceDock extends SequentialCommandGroup {
             new IntakeStop()
         );
 
+        // dock and engage
         addCommands(
             new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1 Piece + Mobility + Dock", CONSTRAINTS))
-                    .robotRelative()
+                PathPlanner.loadPath("1 Piece + Dock", CONSTRAINTS))
+                    .fieldRelative()
                     .alongWith(new ArmNeutral()),
 
-            new SwerveDriveEngage()
+            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new PlantEngage()
         );
     
     }

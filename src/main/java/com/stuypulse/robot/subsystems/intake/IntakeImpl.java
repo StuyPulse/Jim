@@ -131,8 +131,12 @@ public class IntakeImpl extends Intake{
             backMotor.set(CONE_BACK_ROLLER.get());
         }
     }
-    
 
+    @Override
+    public boolean hasNewGamePiece() {
+        return false;
+    }
+    
     @Override
     public void periodic(){
         if (isStalling() || hasCube()) {

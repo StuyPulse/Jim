@@ -2,17 +2,11 @@ package com.stuypulse.robot.commands.auton;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.stuypulse.robot.commands.arm.routines.ArmNeutral;
-import com.stuypulse.robot.commands.arm.routines.ArmReady;
-import com.stuypulse.robot.commands.arm.routines.ArmScore;
-import com.stuypulse.robot.commands.intake.IntakeScore;
-import com.stuypulse.robot.commands.intake.IntakeStop;
+import com.stuypulse.robot.commands.arm.routines.*;
+import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.SwerveDriveFollowTrajectory;
-import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
-import com.stuypulse.robot.subsystems.Manager.NodeLevel;
-import com.stuypulse.robot.subsystems.Manager.ScoreSide;
+import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,6 +18,7 @@ public class OnePiece extends SequentialCommandGroup {
     private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
     public OnePiece() {
+        // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
             new ManagerSetGamePiece(GamePiece.CONE),
@@ -34,6 +29,7 @@ public class OnePiece extends SequentialCommandGroup {
             // new ManagerSetGridColumn()
         );
 
+        // score first piece
         addCommands(
             new ArmReady(),
             new ArmScore(),
@@ -42,6 +38,7 @@ public class OnePiece extends SequentialCommandGroup {
             new IntakeStop()
         );
         
+        // mobility
         addCommands(
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Mobility", CONSTRAINTS))
