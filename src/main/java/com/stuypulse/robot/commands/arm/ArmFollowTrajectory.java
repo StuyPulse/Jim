@@ -3,15 +3,10 @@ package com.stuypulse.robot.commands.arm;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
-import com.stuypulse.robot.util.AStar.AstarUtil;
 import com.stuypulse.stuylib.util.StopWatch;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmFollowTrajectory extends CommandBase {

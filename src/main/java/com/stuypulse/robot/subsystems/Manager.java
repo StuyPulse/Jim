@@ -102,15 +102,10 @@ public class Manager extends SubsystemBase {
 
     /** Generate Ready Trajectories **/
 
-    public ArmTrajectory getSampleTrajectory(Arm arm) {
-        ArmState start = Arm.getInstance().getState();
+    public ArmTrajectory getNeutralTrajectory(Arm arm) {
         ArmState[] states = { 
             Arm.getInstance().getState(),
-            // ArmState.fromDegrees(-10, 0),
-            // new ArmState(start.getShoulderState(), Rotation2d.fromDegrees(90)),
-            // ArmState.fromDegrees(-60, 90),
-            // ArmState.fromDegrees(-60, 0)
-            ArmState.fromDegrees(-130, -170)
+            ArmState.fromDegrees(-90, 90)
         };
 
         ArmTrajectory intakeTrajectory = new ArmTrajectory();
@@ -119,7 +114,51 @@ public class Manager extends SubsystemBase {
             intakeTrajectory.append(AstarUtil.generateTrajectory(
                 states[i], states[i+1]));
         }
-        
+        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+    }
+
+    public ArmTrajectory getConeHighTipOutTrajectory(Arm arm) {
+        ArmState[] states = { 
+            Arm.getInstance().getState(),
+            ArmState.fromDegrees(-8, -32)
+        };
+
+        ArmTrajectory intakeTrajectory = new ArmTrajectory();
+
+        for (int i = 0; i < states.length - 1; ++i) {
+            intakeTrajectory.append(AstarUtil.generateTrajectory(
+                states[i], states[i+1]));
+        }
+        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+    }
+
+    public ArmTrajectory getConeMidTipOutTrajectory(Arm arm) {
+        ArmState[] states = { 
+            Arm.getInstance().getState(),
+            ArmState.fromDegrees(-37, 86)
+        };
+
+        ArmTrajectory intakeTrajectory = new ArmTrajectory();
+
+        for (int i = 0; i < states.length - 1; ++i) {
+            intakeTrajectory.append(AstarUtil.generateTrajectory(
+                states[i], states[i+1]));
+        }
+        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+    }
+
+    public ArmTrajectory getConeMidTipInTrajectory(Arm arm) {
+        ArmState[] states = { 
+            Arm.getInstance().getState(),
+            ArmState.fromDegrees(-5, -136)
+        };
+
+        ArmTrajectory intakeTrajectory = new ArmTrajectory();
+
+        for (int i = 0; i < states.length - 1; ++i) {
+            intakeTrajectory.append(AstarUtil.generateTrajectory(
+                states[i], states[i+1]));
+        }
         return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
     }
 

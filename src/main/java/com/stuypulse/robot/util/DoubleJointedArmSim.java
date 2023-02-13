@@ -20,9 +20,9 @@ public class DoubleJointedArmSim {
             shoulderMomentOfInertia + wristMomentOfIntertia, 
             shoulderArmLengthMeters + wristArmLengthMeters, 
             shoulderMinAngleRads, shoulderMaxAngleRads,
-             false);
+             true);
 
-        wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, false);
+        wristSim = new SingleJointedArmSim(wristDCMotorGearbox, wristGearing, wristMomentOfIntertia, wristArmLengthMeters, wristMinAngleRads, wristMaxAngleRads, true);
     }
 
     public double getShoulderAngleDegrees() {

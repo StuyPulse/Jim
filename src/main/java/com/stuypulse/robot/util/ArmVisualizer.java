@@ -36,6 +36,8 @@ public class ArmVisualizer {
     private MechanismRoot2d pegRootMid;
     private MechanismRoot2d pegRootTop;
     private MechanismRoot2d intakeDirectionRoot;
+    private double PEG_ROOT_MID_INCHES = 1;
+    private double PEG_ROOT_HIGH_INCHES = 1;
 
     private FieldObject2d fieldObject;
 
@@ -47,8 +49,8 @@ public class ArmVisualizer {
         wristRoot = arm.getRoot("Wrist Root", 8, 4);
         targetWristRoot = arm.getRoot("Target Wrist Root", 8, 4);
         swerveRoot = arm.getRoot("Swerve Root", 8-((12+3.5)/10), 0);
-        pegRootMid = arm.getRoot("Peg Root Mid", (80+22.75+(12+3.5)) / 10, 0);
-        pegRootTop = arm.getRoot("Peg Root Top", (80+36.75+(12+3.5)) / 10, 0);
+        pegRootMid = arm.getRoot("Peg Root Mid", ((80+22.75+(12+3.5)) + PEG_ROOT_MID_INCHES) / 10, 0);
+        pegRootTop = arm.getRoot("Peg Root Top", ((80+36.75+(12+3.5)) + PEG_ROOT_HIGH_INCHES)/ 10, 0);
         intakeDirectionRoot = arm.getRoot("Intake Direction Root", 8, 4);
         // Low Peg: 2 ft 10 inch
         // High Peg: 3 ft 10 inch

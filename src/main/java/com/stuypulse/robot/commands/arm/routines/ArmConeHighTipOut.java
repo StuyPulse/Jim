@@ -4,10 +4,10 @@ import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 
-public class ArmSample extends ArmFollowTrajectory {
+public class ArmConeHighTipOut extends ArmFollowTrajectory {
 
-    public ArmSample(Arm arm) {
-        super(() -> Manager.getInstance().getSampleTrajectory(arm));
+    public ArmConeHighTipOut(Arm arm) {
+        super(() -> Manager.getInstance().getConeHighTipOutTrajectory(arm));
     }
     
 }
