@@ -8,7 +8,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
-import com.stuypulse.robot.util.AStar.AstarImp;
+import com.stuypulse.robot.util.AStar.AstarUtil;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,7 +35,7 @@ public class ArmFollowTrajectory extends CommandBase {
         arm = Arm.getInstance();
 
         timer =  new StopWatch();
-        this.trajectory = AstarImp.generateTrajectory(arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), finalShoulderAngle.getDegrees(), finalWristAngle.getDegrees());
+        this.trajectory = AstarUtil.generateTrajectory(arm.getShoulderAngle().getDegrees(), arm.getWristAngle().getDegrees(), finalShoulderAngle.getDegrees(), finalWristAngle.getDegrees());
 
         addRequirements(arm);
     }

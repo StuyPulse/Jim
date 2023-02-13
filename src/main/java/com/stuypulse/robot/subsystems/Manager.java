@@ -2,7 +2,7 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.AStar.*;
-import com.stuypulse.robot.util.AStar.AstarImp;
+import com.stuypulse.robot.util.AStar.AstarUtil;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
@@ -116,7 +116,7 @@ public class Manager extends SubsystemBase {
         ArmTrajectory intakeTrajectory = new ArmTrajectory();
 
         for (int i = 0; i < states.length - 1; ++i) {
-            intakeTrajectory.append(AstarImp.generateTrajectory(
+            intakeTrajectory.append(AstarUtil.generateTrajectory(
                 states[i], states[i+1]));
         }
         

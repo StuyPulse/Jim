@@ -1,5 +1,6 @@
 package com.stuypulse.robot.util.AStar;
 
+import java.io.FileWriter;
 import java.util.List;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -52,6 +53,8 @@ public class AstarUtil {
         };
     }
 
+    
+ 
     
     
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 
 // TODO: REMOVE
-public class AsstarTest {
+public class AstarTest {
 
     public static void main(String[] args) {
         Node initialNode = new Node(2, 1);

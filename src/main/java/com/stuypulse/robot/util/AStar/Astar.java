@@ -1,17 +1,12 @@
 package com.stuypulse.robot.util.AStar;
 
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-
-import com.stuypulse.robot.util.AStar.Constraint;
-
 
 public class Astar {
 
@@ -34,12 +29,6 @@ public class Astar {
     private Node initialNode;
     private Node finalNode;
     private Constraint constraint; 
-
-    public static void main(String[] args) {
-        for (int i = -400; i < 400; i+=5) {
-            System.out.println(normDegrees(i) + " hhe" + i);
-        }
-    }
 
     public Astar(Node initialNode, Node finalNode, int hvCost, int diagonalCost) {
         this.hCost = hvCost;
