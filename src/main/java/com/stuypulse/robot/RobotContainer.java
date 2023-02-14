@@ -32,11 +32,14 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class RobotContainer {
 
@@ -106,6 +109,16 @@ public class RobotContainer {
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
         // right trigger -> robotrelative override
+
+        driver.getLeftStickButton().onTrue(new RunCommand(() -> {
+            var state = new SwerveModuleState(+0.5, new Rotation2d());
+            swerve.setModuleStates(state, state, state, state);
+        }, swerve));
+
+        driver.getRightStickButton().onTrue(new RunCommand(() -> {
+            var state = new SwerveModuleState(-0.5, Rotation2d.fromDegrees(90));
+            swerve.setModuleStates(state, state, state, state);
+        }, swerve));
     }
 
     private void configureOperatorBindings() {
