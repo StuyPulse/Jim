@@ -17,10 +17,8 @@ public class Intake extends SubsystemBase{
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
 
-    private DigitalInput frontLeftSensor;
-    private DigitalInput frontRightSensor;
-    private DigitalInput backLeftSensor;
-    private DigitalInput backRightSensor;
+    private DigitalInput frontSensor;
+    private DigitalInput backSensor;
 
     public Intake() {
         frontDutyCycle = new SmartNumber("Intake/Front Duty Cycle", 0.0);
@@ -32,10 +30,8 @@ public class Intake extends SubsystemBase{
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
 
-        frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
-        frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
-        backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
+        frontSensor = new DigitalInput(FRONT_SENSOR);
+        backSensor = new DigitalInput(BACK_SENSOR);
     }
 
     public void runFront() {
@@ -59,10 +55,8 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
         SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
 
-        SmartDashboard.putBoolean("Intake/Front Left Sensor", frontLeftSensor.get());
-        SmartDashboard.putBoolean("Intake/Front Right Sensor", frontRightSensor.get());
-        SmartDashboard.putBoolean("Intake/Back Left Sensor", backLeftSensor.get());
-        SmartDashboard.putBoolean("Intake/Back Right Sensor", backRightSensor.get());
+        SmartDashboard.putBoolean("Intake/Front Sensor", frontSensor.get());
+        SmartDashboard.putBoolean("Intake/Back Sensor", backSensor.get());
     }
 
 }

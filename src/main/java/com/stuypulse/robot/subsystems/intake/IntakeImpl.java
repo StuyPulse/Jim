@@ -41,10 +41,10 @@ public class IntakeImpl extends Intake{
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT/2);
 
-        frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
-        frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
-        backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
+        // frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
+        // frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
+        // backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
+        // backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
