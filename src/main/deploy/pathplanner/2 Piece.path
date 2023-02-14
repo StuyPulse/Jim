@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7583658020383086,
-        "y": 4.860069634547257
+        "x": 2.8325277931694677,
+        "y": 5.0303670714103
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -28,18 +28,18 @@
         "y": 4.5834346472963405
       },
       "prevControl": {
-        "x": 5.800197620366711,
-        "y": 4.665666849165367
+        "x": 5.988048417377976,
+        "y": 4.859201462175167
       },
       "nextControl": {
-        "x": 5.800197620366711,
-        "y": 4.665666849165367
+        "x": 5.988048417377976,
+        "y": 4.859201462175167
       },
       "holonomicAngle": 0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -53,8 +53,8 @@
         "y": 4.431287439087334
       },
       "prevControl": {
-        "x": 2.4153020631290905,
-        "y": 5.145956083638272
+        "x": 1.775472590091089,
+        "y": 5.391716690906692
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -72,15 +72,15 @@
   ],
   "markers": [
     {
-      "position": 0.4654545454545438,
+      "position": 0.40859375,
       "names": [
         "ReadyIntakeOne"
       ]
     },
     {
-      "position": 1.4545454545453818,
+      "position": 1.4349431818181824,
       "names": [
-        "ReadyArm"
+        "ReadyArmOne"
       ]
     }
   ]

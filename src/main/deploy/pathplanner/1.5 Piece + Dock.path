@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.375880532074901,
-        "y": 4.8715050925108985
+        "x": 2.8135093921433407,
+        "y": 5.0398762719233625
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,44 +24,19 @@
     },
     {
       "anchorPoint": {
-        "x": 6.600679677821552,
-        "y": 4.562747727492601
+        "x": 6.720256856883822,
+        "y": 4.602453048322467
       },
       "prevControl": {
-        "x": 6.438473895396013,
-        "y": 4.8006495417167265
+        "x": 5.1227111706892465,
+        "y": 4.602453048322467
       },
       "nextControl": {
-        "x": 6.772211547276161,
-        "y": 4.311167652292508
-      },
-      "holonomicAngle": -5.2679059710592995,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.857374910184913,
-        "y": 3.0075254444374795
-      },
-      "prevControl": {
-        "x": 6.568266779445489,
-        "y": 3.0316234739039403
-      },
-      "nextControl": {
-        "x": 5.182682890330118,
-        "y": 2.9846545285101977
+        "x": 5.1227111706892465,
+        "y": 4.602453048322467
       },
       "holonomicAngle": 0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -74,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.1,
-        "y": 2.9383429585364516
+        "x": 3.8960243045041265,
+        "y": 2.6720853441706884
       },
       "prevControl": {
-        "x": 5.031901650280169,
-        "y": 2.9763797605887032
+        "x": 6.739275257909948,
+        "y": 2.6911037451968145
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -95,5 +70,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.3764204545454546,
+      "names": [
+        "ReadyIntakeOne"
+      ]
+    },
+    {
+      "position": 1.4579545454545455,
+      "names": [
+        "ArmNeutral"
+      ]
+    }
+  ]
 }

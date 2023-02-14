@@ -114,7 +114,7 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -145,8 +145,30 @@
       }
     }
   ],
-  "maxVelocity": null,
-  "maxAcceleration": 2.0,
-  "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.3725142045454543,
+      "names": [
+        "ReadyIntakeOne"
+      ]
+    },
+    {
+      "position": 1.5177556818181812,
+      "names": [
+        "ReadyArmOne"
+      ]
+    },
+    {
+      "position": 2.3323863636363615,
+      "names": [
+        "ReadyIntakeTwo"
+      ]
+    },
+    {
+      "position": 3.7950994318181825,
+      "names": [
+        "event"
+      ]
+    }
+  ]
 }

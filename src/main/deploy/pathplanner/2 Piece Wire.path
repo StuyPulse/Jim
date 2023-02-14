@@ -75,15 +75,15 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.5381818181817876,
+      "position": 0.45703125,
       "names": [
         "ReadyIntakeOne"
       ]
     },
     {
-      "position": 1.4109090909090116,
+      "position": 1.411931818181819,
       "names": [
-        "ReadyArm"
+        "ReadyArmOne"
       ]
     }
   ]

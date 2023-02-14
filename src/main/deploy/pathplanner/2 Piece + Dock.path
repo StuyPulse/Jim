@@ -97,15 +97,21 @@
   ],
   "markers": [
     {
-      "position": 0.39272727272723806,
+      "position": 0.35294744318181825,
       "names": [
         "ReadyIntakeOne"
       ]
     },
     {
-      "position": 1.48363636363628,
+      "position": 1.5316406250000005,
       "names": [
-        "ReadyArm"
+        "ReadyArmOne"
+      ]
+    },
+    {
+      "position": 2.4816051136363635,
+      "names": [
+        "ArmNeutral"
       ]
     }
   ]
