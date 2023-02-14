@@ -2,6 +2,7 @@ package com.stuypulse.robot.commands.auton;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.stuypulse.robot.commands.arm.ArmDrive;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
@@ -54,7 +55,8 @@ public class ThreePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two"))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
@@ -65,7 +67,9 @@ public class ThreePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
-                    .alongWith(new ArmReady()),
+                    .addEvent("ReadyArmOne", new ArmReady())
+                    .withEvents(),
+
 
             new ManagerSetScoreIndex(1),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -81,7 +85,8 @@ public class ThreePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Three"))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
@@ -92,7 +97,8 @@ public class ThreePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Three"))
                     .fieldRelative()
-                    .alongWith(new ArmReady()),
+                    .addEvent("ReadyArmTwo", new ArmReady())
+                    .withEvents(),
 
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),

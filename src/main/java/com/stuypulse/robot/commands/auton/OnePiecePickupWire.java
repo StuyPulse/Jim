@@ -46,7 +46,9 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1.5 Piece + Wire", CONSTRAINTS))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
+
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),

@@ -43,7 +43,8 @@ public class OnePiece extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Mobility", CONSTRAINTS))
                     .robotRelative()
-                    .alongWith(new ArmNeutral())
+                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .withEvents()
         );
     }
     

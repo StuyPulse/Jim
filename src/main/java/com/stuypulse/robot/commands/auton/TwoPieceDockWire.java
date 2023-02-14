@@ -53,7 +53,8 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeOne",new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
@@ -64,7 +65,8 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                    .alongWith(new ArmReady()),
+                    .addEvent("ReadyArmOne", new ArmReady())
+                    .withEvents(),
 
             new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -79,7 +81,8 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .alongWith(new ArmNeutral()),
+                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .withEvents(),
 
             new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
             new PlantEngage()

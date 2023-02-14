@@ -46,7 +46,8 @@ public class OnePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Dock", CONSTRAINTS))
                     .fieldRelative()
-                    .alongWith(new ArmNeutral()),
+                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .withEvents(),
 
             new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
             new PlantEngage()

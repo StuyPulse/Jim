@@ -54,7 +54,8 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two"))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
@@ -65,7 +66,8 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
-                    .alongWith(new ArmReady()),
+                    .addEvent("ReadyArmOne", new ArmReady())
+                    .withEvents(),
 
             new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -81,7 +83,8 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Three"))
                     .robotRelative()
-                    .alongWith(new ArmIntake().andThen(new IntakeAcquire())),
+                    .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
@@ -92,7 +95,8 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Three"))
                     .fieldRelative()
-                    .alongWith(new ArmReady()),
+                    .addEvent("ReadyArmTwo", new ArmReady())
+                    .withEvents(),
 
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
