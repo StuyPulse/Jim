@@ -147,7 +147,9 @@ public class RobotContainer {
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
         // arm to neutral
-        operator.getDPadRight().onTrue(new ArmNeutral());
+        operator.getDPadRight()
+            .onTrue(new ArmNeutral())
+            .onTrue(new IntakeStop());
 
         // manual overrides
         operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
