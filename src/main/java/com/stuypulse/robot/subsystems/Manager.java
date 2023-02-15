@@ -5,13 +5,10 @@ import com.stuypulse.robot.util.AStar.*;
 import com.stuypulse.robot.util.AStar.AstarUtil;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,7 +27,8 @@ public class Manager extends SubsystemBase {
 
     // game piece to score
     public enum GamePiece {
-        CONE(false),
+        CONE_TIP_IN(false),
+        CONE_TIP_OUT(false),
         CUBE(true);
 
         private final boolean cube;
@@ -95,70 +93,8 @@ public class Manager extends SubsystemBase {
 
     public ArmTrajectory getIntakeTrajectory() {
         final ArmTrajectory intakeTrajectory = 
-            new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0));
+            new ArmTrajectory().addState(ArmState.fromDegrees(-55, 0));
 
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
-    }
-
-    /** Generate Ready Trajectories **/
-
-    public ArmTrajectory getNeutralTrajectory(Arm arm) {
-        ArmState[] states = { 
-            Arm.getInstance().getState(),
-            ArmState.fromDegrees(-90, 90)
-        };
-
-        ArmTrajectory intakeTrajectory = new ArmTrajectory();
-
-        for (int i = 0; i < states.length - 1; ++i) {
-            intakeTrajectory.append(AstarUtil.generateTrajectory(
-                states[i], states[i+1]));
-        }
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
-    }
-
-    public ArmTrajectory getConeHighTipOutTrajectory(Arm arm) {
-        ArmState[] states = { 
-            Arm.getInstance().getState(),
-            ArmState.fromDegrees(-8, -32)
-        };
-
-        ArmTrajectory intakeTrajectory = new ArmTrajectory();
-
-        for (int i = 0; i < states.length - 1; ++i) {
-            intakeTrajectory.append(AstarUtil.generateTrajectory(
-                states[i], states[i+1]));
-        }
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
-    }
-
-    public ArmTrajectory getConeMidTipOutTrajectory(Arm arm) {
-        ArmState[] states = { 
-            Arm.getInstance().getState(),
-            ArmState.fromDegrees(-37, 86)
-        };
-
-        ArmTrajectory intakeTrajectory = new ArmTrajectory();
-
-        for (int i = 0; i < states.length - 1; ++i) {
-            intakeTrajectory.append(AstarUtil.generateTrajectory(
-                states[i], states[i+1]));
-        }
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
-    }
-
-    public ArmTrajectory getConeMidTipInTrajectory(Arm arm) {
-        ArmState[] states = { 
-            Arm.getInstance().getState(),
-            ArmState.fromDegrees(-5, -136)
-        };
-
-        ArmTrajectory intakeTrajectory = new ArmTrajectory();
-
-        for (int i = 0; i < states.length - 1; ++i) {
-            intakeTrajectory.append(AstarUtil.generateTrajectory(
-                states[i], states[i+1]));
-        }
         return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
     }
 
@@ -190,13 +126,37 @@ public class Manager extends SubsystemBase {
 
     private ArmTrajectory getMidReadyTrajectory() {
         switch (gamePiece) {
-            case CONE:
-                return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(-45, 90)));
+            case CONE_TIP_IN:
+                // return normalize(ArmTrajectory.fromStates(
+                //         ArmState.fromDegrees(-45, 90)));
+
+                return normalize(AstarUtil.generateTrajectory(
+                    new ArmState[] { 
+                        Arm.getInstance().getState(), 
+                        ArmState.fromDegrees(-5, -136)}, 
+
+                    new Constraint[] {}));
+            
+            case CONE_TIP_OUT:
+                        
+                return normalize(AstarUtil.generateTrajectory(
+                    new ArmState[] { 
+                        Arm.getInstance().getState(), 
+                        ArmState.fromDegrees(-37, 87)}, 
+
+                    new Constraint[] {}));
+        
 
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                
+                return normalize(AstarUtil.generateTrajectory(
+                    new ArmState[] { 
+                        Arm.getInstance().getState(), 
+                        ArmState.fromDegrees(-5, -136)}, 
+
+                    new Constraint[] {}));
+        
+                
 
             default:
                 return getNeutralTrajectory();
@@ -205,13 +165,24 @@ public class Manager extends SubsystemBase {
 
     private ArmTrajectory getHighReadyTrajectory() {
         switch (gamePiece) {
-            case CONE:
-                return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(0, 90)));
+            case CONE_TIP_IN:
+                return normalize(AstarUtil.generateTrajectory(
+                    new ArmState[] { 
+                        Arm.getInstance().getState(), 
+                        ArmState.fromDegrees(-8, -32)}, 
+
+                    new Constraint[] {}));
+
+            case CONE_TIP_OUT:
+                return getNeutralTrajectory();
 
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                return normalize(AstarUtil.generateTrajectory(
+                    new ArmState[] { 
+                        Arm.getInstance().getState(), 
+                        ArmState.fromDegrees(-8, -32)}, 
+
+                    new Constraint[] {}));
 
             default:
                 return getNeutralTrajectory();
@@ -227,7 +198,11 @@ public class Manager extends SubsystemBase {
     /** Generate Neutral Trajectories **/
 
     public ArmTrajectory getNeutralTrajectory() {
-        return ArmTrajectory.fromStates(ArmState.fromDegrees(-90, +90));
+        return AstarUtil.generateTrajectory(new ArmState(
+                Arm.getInstance().getShoulderAngle(), 
+                Arm.getInstance().getWristAngle()), 
+                ArmState.fromDegrees(-90, 90)
+               );
     }
 
     /** Generate Score Pose **/

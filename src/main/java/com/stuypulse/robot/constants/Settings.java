@@ -142,7 +142,7 @@ public interface Settings {
 
     public interface Arm {
 
-        double MAX_DEGREES_PER_SECOND = 30;
+        double MAX_DEGREES_PER_SECOND = 60;
 
         public interface Shoulder {
             double GEARING = 80;

@@ -8,7 +8,7 @@ public class PerfectSimArm extends Arm {
 
     private final ArmVisualizer visualizer = new ArmVisualizer(); 
 
-    private Rotation2d shoulderAngle = Rotation2d.fromDegrees(90);
+    private Rotation2d shoulderAngle = Rotation2d.fromDegrees(0);
     private Rotation2d wristAngle = Rotation2d.fromDegrees(-90);
 
     @Override

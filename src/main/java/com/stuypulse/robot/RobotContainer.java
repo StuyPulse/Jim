@@ -9,7 +9,6 @@ import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
 import com.stuypulse.robot.commands.manager.*;
-import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.wings.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -25,11 +24,9 @@ import com.stuypulse.robot.subsystems.wings.*;
 
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Manager.*;
-import com.stuypulse.robot.util.*;
 
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -123,7 +120,6 @@ public class RobotContainer {
 
         // ready & score
         // operator.getLeftBumper().onTrue(new ArmReady());
-        operator.getLeftButton().onTrue(new ArmSample(arm));
 
 
         operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
@@ -134,8 +130,8 @@ public class RobotContainer {
         // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
         // set game piece
-        // operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
+        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
+        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
         // TODO: CONE_TIP_OUT
 
         // flip intake side

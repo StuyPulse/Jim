@@ -17,7 +17,7 @@ public class IntakeScore extends InstantCommand {
 
     @Override
     public void initialize() {
-        if (Manager.getInstance().getGamePiece() == GamePiece.CONE) {
+        if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_IN) {
             intake.deacquireCone();
         } else {
             intake.deacquireCube();
