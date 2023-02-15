@@ -160,9 +160,6 @@ public class IntakeImpl extends Intake{
 
         Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
-
-        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
-
         if (hasNewGamepiece()) {
             Manager.getInstance().setIntakedHeading(
                 SwerveDrive.getInstance().getGyroAngle());
