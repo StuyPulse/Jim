@@ -5,6 +5,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.util.ArmState;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.stuypulse.robot.subsystems.intake.Intake;
@@ -81,8 +82,6 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
-    private Rotation2d intakedHeading;
-
     public Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
@@ -91,8 +90,6 @@ public class Manager extends SubsystemBase {
 
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
-
-        intakedHeading = new Rotation2d();
     }
 
     /** Generate Intake Trajectories **/
@@ -187,7 +184,7 @@ public class Manager extends SubsystemBase {
     }
 
     private Rotation2d getWestEastAngle(Rotation2d angle) {
-        return Math.abs(angle.getDegrees()) > 90
+        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) > 90
             ? Rotation2d.fromDegrees(180)
             : Rotation2d.fromDegrees(0);
     }
@@ -280,20 +277,8 @@ public class Manager extends SubsystemBase {
         this.gridColumn = gridColumn;
     }
 
-    public Rotation2d getIntakedHeading() {
-        return intakedHeading;
-    }
-
-    public void setIntakedHeading(Rotation2d intakedHeading) {
-        this.intakedHeading = intakedHeading;
-    }
-
     @Override
     public void periodic() {
-        if (Intake.getInstance().hasNewGamepiece()) {
-            setIntakedHeading(SwerveDrive.getInstance().getGyroAngle());
-        }
-
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());

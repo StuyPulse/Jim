@@ -160,11 +160,6 @@ public class IntakeImpl extends Intake{
 
         Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
-        if (hasNewGamepiece()) {
-            Manager.getInstance().setIntakedHeading(
-                SwerveDrive.getInstance().getGyroAngle());
-        }
-
         SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
         SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
