@@ -23,12 +23,16 @@ public class OdometryImpl extends Odometry {
     private final SwerveDriveOdometry odometry;
     private final Field2d field;
 
+    private boolean overrideNoise;
+
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), new Pose2d());
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, Units.degreesToRadians(10)));
         field = new Field2d();
+
+        overrideNoise = false;
 
         swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
@@ -57,8 +61,20 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
+    public void overrideNoise(boolean overrideNoise) {
+        this.overrideNoise = overrideNoise;
+    }
+
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){  
         for (Result result : vision.getResults()) {
+
+            if (overrideNoise) {
+                poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        VecBuilder.fill(1, 1, Math.toRadians(5)));
+                return;
+            }
             
             switch (result.getNoise()) {
                 case LOW:
