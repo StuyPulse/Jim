@@ -63,6 +63,9 @@ public class SL_SwerveModule extends SwerveModule {
         absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         absoluteEncoder.setZeroOffset(0.0);
 
+        // TODO: add as configurable setting
+        absoluteEncoder.setInverted(true);
+
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
             .setSetpointFilter(new ARateLimit(Swerve.MAX_TURNING));
 
