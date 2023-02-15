@@ -96,16 +96,19 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getDPadLeft().onTrue(new WingRetractLeft());
-        driver.getDPadUp().onTrue(new WingRetractRight());
+        driver.getSelectButton().onTrue(new WingRetractLeft());
+        driver.getStartButton().onTrue(new WingRetractRight());
 
         // arm
-        driver.getBottomButton().onTrue(new ArmScore().andThen(new IntakeScore()));
+        driver.getBottomButton()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
         // right trigger -> robotrelative override
 
         // plant
@@ -130,7 +133,10 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper().onTrue(new ArmReady());
-        operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
+        operator.getRightBumper()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
@@ -140,7 +146,7 @@ public class RobotContainer {
         // set game piece
         operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
         operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
-        // TODO: CONE_TIP_OUT
+        // operator.getBottomButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
