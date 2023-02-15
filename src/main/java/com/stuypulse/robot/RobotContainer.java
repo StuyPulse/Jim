@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
+import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.wings.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -106,6 +107,13 @@ public class RobotContainer {
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
         // right trigger -> robotrelative override
+
+        // plant
+        driver.getLeftBumper()
+            .onTrue(new PlantEngage())
+            .onFalse(new PlantDisengage());
+        // driver.getLeftBumper()
+        //     .whileTrue(new SwerveDrivePlantDrive(driver));
     }
 
     private void configureOperatorBindings() {
