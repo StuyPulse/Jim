@@ -5,6 +5,7 @@ import com.stuypulse.robot.util.AStar.*;
 import com.stuypulse.robot.util.AStar.AstarUtil;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
@@ -135,7 +136,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-5, -136)}, 
 
-                    new Constraint[] {}));
+                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
             
             case CONE_TIP_OUT:
                         
@@ -144,7 +145,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-37, 87)}, 
 
-                    new Constraint[] {}));
+                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
         
 
             case CUBE:
@@ -154,7 +155,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-5, -136)}, 
 
-                    new Constraint[] {}));
+                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
         
                 
 
@@ -171,7 +172,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-8, -32)}, 
 
-                    new Constraint[] {}));
+                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
 
             case CONE_TIP_OUT:
                 return getNeutralTrajectory();
@@ -182,7 +183,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-8, -32)}, 
 
-                    new Constraint[] {}));
+                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
 
             default:
                 return getNeutralTrajectory();

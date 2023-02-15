@@ -11,6 +11,7 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
+import com.stuypulse.robot.util.AStar.Constraint;
 import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -143,6 +144,8 @@ public interface Settings {
     public interface Arm {
 
         double MAX_DEGREES_PER_SECOND = 60;
+        Constraint[] intakeConstraints = {};
+        Constraint[] scoreConstraints = {};
 
         public interface Shoulder {
             double GEARING = 80;

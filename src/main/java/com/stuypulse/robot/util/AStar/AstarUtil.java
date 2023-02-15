@@ -7,7 +7,7 @@ import com.stuypulse.robot.util.ArmTrajectory;
 
 public class AstarUtil {
  
-    public static ArmTrajectory generateTrajectory(ArmState[] states, Constraint[] constraints) {
+    public static ArmTrajectory generateTrajectory(ArmState[] states, Constraint[]... constraints) {
         ArmTrajectory trajectory = new ArmTrajectory();
 
         for (int i = 0; i < states.length - 1; i += 2) {
@@ -17,7 +17,7 @@ public class AstarUtil {
         return trajectory;
     }
 
-    public static ArmTrajectory generateTrajectory(ArmState start, ArmState end, Constraint... constraints) {
+    public static ArmTrajectory generateTrajectory(ArmState start, ArmState end, Constraint[]... constraints) {
         return generateTrajectory(
             start.getShoulderState().getDegrees(),
             start.getWristState().getDegrees(),
@@ -27,7 +27,7 @@ public class AstarUtil {
         );
     }
 
-    public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle, Constraint... constraints) {
+    public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle, Constraint[]... constraints) {
         
         Astar astar = new Astar(
                 new Node(initialShoulderAngle, initialWristAngle), 
@@ -35,8 +35,9 @@ public class AstarUtil {
             );
         
 
-        for (Constraint constraint : constraints) {
-            astar.addConstraint(constraint);
+        for (Constraint[] constraint : constraints) {
+            for (Constraint singleConstraint : constraint)
+                astar.addConstraint(singleConstraint);
         }
 
         // add constraints to astar path (example constraints)
