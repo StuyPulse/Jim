@@ -38,18 +38,18 @@ public interface Field {
     public interface ScorePoses {
         double DEFAULT_X_DIST = GRID_DEPTH + Units.inchesToMeters(37) / 2.0;
 
-        Pose2d ONE =   new Pose2d(Units.inchesToMeters(196), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d TWO =   new Pose2d(Units.inchesToMeters(174.125), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d THREE = new Pose2d(Units.inchesToMeters(152), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d FOUR =  new Pose2d(Units.inchesToMeters(130), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d FIVE =  new Pose2d(Units.inchesToMeters(108.125), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d SIX =   new Pose2d(Units.inchesToMeters(86), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d SEVEN = new Pose2d(Units.inchesToMeters(64), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d EIGHT = new Pose2d(Units.inchesToMeters(42.125), DEFAULT_X_DIST, new Rotation2d());
-        Pose2d NINE =  new Pose2d(Units.inchesToMeters(20), DEFAULT_X_DIST, new Rotation2d());
+        Translation2d ONE =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(196));
+        Translation2d TWO =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(174.125));
+        Translation2d THREE = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(152));
+        Translation2d FOUR =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(130));
+        Translation2d FIVE =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(108.125));
+        Translation2d SIX =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(86));
+        Translation2d SEVEN = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(64));
+        Translation2d EIGHT = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(42.125));
+        Translation2d NINE =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(20));
     }
 
-    Pose2d BLUE_ALIGN_POSES[] = {
+    Translation2d BLUE_ALIGN_POSES[] = {
         ScorePoses.ONE,
         ScorePoses.TWO,
         ScorePoses.THREE,
@@ -61,16 +61,16 @@ public interface Field {
         ScorePoses.NINE
     };
 
-    Pose2d RED_ALIGN_POSES[] = {
-        AllianceUtil.mirroredPose(ScorePoses.NINE),
-        AllianceUtil.mirroredPose(ScorePoses.EIGHT),
-        AllianceUtil.mirroredPose(ScorePoses.SEVEN),
-        AllianceUtil.mirroredPose(ScorePoses.SIX),
-        AllianceUtil.mirroredPose(ScorePoses.FIVE),
-        AllianceUtil.mirroredPose(ScorePoses.FOUR),
-        AllianceUtil.mirroredPose(ScorePoses.THREE),
-        AllianceUtil.mirroredPose(ScorePoses.TWO),
-        AllianceUtil.mirroredPose(ScorePoses.ONE)
+    Translation2d RED_ALIGN_POSES[] = {
+        AllianceUtil.getMirroredTranslation(ScorePoses.NINE),
+        AllianceUtil.getMirroredTranslation(ScorePoses.EIGHT),
+        AllianceUtil.getMirroredTranslation(ScorePoses.SEVEN),
+        AllianceUtil.getMirroredTranslation(ScorePoses.SIX),
+        AllianceUtil.getMirroredTranslation(ScorePoses.FIVE),
+        AllianceUtil.getMirroredTranslation(ScorePoses.FOUR),
+        AllianceUtil.getMirroredTranslation(ScorePoses.THREE),
+        AllianceUtil.getMirroredTranslation(ScorePoses.TWO),
+        AllianceUtil.getMirroredTranslation(ScorePoses.ONE)
     };
 
 }

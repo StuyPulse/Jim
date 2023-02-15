@@ -3,11 +3,16 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class AllianceUtil {
-    public static Pose2d mirroredPose(Pose2d pose) {
+    public static Pose2d getMirroredPose(Pose2d pose) {
         return new Pose2d(pose.getX(), Field.HEIGHT - pose.getY(), pose.getRotation());
+    }
+
+    public static Translation2d getMirroredTranslation(Translation2d translation) {
+        return new Translation2d(translation.getX(), Field.HEIGHT - translation.getY());
     }
 
     // 2 origin system, convert from red to blue
@@ -15,6 +20,6 @@ public class AllianceUtil {
         if (alliance == Alliance.Blue)
             return bluePose;
         
-        return mirroredPose(bluePose);
+        return getMirroredPose(bluePose);
     }
 }
