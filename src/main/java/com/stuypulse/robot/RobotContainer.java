@@ -109,9 +109,8 @@ public class RobotContainer {
         // right trigger -> robotrelative override
 
         // plant
-        driver.getLeftBumper()
-            .onTrue(new PlantEngage())
-            .onFalse(new PlantDisengage());
+        driver.getLeftBumper().onTrue(new PlantEngage());
+        driver.getRightBumper().onTrue(new PlantEngage());
         // driver.getLeftBumper()
         //     .whileTrue(new SwerveDrivePlantDrive(driver));
     }
