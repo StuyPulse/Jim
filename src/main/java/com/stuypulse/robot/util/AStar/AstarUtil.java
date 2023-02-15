@@ -38,7 +38,8 @@ public class AstarUtil {
         for (Constraint constraint : constraints) {
             astar.addConstraint(constraint);
         }
-        // add constraints to astar path
+
+        // add constraints to astar path (example constraints)
         astar.addConstraint((s, w) -> 0 <= s && s <= 180);
         astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));
 
