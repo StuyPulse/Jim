@@ -41,12 +41,14 @@ public class TwoPieceWire extends SequentialCommandGroup{
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetNodeLevel(NodeLevel.MID),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
@@ -55,7 +57,8 @@ public class TwoPieceWire extends SequentialCommandGroup{
                     .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
         
         // drive to grid and score game piece

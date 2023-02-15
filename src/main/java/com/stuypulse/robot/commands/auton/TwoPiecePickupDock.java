@@ -44,12 +44,14 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // drive to and intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetNodeLevel(NodeLevel.MID),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake One"))
@@ -58,7 +60,8 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
                     .withEvents(), 
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
         
         // drive to grid and score second piece
@@ -75,7 +78,8 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // intake third piece
@@ -87,7 +91,8 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
                     .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // dock and engage
@@ -95,7 +100,8 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral()),
+                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .withEvents(),
 
 
             new SwerveDriveEngage().withTimeout(ENGAGE_TIME),

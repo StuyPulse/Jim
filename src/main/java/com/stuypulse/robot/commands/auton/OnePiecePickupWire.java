@@ -25,9 +25,6 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CONE),
             new ManagerSetIntakeSide(IntakeSide.FRONT),
             new ManagerSetScoreSide(ScoreSide.OPPOSITE)
-            
-            // new ManagerSetGridSection()
-            // new ManagerSetGridColumn()
         );
 
         // score first piece

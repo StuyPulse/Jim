@@ -27,9 +27,6 @@ public class OnePieceDock extends SequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CONE),
             new ManagerSetIntakeSide(IntakeSide.FRONT),
             new ManagerSetScoreSide(ScoreSide.OPPOSITE)
-            
-            // new ManagerSetGridSection()
-            // new ManagerSetGridColumn()
         );
 
         // score first piece
@@ -45,7 +42,7 @@ public class OnePieceDock extends SequentialCommandGroup {
         addCommands(
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("1 Piece + Dock", CONSTRAINTS))
-                    .fieldRelative()
+                    .robotRelative()
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
 

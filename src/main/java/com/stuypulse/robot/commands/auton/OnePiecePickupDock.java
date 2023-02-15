@@ -23,7 +23,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1.5 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
-            "Intake Piece", "Dock"
+            "Intake Piece", "Dock" 
         );
 
         // initial setup
@@ -45,12 +45,13 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // intake second piece
         addCommands(
+            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CUBE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()
-                    .addEvent("Ready Intake One", new ArmIntake().andThen(new IntakeAcquire()))
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),

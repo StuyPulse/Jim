@@ -47,21 +47,24 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetNodeLevel(NodeLevel.MID),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeOne", new IntakeAcquire())
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
 
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
         
         // drive to grid and score second piece
@@ -69,7 +72,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
-                    .addEvent("ReadyArmOne", new ArmReady())
+                    .addEvent("ReadyArmOne", new ArmReady().andThen(new ArmScore()))
                     .withEvents(),
 
 
@@ -79,7 +82,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // drive to and intake third piece
@@ -87,10 +91,11 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Three"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeTwo", new IntakeAcquire())
+                    .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // drive to grid and score third piece
@@ -107,7 +112,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
         // dock and engage
