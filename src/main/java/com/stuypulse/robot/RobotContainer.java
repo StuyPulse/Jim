@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
+import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.wings.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -96,19 +97,27 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getDPadLeft().onTrue(new WingRetractLeft());
-        driver.getDPadUp().onTrue(new WingRetractRight());
+        driver.getSelectButton().onTrue(new WingRetractLeft());
+        driver.getStartButton().onTrue(new WingRetractRight());
 
         // arm
-        driver.getBottomButton().onTrue(new ArmScore().andThen(new IntakeScore()));
+        driver.getBottomButton()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
         // right trigger -> robotrelative override
 
-        driver.getRightBumper().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
+        // plant
+        driver.getLeftBumper().onTrue(new PlantEngage());
+        driver.getRightBumper().onTrue(new PlantDisengage());
+        // driver.getLeftBumper()
+        //     .whileTrue(new SwerveDrivePlantDrive(driver));
+
         driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
@@ -127,7 +136,10 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper().onTrue(new ArmReady());
-        operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
+        operator.getRightBumper()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
@@ -137,13 +149,15 @@ public class RobotContainer {
         // set game piece
         operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
         operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
-        // TODO: CONE_TIP_OUT
+        // operator.getBottomButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
         // arm to neutral
-        operator.getDPadRight().onTrue(new ArmNeutral());
+        operator.getDPadRight()
+            .onTrue(new ArmNeutral())
+            .onTrue(new IntakeStop());
 
         // manual overrides
         operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
