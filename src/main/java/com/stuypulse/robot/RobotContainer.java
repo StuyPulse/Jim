@@ -98,6 +98,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
+        // MAKE THESE TOGGLE COMMANDS
         driver.getSelectButton().onTrue(new WingRetractLeft());
         driver.getStartButton().onTrue(new WingRetractRight());
 
@@ -119,8 +120,6 @@ public class RobotContainer {
         driver.getRightBumper().onTrue(new PlantDisengage());
         // driver.getLeftBumper()
         //     .whileTrue(new SwerveDrivePlantDrive(driver));
-
-        driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {
