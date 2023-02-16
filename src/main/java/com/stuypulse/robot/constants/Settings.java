@@ -72,8 +72,8 @@ public interface Settings {
         double WIDTH = Units.inchesToMeters(26.504);
         double LENGTH = Units.inchesToMeters(20.508);
         
-        double MAX_SPEED = 4.2;
-        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
+        double MAX_SPEED = Units.feetToMeters(15.76);
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 6.28);
 
 
         public interface Motion {
@@ -82,7 +82,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 2.0;
+            double kP = 3.5;
             double kI = 0.0;
             double kD = 0.1;
             
@@ -252,9 +252,9 @@ public interface Settings {
     
         
         SmartNumber DEADBAND = new SmartNumber("Driver Settings/Deadband", 0.05);
-        SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", 4.2);
-        SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 7);
-        SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 6.1);
+        SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", Units.feetToMeters(15.67));
+        SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 694);
+        SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", Math.pow(Units.feetToMeters(15), 2.0) / Swerve.FrontLeft.MODULE_OFFSET.getNorm());
 
         SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
         SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
