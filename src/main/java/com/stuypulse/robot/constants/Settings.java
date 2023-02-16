@@ -27,7 +27,11 @@ public interface Settings {
     
     public enum Robot {
         JIM,
-        SACROD
+        SACROD,
+
+
+        // runs voltage control project
+        BLAY_MODE
     }
 
     Robot ROBOT = Robot.JIM;
@@ -78,7 +82,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 3.5;
+            double kP = 2.0;
             double kI = 0.0;
             double kD = 0.1;
             
@@ -87,36 +91,36 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 1.3;
+            double kP = 2.38;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17335;
-            double kV = 2.7274;
-            double kA = 0.456;
+            double kS = 0.17459;
+            double kV = 2.4561;
+            double kA = 0.40442;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(174).plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-131).plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(119).plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 

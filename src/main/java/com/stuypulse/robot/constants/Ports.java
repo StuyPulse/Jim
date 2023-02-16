@@ -31,12 +31,12 @@ public interface Ports {
             int TURN = 13;
         }
 
-        public interface BackRight{
+        public interface BackLeft{
             int DRIVE = 14;
             int TURN = 15;
         }
 
-        public interface BackLeft{
+        public interface BackRight {
             int DRIVE = 16;
             int TURN = 17; 
         }

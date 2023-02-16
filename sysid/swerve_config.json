@@ -1,0 +1,60 @@
+{
+  "canivore names": [
+    "rio",
+    "rio",
+    "rio",
+    "rio"
+  ],
+  "counts per rotation": 1.0,
+  "encoder canivore name": "rio",
+  "encoder type": "Encoder Port",
+  "encoding": false,
+  "gearing denominator": 1.0,
+  "gearing numerator": 4.71,
+  "gyro": "Analog Gyro",
+  "gyro canivore name": "rio",
+  "gyro ctor": "1",
+  "is drivetrain": false,
+  "motor controllers": [
+    "SPARK MAX (Brushless)",
+    "SPARK MAX (Brushless)",
+    "SPARK MAX (Brushless)",
+    "SPARK MAX (Brushless)"
+  ],
+  "number of samples per average": 8,
+  "primary encoder inverted": false,
+  "primary encoder ports": [
+    0,
+    1
+  ],
+  "primary motor ports": [
+    10,
+    12,
+    14,
+    16
+  ],
+  "primary motors inverted": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "secondary encoder inverted": false,
+  "secondary encoder ports": [
+    2,
+    3
+  ],
+  "secondary motor ports": [
+    2,
+    3,
+    5,
+    7
+  ],
+  "secondary motors inverted": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "velocity measurement period": 5
+}
