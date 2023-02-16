@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch AngleCalculator",
+      "request": "launch",
+      "mainClass": "com.stuypulse.robot.util.AStar.AngleCalculator",
+      "projectName": "Jim"
+    },
+    {
+      "type": "java",
       "name": "Launch Astar",
       "request": "launch",
       "mainClass": "com.stuypulse.robot.util.Astar",
