@@ -1,33 +1,34 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
+import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.VStream;
 import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveDrive extends CommandBase {
+public class SwerveDrivePlantDrive extends CommandBase {
     
     private SwerveDrive swerve;
+    private Plant plant;
 
     private VStream speed;
     private IStream turn;
-    private BStream robotRelative;
 
-    public SwerveDriveDrive(Gamepad driver) {
+    private BStream planting;
+
+    public SwerveDrivePlantDrive(Gamepad driver) {
         this.swerve = SwerveDrive.getInstance();
+        this.plant = Plant.getInstance();
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
@@ -46,26 +47,21 @@ public class SwerveDriveDrive extends CommandBase {
                 x -> x * Settings.Driver.Turn.MAX_TELEOP_TURNING.get(),
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
-        
-        robotRelative = BStream.create(driver::getRightTriggerPressed);
+
+        planting = BStream.create(() -> speed.get().magnitude() < 0.05 && turn.get() < 0.05)
+            .filtered(new BDebounce.Rising(Settings.Driver.PLANT_DEBOUNCE));
 
         addRequirements(swerve);
     }
     
     @Override
     public void execute() {
-        if (robotRelative.get()) {
-            Vector2D s = speed.get();
-            Vector2D translation = new Vector2D(s.y, -s.x);
-
-            if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
-                translation = translation.negative();
-            }
-
-            swerve.setChassisSpeeds(
-                new ChassisSpeeds(translation.x, translation.y, -turn.get()));
+        if (planting.get()) {
+            plant.engage();
         } else {
-            swerve.drive(speed.get(), turn.get());
+            plant.disengage();
         }
+
+        swerve.drive(speed.get(), turn.get());
     }
 }

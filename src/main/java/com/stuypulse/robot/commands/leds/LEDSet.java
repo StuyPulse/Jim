@@ -15,8 +15,8 @@ public class LEDSet extends InstantCommand {
     private LEDColor color;
     private LEDController controller;
 
-    public LEDSet(LEDController controller, LEDColor color) {
-        this.controller = controller;
+    public LEDSet(LEDColor color) {
+        this.controller = LEDController.getInstance();
         this.color = color;
     }
 
