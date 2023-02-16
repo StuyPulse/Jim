@@ -116,4 +116,16 @@ public class WingsImpl extends Wings {
         SmartDashboard.putNumber("Wings/Left Retract Time",leftRetractTime);
         SmartDashboard.putNumber("Wings/Right Retract Time",rightRetractTime);
     }
+
+    @Override
+    public boolean isLeftExtended() {
+        // TODO Auto-generated method stub
+        return isEngaged(leftDeploy);
+    }
+
+    @Override
+    public boolean isRightExtended() {
+        // TODO Auto-generated method stub
+        return isEngaged(rightDeploy);
+    }
 }

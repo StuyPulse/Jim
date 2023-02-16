@@ -17,5 +17,17 @@ public class NoWings extends Wings {
     @Override
     public void retractRight() {
     }
+
+    @Override
+    public boolean isLeftExtended() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isRightExtended() {
+        // TODO Auto-generated method stub
+        return false;
+    }
     
 }
