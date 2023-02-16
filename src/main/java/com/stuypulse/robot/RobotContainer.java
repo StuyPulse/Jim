@@ -115,11 +115,9 @@ public class RobotContainer {
         driver.getDPadDown().onTrue(new OdometryRealign(new Rotation2d()));
         // right trigger -> robotrelative override
 
-        // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
-        // driver.getLeftBumper()
-        //     .whileTrue(new SwerveDrivePlantDrive(driver));
+
     }
 
     private void configureOperatorBindings() {

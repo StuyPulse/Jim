@@ -82,7 +82,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 3.5;
+            double kP = 2.0;
             double kI = 0.0;
             double kD = 0.1;
             
