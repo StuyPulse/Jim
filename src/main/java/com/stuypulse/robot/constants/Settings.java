@@ -259,6 +259,8 @@ public interface Settings {
         SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
         SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
 
+        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
+
         public interface Drive {
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
