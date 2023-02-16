@@ -239,26 +239,26 @@ public interface Settings {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Speed Deadband", 0.05);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
-            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", Units.feetToMeters(15.67));
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 10);
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 6.5);
 
-            SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
+            SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(1));
         }
 
         public interface Turn {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn Deadband", 0.05);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
-            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 1.36 /*Math.pow(Units.feetToMeters(15.67), 2.0) / Swerve.FrontLeft.MODULE_OFFSET.getNorm()*/);
+            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
 
-            SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
+            SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(10));
         }
 
     }
