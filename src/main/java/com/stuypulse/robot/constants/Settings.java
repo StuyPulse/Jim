@@ -24,6 +24,17 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    
+    public enum Robot {
+        JIM,
+        SACROD,
+
+
+        // runs voltage control project
+        BLAY_MODE
+    }
+
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -31,11 +42,18 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
         SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
 
-        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 1);
-        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Back Roller Speed", 1);
+        SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Front Roller Speed", 1);
+        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Back Roller Speed", 0.5);
 
-        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
-        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
+        SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Front Roller Speed", 1);
+        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Back Roller Speed", 0.5);
+
+        SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Back Roller Speed", 1);
+
+        SmartNumber OUTTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Back Roller Speed", 1);
+
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Settings/Intake/New Gamepiece Time (Falling)", 0.5);
     }
@@ -65,7 +83,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 3.5;
+            double kP = 2.0;
             double kI = 0.0;
             double kD = 0.1;
             
@@ -74,36 +92,36 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 1.3;
+            double kP = 2.38;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17335;
-            double kV = 2.7274;
-            double kA = 0.456;
+            double kS = 0.17459;
+            double kV = 2.4561;
+            double kA = 0.40442;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(174).plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-131).plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(119).plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -241,6 +259,8 @@ public interface Settings {
 
         SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
         SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
+
+        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);

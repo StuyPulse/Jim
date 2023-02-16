@@ -34,6 +34,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private PathPlannerTrajectory path;
+	private HashMap<String, Command> events;
 
 	public SwerveDriveFollowTrajectory(PathPlannerTrajectory path) {
 
@@ -45,12 +46,13 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.THETA.kP, Motion.THETA.kI, Motion.THETA.kD),
 			SwerveDrive.getInstance()::setModuleStates,
-			false,
+			true,
 			SwerveDrive.getInstance()
 		);
 		
 		robotRelative = false;
 		this.path = path;
+		events = new HashMap<String, Command>();
 	}
 
 	public SwerveDriveFollowTrajectory robotRelative() {
@@ -63,15 +65,13 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		return this;
 	}
 
-	public FollowPathWithEvents withEvents(Map<String, Command> events) {
-		return new FollowPathWithEvents(
-			this,
-			path.getMarkers(),
-			new HashMap<String, Command>(events)
-		);
+	public SwerveDriveFollowTrajectory addEvent(String name, Command command) {
+		events.put(name, command);
+		return this;
 	}
 
-	public FollowPathWithEvents withEvents(HashMap<String, Command> events) {
+	// FINISHES AT END OF PATH FOLLOWING, NOT AFTER ALL EVENTS DONE
+	public FollowPathWithEvents withEvents() {
 		return new FollowPathWithEvents(
 			this,
 			path.getMarkers(),
@@ -82,7 +82,8 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 	@Override
 	public void initialize() {
 		if (robotRelative) {
-			PathPlannerState initialState = path.getInitialState();
+			PathPlannerState initialState = PathPlannerTrajectory.transformStateForAlliance(
+				path.getInitialState(), DriverStation.getAlliance());
 			
 			Odometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),

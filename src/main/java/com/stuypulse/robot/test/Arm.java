@@ -28,7 +28,7 @@ public class Arm extends SubsystemBase {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
         configureMotors();

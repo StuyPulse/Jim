@@ -26,6 +26,27 @@
         }
       },
       "/SmartDashboard/Field": {
+        "Back Left-2d": {
+          "length": 0.11999999731779099,
+          "width": 0.11999999731779099
+        },
+        "Back Right-2d": {
+          "length": 0.11999999731779099,
+          "width": 0.11999999731779099
+        },
+        "Front Left-2d": {
+          "length": 0.11999999731779099,
+          "width": 0.11999999731779099
+        },
+        "Front Right-2d": {
+          "length": 0.11999999731779099,
+          "width": 0.11999999731779099
+        },
+        "Robot": {
+          "length": 0.7874000072479248,
+          "width": 0.9398000240325928
+        },
+        "image": "C:\\Users\\vinow\\Jim\\images\\ppfield.png",
         "window": {
           "visible": true
         }
@@ -33,6 +54,9 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "transitory": {
       "FMSInfo": {
         "open": true
@@ -47,11 +71,37 @@
         "Arm": {
           "open": true
         },
+        "Intake": {
+          "open": true
+        },
         "Manager": {
+          "open": true
+        },
+        "Swerve": {
+          "open": true
+        },
+        "Wrist": {
           "open": true
         },
         "open": true
       }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
     }
   }
 }

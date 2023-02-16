@@ -12,9 +12,12 @@ import static com.stuypulse.robot.constants.Settings.Vision.*;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -65,10 +68,6 @@ public class VisionImpl extends Vision {
         SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
         SmartDashboard.putNumber("Vision/Distance", distance);
         SmartDashboard.putNumber("Vision/Tag ID", data.id);
-        
-        // SmartDashboard.putNumber("Vision/Pose Degrees", data.pose.getRotation().getDegrees());
-        // SmartDashboard.putNumber("Vision/Pose X", data.pose.getX());
-        // SmartDashboard.putNumber("Vision/Pose Y", data.pose.getY());
 
 
         if (Math.abs(angleDegrees) > TRUST_ANGLE)
@@ -96,7 +95,7 @@ public class VisionImpl extends Vision {
             return Double.POSITIVE_INFINITY;
 
         Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
+        Translation2d tag = Field.getAprilTagFromId(id).toPose2d().getTranslation();
         
         return robot.getDistance(tag);
     }
@@ -106,10 +105,9 @@ public class VisionImpl extends Vision {
             return Double.POSITIVE_INFINITY;
 
         Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.APRIL_TAGS[id-1].toPose2d().getTranslation();
-
+        Translation2d tag = Field.getAprilTagFromId(id).toPose2d().getTranslation();
+        
         double deg = robot.minus(tag).getAngle().getDegrees();
-
         if (Math.abs(deg) > 90)
             deg += 180;
 

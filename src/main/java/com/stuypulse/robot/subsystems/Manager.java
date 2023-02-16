@@ -3,10 +3,14 @@ package com.stuypulse.robot.subsystems;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -133,11 +137,11 @@ public class Manager extends SubsystemBase {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(-45, 90)));
+                    ArmState.fromDegrees(-10, 120)));
 
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                    ArmState.fromDegrees(-10, 120)));
 
             default:
                 return getNeutralTrajectory();
@@ -148,11 +152,11 @@ public class Manager extends SubsystemBase {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(0, 90)));
+                    ArmState.fromDegrees(10, 120)));
 
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                    ArmState.fromDegrees(10, 120)));
 
             default:
                 return getNeutralTrajectory();
@@ -162,7 +166,24 @@ public class Manager extends SubsystemBase {
     /** Generate Score Trajectories **/
 
     public ArmTrajectory getScoreTrajectory() {
-        return getNeutralTrajectory();
+        switch (nodeLevel) {
+            case LOW:
+                return getIntakeTrajectory();
+            case MID:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(-30, 0)));
+            case HIGH:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(10, -45)));
+            default:
+                return getNeutralTrajectory();
+        }
     }
 
     /** Generate Neutral Trajectories **/
@@ -279,6 +300,8 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());

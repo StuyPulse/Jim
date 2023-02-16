@@ -13,6 +13,15 @@
         "Settings": {
           "open": true
         },
+        "Swerve": {
+          "Drive": {
+            "open": true
+          },
+          "Turn": {
+            "open": true
+          },
+          "open": true
+        },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
             "open": true
@@ -23,12 +32,6 @@
           "open": true
         },
         "Wrist": {
-          "open": true
-        },
-        "Vision": {
-          "limelight": {
-            "open": true
-          },
           "open": true
         },
         "open": true

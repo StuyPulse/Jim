@@ -16,10 +16,8 @@ public interface Ports {
     public interface Intake {
         int FRONT_MOTOR_PORT = 30;
         int BACK_MOTOR_PORT = 31;
-        int FRONT_RIGHT_SENSOR = 0;
-        int FRONT_LEFT_SENSOR = 1;
-        int BACK_LEFT_SENSOR = 2;
-        int BACK_RIGHT_SENSOR = 3;
+        int FRONT_SENSOR = 0;
+        int BACK_SENSOR = 1;
     }
     
     public interface Swerve {
@@ -33,12 +31,12 @@ public interface Ports {
             int TURN = 13;
         }
 
-        public interface BackRight{
+        public interface BackLeft{
             int DRIVE = 14;
             int TURN = 15;
         }
 
-        public interface BackLeft{
+        public interface BackRight {
             int DRIVE = 16;
             int TURN = 17; 
         }

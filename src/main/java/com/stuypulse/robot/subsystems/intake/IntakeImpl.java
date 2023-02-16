@@ -23,10 +23,8 @@ public class IntakeImpl extends Intake{
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
 
-    private DigitalInput frontLeftSensor;
-    private DigitalInput frontRightSensor;
-    private DigitalInput backLeftSensor;
-    private DigitalInput backRightSensor;
+    private DigitalInput frontSensor;
+    private DigitalInput backSensor;
 
     private BStream stalling;
     private BStream hasNewGamepiece;
@@ -50,10 +48,8 @@ public class IntakeImpl extends Intake{
                                 new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
                         .polling(0.01);
 
-        frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
-        frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
-        backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
+        frontSensor = new DigitalInput(FRONT_SENSOR);
+        backSensor = new DigitalInput(BACK_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
@@ -73,10 +69,10 @@ public class IntakeImpl extends Intake{
     // CUBE DETECTION (ir sensors)
 
     private boolean hasCubeFront() {
-        return !frontLeftSensor.get()||!frontRightSensor.get();
+        return !frontSensor.get();
     }
     private boolean hasCubeBack() {
-        return !backLeftSensor.get()||!backRightSensor.get();
+        return !backSensor.get();
     }
     private boolean hasCube() {
         return isFlipped()? hasCubeBack() : hasCubeFront();
@@ -110,48 +106,52 @@ public class IntakeImpl extends Intake{
     @Override
     public void acquireCube(){
         if (isFlipped()) {
-            frontMotor.set(-CUBE_FRONT_ROLLER.get());
-            backMotor.set(-CUBE_BACK_ROLLER.get());
+            frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
+            backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
         } else {
-            frontMotor.set(CUBE_FRONT_ROLLER.get());
-            backMotor.set(CUBE_BACK_ROLLER.get());
+            frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
+            backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
         }
     }
 
     @Override
     public void acquireCone() {
         if (isFlipped()) {
-            frontMotor.set(-CONE_FRONT_ROLLER.get());
-            backMotor.set(CONE_BACK_ROLLER.get());
+            frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
+            backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
         } else {
-            frontMotor.set(CONE_FRONT_ROLLER.get());
-            backMotor.set(-CONE_BACK_ROLLER.get());
+            frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
+            backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
         }
     }
 
     @Override
     public void deacquireCube(){
         if (isFlipped()) {
-            frontMotor.set(CUBE_FRONT_ROLLER.get());
-            backMotor.set(CUBE_BACK_ROLLER.get());
+            frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
+            backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
         } else {
-            frontMotor.set(-CUBE_FRONT_ROLLER.get());
-            backMotor.set(-CUBE_BACK_ROLLER.get());
+            frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
+            backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
         }
     }
 
     @Override
     public void deacquireCone(){
         if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
-            frontMotor.set(CONE_FRONT_ROLLER.get());
-            backMotor.set(-CONE_BACK_ROLLER.get());
+            frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
+            backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {
-            frontMotor.set(-CONE_FRONT_ROLLER.get());
-            backMotor.set(CONE_BACK_ROLLER.get());
+            frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
+            backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
         }
     }
-    
 
+    @Override
+    public boolean hasNewGamePiece() {
+        return false;
+    }
+    
     @Override
     public void periodic(){
         if (isStalling() || hasCube()) {
