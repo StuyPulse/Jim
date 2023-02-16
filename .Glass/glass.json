@@ -13,6 +13,15 @@
         "Back Right": {
           "open": true
         },
+        "DriPver Settings": {
+          "open": true
+        },
+        "Driver Setings": {
+          "open": true
+        },
+        "Driver Settings": {
+          "open": true
+        },
         "Front Left": {
           "open": true
         },
@@ -20,6 +29,9 @@
           "open": true
         },
         "Odometry": {
+          "open": true
+        },
+        "Operator Settings": {
           "open": true
         },
         "Pump": {
@@ -169,7 +181,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Right/Velocity"
+              "id": "NT:/SmartDashboard/Front Right/Target Angle"
             }
           ]
         }
@@ -201,7 +213,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Left/Velocity"
+              "id": "NT:/SmartDashboard/Front Left/Target Angle"
             }
           ]
         }
@@ -233,7 +245,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Left/Velocity"
+              "id": "NT:/SmartDashboard/Back Left/Target Angle"
             }
           ]
         }
@@ -265,7 +277,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Right/Velocity"
+              "id": "NT:/SmartDashboard/Back Right/Target Angle"
             }
           ]
         }
@@ -310,21 +322,128 @@
     "Plot <6>": {
       "plots": [
         {
-          "height": 447
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 447,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Front Left/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Front Left/Target Velocity"
+            }
+          ]
         }
       ]
     },
     "Plot <7>": {
       "plots": [
         {
-          "height": 446
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 446,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Front Right/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Front Right/Target Velocity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <8>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 425,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Back Right/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Back Right/Target Velocity"
+            }
+          ]
         }
       ]
     },
     "Plot <9>": {
       "plots": [
         {
-          "height": 424
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 424,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Back Left/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Back Left/Target Velocity"
+            }
+          ]
         }
       ]
     }
