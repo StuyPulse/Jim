@@ -12,14 +12,19 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class OnePieceDock extends SequentialCommandGroup {
+public class OnePiecePickupDock extends SequentialCommandGroup{
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
+    private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double ENGAGE_TIME = 3.0;
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
-    public OnePieceDock() {
+    public OnePiecePickupDock() {
+        var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("1.5 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
+            "Intake Piece", "Dock" 
+        );
 
         // initial setup
         addCommands(
@@ -38,18 +43,32 @@ public class OnePieceDock extends SequentialCommandGroup {
             new IntakeStop()
         );
 
+        // intake second piece
+        addCommands(
+            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetGamePiece(GamePiece.CUBE),
+
+            new SwerveDriveFollowTrajectory(
+                paths.get("Intake Piece"))
+                    .robotRelative()
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
+
+            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeStop()
+        );
+        
         // dock and engage
         addCommands(
             new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1 Piece + Dock", CONSTRAINTS))
-                    .robotRelative()
+                paths.get("Dock"))
+                    .fieldRelative()
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
-
+                    
             new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     
     }
-
 }
