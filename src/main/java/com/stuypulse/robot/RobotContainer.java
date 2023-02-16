@@ -111,6 +111,7 @@ public class RobotContainer {
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        driver.getDPadDown().onTrue(new OdometryRealign(new Rotation2d()));
         // right trigger -> robotrelative override
 
         // plant
