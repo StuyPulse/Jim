@@ -113,7 +113,7 @@ public class RobotContainer {
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
-        driver.getRightBumper().onTrue(new PlantEngage());
+        driver.getRightBumper().onTrue(new PlantDisengage());
         // driver.getLeftBumper()
         //     .whileTrue(new SwerveDrivePlantDrive(driver));
     }

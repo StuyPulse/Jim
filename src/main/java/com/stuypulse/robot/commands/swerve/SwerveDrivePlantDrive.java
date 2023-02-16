@@ -48,7 +48,7 @@ public class SwerveDrivePlantDrive extends CommandBase {
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
 
-        planting = BStream.create(() -> speed.get().magnitude() == 0 && turn.get() == 0)
+        planting = BStream.create(() -> speed.get().magnitude() < 0.05 && turn.get() < 0.05)
             .filtered(new BDebounce.Rising(Settings.Driver.PLANT_DEBOUNCE));
 
         addRequirements(swerve);
