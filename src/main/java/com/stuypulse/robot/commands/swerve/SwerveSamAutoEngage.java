@@ -38,13 +38,13 @@ public class SwerveSamAutoEngage extends CommandBase {
 
     @Override
     public void execute() {
-        var target = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
-        var balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees();
-        var offset = tiltController.update(0, balanceAngle);
+        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
+        double balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees();
+        double offset = tiltController.update(0, balanceAngle);
 
         target += offset;
-        var currentPosition = odometry.getTranslation().getX();
-        var velocity = translationController.update(target, currentPosition);
+        double currentPosition = odometry.getTranslation().getX();
+        double velocity = translationController.update(target, currentPosition);
 
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                                         new ChassisSpeeds(velocity, 0.0, 0.0), 
