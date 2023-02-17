@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class OdometryImpl extends Odometry {
 
     static class StandardDeviations {
-        public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
-        public static final Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
+        public static final Vector<N3> AUTO_LOW = VecBuilder.fill(20, 20, Math.toRadians(50));
+        public static final Vector<N3> AUTO_MID = VecBuilder.fill(25, 25, Math.toRadians(55));
 
         public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
         public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
@@ -98,6 +98,7 @@ public class OdometryImpl extends Odometry {
         odometry.update(drive.getGyroAngle(), drive.getModulePositions());
 
         for (Result result : results) {
+            // result.noise = Noise.HIGH;
             switch (result.getNoise()) {
                 case LOW:
                     poseEstimator.addVisionMeasurement(

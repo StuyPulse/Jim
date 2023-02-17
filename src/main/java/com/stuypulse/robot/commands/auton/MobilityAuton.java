@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class MobilityAuton extends SequentialCommandGroup {
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 1);
     
     public MobilityAuton() {
         addCommands(

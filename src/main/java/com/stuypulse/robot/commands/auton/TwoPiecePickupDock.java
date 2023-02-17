@@ -17,9 +17,9 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double ALIGNMENT_TIME = 1.0;
-    private static final double ENGAGE_TIME = 3.0;
+    private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_ONE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints INTAKE_ONE_PIECE_CONSTRAINTS = new PathConstraints(1, 1);
     private static final PathConstraints SCORE_ONE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints INTAKE_TWO_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
