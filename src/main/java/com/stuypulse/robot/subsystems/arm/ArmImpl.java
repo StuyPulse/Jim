@@ -3,6 +3,7 @@ package com.stuypulse.robot.subsystems.arm;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import static com.stuypulse.robot.constants.Motors.Arm.*;
@@ -54,8 +55,11 @@ public class ArmImpl extends Arm {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        wristEncoder.setInverted(true);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
         wristEncoder.setZeroOffset(Wrist.ANGLE_OFFSET);
@@ -72,8 +76,8 @@ public class ArmImpl extends Arm {
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
-        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
+        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", -90);
+        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 90);
 
         armVisualizer = new ArmVisualizer();
 

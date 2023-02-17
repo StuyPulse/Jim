@@ -18,6 +18,14 @@ public class SwerveDriveEngage extends CommandBase {
     private static SmartNumber kMaxTilt = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
     private static SmartNumber kMaxEngageSpeed = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.45);
 
+    private static SmartNumber kT_u = new SmartNumber("Auto Engage/Tu", 0.2);  // from Zieger-Nichols tuning method
+    private static Number kK_u = IStream.create(() -> kMaxEngageSpeed.get() / kMaxTilt.get()).number();  // from Zieger-Nichols tuning method
+
+    private static Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+    private static Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
+
+    
+
     private SwerveDrive swerve;
     private Odometry odometry;
 
@@ -25,9 +33,7 @@ public class SwerveDriveEngage extends CommandBase {
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
-
-        Number kP = IStream.create(() -> kMaxEngageSpeed.get() / kMaxTilt.get()).number();
-        control = new PIDController(kP, 0, 0);
+        control = new PIDController(kP, 0, kD);
     }
 
     private Rotation2d getBalanceAngle() {

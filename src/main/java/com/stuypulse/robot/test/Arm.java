@@ -3,6 +3,7 @@ package com.stuypulse.robot.test;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import com.stuypulse.stuylib.control.angle.AngleController;
@@ -28,8 +29,11 @@ public class Arm extends SubsystemBase {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        wristEncoder.setInverted(true);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         configureMotors();
     }

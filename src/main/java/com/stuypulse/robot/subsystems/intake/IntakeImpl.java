@@ -10,8 +10,9 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,12 +23,11 @@ public class IntakeImpl extends Intake{
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
 
-    private DigitalInput frontLeftSensor;
-    private DigitalInput frontRightSensor;
-    private DigitalInput backLeftSensor;
-    private DigitalInput backRightSensor;
+    private DigitalInput frontSensor;
+    private DigitalInput backSensor;
 
     private BStream stalling;
+    private BStream hasNewGamepiece;
 
     public IntakeImpl(){
        
@@ -41,10 +41,15 @@ public class IntakeImpl extends Intake{
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT/2);
 
-        frontLeftSensor = new DigitalInput(FRONT_LEFT_SENSOR);
-        frontRightSensor = new DigitalInput(FRONT_RIGHT_SENSOR);
-        backLeftSensor = new DigitalInput(BACK_LEFT_SENSOR);
-        backRightSensor = new DigitalInput(BACK_RIGHT_SENSOR);
+        hasNewGamepiece =
+                BStream.create(this::hasGamepiece)
+                        .filtered(
+                                new BButton.Pressed(),
+                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
+                        .polling(0.01);
+
+        frontSensor = new DigitalInput(FRONT_SENSOR);
+        backSensor = new DigitalInput(BACK_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
@@ -64,13 +69,23 @@ public class IntakeImpl extends Intake{
     // CUBE DETECTION (ir sensors)
 
     private boolean hasCubeFront() {
-        return !frontLeftSensor.get()||!frontRightSensor.get();
+        return !frontSensor.get();
     }
     private boolean hasCubeBack() {
-        return !backLeftSensor.get()||!backRightSensor.get();
+        return !backSensor.get();
     }
     private boolean hasCube() {
         return isFlipped()? hasCubeBack() : hasCubeFront();
+    }
+
+    // GAMEPIECE DETECTION
+
+    private boolean hasGamepiece() {
+        return isStalling() || hasCube();
+    }
+
+    public boolean hasNewGamepiece() {
+        return hasNewGamepiece.get();
     }
 
     // WRIST ORIENTATION
@@ -131,8 +146,12 @@ public class IntakeImpl extends Intake{
             backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
         }
     }
-    
 
+    @Override
+    public boolean hasNewGamePiece() {
+        return false;
+    }
+    
     @Override
     public void periodic(){
         if (isStalling() || hasCube()) {

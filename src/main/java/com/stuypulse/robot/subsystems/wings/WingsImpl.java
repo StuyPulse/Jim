@@ -12,68 +12,68 @@ public class WingsImpl extends Wings {
 
     private final StopWatch timer;
 
-    private double leftDeployTime;
-    private double rightDeployTime;
-    private double leftRetractTime;
-    private double rightRetractTime;
+    private double redDeployTime;
+    private double whiteDeployTime;
+    private double redRetractTime;
+    private double whiteRetractTime;
 
-    // left solenoids
-    private final DoubleSolenoid leftDeploy;
-    private final Solenoid leftLatch;
+    // red solenoids
+    private final DoubleSolenoid redDeploy;
+    private final Solenoid redLatch;
 
-    // right solenoids
-    private final DoubleSolenoid rightDeploy;
-    private final Solenoid rightLatch;
+    // white solenoids
+    private final DoubleSolenoid whiteDeploy;
+    private final Solenoid whiteLatch;
 
     public WingsImpl() {
         timer = new StopWatch();
 
-        leftDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, LEFT_DEPLOY_FORWARD, LEFT_DEPLOY_REVERSE);
-        leftLatch = new Solenoid(PneumaticsModuleType.CTREPCM, LEFT_LATCH);
-        leftDeployTime = -1.0;
-        leftRetractTime = -1.0;
+        redDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RED_DEPLOY_FORWARD, RED_DEPLOY_REVERSE);
+        redLatch = new Solenoid(PneumaticsModuleType.CTREPCM, RED_LATCH);
+        redDeployTime = -1.0;
+        redRetractTime = -1.0;
         
-        rightDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RIGHT_DEPLOY_FORWARD, RIGHT_DEPLOY_REVERSE);
-        rightLatch = new Solenoid(PneumaticsModuleType.CTREPCM, RIGHT_LATCH);
-        rightDeployTime = -1.0;
-        rightRetractTime = -1.0;
+        whiteDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, WHITE_DEPLOY_FORWARD, WHITE_DEPLOY_REVERSE);
+        whiteLatch = new Solenoid(PneumaticsModuleType.CTREPCM, WHITE_LATCH);
+        whiteDeployTime = -1.0;
+        whiteRetractTime = -1.0;
 
-        leftLatch.set(true);
-        rightLatch.set(true);
+        redLatch.set(true);
+        whiteLatch.set(true);
 
-        rightDeploy.set(DoubleSolenoid.Value.kReverse);
-        leftDeploy.set(DoubleSolenoid.Value.kReverse);
+        whiteDeploy.set(DoubleSolenoid.Value.kReverse);
+        redDeploy.set(DoubleSolenoid.Value.kReverse);
     }
 
     @Override
-    public void extendLeft() {
-        if (leftLatch.get() && !isEngaged(leftDeploy)) {
-            leftLatch.set(false);
-            leftDeployTime = timer.getTime();
+    public void extendRed() {
+        if (redLatch.get() && !isEngaged(redDeploy)) {
+            redLatch.set(false);
+            redDeployTime = timer.getTime();
         }
     }
 
     @Override
-    public void retractLeft() {
-        if (!leftLatch.get() && isEngaged(leftDeploy)) {
-            leftDeploy.set(DoubleSolenoid.Value.kReverse);
-            leftRetractTime = timer.getTime();
+    public void retractRed() {
+        if (!redLatch.get() && isEngaged(redDeploy)) {
+            redDeploy.set(DoubleSolenoid.Value.kReverse);
+            redRetractTime = timer.getTime();
         }
     }
 
     @Override
-    public void extendRight() {
-        if(rightLatch.get() && !isEngaged(rightDeploy)){
-            rightLatch.set(false);
-            rightDeployTime = timer.getTime();
+    public void extendWhite() {
+        if(whiteLatch.get() && !isEngaged(whiteDeploy)){
+            whiteLatch.set(false);
+            whiteDeployTime = timer.getTime();
         }
     }
 
     @Override
-    public void retractRight() {
-        if(!rightLatch.get() && isEngaged(rightDeploy)){
-            rightDeploy.set(DoubleSolenoid.Value.kReverse);
-            rightRetractTime = timer.getTime();
+    public void retractWhite() {
+        if(!whiteLatch.get() && isEngaged(whiteDeploy)){
+            whiteDeploy.set(DoubleSolenoid.Value.kReverse);
+            whiteRetractTime = timer.getTime();
         }
     }
 
@@ -88,32 +88,42 @@ public class WingsImpl extends Wings {
 
     @Override
     public void periodic() {
-        if(leftDeployTime > 0 && timer.getTime() - leftDeployTime >= LEFT_LATCH_DELAY.get()){
-            leftDeploy.set(DoubleSolenoid.Value.kForward); // dont set off
-            leftDeployTime = -1.0;
+        if(redDeployTime > 0 && timer.getTime() - redDeployTime >= RED_LATCH_DELAY.get()){
+            redDeploy.set(DoubleSolenoid.Value.kForward); // dont set off
+            redDeployTime = -1.0;
         }
-        if(rightDeployTime > 0 && timer.getTime() - rightDeployTime >= RIGHT_LATCH_DELAY.get()){
-            rightDeploy.set(DoubleSolenoid.Value.kForward);
-            rightDeployTime = -1.0;
+        if(whiteDeployTime > 0 && timer.getTime() - whiteDeployTime >= WHITE_LATCH_DELAY.get()){
+            whiteDeploy.set(DoubleSolenoid.Value.kForward);
+            whiteDeployTime = -1.0;
         }
-        if(leftRetractTime > 0 && timer.getTime() - leftRetractTime >= LEFT_RETRACT_DELAY.get()){
-            leftLatch.set(true);
-            leftRetractTime = -1.0;
+        if(redRetractTime > 0 && timer.getTime() - redRetractTime >= RED_RETRACT_DELAY.get()){
+            redLatch.set(true);
+            redRetractTime = -1.0;
         }
-        if(rightRetractTime > 0 && timer.getTime() - rightRetractTime >= RIGHT_RETRACT_DELAY.get()){
-            rightLatch.set(true);
-            rightRetractTime = -1.0;
+        if(whiteRetractTime > 0 && timer.getTime() - whiteRetractTime >= WHITE_RETRACT_DELAY.get()){
+            whiteLatch.set(true);
+            whiteRetractTime = -1.0;
         }
 
-        SmartDashboard.putBoolean("Wings/Right Latch Engaged", rightLatch.get());
-        SmartDashboard.putBoolean("Wings/Right Deploy Engaged", isEngaged(rightDeploy));
-        SmartDashboard.putBoolean("Wings/Left Latch Engaged", leftLatch.get());
-        SmartDashboard.putBoolean("Wings/Left Deploy Engaged", isEngaged(leftDeploy));
+        SmartDashboard.putBoolean("Wings/White Latch Engaged", whiteLatch.get());
+        SmartDashboard.putBoolean("Wings/White Deploy Engaged", isEngaged(whiteDeploy));
+        SmartDashboard.putBoolean("Wings/Red Latch Engaged", redLatch.get());
+        SmartDashboard.putBoolean("Wings/Red Deploy Engaged", isEngaged(redDeploy));
 
         SmartDashboard.putNumber("Wings/Current Time", timer.getTime());
-        SmartDashboard.putNumber("Wings/Left Deploy Time",leftDeployTime);
-        SmartDashboard.putNumber("Wings/Right Deploy Time",rightDeployTime);
-        SmartDashboard.putNumber("Wings/Left Retract Time",leftRetractTime);
-        SmartDashboard.putNumber("Wings/Right Retract Time",rightRetractTime);
+        SmartDashboard.putNumber("Wings/Red Deploy Time", redDeployTime);
+        SmartDashboard.putNumber("Wings/White Deploy Time", whiteDeployTime);
+        SmartDashboard.putNumber("Wings/Red Retract Time", redRetractTime);
+        SmartDashboard.putNumber("Wings/White Retract Time", whiteRetractTime);
+    }
+
+    @Override
+    public boolean isRedExtended() {
+        return isEngaged(redDeploy);
+    }
+
+    @Override
+    public boolean isWhiteExtended() {
+        return isEngaged(whiteDeploy);
     }
 }

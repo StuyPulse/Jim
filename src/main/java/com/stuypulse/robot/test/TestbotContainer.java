@@ -59,7 +59,7 @@ public class TestbotContainer {
             .onFalse(swerve.runOnce(swerve::stop));
 
         driver.getBottomButton()
-            .onTrue(swerve.runOnce(swerve::driveMotorFR))
+            .onTrue(swerve.runOnce(swerve::driveMotorBL))
             .onFalse(swerve.runOnce(swerve::stop));
 
         // wings
