@@ -143,7 +143,7 @@ public interface Settings {
 
     public interface Arm {
 
-        double MAX_DEGREES_PER_SECOND = 60;
+        double MAX_DEGREES_PER_SECOND = 90;
         Constraint[] intakeConstraints = {};
         Constraint[] scoreConstraints = {};
 

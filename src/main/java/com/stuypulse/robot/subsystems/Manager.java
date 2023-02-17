@@ -93,10 +93,11 @@ public class Manager extends SubsystemBase {
     /** Generate Intake Trajectories **/
 
     public ArmTrajectory getIntakeTrajectory() {
-        final ArmTrajectory intakeTrajectory = 
-            new ArmTrajectory().addState(ArmState.fromDegrees(-55, 0));
-
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+        return normalize(AstarUtil.generateTrajectory(
+            new ArmState[] { 
+                Arm.getInstance().getState(), 
+                ArmState.fromDegrees(-55, 0)}, 
+            Settings.Arm.intakeConstraints));
     }
 
     /** puts the trajectory on the correct side */
