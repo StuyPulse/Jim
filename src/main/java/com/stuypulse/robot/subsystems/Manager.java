@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -211,7 +212,7 @@ public class Manager extends SubsystemBase {
     }
 
     private ScoreSide currentScoringSide() {
-        Rotation2d normalizedHeading = getWestEastAngle(SwerveDrive.getInstance().getGyroAngle());
+        Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
 
         if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
             if (intakeSide == IntakeSide.FRONT)
