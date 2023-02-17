@@ -154,13 +154,21 @@ public interface Settings {
         Constraint[] scoreConstraints = {};
 
         public interface Shoulder {
-            double GEARING = 80;
-            double LENGTH = Units.inchesToMeters(43.75);
-            double MAX_ANGLE = 0; 
-            double MIN_ANGLE = -180;
-            double MASS = 4.5; 
-            double WEIGHT = MASS * 9.81; 
-            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            int MOTORS = 2;
+            double REDUCTION = 63.0;
+            double MASS = 3.054; // kg
+            double LENGTH = 1.065; // m, length
+            double MOI = 0.369; // kg m^2
+            double RADIUS = 0.305; // m, radius to cg
+
+            ArmJoint JOINT = 
+                new ArmJoint(
+                    DCMotor.getNEO(MOTORS).withReduction(REDUCTION),
+                    MASS, 
+                    LENGTH, 
+                    MOI, 
+                    RADIUS);
+
 
             double VEL_LIMIT = 0.5;
             double ACCEL_LIMIT = 0.4;
