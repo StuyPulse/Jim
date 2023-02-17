@@ -3,6 +3,7 @@ package com.stuypulse.robot.subsystems.arm;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import static com.stuypulse.robot.constants.Motors.Arm.*;
@@ -55,7 +56,9 @@ public class ArmImpl extends Arm {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
         wristEncoder.setZeroOffset(Wrist.ANGLE_OFFSET);
