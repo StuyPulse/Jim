@@ -3,6 +3,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -138,6 +139,13 @@ public class ArmVisualizer {
             intakeDirection.setLength(+frontDirection * 2);
 
         intakeDirection.setAngle(wristLigament.getAngle() + 90);
+    }
 
+    public void setIntakingPiece(GamePiece gamePiece) {
+        if (gamePiece.isCube()) {
+            intakeDirection.setColor(new Color8Bit(220, 30, 220));
+        } else {
+            intakeDirection.setColor(new Color8Bit(255, 255, 63));
+        }
     }
 }

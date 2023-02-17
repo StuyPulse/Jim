@@ -9,7 +9,8 @@ public abstract class Intake extends SubsystemBase {
     
     public static Intake getInstance() {
         if (instance == null) {
-            instance = Settings.ROBOT == Robot.JIM ? new IntakeImpl() : new NoIntake();
+            instance = new NoIntake();
+            // instance = Settings.ROBOT == Robot.JIM ? new IntakeImpl() : new NoIntake();
         }
         return instance;
     }
@@ -21,4 +22,6 @@ public abstract class Intake extends SubsystemBase {
     public abstract void deacquireCone();
 
     public abstract void stop();
+
+    public abstract boolean hasNewGamePiece();
 }

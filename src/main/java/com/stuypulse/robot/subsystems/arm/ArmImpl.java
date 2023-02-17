@@ -11,6 +11,7 @@ import static com.stuypulse.robot.constants.Settings.Arm.*;
 
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.robot.util.FieldArm2d;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
@@ -21,11 +22,7 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
@@ -45,7 +42,7 @@ public class ArmImpl extends Arm {
 
     private final ArmVisualizer armVisualizer;
 
-    private final FieldObject2d fieldObject;
+    private final FieldArm2d fieldArm;
 
     private SmartBoolean feedbackEnable;
 
@@ -77,7 +74,7 @@ public class ArmImpl extends Arm {
 
         armVisualizer = new ArmVisualizer();
 
-        fieldObject = Odometry.getInstance().getField().getObject("Field Arm");
+        fieldArm = new FieldArm2d(Odometry.getInstance().getField().getObject("Field Arm"));
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
     }
@@ -110,12 +107,12 @@ public class ArmImpl extends Arm {
 
     @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
+        shoulderTargetAngle.set(angle.getDegrees());
     }
 
     @Override
     public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
+        wristTargetAngle.set(angle.getDegrees());
     }
 
     private void runShoulder(double voltage) {
@@ -125,18 +122,6 @@ public class ArmImpl extends Arm {
 
     private void runWrist(double voltage) {
         wrist.setVoltage(voltage);
-    }
-
-    private void updateFieldObject() {
-        double distanceFromSwerveCenter = getShoulderAngle().getCos() * Shoulder.LENGTH + getWristAngle().getCos() * Wrist.LENGTH;
-
-        Pose2d swervePose = Odometry.getInstance().getPose();
-        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
-        
-        fieldObject.setPose(new Pose2d(
-            topDownTranslation.plus(swervePose.getTranslation()),
-            swervePose.getRotation()
-        ));
     }
 
     public ArmVisualizer getVisualizer() {
@@ -152,19 +137,13 @@ public class ArmImpl extends Arm {
         double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
 
-        // if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
-        //     wristOutput = wristController.update(Angle.k90deg, Angle.fromRotation2d(getWristAngle()));
-        // } else {
-        //     wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
-        // }
-
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
         armVisualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
 
-        updateFieldObject();
+        fieldArm.update(Odometry.getInstance().getPose(), getState());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());

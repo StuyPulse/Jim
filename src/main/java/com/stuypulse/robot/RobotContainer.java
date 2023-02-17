@@ -9,6 +9,7 @@ import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
 import com.stuypulse.robot.commands.manager.*;
+import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.wings.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -29,11 +30,13 @@ import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class RobotContainer {
 
@@ -68,7 +71,7 @@ public class RobotContainer {
         configureAutons();
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        CameraServer.startAutomaticCapture();
+        // CameraServer.startAutomaticCapture();
     }
 
     /****************/
@@ -92,17 +95,28 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getDPadLeft().onTrue(new WingRetractLeft());
-        driver.getDPadUp().onTrue(new WingRetractRight());
+        driver.getSelectButton().onTrue(new WingRetractLeft());
+        driver.getStartButton().onTrue(new WingRetractRight());
 
         // arm
-        driver.getBottomButton().onTrue(new ArmScore().andThen(new IntakeScore()));
+        driver.getBottomButton()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveSlowDrive(driver));
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
         // right trigger -> robotrelative override
+
+        // plant
+        driver.getLeftBumper().onTrue(new PlantEngage());
+        driver.getRightBumper().onTrue(new PlantDisengage());
+        // driver.getLeftBumper()
+        //     .whileTrue(new SwerveDrivePlantDrive(driver));
+
+        driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {
@@ -119,10 +133,11 @@ public class RobotContainer {
             .onFalse(new ArmNeutral());
 
         // ready & score
-        // operator.getLeftBumper().onTrue(new ArmReady());
-
-
-        operator.getRightBumper().onTrue(new ArmScore().andThen(new IntakeScore()));
+        operator.getLeftBumper().onTrue(new ArmReady());
+        operator.getRightBumper()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
@@ -132,13 +147,14 @@ public class RobotContainer {
         // set game piece
         operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
         operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
-        // TODO: CONE_TIP_OUT
 
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
         // arm to neutral
-        operator.getDPadRight().onTrue(new ArmNeutral());
+        operator.getDPadRight()
+            .onTrue(new ArmNeutral())
+            .onTrue(new IntakeStop());
 
         // manual overrides
         operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
@@ -164,9 +180,16 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("One Piece", new OnePiece());
-        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Wire", new OnePiecePickupWire());
+        autonChooser.addOption("One Piece + Dock", new OnePieceDock());
+        autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
+        autonChooser.addOption("Two Piece", new TwoPiece());
+        autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
+        autonChooser.addOption("2.5 Piece", new TwoPiecePickup());
+        autonChooser.addOption("2.5 Piece Dock", new TwoPiecePickupDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
+        autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
 
         

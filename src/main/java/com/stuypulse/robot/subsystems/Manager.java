@@ -10,6 +10,9 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -194,7 +197,24 @@ public class Manager extends SubsystemBase {
     /** Generate Score Trajectories **/
 
     public ArmTrajectory getScoreTrajectory() {
-        return getNeutralTrajectory();
+        switch (nodeLevel) {
+            case LOW:
+                return getIntakeTrajectory();
+            case MID:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(-30, 0)));
+            case HIGH:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(10, -45)));
+            default:
+                return getNeutralTrajectory();
+        }
     }
 
     /** Generate Neutral Trajectories **/
@@ -209,7 +229,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Pose2d getScorePose() {
+    public Translation2d getScoreTranslation() {
         int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
         
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
@@ -217,6 +237,13 @@ public class Manager extends SubsystemBase {
         } else {
             return Field.RED_ALIGN_POSES[index];
         }
+    }
+
+    public Pose2d getScorePose() {
+        var translation = getScoreTranslation();
+        var rotation = new Rotation2d(); 
+
+        return new Pose2d(translation, rotation);
     }
 
     /** Change and Read State **/
@@ -270,6 +297,8 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());

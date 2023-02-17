@@ -12,10 +12,12 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.AStar.Constraint;
+import com.stuypulse.robot.util.ArmJoint;
 import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -28,7 +30,11 @@ public interface Settings {
     
     public enum Robot {
         JIM,
-        SACROD
+        SACROD,
+
+
+        // runs voltage control project
+        BLAY_MODE
     }
 
     Robot ROBOT = Robot.JIM;
@@ -79,7 +85,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 3.5;
+            double kP = 2.0;
             double kI = 0.0;
             double kD = 0.1;
             
@@ -88,36 +94,36 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 1.3;
+            double kP = 2.38;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17335;
-            double kV = 2.7274;
-            double kA = 0.456;
+            double kS = 0.17459;
+            double kV = 2.4561;
+            double kA = 0.40442;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(174).plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-131).plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(119).plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -161,15 +167,10 @@ public interface Settings {
 
             double ANGLE_OFFSET = 0;
 
-            SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 30;
-            double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
-            double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
-
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 16);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 4);
                 SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
             }
@@ -183,15 +184,22 @@ public interface Settings {
         }
     
         public interface Wrist {
-            double GEARING = 50;
-            double LENGTH = Units.inchesToMeters(17);
-            double MAX_ANGLE = Double.POSITIVE_INFINITY; 
-            double MIN_ANGLE = Double.NEGATIVE_INFINITY;
-            double MASS = 2.5;
-            double WEIGHT = MASS * 9.81;
-            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
-            SmartNumber wristSpeedDegrees = new SmartNumber("Arm/Wrist/Speed", 15); // degrees per second
             
+            int MOTORS = 1;
+            double REDUCTION = 70.0;
+            double MASS = 1.317; // kg
+            double LENGTH = 0.73; // m, length
+            double MOI = 0.033; // kg m^2
+            double RADIUS = 0.2269 + 1.065; // m, radius to cg
+
+            ArmJoint JOINT = 
+                new ArmJoint(
+                    DCMotor.getNEO(MOTORS).withReduction(REDUCTION),
+                    MASS, 
+                    LENGTH, 
+                    MOI, 
+                    RADIUS);
+
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
 
@@ -259,6 +267,8 @@ public interface Settings {
 
         SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
         SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
+
+        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
