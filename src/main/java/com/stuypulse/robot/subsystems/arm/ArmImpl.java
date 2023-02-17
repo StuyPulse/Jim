@@ -56,13 +56,8 @@ public class ArmImpl extends Arm {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
-        wristEncoder.setInverted(true);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
-        shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
-        wristEncoder.setZeroOffset(Wrist.ANGLE_OFFSET);
+        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
         configureMotors();
 
@@ -76,8 +71,8 @@ public class ArmImpl extends Arm {
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", -90);
-        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 90);
+        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", getShoulderAngle().getDegrees());
+        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", getWristAngle().getDegrees());
 
         armVisualizer = new ArmVisualizer();
 
@@ -87,6 +82,15 @@ public class ArmImpl extends Arm {
     }
 
     private void configureMotors() {
+        shoulderEncoder.setZeroOffset(0);
+        wristEncoder.setZeroOffset(0);
+
+        shoulderEncoder.setInverted(false);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+        wristEncoder.setInverted(true);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
         WRIST_CONFIG.configure(wrist);
