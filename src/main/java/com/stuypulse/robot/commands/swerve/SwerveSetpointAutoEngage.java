@@ -27,7 +27,7 @@ public class SwerveSetpointAutoEngage extends CommandBase {
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
 
-        controller = new PIDController(P, I, D);
+        controller = new PIDController(Translation.P, Translation.I, Translation.D);
 
         balanceAngle = 0;
 
@@ -48,7 +48,9 @@ public class SwerveSetpointAutoEngage extends CommandBase {
         double currentPosition = odometry.getPose().getX();
         double velocity = controller.update(target, currentPosition);
         
-        swerve.setChassisSpeeds(new ChassisSpeeds(velocity, 0, 0));
+        swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
+                                        new ChassisSpeeds(velocity, 0.0, 0.0), 
+                                        odometry.getRotation()));
 
         SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
         SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
