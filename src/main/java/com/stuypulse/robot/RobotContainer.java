@@ -114,6 +114,7 @@ public class RobotContainer {
         driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
 
+        // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 

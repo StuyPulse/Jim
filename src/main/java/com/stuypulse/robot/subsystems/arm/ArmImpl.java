@@ -72,8 +72,8 @@ public class ArmImpl extends Arm {
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", 0);
-        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 0);
+        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", -90);
+        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 90);
 
         armVisualizer = new ArmVisualizer();
 
