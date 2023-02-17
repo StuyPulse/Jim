@@ -98,8 +98,8 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingRetractLeft());
-        driver.getStartButton().onTrue(new WingRetractRight());
+        driver.getSelectButton().onTrue(new WingsToggleRed());
+        driver.getStartButton().onTrue(new WingsToggleWhite());
 
         // arm
         driver.getBottomButton()
@@ -111,15 +111,13 @@ public class RobotContainer {
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
-        // driver.getLeftBumper()
-        //     .whileTrue(new SwerveDrivePlantDrive(driver));
 
-        driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {

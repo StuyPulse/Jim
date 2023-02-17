@@ -24,8 +24,12 @@ public interface Field {
         new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
     };
 
+    public static boolean isValidAprilTagId(int id) {
+        return id >= 1 && id <= 8;
+    }
+
     public static boolean isAprilTagBlueFromId(int id) {
-        return id >= 5 || id <= 8;
+        return id >= 5 && id <= 8;
     }
 
     public static Pose3d getAprilTagFromId(int id) {

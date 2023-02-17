@@ -58,11 +58,11 @@ public interface Ports {
     }
     
     public interface Wings {
-        int LEFT_DEPLOY_FORWARD = 2;
-        int LEFT_DEPLOY_REVERSE = 3;
-        int RIGHT_DEPLOY_FORWARD = 4;
-        int RIGHT_DEPLOY_REVERSE = 5;
-        int LEFT_LATCH = 6;
-        int RIGHT_LATCH = 7;
+        int RED_DEPLOY_FORWARD = 2;
+        int RED_DEPLOY_REVERSE = 3;
+        int WHITE_DEPLOY_FORWARD = 4;
+        int WHITE_DEPLOY_REVERSE = 5;
+        int RED_LATCH = 6;
+        int WHITE_LATCH = 7;
     }
 }

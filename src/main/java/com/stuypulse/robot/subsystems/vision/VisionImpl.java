@@ -62,6 +62,8 @@ public class VisionImpl extends Vision {
 
     // assigns error to data and returns a result 
     private Result process(AprilTagData data) {
+        if (!Field.isValidAprilTagId(data.id))
+            return new Result(data, Noise.HIGH);
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
