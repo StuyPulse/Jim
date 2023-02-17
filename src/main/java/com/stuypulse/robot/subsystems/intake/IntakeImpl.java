@@ -10,8 +10,9 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -26,6 +27,7 @@ public class IntakeImpl extends Intake{
     private DigitalInput backSensor;
 
     private BStream stalling;
+    private BStream hasNewGamepiece;
 
     public IntakeImpl(){
        
@@ -38,6 +40,13 @@ public class IntakeImpl extends Intake{
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT/2);
+
+        hasNewGamepiece =
+                BStream.create(this::hasGamepiece)
+                        .filtered(
+                                new BButton.Pressed(),
+                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
+                        .polling(0.01);
 
         frontSensor = new DigitalInput(FRONT_SENSOR);
         backSensor = new DigitalInput(BACK_SENSOR);
@@ -67,6 +76,16 @@ public class IntakeImpl extends Intake{
     }
     private boolean hasCube() {
         return isFlipped()? hasCubeBack() : hasCubeFront();
+    }
+
+    // GAMEPIECE DETECTION
+
+    private boolean hasGamepiece() {
+        return isStalling() || hasCube();
+    }
+
+    public boolean hasNewGamepiece() {
+        return hasNewGamepiece.get();
     }
 
     // WRIST ORIENTATION
