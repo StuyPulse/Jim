@@ -17,11 +17,11 @@ public abstract class Wings extends SubsystemBase {
     }
 
 
-    public abstract boolean isLeftExtended();
-    public abstract boolean isRightExtended();
+    public abstract boolean isRedExtended();
+    public abstract boolean isWhiteExtended();
 
-    public abstract void extendLeft();
-    public abstract void retractLeft();
-    public abstract void extendRight();
-    public abstract void retractRight();
+    public abstract void extendRed();
+    public abstract void retractRed();
+    public abstract void extendWhite();
+    public abstract void retractWhite();
 }

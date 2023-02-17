@@ -3,17 +3,17 @@ import com.stuypulse.robot.subsystems.wings.Wings;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class WingsExtendRight extends InstantCommand{
+public class WingsExtendWhite extends InstantCommand{
     private Wings wings;
 
-    public WingsExtendRight(){
+    public WingsExtendWhite(){
         wings = Wings.getInstance();
         addRequirements(wings);
     }
 
     @Override
     public void initialize(){
-        wings.extendRight();
+        wings.extendWhite();
     }
 
 }

@@ -3,29 +3,29 @@ package com.stuypulse.robot.subsystems.wings;
 public class NoWings extends Wings {
 
     @Override
-    public void extendLeft() {
+    public void extendRed() {
     }
 
     @Override
-    public void retractLeft() {
+    public void retractRed() {
     }
 
     @Override
-    public void extendRight() {
+    public void extendWhite() {
     }
 
     @Override
-    public void retractRight() {
+    public void retractWhite() {
     }
 
     @Override
-    public boolean isLeftExtended() {
+    public boolean isRedExtended() {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean isRightExtended() {
+    public boolean isWhiteExtended() {
         // TODO Auto-generated method stub
         return false;
     }

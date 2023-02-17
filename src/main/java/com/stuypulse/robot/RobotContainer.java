@@ -98,8 +98,8 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingsToggleLeft());
-        driver.getStartButton().onTrue(new WingsToggleRight());
+        driver.getSelectButton().onTrue(new WingsToggleRed());
+        driver.getStartButton().onTrue(new WingsToggleWhite());
 
         // arm
         driver.getBottomButton()

@@ -4,14 +4,14 @@ import com.stuypulse.robot.subsystems.wings.Wings;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class WingsToggleLeft extends InstantCommand {
-    public WingsToggleLeft() {
+public class WingsToggleRed extends InstantCommand {
+    public WingsToggleRed() {
         super(() -> {
             var wings = Wings.getInstance();
-            if (wings.isLeftExtended()) {
-                wings.retractLeft();
+            if (wings.isRedExtended()) {
+                wings.retractRed();
             } else {
-                wings.extendLeft();
+                wings.extendRed();
             }
         });
     }
