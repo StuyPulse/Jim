@@ -3,19 +3,18 @@ package com.stuypulse.robot.subsystems.arm;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.robot.util.AngleMotionProfile;
 import com.stuypulse.robot.util.ArmDynamics;
-import com.stuypulse.robot.util.ArmJoint;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.TwoJointArmSimulation;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimArm extends Arm {
 
@@ -32,13 +31,20 @@ public class SimArm extends Arm {
 
     public SimArm() {
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
-        simulation = new TwoJointArmSimulation(Math.PI/2, Math.PI/2, dynamics);
+        simulation = new TwoJointArmSimulation(-Math.PI/2, Math.PI/2, dynamics);
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target (deg)", 90);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target (deg)", -90);
 
-        shoulderController = new AnglePIDController(5, 0, 1);
-        wristController = new AnglePIDController(2.5, 0, 0.5);
+        shoulderController = new AnglePIDController(
+            new SmartNumber("Arm/Shoulder/kP", 4), 
+            0, 
+            new SmartNumber("Arm/Shoulder/kD", 0.8));
+
+        wristController =  new AnglePIDController(
+            new SmartNumber("Arm/Wrist/kP", 4), 
+            0, 
+            new SmartNumber("Arm/Wrist/kD", 0.8));
 
         visualizer = new ArmVisualizer();
     }
@@ -50,7 +56,7 @@ public class SimArm extends Arm {
 
     @Override
     public Rotation2d getWristAngle() {
-        return Rotation2d.fromRadians(simulation.getWristPositionRadians()).plus(getShoulderAngle());
+        return getRelativeWristTargetAngle().plus(getShoulderAngle());
     }
 
     @Override
@@ -87,13 +93,49 @@ public class SimArm extends Arm {
         return visualizer;
     }
 
+
+    private Rotation2d lastShoulderAngle;
+    private Rotation2d lastWristAngle;
+    
+    private double lastShoulderVelocity = Double.NaN;
+    private double lastWristVelocity = Double.NaN;
+
+
     @Override
     public void periodic() {
-        var u_ff = dynamics.feedforward(
-            VecBuilder.fill(getShoulderTargetAngle().getRadians(), getRelativeWristTargetAngle().getRadians()),
-            VecBuilder.fill(0, 0),
-            VecBuilder.fill(0, 0));
+
+        var u_ff = VecBuilder.fill(0, 0);
+
+        if (lastShoulderAngle != null && lastWristAngle != null) {
+            lastShoulderVelocity = getShoulderTargetAngle().minus(lastShoulderAngle).getRadians() / Settings.DT;
+            lastWristVelocity = getWristTargetAngle().minus(lastWristAngle).getRadians() / Settings.DT;
+        }
+
+        if (!Double.isNaN(lastShoulderVelocity) && !Double.isNaN(lastWristVelocity)) {
+            double currentShoulderVelocity = getShoulderTargetAngle().minus(lastShoulderAngle).getRadians() / Settings.DT;
+            double currentWristVelocity = getWristTargetAngle().minus(lastWristAngle).getRadians() / Settings.DT;
+            
+            u_ff = dynamics.feedforward(
+                VecBuilder.fill(getShoulderTargetAngle().getRadians(), getRelativeWristTargetAngle().getRadians()),
+                VecBuilder.fill(currentShoulderVelocity, currentWristVelocity),
+                VecBuilder.fill(
+                    (currentShoulderVelocity - lastShoulderVelocity)/ Settings.DT, 
+                    (currentWristVelocity - lastWristVelocity) / Settings.DT));
+
+            lastShoulderVelocity = currentShoulderVelocity;
+            lastWristVelocity = currentWristVelocity;
+        }
+
+        lastWristAngle = getWristTargetAngle();
+        lastShoulderAngle = getShoulderTargetAngle();
         
+        u_ff = VecBuilder.fill(
+            MathUtil.clamp(u_ff.get(0, 0), -12, 12),
+            MathUtil.clamp(u_ff.get(1, 0), -12, 12));
+
+        SmartDashboard.putNumber("Arm/Wrist Voltage", u_ff.get(0, 0));
+        SmartDashboard.putNumber("Arm/Shoulder Voltage", u_ff.get(1, 0));
+
         simulation.update( 
             u_ff.get(0, 0) +
             shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle())),

@@ -118,7 +118,7 @@ public class SimArm2 extends Arm {
 
     @Override
     public void periodic() {
-
+        
         double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));;
     
