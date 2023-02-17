@@ -122,15 +122,17 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // intaking
         operator.getRightTriggerButton()
-            .onTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            .whileTrue(new ArmIntake().andThen(new IntakeAcquire()))
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            // .onFalse(new ArmNeutral())
+        ;
 
         // outtake
         operator.getLeftTriggerButton()
-            .onTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .whileTrue(new ArmIntake().andThen(new IntakeDeacquire()))
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            // .onFalse(new ArmNeutral())
+        ;
 
         // ready & score
         operator.getLeftBumper().onTrue(new ArmReady());
