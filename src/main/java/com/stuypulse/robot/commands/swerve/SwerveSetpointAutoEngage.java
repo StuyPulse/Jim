@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands;
+package com.stuypulse.robot.commands.swerve;
 
 import static com.stuypulse.robot.constants.Field.*;
 import static com.stuypulse.robot.constants.Settings.AutoBalance.*;
@@ -8,29 +8,28 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.Pitch;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoBalance extends CommandBase {
+public class SwerveSetpointAutoEngage extends CommandBase {
 
     private final SwerveDrive swerve;
     private final Odometry odometry;
 
     private Controller controller;
 
-    private SmartNumber balanceAngle;
+    private double balanceAngle;
 
-    public AutoBalance() {
+    public SwerveSetpointAutoEngage() {
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
 
         controller = new PIDController(P, I, D);
 
-        balanceAngle = new SmartNumber("Auto Balance/Angle", 0);
+        balanceAngle = 0;
 
         addRequirements(swerve);
     }
@@ -43,26 +42,27 @@ public class AutoBalance extends CommandBase {
     @Override
     public void execute() {
 
-        balanceAngle.set(Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees());
+        balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees();
 
-        double targetX = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
-        double x = odometry.getPose().getX();
+        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
+        double currentPosition = odometry.getPose().getX();
+        double velocity = controller.update(target, currentPosition);
+        
+        swerve.setChassisSpeeds(new ChassisSpeeds(velocity, 0, 0));
 
-        double speed = controller.update(targetX, x);
-        swerve.setChassisSpeeds(new ChassisSpeeds(speed, 0, 0));
-
-        SmartDashboard.putNumber("Auto Balance/Speed", speed);
-        SmartDashboard.putNumber("Auto Balance/Target", targetX);
-        SmartDashboard.putNumber("Auto Balance/Current X", x);
+        SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
+        SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
+        SmartDashboard.putNumber("Auto Balance/Target", target);
     }
 
     @Override
     public boolean isFinished() {
-        return balanceAngle.get() < ANGLE_THRESHOLD.get() && controller.isDone(DISTANCE_THRESHOLD.get());
+        return balanceAngle < ANGLE_THRESHOLD.get() && controller.isDone(DISTANCE_THRESHOLD.get());
     }
 
     @Override
     public void end(boolean interrupted) {
         swerve.setChassisSpeeds(new ChassisSpeeds());
+        odometry.overrideNoise(false);
     }
 }
