@@ -55,9 +55,10 @@ public class ArmImpl extends Arm {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderEncoder = shoulderLeft.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        wristEncoder.setInverted(true);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
