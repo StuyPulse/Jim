@@ -1,8 +1,10 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "window": {
-        "visible": false
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
@@ -45,6 +47,9 @@
       },
       "SmartDashboard": {
         "Arm": {
+          "open": true
+        },
+        "Auto Balance": {
           "open": true
         },
         "Manager": {

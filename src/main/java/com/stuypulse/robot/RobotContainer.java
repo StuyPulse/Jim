@@ -5,6 +5,7 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.AutoBalance;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
@@ -169,6 +170,7 @@ public class RobotContainer {
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
+        autonChooser.addOption("Auto Engage", new AutoBalance());
 
         
         SmartDashboard.putData("Autonomous", autonChooser);
