@@ -95,5 +95,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.46448863636363635,
+      "names": [
+        "ReadyIntakeOne"
+      ]
+    },
+    {
+      "position": 1.4509943181818183,
+      "names": [
+        "ReadyArmOne"
+      ]
+    }
+  ]
 }

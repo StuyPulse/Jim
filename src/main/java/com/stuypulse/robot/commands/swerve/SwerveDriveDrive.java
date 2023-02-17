@@ -1,9 +1,12 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
@@ -52,10 +55,15 @@ public class SwerveDriveDrive extends CommandBase {
     @Override
     public void execute() {
         if (robotRelative.get()) {
-            var s = speed.get();
+            Vector2D s = speed.get();
+            Vector2D translation = new Vector2D(s.y, -s.x);
+
+            if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+                translation = translation.negative();
+            }
+
             swerve.setChassisSpeeds(
-                new ChassisSpeeds(s.y, -s.x, -turn.get()),
-                false);
+                new ChassisSpeeds(translation.x, translation.y, -turn.get()));
         } else {
             swerve.drive(speed.get(), turn.get());
         }

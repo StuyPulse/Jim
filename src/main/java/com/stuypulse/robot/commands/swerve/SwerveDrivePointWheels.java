@@ -7,21 +7,27 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LockWheels extends CommandBase {
+public class SwerveDrivePointWheels extends CommandBase {
     
-    private SwerveDrive swerve;
+    private final SwerveDrive swerve;
+    private final Rotation2d angle;
     
-    public LockWheels(){
+    public SwerveDrivePointWheels(Rotation2d angle) {
         this.swerve = SwerveDrive.getInstance();
+        this.angle = angle;
         
         addRequirements(swerve);
+    }
+
+    public SwerveDrivePointWheels() {
+        this(Rotation2d.fromDegrees(0));
     }
     
     @Override
     public void execute(){
         SwerveModuleState state = new SwerveModuleState(
             0,
-            Odometry.getInstance().getRotation().minus(Rotation2d.fromDegrees(90)));
+            angle.minus(Odometry.getInstance().getRotation()));
         swerve.setModuleStates(state, state, state, state);
     }
 

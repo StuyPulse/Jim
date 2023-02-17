@@ -1,107 +1,130 @@
 package com.stuypulse.robot.commands.auton;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
-import com.stuypulse.robot.commands.intake.IntakeAcquireCube;
-import com.stuypulse.robot.commands.intake.IntakeDeacquireCube;
-import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.swerve.FollowTrajectory;
-import com.stuypulse.robot.constants.Settings.Swerve.Motion;
-import com.stuypulse.robot.subsystems.LEDController;
-import com.stuypulse.robot.util.LEDColor;
+import com.stuypulse.robot.commands.arm.routines.*;
+import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.manager.*;
+import com.stuypulse.robot.commands.plant.PlantEngage;
+import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ThreePieceDock extends SequentialCommandGroup {
 
-    private HashMap<String, PathPlannerTrajectory> paths;
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
+    private static final double ALIGNMENT_TIME = 1.0;
+    private static final double ENGAGE_TIME = 3.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(5, 3);
+    private static final PathConstraints INTAKE_PIECE_TWO = new PathConstraints(4, 3);
+    private static final PathConstraints SCORE_PIECE_TWO = new PathConstraints(3, 2);
+    private static final PathConstraints INTAKE_PIECE_THREE = new PathConstraints(4, 3);
+    private static final PathConstraints SCORE_PIECE_THREE = new PathConstraints(3, 2);
+    private static final PathConstraints DOCK = new PathConstraints(4, 3);
 
     public ThreePieceDock() {
-
-
         // load paths into hashmap
-        paths = FollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
+        var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("3 Piece + Dock", INTAKE_PIECE_TWO, SCORE_PIECE_TWO, INTAKE_PIECE_THREE, SCORE_PIECE_THREE, DOCK),
 
-            "Intake Piece", "Score Piece", "Intake Piece Two", "Score Piece Two", "Dock"
+            "Intake Piece Two", "Score Piece Two", "Intake Piece Three", "Score Piece Three", "Dock"
         );
 
-        // Drive to first piece and intake
+        // initial setup
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
-            
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetGamePiece(GamePiece.CONE),
+            new ManagerSetIntakeSide(IntakeSide.FRONT),
+            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+        );
+
+        // score first piece
+        addCommands(
+            new ArmReady(),
+            new ArmScore(),
+            new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            
-            new FollowTrajectory(
-                paths.get("Intake Piece")
-            ).robotRelative(),
-            new IntakeAcquireCube(),
-            new WaitCommand(INTAKE_ACQUIRE_TIME)
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
-        // Drive to grid and score one piece
+        // drive to second game piece and intake
         addCommands(
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetNodeLevel(NodeLevel.MID),
 
-            new FollowTrajectory(
-                paths.get("Score Piece")
-            ).fieldRelative(),
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
+            new SwerveDriveFollowTrajectory(
+                paths.get("Intake Piece Two"))
+                    .robotRelative()
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
+
+            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeStop(),
+            new ArmNeutral()
         );
-
-        // Drive to second game piece and intake 
+        
+        // drive to grid and score second piece
         addCommands(
+            new SwerveDriveFollowTrajectory(
+                paths.get("Score Piece Two"))
+                    .fieldRelative()
+                    .addEvent("ReadyArmOne", new ArmReady().andThen(new ArmScore()))
+                    .withEvents(),
 
-            new LEDSet(LEDController.getInstance(), LEDColor.PURPLE),
 
-            new FollowTrajectory(
-                paths.get("Intake Piece Two")
-            ).fieldRelative(),
-            new IntakeAcquireCube(),
-            new WaitCommand(INTAKE_ACQUIRE_TIME)
+            new ManagerSetScoreIndex(1),
+            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
+            new ArmScore(),
+            new IntakeScore(),
+            new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
-        // Drive to grid and score second piece
-
+        // drive to and intake third piece
         addCommands(
-
-            new LEDSet(LEDController.getInstance(), LEDColor.GREEN),
-
-            new FollowTrajectory(
-                paths.get("Score Piece Two")
-            ).fieldRelative(),
-            // new ArmFollowTrajectory(),
-            new IntakeDeacquireCube(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
-
+            new SwerveDriveFollowTrajectory(
+                paths.get("Intake Piece Three"))
+                    .robotRelative()
+                    .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
+                    .withEvents(),
+            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeStop(),
+            new ArmNeutral()
         );
 
-        // Drive to charging station and dock
+        // drive to grid and score third piece
         addCommands(
+            new SwerveDriveFollowTrajectory(
+                paths.get("Score Piece Three"))
+                    .fieldRelative()
+                    .addEvent("ReadyArmTwo", new ArmReady())
+                    .withEvents(),
 
-            new LEDSet(LEDController.getInstance(), LEDColor.BLUE),
+            new ManagerSetScoreIndex(4),
+            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new FollowTrajectory(
-                paths.get("Dock")
-            ).fieldRelative()
-
-            // new BasicGyroEngage()
+            new ArmScore(),
+            new IntakeScore(),
+            new WaitCommand(INTAKE_DEACQUIRE_TIME),
+            new IntakeStop(),
+            new ArmNeutral()
         );
-                
+
+        // dock and engage
+        addCommands(
+            new SwerveDriveFollowTrajectory(
+                paths.get("Dock"))
+                    .fieldRelative()
+                    .addEvent("ArmNeutral", new ArmNeutral()),
+
+            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new PlantEngage()
+        );
     }
-
 }

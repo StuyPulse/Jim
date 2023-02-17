@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class FollowTrajectory extends PPSwerveControllerCommand {
+public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	public static HashMap<String, PathPlannerTrajectory> getSeparatedPaths(List<PathPlannerTrajectory> paths, String... names) {
 		if (paths.size() != names.length)
@@ -34,8 +34,9 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private PathPlannerTrajectory path;
+	private HashMap<String, Command> events;
 
-	public FollowTrajectory(PathPlannerTrajectory path) {
+	public SwerveDriveFollowTrajectory(PathPlannerTrajectory path) {
 
 		super(
 			path,
@@ -51,27 +52,26 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 		
 		robotRelative = false;
 		this.path = path;
+		events = new HashMap<String, Command>();
 	}
 
-	public FollowTrajectory robotRelative() {
+	public SwerveDriveFollowTrajectory robotRelative() {
 		robotRelative = true;
 		return this;
 	}
 
-	public FollowTrajectory fieldRelative() {
+	public SwerveDriveFollowTrajectory fieldRelative() {
 		robotRelative = false;
 		return this;
 	}
 
-	public FollowPathWithEvents withEvents(Map<String, Command> events) {
-		return new FollowPathWithEvents(
-			this,
-			path.getMarkers(),
-			new HashMap<String, Command>(events)
-		);
+	public SwerveDriveFollowTrajectory addEvent(String name, Command command) {
+		events.put(name, command);
+		return this;
 	}
 
-	public FollowPathWithEvents withEvents(HashMap<String, Command> events) {
+	// FINISHES AT END OF PATH FOLLOWING, NOT AFTER ALL EVENTS DONE
+	public FollowPathWithEvents withEvents() {
 		return new FollowPathWithEvents(
 			this,
 			path.getMarkers(),
@@ -83,8 +83,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
 	public void initialize() {
 		if (robotRelative) {
 			PathPlannerState initialState = PathPlannerTrajectory.transformStateForAlliance(
-				path.getInitialState(),
-				DriverStation.getAlliance());
+				path.getInitialState(), DriverStation.getAlliance());
 			
 			Odometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),
