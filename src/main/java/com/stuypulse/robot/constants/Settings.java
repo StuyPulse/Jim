@@ -173,7 +173,7 @@ public interface Settings {
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 16);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 4);
                 SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
             }
