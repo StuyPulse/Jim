@@ -121,7 +121,7 @@ public class Manager extends SubsystemBase {
     public ArmTrajectory getReadyTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getIntakeTrajectory();
+                return getLowScoreTrajectory();
 
             case MID:
                 return getMidReadyTrajectory();
@@ -134,11 +134,24 @@ public class Manager extends SubsystemBase {
         }
     }
 
+    private ArmTrajectory getLowScoreTrajectory() {
+        if (scoreSide == ScoreSide.OPPOSITE && gamePiece.isCone())
+            return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-50, -150)));
+        
+        return getIntakeTrajectory();
+    }
+
     private ArmTrajectory getMidReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
+                if (scoreSide == ScoreSide.OPPOSITE)
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -60)));
+                else
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -75)));
+
+            case CONE_TIP_OUT:
                 return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-10, 120)));
+                    ArmState.fromDegrees(-20, 85)));
 
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
@@ -152,9 +165,11 @@ public class Manager extends SubsystemBase {
     private ArmTrajectory getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, 120)));
-
+                if (scoreSide == ScoreSide.OPPOSITE)
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -30)));
+                else
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, 0)));
+            
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
                     ArmState.fromDegrees(10, 120)));
@@ -169,19 +184,26 @@ public class Manager extends SubsystemBase {
     public ArmTrajectory getScoreTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getIntakeTrajectory();
+                return getLowScoreTrajectory();
             case MID:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
                 
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-30, 0)));
+                else if (gamePiece == GamePiece.CONE_TIP_OUT)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-35, 90)));
+
+                if (scoreSide == ScoreSide.OPPOSITE)
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-5, -90)));
+                else
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-5, -85)));
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
 
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, -45)));
+                if (scoreSide == ScoreSide.OPPOSITE)
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -45)));
+                else
+                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -20)));
             default:
                 return getNeutralTrajectory();
         }
