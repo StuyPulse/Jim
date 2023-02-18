@@ -1,6 +1,7 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.robot.util.AllianceUtil;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public interface Field {
-    Translation2d CHARGING_STATION_CENTER = new Translation2d(172.631, 0);
+    SmartNumber CHARGING_STATION_CENTER = new SmartNumber("Field/Charging Station Center", 172.631 - 14);
     double PEG_TO_CHARGING_STATION_EDGE = Units.inchesToMeters(60.69);
 
     double GRID_DEPTH = Units.inchesToMeters(54.25);

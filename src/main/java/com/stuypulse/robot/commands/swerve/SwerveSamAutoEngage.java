@@ -38,9 +38,9 @@ public class SwerveSamAutoEngage extends CommandBase {
 
     @Override
     public void execute() {
-        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
-        double balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees();
-        double offset = tiltController.update(0, balanceAngle);
+        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.get());
+        double balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), odometry.getRotation()).getDegrees();
+        double offset = tiltController.update(0, balanceAngle) / Math.cos(Math.toRadians(balanceAngle));
 
         target += offset;
         double currentPosition = odometry.getTranslation().getX();
@@ -55,14 +55,14 @@ public class SwerveSamAutoEngage extends CommandBase {
         SmartDashboard.putNumber("Auto Engage/Target", target);
     }
 
-    @Override 
-    public boolean isFinished() {
-        return translationController.isDone(0.1);
-    }
+    // @Override 
+    // public boolean isFinished() {
+    //     return translationController.isDone(0.1);
+    // }
 
     @Override 
     public void end(boolean interrupted) {
-        swerve.setChassisSpeeds(new ChassisSpeeds());
+        // swerve.setChassisSpeeds(new ChassisSpeeds());
         odometry.overrideNoise(false);
     }
 }

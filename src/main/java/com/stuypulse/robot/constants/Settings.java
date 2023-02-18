@@ -34,7 +34,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.JIM;
+    Robot ROBOT = Robot.SACROD;
 
     double DT = 0.02;
 
@@ -292,7 +292,7 @@ public interface Settings {
     public interface AutoBalance {
 
         public interface Tilt {
-            SmartNumber P = new SmartNumber("Auto Balance/kP", 0.1);
+            SmartNumber P = new SmartNumber("Auto Balance/kP", 0.05);
             SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Auto Balance/Translation/kD", 0);
         }

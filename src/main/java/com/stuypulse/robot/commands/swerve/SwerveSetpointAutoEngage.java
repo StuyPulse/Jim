@@ -44,7 +44,7 @@ public class SwerveSetpointAutoEngage extends CommandBase {
 
         balanceAngle = Pitch.calculate(swerve.getGyroPitch(), swerve.getGyroRoll(), swerve.getGyroAngle()).getDegrees();
 
-        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.getX());
+        double target = Units.inchesToMeters(CHARGING_STATION_CENTER.get());
         double currentPosition = odometry.getPose().getX();
         double velocity = controller.update(target, currentPosition);
         

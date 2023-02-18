@@ -30,6 +30,8 @@ public class OdometryImpl extends Odometry {
         public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
         public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
 
+        public static final Vector<N3> OVERRIDE = VecBuilder.fill(1,1,Math.toRadians(10));
+
         private StandardDeviations() {}
 
         public static Vector<N3> get(Noise noise) {
@@ -102,32 +104,24 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){  
+        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
         for (Result result : vision.getResults()) {
 
-            if (overrideNoise) {
-                poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        VecBuilder.fill(1, 1, Math.toRadians(5)));
-                return;
-            }
-            
+            // if (overrideNoise) {
+            //     poseEstimator.addVisionMeasurement(result.getPose(), Timer.getFPGATimestamp() - result.getLatency(),
+            //         StandardDeviations.OVERRIDE);
+            //     continue;
+            // }
+
             switch (result.getNoise()) {
-                case LOW:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
-                    break;
-
-                case MID:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
-                    break;
-
                 case HIGH:
+                    break;
+                default:
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        StandardDeviations.get(result.getNoise()));
                     break;
             }
         }  
