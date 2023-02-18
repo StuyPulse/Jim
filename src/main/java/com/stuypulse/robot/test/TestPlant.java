@@ -15,11 +15,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 * @author Tracey Lin
 *
 */
-public class Plant extends SubsystemBase {
+public class TestPlant extends SubsystemBase {
     
     private final DoubleSolenoid solenoid;
 
-    public Plant() {
+    public TestPlant() {
         this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD, REVERSE);
         disengage();
     }
