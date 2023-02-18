@@ -170,7 +170,7 @@ public interface Settings {
             double MIN_ANGLE = Units.degreesToRadians(-180);
             double MAX_ANGLE = Units.degreesToRadians(0);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.362988/*0.640865*/).plus(Rotation2d.fromDegrees(90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);//.plus(Rotation2d.fromDegrees(90));
 
             double VEL_LIMIT = 0.5;
             double ACCEL_LIMIT = 0.4;
@@ -182,7 +182,7 @@ public interface Settings {
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.3);
             }
             
             public interface Feedforward {
@@ -190,7 +190,7 @@ public interface Settings {
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0);
                 // empty kG - 0.275
                 // cone  kG - 0.35
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.35);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0);
             }
         }
@@ -215,7 +215,7 @@ public interface Settings {
             double MIN_ANGLE = Double.NEGATIVE_INFINITY;
             double MAX_ANGLE = Double.POSITIVE_INFINITY;
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.151151).minus(Rotation2d.fromDegrees(90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);//.minus(Rotation2d.fromDegrees(90));
 
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
@@ -225,15 +225,15 @@ public interface Settings {
             double TOLERANCE = 5;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
             }
     
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
                 SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
                 SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0);
             }
         }

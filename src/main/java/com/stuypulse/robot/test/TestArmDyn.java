@@ -49,20 +49,20 @@ public class TestArmDyn extends SubsystemBase {
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
-        shoulderController = new AngleArmFeedforward(Shoulder.Feedforward.kG)
-            .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD));
+        // shoulderController = new AngleArmFeedforward(Shoulder.Feedforward.kG)
+        //     .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD));
 
-        // shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-        //     .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
-        //     .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
+            .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
+            .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD));
         //     .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
 
-        wristController = new AngleArmFeedforward(Wrist.Feedforward.kG)
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
+        // wristController = new AngleArmFeedforward(Wrist.Feedforward.kG)
+        //     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
         
-        // wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
-        //     .add(new AngleArmFeedforward(Wrist.Feedforward.kG));
-            // .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
+        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
+            .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
             // .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
@@ -81,7 +81,7 @@ public class TestArmDyn extends SubsystemBase {
     }
 
     public Rotation2d getWristAngle() {
-        return Rotation2d.fromRotations(wristEncoder.getPosition()).minus(Wrist.ZERO_ANGLE);
+        return Rotation2d.fromRotations(wristEncoder.getPosition()).minus(Wrist.ZERO_ANGLE).plus(getShoulderAngle());
     }
 
     public Rotation2d getShoulderTargetAngle() {
@@ -162,8 +162,7 @@ public class TestArmDyn extends SubsystemBase {
             shoulderController.update(Angle.fromDegrees(targetShoulderAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
         
         double wristVolts =
-            Math.signum(lastWristVelocity) * 1.0 +
-            u_ff.get(1, 0) +
+            // u_ff.get(1, 0) +
             wristController.update(Angle.fromDegrees(targetWristAngle.get()), Angle.fromRotation2d(getWristAngle()));
 
         SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);

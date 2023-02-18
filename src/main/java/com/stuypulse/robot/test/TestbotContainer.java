@@ -8,6 +8,8 @@ import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestbotContainer {
@@ -30,6 +32,8 @@ public class TestbotContainer {
     public TestbotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+
+        DriverStation.silenceJoystickConnectionWarning(true);
 
         CameraServer.startAutomaticCapture();
     }

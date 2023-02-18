@@ -70,7 +70,7 @@ public class TestArmPD extends SubsystemBase {
     }
 
     public Rotation2d getWristAngle() {
-        return Rotation2d.fromRotations(wristEncoder.getPosition()).minus(Wrist.ZERO_ANGLE);
+        return Rotation2d.fromRotations(wristEncoder.getPosition()).minus(Wrist.ZERO_ANGLE).plus(getShoulderAngle());
     }
 
     private void runShoulder(double voltage) {
