@@ -95,72 +95,80 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingRetractLeft());
-        driver.getStartButton().onTrue(new WingRetractRight());
+        // driver.getSelectButton().onTrue(new WingRetractLeft());
+        // driver.getStartButton().onTrue(new WingRetractRight());
 
-        // arm
-        driver.getBottomButton()
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
-            .onFalse(new ArmReady())
-            .onFalse(new IntakeStop());
-        driver.getTopButton().onTrue(new ArmReady());
+        // // arm
+        // driver.getBottomButton()
+        //     .onTrue(new ArmScore().andThen(new IntakeScore()))
+        //     .onFalse(new ArmReady())
+        //     .onFalse(new IntakeStop());
+        // driver.getTopButton().onTrue(new ArmReady());
 
-        // swerve
-        driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
-        // right trigger -> robotrelative override
+        // // swerve
+        // driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
+        // driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        // // right trigger -> robotrelative override
 
-        // plant
-        driver.getLeftBumper().onTrue(new PlantEngage());
-        driver.getRightBumper().onTrue(new PlantDisengage());
-        // driver.getLeftBumper()
-        //     .whileTrue(new SwerveDrivePlantDrive(driver));
+        // // plant
+        // driver.getLeftBumper().onTrue(new PlantEngage());
+        // driver.getRightBumper().onTrue(new PlantDisengage());
+        // // driver.getLeftBumper()
+        // //     .whileTrue(new SwerveDrivePlantDrive(driver));
 
-        driver.getRightButton().whileTrue(new SwerveDriveEngage());
+        // driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            .onTrue(arm.runOnce(() -> {
+                arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-55));
+                arm.setTargetWristAngle(Rotation2d.fromDegrees(0));
+            }))
+            .onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             // .onFalse(new ArmNeutral())
         ;
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .onTrue(arm.runOnce(() -> {
+                arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-55));
+                arm.setTargetWristAngle(Rotation2d.fromDegrees(0));
+            }))
+            .onTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             // .onFalse(new ArmNeutral())
         ;
 
         // ready & score
-        operator.getLeftBumper().onTrue(new ArmReady());
-        operator.getRightBumper()
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
-            .onFalse(new ArmReady())
-            .onFalse(new IntakeStop());
+        // operator.getLeftBumper().onTrue(new ArmReady());
+        // operator.getRightBumper()
+        //     .onTrue(new ArmScore().andThen(new IntakeScore()))
+        //     .onFalse(new ArmReady())
+        //     .onFalse(new IntakeStop());
 
-        // set level to score at
-        operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
-        operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
-        // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
+        // // set level to score at
+        // operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
+        // operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
+        // // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
-        // set game piece
-        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
+        // // set game piece
+        // operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
+        // operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
-        // flip intake side
-        operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
+        // // flip intake side
+        // operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
-        // arm to neutral
-        operator.getDPadRight()
-            .onTrue(new ArmNeutral())
-            .onTrue(new IntakeStop());
+        // // arm to neutral
+        // operator.getDPadRight()
+        //     .onTrue(new ArmNeutral())
+        //     .onTrue(new IntakeStop());
 
-        // manual overrides
-        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
-        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
+        // // manual overrides
+        // operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
+        // operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
 
     }
 

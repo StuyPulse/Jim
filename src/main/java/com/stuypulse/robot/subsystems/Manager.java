@@ -138,9 +138,9 @@ public class Manager extends SubsystemBase {
                 return normalize(AstarUtil.generateTrajectory(
                     new ArmState[] { 
                         Arm.getInstance().getState(), 
-                        ArmState.fromDegrees(-5, -136)}, 
-
-                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
+                        ArmState.fromDegrees(-5, -136)
+                    }, 
+                    Settings.Arm.intakeConstraints));
             
             case CONE_TIP_OUT:
                         
@@ -149,7 +149,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-37, 87)}, 
 
-                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
+                    Settings.Arm.intakeConstraints));
         
 
             case CUBE:
@@ -159,7 +159,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-5, -136)}, 
 
-                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
+                    Settings.Arm.intakeConstraints));
         
                 
 
@@ -176,7 +176,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-8, -32)}, 
 
-                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
+                    Settings.Arm.intakeConstraints));
 
             case CONE_TIP_OUT:
                 return getNeutralTrajectory();
@@ -187,7 +187,7 @@ public class Manager extends SubsystemBase {
                         Arm.getInstance().getState(), 
                         ArmState.fromDegrees(-8, -32)}, 
 
-                    Settings.Arm.intakeConstraints, Settings.Arm.scoreConstraints));
+                    Settings.Arm.intakeConstraints));
 
             default:
                 return getNeutralTrajectory();
@@ -223,8 +223,7 @@ public class Manager extends SubsystemBase {
         return AstarUtil.generateTrajectory(new ArmState(
                 Arm.getInstance().getShoulderAngle(), 
                 Arm.getInstance().getWristAngle()), 
-                ArmState.fromDegrees(-90, 90)
-               );
+                ArmState.fromDegrees(-90, 90), new Constraint[] {});
     }
 
     /** Generate Score Pose **/

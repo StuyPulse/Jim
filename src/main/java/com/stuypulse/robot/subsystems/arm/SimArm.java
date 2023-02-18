@@ -31,7 +31,7 @@ public class SimArm extends Arm {
 
     public SimArm() {
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
-        simulation = new TwoJointArmSimulation(0, Math.PI/2, dynamics);
+        simulation = new TwoJointArmSimulation(-Math.PI/4, Math.PI/4, dynamics);
 
         shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target (deg)", 90);
         wristTargetAngle = new SmartNumber("Arm/Wrist Target (deg)", -90);
