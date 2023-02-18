@@ -24,6 +24,17 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    
+    public enum Robot {
+        JIM,
+        SACROD,
+
+
+        // runs voltage control project
+        BLAY_MODE
+    }
+
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -31,12 +42,20 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
         SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
 
-        SmartNumber CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cone Front Roller Speed", 1);
-        SmartNumber CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cone Back Roller Speed", 1);
+        SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Front Roller Speed", 1);
+        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Back Roller Speed", 0.5);
 
-        SmartNumber CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Cube Front Roller Speed", 1);
-        SmartNumber CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Cube Back Roller Speed", 0.8);
+        SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Front Roller Speed", 1);
+        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Back Roller Speed", 0.5);
 
+        SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Back Roller Speed", 1);
+
+        SmartNumber OUTTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Back Roller Speed", 1);
+
+
+        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Settings/Intake/New Gamepiece Time (Falling)", 0.5);
     }
 
     public interface Vision {
@@ -54,8 +73,8 @@ public interface Settings {
         double WIDTH = Units.inchesToMeters(26.504);
         double LENGTH = Units.inchesToMeters(20.508);
         
-        double MAX_SPEED = 4.2;
-        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
+        double MAX_SPEED = Units.feetToMeters(15.76);
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 6.28);
 
 
         public interface Motion {
@@ -64,7 +83,7 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 3.5;
+            double kP = 2.0;
             double kI = 0.0;
             double kD = 0.1;
             
@@ -73,36 +92,36 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 1.3;
+            double kP = 2.38;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17335;
-            double kV = 2.7274;
-            double kA = 0.456;
+            double kS = 0.17459;
+            double kV = 2.4561;
+            double kA = 0.40442;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(174).plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-131).plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(119).plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -201,10 +220,10 @@ public interface Settings {
     }
         
     public interface Wings {
-        SmartNumber LEFT_LATCH_DELAY = new SmartNumber("Wings/Left Latch Delay", 1.0);
-        SmartNumber RIGHT_LATCH_DELAY = new SmartNumber("Wings/Right Latch Delay", 1.0);
-        SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
-        SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
+        SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 1.0);
+        SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 1.0);
+        SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 1.0);
+        SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 1.0);
     }
 
     public interface Operator {
@@ -218,37 +237,29 @@ public interface Settings {
     }
 
     public interface Driver {
-        
-        // If speed is below this, use quick turn
-        SmartNumber BASE_TURNING_SPEED = new SmartNumber("Driver Settings/Base Turn Speed", 0.45);
-
-        // Low Pass Filter and deadband for Driver Controls
-        SmartNumber SPEED_DEADBAND = new SmartNumber("Driver Settings/Speed Deadband", 0.00);
-        SmartNumber ANGLE_DEADBAND = new SmartNumber("Driver Settings/Turn Deadband", 0.00);
-
-        SmartNumber SPEED_POWER = new SmartNumber("Driver Settings/Speed Power", 2.0);
-        SmartNumber ANGLE_POWER = new SmartNumber("Driver Settings/Turn Power", 1.0);
-
-        SmartNumber SPEED_FILTER = new SmartNumber("DriPver Settings/Speed Filtering", 0.125);
-        SmartNumber ANGLE_FILTER = new SmartNumber("Driver Settings/Turn Filtering", 0.005);
-    
-        
-        SmartNumber DEADBAND = new SmartNumber("Driver Settings/Deadband", 0.05);
-        SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", 4.2);
-        SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 7);
-        SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 6.1);
-
-        SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
-        SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
+        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
+
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 6.5);
+
+            SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(1));
         }
 
         public interface Turn {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+
+            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
+
+            SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(10));
         }
 
     }

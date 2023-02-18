@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings.Swerve;
@@ -42,6 +43,8 @@ public class SL_SwerveModule extends SwerveModule {
     private final CANSparkMax driveMotor;
     private final RelativeEncoder driveEncoder;
     
+    private Rotation2d angleOffset;
+
     // controllers
     private Controller driveController;
     private AngleController turnController;
@@ -59,10 +62,16 @@ public class SL_SwerveModule extends SwerveModule {
         absoluteEncoder = turnMotor.getAbsoluteEncoder(Type.kDutyCycle);
         absoluteEncoder.setPositionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
         absoluteEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
-        absoluteEncoder.setZeroOffset(angleOffset.getRotations());
+        absoluteEncoder.setZeroOffset(0.0);
+
+        // TODO: add as configurable setting
+        absoluteEncoder.setInverted(true);
+        turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
             .setSetpointFilter(new ARateLimit(Swerve.MAX_TURNING));
+
+        this.angleOffset = angleOffset;
 
         // drive
         driveMotor = new CANSparkMax(driveCANId, MotorType.kBrushless);
@@ -100,7 +109,7 @@ public class SL_SwerveModule extends SwerveModule {
     }
     
     private Rotation2d getAngle() {
-        return Rotation2d.fromRotations(absoluteEncoder.getPosition());
+        return Rotation2d.fromRotations(absoluteEncoder.getPosition()).minus(angleOffset);
     } 
 
     @Override 

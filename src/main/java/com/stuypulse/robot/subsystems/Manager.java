@@ -3,11 +3,21 @@ package com.stuypulse.robot.subsystems;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,7 +35,8 @@ public class Manager extends SubsystemBase {
 
     // game piece to score
     public enum GamePiece {
-        CONE(false),
+        CONE_TIP_IN(false),
+        CONE_TIP_OUT(false),
         CUBE(true);
 
         private final boolean cube;
@@ -125,13 +136,13 @@ public class Manager extends SubsystemBase {
 
     private ArmTrajectory getMidReadyTrajectory() {
         switch (gamePiece) {
-            case CONE:
+            case CONE_TIP_IN:
                 return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(-45, 90)));
+                    ArmState.fromDegrees(-10, 120)));
 
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                    ArmState.fromDegrees(-10, 120)));
 
             default:
                 return getNeutralTrajectory();
@@ -140,13 +151,13 @@ public class Manager extends SubsystemBase {
 
     private ArmTrajectory getHighReadyTrajectory() {
         switch (gamePiece) {
-            case CONE:
+            case CONE_TIP_IN:
                 return normalize(ArmTrajectory.fromStates(
-                        ArmState.fromDegrees(0, 90)));
+                    ArmState.fromDegrees(10, 120)));
 
             case CUBE:
                 return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(0, -90)));
+                    ArmState.fromDegrees(10, 120)));
 
             default:
                 return getNeutralTrajectory();
@@ -156,7 +167,24 @@ public class Manager extends SubsystemBase {
     /** Generate Score Trajectories **/
 
     public ArmTrajectory getScoreTrajectory() {
-        return getNeutralTrajectory();
+        switch (nodeLevel) {
+            case LOW:
+                return getIntakeTrajectory();
+            case MID:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(-30, 0)));
+            case HIGH:
+                if (gamePiece == GamePiece.CUBE)
+                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+
+                return normalize(ArmTrajectory.fromStates(
+                    ArmState.fromDegrees(10, -45)));
+            default:
+                return getNeutralTrajectory();
+        }
     }
 
     /** Generate Neutral Trajectories **/
@@ -167,7 +195,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Pose2d getScorePose() {
+    public Translation2d getScoreTranslation() {
         int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
         
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
@@ -175,6 +203,51 @@ public class Manager extends SubsystemBase {
         } else {
             return Field.RED_ALIGN_POSES[index];
         }
+    }
+
+    private Rotation2d getWestEastAngle(Rotation2d angle) {
+        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) > 90
+            ? Rotation2d.fromDegrees(180)
+            : Rotation2d.fromDegrees(0);
+    }
+
+    private ScoreSide currentScoringSide() {
+        Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
+
+        if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
+            if (intakeSide == IntakeSide.FRONT)
+                return ScoreSide.OPPOSITE;
+            else
+                return ScoreSide.SAME;
+        } else {
+            if (intakeSide == IntakeSide.FRONT)
+                return ScoreSide.SAME;
+            else
+                return ScoreSide.OPPOSITE;
+        }
+    }
+
+    private boolean possibleScoringMotion(NodeLevel level, GamePiece piece, ScoreSide side) {
+        if (piece == GamePiece.CONE_TIP_OUT) {
+            if (level == NodeLevel.HIGH)
+                return false;
+            
+            else if (level == NodeLevel.MID && side == ScoreSide.OPPOSITE)
+                return false;
+        }
+        
+        return true;
+    }
+
+    public Pose2d getScorePose() {
+        ScoreSide side = currentScoringSide();
+        Rotation2d currentHeading = SwerveDrive.getInstance().getGyroAngle();
+        
+        Rotation2d rotation = possibleScoringMotion(nodeLevel, gamePiece, side)
+            ? getWestEastAngle(currentHeading)
+            : getWestEastAngle(currentHeading).rotateBy(Rotation2d.fromDegrees(180));
+
+        return new Pose2d(getScoreTranslation(), rotation);
     }
 
     /** Change and Read State **/
@@ -228,9 +301,12 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
+        SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
     }
 }

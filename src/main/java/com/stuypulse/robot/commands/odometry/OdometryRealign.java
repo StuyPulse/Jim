@@ -16,11 +16,15 @@ public class OdometryRealign extends InstantCommand {
         odometry = Odometry.getInstance();
         this.references = references;
 
-        // addRequirements(null);
+        // addRequirements(odometry);
     }
 
     public OdometryRealign(Rotation2d reference) {
         this(() -> reference);
+    }
+
+    public OdometryRealign() {
+        this(Rotation2d.fromDegrees(0));
     }
 
     @Override
