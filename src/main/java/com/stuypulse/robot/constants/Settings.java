@@ -213,7 +213,7 @@ public interface Settings {
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Wrist/kP", 10);
-                SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
+                SmartNumber kI = new SmartNumber("Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Wrist/kD", 0);
             }
     

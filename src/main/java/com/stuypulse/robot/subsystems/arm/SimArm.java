@@ -56,7 +56,7 @@ public class SimArm extends Arm {
 
     @Override
     public Rotation2d getWristAngle() {
-        return getRelativeWristTargetAngle().plus(getShoulderAngle());
+        return Rotation2d.fromRadians(simulation.getWristPositionRadians()).plus(getShoulderAngle());
     }
 
     @Override
@@ -70,8 +70,7 @@ public class SimArm extends Arm {
     }
 
     public Rotation2d getRelativeWristTargetAngle() {
-        // return getWristAngle().minus(getShoulderAngle());
-        return Rotation2d.fromRadians(simulation.getWristPositionRadians());
+        return getWristTargetAngle().minus(getShoulderTargetAngle());
     }
 
     @Override
