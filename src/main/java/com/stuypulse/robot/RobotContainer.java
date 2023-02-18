@@ -143,32 +143,32 @@ public class RobotContainer {
         ;
 
         // ready & score
-        // operator.getLeftBumper().onTrue(new ArmReady());
-        // operator.getRightBumper()
-        //     .onTrue(new ArmScore().andThen(new IntakeScore()))
-        //     .onFalse(new ArmReady())
-        //     .onFalse(new IntakeStop());
+        operator.getLeftBumper().onTrue(new ArmReady());
+        operator.getRightBumper()
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
 
-        // // set level to score at
-        // operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
-        // operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
-        // // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
+        // set level to score at
+        operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
+        operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
+        // operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
-        // // set game piece
-        // operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        // operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
+        // set game piece
+        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
+        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
-        // // flip intake side
-        // operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
+        // flip intake side
+        operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
-        // // arm to neutral
-        // operator.getDPadRight()
-        //     .onTrue(new ArmNeutral())
-        //     .onTrue(new IntakeStop());
+        // arm to neutral
+        operator.getDPadRight()
+            .onTrue(new ArmNeutral())
+            .onTrue(new IntakeStop());
 
-        // // manual overrides
-        // operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
-        // operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
+        // manual overrides
+        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
+        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
 
     }
 

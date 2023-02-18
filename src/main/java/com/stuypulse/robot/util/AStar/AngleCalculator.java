@@ -57,7 +57,7 @@ public class AngleCalculator {
         p.addPoint((int) P2x, (int) P2y);
         p.addPoint((int) P3x, (int) P3y);
         p.addPoint((int) P4x, (int) P4y);
-        System.out.println(P1x + " " + P1y + " | " + P2x + " " + P2y + " | " + P3x + " " + P3y + " | " + P4x + " " + P4y);
+        // System.out.println(P1x + " " + P1y + " | " + P2x + " " + P2y + " | " + P3x + " " + P3y + " | " + P4x + " " + P4y);
         return p;
 
     }
@@ -74,7 +74,7 @@ public class AngleCalculator {
     public static void main(String[] args) {
         AngleCalculator a = new AngleCalculator();
         a.init();
-        for (int i = -60; i < -59; i++) {
+        for (int i = -180; i < 0; i++) {
             for (int j = -180; j < 0; j++) {
                 Polygon p1 = a.getPolygonFromMidline(a.shoulder_x, a.shouder_y, i, a.SHOULDER_WIDTH, a.SHOULDER_LENGTH);
                 Polygon p2 = a.getPolygonFromMidline(a.wrist_x, a.wrist_y, j, a.WRIST_WIDTH, a.WRIST_LENGTH);
