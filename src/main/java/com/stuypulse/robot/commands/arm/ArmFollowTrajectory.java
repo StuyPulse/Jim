@@ -5,8 +5,11 @@ import java.util.function.Supplier;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,53 +17,46 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ArmFollowTrajectory extends CommandBase {
     
     private final Arm arm;
-    private Supplier<ArmTrajectory> trajectorySupplier;
+    private Supplier<ArmBFSField> trajectorySupplier;
 
-    private ArmTrajectory trajectory;
-    private int currentIdx;
-
-    public ArmFollowTrajectory(Supplier<ArmTrajectory> trajectorySupplier) {
+    private BStream finished;
+    public ArmFollowTrajectory(Supplier<ArmBFSField> trajectorySupplier) {
         arm = Arm.getInstance();
         
         this.trajectorySupplier = trajectorySupplier;
-        currentIdx = 0;
+
+        finished = BStream.create(this::atSetpoint)
+            .filtered(new BDebounceRC.Rising(0.2));
 
         addRequirements(arm);
     }
 
-    public ArmFollowTrajectory(ArmTrajectory trajectory) {
+    public ArmFollowTrajectory(ArmBFSField trajectory) {
         this(() -> trajectory);
     }
 
+    private ArmBFSField.Node getCurrentNode() {
+        return trajectorySupplier.get().getNode(arm.getState());
+    }
+
     private ArmState getCurrentSetpoint() {
-        return trajectory.getStates().get(currentIdx);
+        return getCurrentNode().travel(30).getArmState();
     }
 
     private boolean atSetpoint() {
-        return arm.isArmAtState(
+        return getCurrentNode().travel(10).isSetpoint() && arm.isArmAtState(
             Rotation2d.fromDegrees(Shoulder.TOLERANCE),
             Rotation2d.fromDegrees(Wrist.TOLERANCE));
     }
 
     @Override
-    public void initialize() {
-        currentIdx = 0;
-
-        trajectory = trajectorySupplier.get();
-    }
-
-    @Override
     public void execute() {
         arm.setTargetState(getCurrentSetpoint());
-
-        if (atSetpoint()) {
-            currentIdx++;
-        }
     }
 
     @Override
     public boolean isFinished() {
-        return currentIdx >= trajectory.getStates().size();
+        return false; /// finished.get();
     }
 
 }

@@ -4,6 +4,7 @@ import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.MathUtil;
@@ -78,6 +79,15 @@ public class Manager extends SubsystemBase {
         RIGHT
     }
 
+    public enum Routine {
+        INTAKE,
+        NEUTRAL,
+        READY,
+        SCORE,
+
+        BLAY_MODE
+    }
+
 
     private GamePiece gamePiece;
     private NodeLevel nodeLevel;
@@ -87,38 +97,59 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
+    private Routine routine;
+
     public Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         intakeSide = IntakeSide.FRONT;
         scoreSide = ScoreSide.SAME;
 
+        routine = Routine.NEUTRAL;
+
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
     }
 
+    public ArmBFSField getTrajectory() {
+        switch (routine) {
+            case INTAKE:
+                return getIntakeTrajectory();
+            case NEUTRAL:
+                return getNeutralTrajectory();
+            case READY:
+                return getReadyTrajectory();
+            case SCORE:
+                return getScoreTrajectory();
+            default:
+                return getNeutralTrajectory(); // TODO: BOOM
+        }
+    }
+
     /** Generate Intake Trajectories **/
 
-    public ArmTrajectory getIntakeTrajectory() {
-        final ArmTrajectory intakeTrajectory = 
-            new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0));
+    private static ArmBFSField.Constraint kIntakeConstraint = (a, w) -> (Math.abs(a + 90) < 30) && (w > 150 || (30 > w));
 
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+    private static ArmBFSField kIntakeTrajectory = new ArmBFSField(-55, 0, kIntakeConstraint);
+
+    public ArmBFSField getIntakeTrajectory() {
+        if (intakeSide == IntakeSide.FRONT) 
+            return kIntakeTrajectory;
+        return kIntakeTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/
 
     /** puts the trajectory on the correct side */
     /** NOTE: trajectory that score "opposite side" must have angles between -90 and -180. **/
-    private ArmTrajectory normalize(ArmTrajectory trajectory) {
+    private ArmBFSField normalize(ArmBFSField field) {
         boolean needsFlip = (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK) ||
             (scoreSide == ScoreSide.OPPOSITE && intakeSide == IntakeSide.FRONT);
-
-        return needsFlip ? trajectory.flipped() : trajectory;
+        return needsFlip ? field.flipped() : field;
     }
     
 
-    public ArmTrajectory getReadyTrajectory() {
+    public ArmBFSField getReadyTrajectory() {
         switch (nodeLevel) {
             case LOW:
                 return getIntakeTrajectory();
@@ -134,30 +165,34 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private ArmTrajectory getMidReadyTrajectory() {
+    private static ArmBFSField kMidReadyTrajectoryCone = new ArmBFSField(-10, 120, kIntakeConstraint);
+    private static ArmBFSField kMidReadyTrajectoryCube = new ArmBFSField(-10, 120, kIntakeConstraint);
+
+    private ArmBFSField getMidReadyTrajectory() {
         switch (gamePiece) {
+            case CONE_TIP_OUT:
             case CONE_TIP_IN:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-10, 120)));
+                return normalize(kMidReadyTrajectoryCone);
 
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-10, 120)));
+                return normalize(kMidReadyTrajectoryCube);
 
             default:
-                return getNeutralTrajectory();
+                return normalize(kNeutralTrajectory);
         }
     }
 
-    private ArmTrajectory getHighReadyTrajectory() {
+
+    private static ArmBFSField kHighReadyTrajectoryCone = new ArmBFSField(10, 120, kIntakeConstraint);
+    private static ArmBFSField kHighReadyTrajectoryCube = new ArmBFSField(10, 120, kIntakeConstraint);
+
+    private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, 120)));
+                return normalize(kHighReadyTrajectoryCone);
 
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, 120)));
+                return normalize(kHighReadyTrajectoryCube);
 
             default:
                 return getNeutralTrajectory();
@@ -166,22 +201,26 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Trajectories **/
 
-    public ArmTrajectory getScoreTrajectory() {
+    public static ArmBFSField kScoreMidTrajectoryCube = new ArmBFSField(-15, 45, kIntakeConstraint);
+    public static ArmBFSField kScoreMidTrajectoryCone = new ArmBFSField(-30, 0, kIntakeConstraint);
+
+    public static ArmBFSField kScoreHighTrajectoryCube = new ArmBFSField(-15, 45, kIntakeConstraint);
+    public static ArmBFSField kScoreHighTrajectoryCone = new ArmBFSField(10, -45, kIntakeConstraint);
+
+    public ArmBFSField getScoreTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getIntakeTrajectory();
+                return getNeutralTrajectory();
             case MID:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                    return normalize(kScoreMidTrajectoryCube);
                 
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-30, 0)));
+                return normalize(kScoreMidTrajectoryCone);
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                    return normalize(kScoreHighTrajectoryCube);
 
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, -45)));
+                return normalize(kScoreHighTrajectoryCone);
             default:
                 return getNeutralTrajectory();
         }
@@ -189,8 +228,10 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
-    public ArmTrajectory getNeutralTrajectory() {
-        return ArmTrajectory.fromStates(ArmState.fromDegrees(-90, +90));
+    private static ArmBFSField kNeutralTrajectory = new ArmBFSField(-90, 90, kIntakeConstraint);
+
+    public ArmBFSField getNeutralTrajectory() {
+        return kNeutralTrajectory;
     }
 
     /** Generate Score Pose **/
@@ -297,6 +338,14 @@ public class Manager extends SubsystemBase {
 
     public void setGridColumn(Direction gridColumn) {
         this.gridColumn = gridColumn;
+    }
+
+    public Routine getRoutine() {
+        return routine;
+    }
+
+    public void setRoutine(Routine routine) {
+        this.routine = routine;
     }
 
     @Override

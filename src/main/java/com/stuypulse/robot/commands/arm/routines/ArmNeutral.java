@@ -1,12 +1,9 @@
 package com.stuypulse.robot.commands.arm.routines;
 
-import com.stuypulse.robot.commands.arm.ArmFollowTrajectory;
-import com.stuypulse.robot.subsystems.Manager;
-
-public class ArmNeutral extends ArmFollowTrajectory {
-
+import com.stuypulse.robot.subsystems.Manager.Routine;
+public class ArmNeutral extends ArmSetRoutine {
+    
     public ArmNeutral() {
-        super(() -> Manager.getInstance().getNeutralTrajectory());
+        super(Routine.NEUTRAL);
     }
-
 }

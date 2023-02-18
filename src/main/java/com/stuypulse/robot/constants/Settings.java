@@ -169,16 +169,16 @@ public interface Settings {
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 16);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 10);
                 SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
             }
             
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.06);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.0);
                 SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.24);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.3);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.01);
             }
         }
     
@@ -207,9 +207,9 @@ public interface Settings {
     
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.05);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.00);
                 SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.1);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.01);
             }
         }
     }

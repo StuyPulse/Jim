@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
@@ -83,7 +84,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        arm.setDefaultCommand(new ArmDrive(operator));
+        arm.setDefaultCommand(new ArmFollowTrajectory(manager::getTrajectory));
     }
 
     /***************/
@@ -121,6 +122,9 @@ public class RobotContainer {
     }
 
     private void configureOperatorBindings() {
+        // manual control
+        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > 0.1).onTrue(new ArmDrive(operator));
+        
         // intaking
         operator.getRightTriggerButton()
             .onTrue(new ArmIntake().andThen(new IntakeAcquire()))

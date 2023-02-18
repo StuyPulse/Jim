@@ -54,6 +54,10 @@ public abstract class Arm extends SubsystemBase {
         return isShoulderAtAngle(shoulderEpsilon) && isWristAtAngle(wristEpsilon);
     }
 
+    public final boolean isArmAtTargetState() {
+        return isArmAtState(getShoulderTargetAngle(), getWristTargetAngle());
+    }
+
     // Set target state
     public abstract void setTargetShoulderAngle(Rotation2d angle);
     public abstract void setTargetWristAngle(Rotation2d angle);
