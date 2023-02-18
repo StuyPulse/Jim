@@ -146,7 +146,7 @@ public interface Settings {
     } 
 
     public interface Arm {
-
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
         public interface Shoulder {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(43.75);
@@ -162,7 +162,7 @@ public interface Settings {
             double TOLERANCE = 3;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 10);
                 SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
             }

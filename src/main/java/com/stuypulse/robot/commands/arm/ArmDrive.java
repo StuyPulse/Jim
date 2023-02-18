@@ -2,6 +2,8 @@ package com.stuypulse.robot.commands.arm;
 
 
 
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
@@ -47,6 +49,7 @@ public class ArmDrive extends CommandBase {
 
     @Override
     public void initialize() {
+        Manager.getInstance().setRoutine(Routine.BLAY_MODE);
         timer.reset();
     }
     
@@ -56,5 +59,10 @@ public class ArmDrive extends CommandBase {
 
         arm.moveShoulder(Rotation2d.fromDegrees(shoulder.get() * dt));
         arm.moveWrist(Rotation2d.fromDegrees(wrist.get() * dt));
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Manager.getInstance().getRoutine() != Routine.BLAY_MODE;
     }
 }
