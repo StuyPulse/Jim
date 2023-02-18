@@ -26,6 +26,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -118,7 +119,10 @@ public class ArmImpl extends Arm {
 
     @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
+        shoulderTargetAngle.set(MathUtil.clamp(
+            angle.getDegrees(),
+            Units.radiansToDegrees(Shoulder.MIN_ANGLE),
+            Units.radiansToDegrees(Shoulder.MAX_ANGLE)));
     }
 
     @Override

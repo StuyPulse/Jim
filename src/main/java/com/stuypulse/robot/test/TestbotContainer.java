@@ -8,6 +8,7 @@ import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestbotContainer {
 
@@ -18,7 +19,9 @@ public class TestbotContainer {
     // // Subsystem
     public final TestIntake intake = new TestIntake();
     public final TestSwerveDrive swerve = new TestSwerveDrive();
-    public final TestArm arm = new TestArm();
+    // public final TestArm arm = new TestArm();
+    // public final TestArmPD arm = new TestArmPD();
+    public final TestArmDyn arm = new TestArmDyn();
     public final TestPlant plant = new TestPlant();
     public final TestWings wings = new TestWings();
     
@@ -91,15 +94,25 @@ public class TestbotContainer {
             .onFalse(intake.runOnce(intake::stop));
     }
 
+    private final SmartNumber SHOULDER_VOLTS = new SmartNumber("Arm/Shoulder Input Volts", 0);
+    private final SmartNumber WRIST_VOLTS = new SmartNumber("Arm/Wrist Input Volts", 0);
+
     private void configureDefaultCommands() {
         // arm
-        arm.setDefaultCommand(arm.run(() -> {
-            double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 10;
-            double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 10;
+        // arm.setDefaultCommand(arm.run(() -> {
+        //     arm.runShoulder(MathUtil.clamp(SHOULDER_VOLTS.get(), -3, 3));
+        //     arm.runWrist(MathUtil.clamp(WRIST_VOLTS.get(), -5, 5));
+        // }));
+        // arm.setDefaultCommand(arm.run(() -> {
+        //     double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 3;
+        //     double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 5;
 
-            arm.runShoulder(shoulderVolts);
-            arm.runWrist(wristVolts);
-        }));
+        //     SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
+        //     SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
+
+        //     arm.runShoulder(shoulderVolts);
+        //     arm.runWrist(wristVolts);
+        // }));
     }
     
 }

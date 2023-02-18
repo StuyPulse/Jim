@@ -43,9 +43,9 @@ public class SimArm extends Arm {
         
         armSim = new DoubleJointedArmSim(
             // shoulder
-            DCMotor.getNEO(2), Shoulder.GEARING, Shoulder.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, 
+            DCMotor.getNEO(2), Shoulder.REDUCTION, Shoulder.MOI, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, 
             // wrist
-            DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE
+            DCMotor.getNEO(1), Wrist.REDUCTION, Wrist.MOI, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE
         );
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
@@ -89,12 +89,12 @@ public class SimArm extends Arm {
 
     @Override
     public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
+        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), -180, 0));
     }
     
     @Override
     public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
+        wristTargetAngle.set(angle.getDegrees());
     }
 
     private void updateFieldObject() {
