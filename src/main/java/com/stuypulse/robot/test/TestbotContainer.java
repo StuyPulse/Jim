@@ -6,6 +6,7 @@ import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 
 public class TestbotContainer {
@@ -26,6 +27,8 @@ public class TestbotContainer {
     public TestbotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+
+        CameraServer.startAutomaticCapture();
     }
 
     private void configureButtonBindings() {
