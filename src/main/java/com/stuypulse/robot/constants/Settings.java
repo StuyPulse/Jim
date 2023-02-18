@@ -147,13 +147,14 @@ public interface Settings {
     } 
 
     public interface Arm {
-        
-        public interface Shoulder {
 
+        double MAX_DEGREES_PER_SECOND = 90;
+
+        public interface Shoulder {
             int MOTORS = 2;
             double REDUCTION = 63.0;
             double MASS = 3.054; // kg
-            double LENGTH = 1.065; // m, length
+            double LENGTH = 1.1557; // m, length
             double MOI = 0.369; // kg m^2
             double RADIUS = 0.305; // m, radius to cg
 
@@ -191,9 +192,9 @@ public interface Settings {
             int MOTORS = 1;
             double REDUCTION = 70.0;
             double MASS = 1.317; // kg
-            double LENGTH = 0.73; // m, length
+            double LENGTH = 0.44298; // m, length
             double MOI = 0.033; // kg m^2
-            double RADIUS = 0.2269 + 1.065; // m, radius to cg
+            double RADIUS = 0.2443 + 1.065; // m, radius to cg
 
             ArmJoint JOINT = 
                 new ArmJoint(
