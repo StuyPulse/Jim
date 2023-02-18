@@ -16,11 +16,11 @@ public class TestbotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     
     // // Subsystem
-    public final Intake intake = new Intake();
-    public final SwerveDrive swerve = new SwerveDrive();
-    public final Arm arm = new Arm();
-    public final Plant plant = new Plant();
-    public final Wings wings = new Wings();
+    public final TestIntake intake = new TestIntake();
+    public final TestSwerveDrive swerve = new TestSwerveDrive();
+    public final TestArm arm = new TestArm();
+    public final TestPlant plant = new TestPlant();
+    public final TestWings wings = new TestWings();
     
     public final Pump pump = new Pump();
 

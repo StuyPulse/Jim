@@ -15,7 +15,7 @@ import static com.stuypulse.robot.constants.Settings.Arm.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Arm extends SubsystemBase {
+public class TestArm extends SubsystemBase {
     
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -24,7 +24,7 @@ public class Arm extends SubsystemBase {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
-    public Arm() {        
+    public TestArm() {        
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
