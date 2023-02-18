@@ -149,8 +149,7 @@ public interface Settings {
 
     public interface Arm {
 
-        double MAX_DEGREES_PER_SECOND = 90;
-
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
         public interface Shoulder {
             int MOTORS = 2;
             double REDUCTION = 63.0;

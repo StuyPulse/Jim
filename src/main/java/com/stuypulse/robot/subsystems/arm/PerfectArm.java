@@ -22,27 +22,6 @@ public class PerfectArm extends Arm {
     }
 
     @Override
-    public Rotation2d getShoulderTargetAngle() {
-        return shoulderAngle;
-    }
-
-    @Override
-    public Rotation2d getWristTargetAngle() {
-        return wristAngle;
-    }
-
-    @Override
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderAngle = angle;
-        
-    }
-
-    @Override
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristAngle = angle;
-    }
-
-    @Override
     public void setFeedbackEnabled(boolean enabled) {
         
     }
