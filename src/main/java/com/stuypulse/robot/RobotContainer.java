@@ -75,7 +75,7 @@ public class RobotContainer {
         configureAutons();
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        // CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
 
     /****************/

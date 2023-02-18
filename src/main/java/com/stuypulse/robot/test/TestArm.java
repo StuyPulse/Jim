@@ -30,10 +30,7 @@ public class TestArm extends SubsystemBase {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
-        wristEncoder.setInverted(true);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         configureMotors();
     }
@@ -48,6 +45,15 @@ public class TestArm extends SubsystemBase {
     }
 
     public void configureMotors() {
+        shoulderEncoder.setZeroOffset(0);
+        wristEncoder.setZeroOffset(0);
+
+        shoulderEncoder.setInverted(true);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+        wristEncoder.setInverted(true);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
         WRIST_CONFIG.configure(wrist);

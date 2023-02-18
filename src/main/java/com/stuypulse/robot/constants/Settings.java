@@ -34,7 +34,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.JIM;
+    Robot ROBOT = Robot.BLAY_MODE;
 
     double DT = 0.02;
 
@@ -159,13 +159,6 @@ public interface Settings {
             double VEL_LIMIT = 0.5;
             double ACCEL_LIMIT = 0.4;
 
-            double ANGLE_OFFSET = 0;
-
-            SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 30;
-            double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
-            double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
-
             double TOLERANCE = 3;
     
             public interface PID {
@@ -175,10 +168,10 @@ public interface Settings {
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.0);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.24);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.01);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0);
             }
         }
     
@@ -195,21 +188,19 @@ public interface Settings {
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
 
-            double ANGLE_OFFSET = 0;
-
             double TOLERANCE = 5;
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 10);
+                SmartNumber kP = new SmartNumber("Wrist/kP", 0);
                 SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Wrist/kD", 0);
             }
     
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.00);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.01);
+                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0);
             }
         }
     }
