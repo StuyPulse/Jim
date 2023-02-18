@@ -14,10 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -63,13 +60,22 @@ public class Manager extends SubsystemBase {
     // side to intake on
     public enum IntakeSide {
         FRONT, 
-        BACK
+        BACK;
+
+        public IntakeSide
+         getOpposite() {
+            return this == BACK ? FRONT : BACK;
+        }
     }
 
     // side to score on (relative to intake side)
     public enum ScoreSide {
         SAME,
-        OPPOSITE
+        OPPOSITE;
+
+        public ScoreSide getOpposite() {
+            return this == SAME ? OPPOSITE : SAME;
+        }
     }
 
     public enum Direction {
@@ -205,25 +211,23 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private Rotation2d getWestEastAngle(Rotation2d angle) {
-        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) > 90
-            ? Rotation2d.fromDegrees(180)
-            : Rotation2d.fromDegrees(0);
+    private boolean facingAway(Rotation2d angle) {
+        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) < 90;
     }
 
     private ScoreSide currentScoringSide() {
-        Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
-
-        if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
-            if (intakeSide == IntakeSide.FRONT)
+        if (facingAway(Odometry.getInstance().getRotation())) {
+            if (intakeSide == IntakeSide.FRONT) {
                 return ScoreSide.OPPOSITE;
-            else
+            } else {
                 return ScoreSide.SAME;
+            }
         } else {
-            if (intakeSide == IntakeSide.FRONT)
+            if (intakeSide == IntakeSide.FRONT) {
                 return ScoreSide.SAME;
-            else
+            } else {
                 return ScoreSide.OPPOSITE;
+            }
         }
     }
 
@@ -240,12 +244,12 @@ public class Manager extends SubsystemBase {
     }
 
     public Pose2d getScorePose() {
-        ScoreSide side = currentScoringSide();
-        Rotation2d currentHeading = SwerveDrive.getInstance().getGyroAngle();
+        Rotation2d currentHeading = Odometry.getInstance().getRotation();
         
-        Rotation2d rotation = possibleScoringMotion(nodeLevel, gamePiece, side)
-            ? getWestEastAngle(currentHeading)
-            : getWestEastAngle(currentHeading).rotateBy(Rotation2d.fromDegrees(180));
+        Rotation2d rotation = facingAway(currentHeading) ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+
+        if (!possibleScoringMotion(nodeLevel, gamePiece, currentScoringSide()))
+            rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
 
         return new Pose2d(getScoreTranslation(), rotation);
     }
