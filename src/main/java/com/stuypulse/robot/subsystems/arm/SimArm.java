@@ -40,9 +40,10 @@ public class SimArm extends Arm {
         
         armSim = new DoubleJointedArmSim(
             // shoulder
-            DCMotor.getNEO(2), Shoulder.GEARING, Shoulder.JKG, Units.inchesToMeters(Shoulder.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 
+            DCMotor.getNEO(2), Shoulder.REDUCTION, Shoulder.MOI, Units.inchesToMeters(Shoulder.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 
             // wrist
-            DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
+            DCMotor.getNEO(1), Wrist.REDUCTION, Wrist.MOI, Units.inchesToMeters(Wrist.LENGTH),Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
+
         );
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
@@ -71,7 +72,6 @@ public class SimArm extends Arm {
     public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(armSim.getWristAngleDegrees());
     }
-
     private void updateFieldObject() {
         double distanceFromSwerveCenter = getShoulderAngle().getCos() * Shoulder.LENGTH + getWristAngle().getCos() * Wrist.LENGTH;
 

@@ -26,6 +26,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -101,7 +102,6 @@ public class ArmImpl extends Arm {
     public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(SLMath.map(wristEncoder.getPosition(), 0, 1, -180, 180));
     }
-
     private void runShoulder(double voltage) {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
