@@ -1,9 +1,14 @@
 package com.stuypulse.robot.subsystems.arm;
 
+import java.util.Optional;
+
+import com.stuypulse.robot.commands.arm.ArmDrive;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
+import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -26,6 +31,10 @@ public abstract class Arm extends SubsystemBase {
         return instance;
     }
     
+    private Optional<ArmBFSField> trajectory = Optional.empty();
+    private ArmState targetState = ArmState.fromDegrees(-90, +90); 
+    // TODO: make arm not dangerous 
+
     // Read arm state
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
@@ -35,11 +44,23 @@ public abstract class Arm extends SubsystemBase {
     }
 
     // Read target state
-    public abstract Rotation2d getShoulderTargetAngle();
-    public abstract Rotation2d getWristTargetAngle();
+    public final Rotation2d getShoulderTargetAngle() {
+        return getTargetState().getShoulderState();
+    }
+    public final Rotation2d getWristTargetAngle() {
+        return getTargetState().getWristState();
+    }
+
+    private final ArmBFSField.Node getTargetNode() {
+        return trajectory.get().getNode(getState()).travel(Settings.Arm.BFS_FIELD_LEAD.getAsDouble());
+    }
 
     public final ArmState getTargetState() {
-        return new ArmState(getShoulderTargetAngle(), getWristTargetAngle());
+        if(trajectory.isPresent()) {
+            targetState = getTargetNode().getArmState();
+        }
+
+        return targetState;
     }
 
     // Compare measurement and target
@@ -55,25 +76,38 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final boolean isArmAtTargetState() {
+        if(trajectory.isPresent() && !getTargetNode().isSetpoint()) {
+            return false;
+        }
+
         return isArmAtState(getShoulderTargetAngle(), getWristTargetAngle());
     }
 
     // Set target state
-    public abstract void setTargetShoulderAngle(Rotation2d angle);
-    public abstract void setTargetWristAngle(Rotation2d angle);
-
     public final void setTargetState(ArmState state) {
-        setTargetShoulderAngle(state.getShoulderState());
-        setTargetWristAngle(state.getWristState());
+        trajectory = Optional.empty();
+        targetState = state;
+    }
+
+    public final void setShoulderTargetState(Rotation2d shoulder) {
+        setTargetState(new ArmState(shoulder, getWristTargetAngle()));
+    }
+
+    public final void setWristTargetState(Rotation2d wrist) {
+        setTargetState(new ArmState(getShoulderTargetAngle(),wrist));
+    }
+
+    public final void setTrajectory(ArmBFSField trajectory) {
+        this.trajectory = Optional.ofNullable(trajectory);
     }
 
     // Change target angle
     public final void moveShoulder(Rotation2d angle) {
-        setTargetShoulderAngle(getShoulderTargetAngle().plus(angle));
+        setShoulderTargetState(getShoulderTargetAngle().plus(angle));
     }
 
     public final void moveWrist(Rotation2d angle) {
-        setTargetWristAngle(getWristTargetAngle().plus(angle));
+        setWristTargetState(getWristTargetAngle().plus(angle));
     }
 
     // Enable feedback control

@@ -146,7 +146,7 @@ public interface Settings {
     } 
 
     public interface Arm {
-
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
         public interface Shoulder {
             double GEARING = 80;
             double LENGTH = Units.inchesToMeters(43.75);

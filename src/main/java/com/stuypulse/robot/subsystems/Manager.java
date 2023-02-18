@@ -6,6 +6,8 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.constants.Constraints;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -128,9 +130,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Intake Trajectories **/
 
-    private static ArmBFSField.Constraint kIntakeConstraint = (a, w) -> (Math.abs(a + 90) < 30) && (w > 150 || (30 > w));
-
-    private static ArmBFSField kIntakeTrajectory = new ArmBFSField(-55, 0, kIntakeConstraint);
+    private static ArmBFSField kIntakeTrajectory = new ArmBFSField(-55, 0, Constraints.CONSTRAINT);
 
     public ArmBFSField getIntakeTrajectory() {
         if (intakeSide == IntakeSide.FRONT) 
@@ -165,8 +165,8 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private static ArmBFSField kMidReadyTrajectoryCone = new ArmBFSField(-10, 120, kIntakeConstraint);
-    private static ArmBFSField kMidReadyTrajectoryCube = new ArmBFSField(-10, 120, kIntakeConstraint);
+    private static ArmBFSField kMidReadyTrajectoryCone = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
+    private static ArmBFSField kMidReadyTrajectoryCube = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
 
     private ArmBFSField getMidReadyTrajectory() {
         switch (gamePiece) {
@@ -183,8 +183,8 @@ public class Manager extends SubsystemBase {
     }
 
 
-    private static ArmBFSField kHighReadyTrajectoryCone = new ArmBFSField(10, 120, kIntakeConstraint);
-    private static ArmBFSField kHighReadyTrajectoryCube = new ArmBFSField(10, 120, kIntakeConstraint);
+    private static ArmBFSField kHighReadyTrajectoryCone = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
+    private static ArmBFSField kHighReadyTrajectoryCube = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
 
     private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
@@ -201,11 +201,11 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Trajectories **/
 
-    public static ArmBFSField kScoreMidTrajectoryCube = new ArmBFSField(-15, 45, kIntakeConstraint);
-    public static ArmBFSField kScoreMidTrajectoryCone = new ArmBFSField(-30, 0, kIntakeConstraint);
+    public static ArmBFSField kScoreMidTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
+    public static ArmBFSField kScoreMidTrajectoryCone = new ArmBFSField(-30, 0, Constraints.CONSTRAINT);
 
-    public static ArmBFSField kScoreHighTrajectoryCube = new ArmBFSField(-15, 45, kIntakeConstraint);
-    public static ArmBFSField kScoreHighTrajectoryCone = new ArmBFSField(10, -45, kIntakeConstraint);
+    public static ArmBFSField kScoreHighTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
+    public static ArmBFSField kScoreHighTrajectoryCone = new ArmBFSField(10, -45, Constraints.CONSTRAINT);
 
     public ArmBFSField getScoreTrajectory() {
         switch (nodeLevel) {
@@ -228,7 +228,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
-    private static ArmBFSField kNeutralTrajectory = new ArmBFSField(-90, 90, kIntakeConstraint);
+    private static ArmBFSField kNeutralTrajectory = new ArmBFSField(-90, 90, Constraints.CONSTRAINT);
 
     public ArmBFSField getNeutralTrajectory() {
         return kNeutralTrajectory;

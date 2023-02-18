@@ -68,7 +68,7 @@ public class ArmBFSField {
 
         private Node makeSetpoint() {
             if (!isValid())
-                throw new RuntimeException("Setpoint is within constraint!");
+                throw new RuntimeException("Setpoint (" + getArmDeg() + ", " + getWristDeg()  + ") is within constraint!");
 
             mNextNode = this;
             mSetpointCost = 0;

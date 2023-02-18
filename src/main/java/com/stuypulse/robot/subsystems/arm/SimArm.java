@@ -33,9 +33,6 @@ public class SimArm extends Arm {
     private final AngleController shoulderController; 
     private final AngleController wristController;
 
-    private final SmartNumber shoulderTargetAngle;
-    private final SmartNumber wristTargetAngle;
-
     private final FieldObject2d fieldObject;
 
     public SimArm() { 
@@ -43,9 +40,9 @@ public class SimArm extends Arm {
         
         armSim = new DoubleJointedArmSim(
             // shoulder
-            DCMotor.getNEO(2), Shoulder.GEARING, Shoulder.JKG, Units.inchesToMeters(Shoulder.LENGTH), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE, 
+            DCMotor.getNEO(2), Shoulder.GEARING, Shoulder.JKG, Units.inchesToMeters(Shoulder.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 
             // wrist
-            DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE
+            DCMotor.getNEO(1), Wrist.GEARING, Wrist.JKG, Units.inchesToMeters(Wrist.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
         );
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
@@ -60,8 +57,6 @@ public class SimArm extends Arm {
                                     // .setSetpointFilter(new MotionProfile(ArmArm.VEL_LIMIT, ArmArm.ACCEL_LIMIT))
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Target Arm Angle (deg)", 0);
-        wristTargetAngle = new SmartNumber("Arm/Target Wrist Angle (deg)", 0);
         visualizer = new ArmVisualizer();
 
         fieldObject = Odometry.getInstance().getField().getObject("Field Arm");
@@ -75,26 +70,6 @@ public class SimArm extends Arm {
     @Override
     public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(armSim.getWristAngleDegrees());
-    }
-
-    @Override
-    public Rotation2d getShoulderTargetAngle() {
-        return Rotation2d.fromDegrees(shoulderTargetAngle.get());
-    }
-    
-    @Override
-    public Rotation2d getWristTargetAngle() {
-        return Rotation2d.fromDegrees(wristTargetAngle.get());
-    }
-
-    @Override
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    }
-    
-    @Override
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
     }
 
     private void updateFieldObject() {
@@ -120,21 +95,15 @@ public class SimArm extends Arm {
     @Override
     public void periodic() {
 
-        double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
-        double wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));;
-
-        // if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
-        //     wristOutput = wristController.update(Angle.k90deg, Angle.fromRotation2d(getWristAngle()));
-        // } else {
-        //     wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
-        // }
+        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
+        double wristOutput = wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
     
         armSim.setInput(shoulderOutput, wristOutput);
 
         armSim.update(Settings.DT);
 
         visualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
-        visualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
+        visualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
 
         updateFieldObject();
 
