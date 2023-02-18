@@ -63,13 +63,21 @@ public class Manager extends SubsystemBase {
     // side to intake on
     public enum IntakeSide {
         FRONT, 
-        BACK
+        BACK;
+
+        public IntakeSide getOpposite() {
+            return (this == FRONT) ? BACK : FRONT;
+        }
     }
 
     // side to score on (relative to intake side)
     public enum ScoreSide {
         SAME,
-        OPPOSITE
+        OPPOSITE;
+
+        public ScoreSide getOpposite() {
+            return (this == SAME) ? OPPOSITE : SAME;
+        }
     }
 
     public enum Direction {
@@ -233,7 +241,7 @@ public class Manager extends SubsystemBase {
             : Rotation2d.fromDegrees(0);
     }
 
-    private ScoreSide currentScoringSide() {
+    public ScoreSide currentScoringSide() {
         Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
 
         if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
@@ -249,7 +257,7 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private boolean possibleScoringMotion(NodeLevel level, GamePiece piece, ScoreSide side) {
+    public boolean possibleScoringMotion(NodeLevel level, GamePiece piece, ScoreSide side) {
         if (piece == GamePiece.CONE_TIP_OUT) {
             if (level == NodeLevel.HIGH)
                 return false;
