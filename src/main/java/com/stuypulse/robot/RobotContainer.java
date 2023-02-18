@@ -122,20 +122,22 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // intaking
         operator.getRightTriggerButton()
-            .onTrue(arm.runOnce(() -> {
-                arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-55));
-                arm.setTargetWristAngle(Rotation2d.fromDegrees(0));
-            }))
-            .onTrue(new IntakeAcquire())
-            .onFalse(new IntakeStop())
+            .onTrue(new ArmIntake())
+            // .onTrue(new IntakeAcquire())
+            // .onFalse(new IntakeStop())
             // .onFalse(new ArmNeutral())
         ;
 
         // outtake
         operator.getLeftTriggerButton()
             .onTrue(arm.runOnce(() -> {
-                arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-55));
-                arm.setTargetWristAngle(Rotation2d.fromDegrees(0));
+                if (manager.getIntakeSide() == IntakeSide.BACK) {
+                    arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-180 - (-55)));
+                    arm.setTargetWristAngle(Rotation2d.fromDegrees(-180 - 0));
+                } else {
+                    arm.setTargetShoulderAngle(Rotation2d.fromDegrees(-55));
+                    arm.setTargetWristAngle(Rotation2d.fromDegrees(0));
+                }
             }))
             .onTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())

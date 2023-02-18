@@ -53,4 +53,9 @@ public class ArmFollowTrajectory extends CommandBase {
         return trajectory.isDone(timer.getTime());
     }
 
+    @Override
+    public void end(boolean i) {
+        System.out.println("ARM FOLLOW TRAJECTORY HAS ENDED");
+    }
+
 }

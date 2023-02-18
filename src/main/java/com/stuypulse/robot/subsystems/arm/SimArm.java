@@ -1,9 +1,12 @@
 package com.stuypulse.robot.subsystems.arm;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.util.ArmDynamics;
+import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.TwoJointArmSimulation;
 import com.stuypulse.stuylib.control.angle.AngleController;
@@ -20,6 +23,8 @@ public class SimArm extends Arm {
 
     private ArmDynamics dynamics;
     private TwoJointArmSimulation simulation;
+
+    // private Optional<ArmTrajectory> trajectory;
 
     private SmartNumber shoulderTargetAngle;
     private SmartNumber wristTargetAngle;

@@ -7,27 +7,33 @@ import com.stuypulse.robot.util.ArmTrajectory;
 
 public class AstarUtil {
  
-    public static ArmTrajectory generateTrajectory(ArmState[] states, Constraint[] constraints) {
+    public static ArmTrajectory generateTrajectory(Constraint constraint, ArmState... states) {
         ArmTrajectory trajectory = new ArmTrajectory();
 
         for (int i = 0; i < states.length - 1; i += 2) {
-            trajectory.append(generateTrajectory(states[i], states[i+1], constraints));
+            trajectory.append(generateTrajectory(constraint, states[i], states[i+1]));
         }
 
         return trajectory;
     }
 
-    public static ArmTrajectory generateTrajectory(ArmState start, ArmState end, Constraint[] constraints) {
+    public static ArmTrajectory generateTrajectory(Constraint constraint, ArmState start, ArmState end) {
         return generateTrajectory(
+            constraint,
             start.getShoulderState().getDegrees(),
             start.getWristState().getDegrees(),
             end.getShoulderState().getDegrees(),
-            end.getWristState().getDegrees(),
-            constraints
+            end.getWristState().getDegrees()
         );
     }
 
-    public static ArmTrajectory generateTrajectory(double initialShoulderAngle, double initialWristAngle, double finalShoulderAngle, double finalWristAngle, Constraint[] constraints) {
+    public static ArmTrajectory generateTrajectory(
+        Constraint constraint, 
+        double initialShoulderAngle, 
+        double initialWristAngle, 
+        double finalShoulderAngle, 
+        double finalWristAngle) 
+    {
         
         Astar astar = new Astar(
                 new Node(initialShoulderAngle, initialWristAngle), 
@@ -35,12 +41,11 @@ public class AstarUtil {
             );
         
 
-        for (Constraint constraint : constraints)
-            astar.addConstraint(constraint);
+        astar.addConstraint(constraint);
 
         // add constraints to astar path (example constraints)
-        astar.addConstraint((s, w) -> 0 <= s && s <= 180);
-        astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));
+        // astar.addConstraint((s, w) -> 0 <= s && s <= 180);
+        // astar.addConstraint((s, w) -> Math.abs(s - (-90)) < 30 && ((-180 <= w && w <= 10)));
 
         List<Node> path = astar.findPath();
         // for (Node node : path) {
