@@ -109,8 +109,7 @@ public class RobotContainer {
         driver.getTopButton().onTrue(new ArmReady());
 
         // swerve
-        driver.getLeftButton().whileTrue(new SwerveSamAutoEngage());
-        // driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
+        driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
         driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
@@ -197,7 +196,6 @@ public class RobotContainer {
         autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
         autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
-        autonChooser.addOption("Auto Engage", new SwerveSetpointAutoEngage());
 
         
         SmartDashboard.putData("Autonomous", autonChooser);
