@@ -104,7 +104,7 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
                     .withEvents(),
 
 
-            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     }
