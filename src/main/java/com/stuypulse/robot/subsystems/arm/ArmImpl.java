@@ -26,6 +26,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -41,9 +42,6 @@ public class ArmImpl extends Arm {
     private final AngleController shoulderController;
     private final AngleController wristController;
 
-    private final SmartNumber shoulderTargetAngle;
-    private final SmartNumber wristTargetAngle; 
-
     private final ArmVisualizer armVisualizer;
 
     private final FieldObject2d fieldObject;
@@ -56,13 +54,8 @@ public class ArmImpl extends Arm {
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
 
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
-        wristEncoder.setInverted(true);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
-        shoulderEncoder.setZeroOffset(Shoulder.ANGLE_OFFSET);
-        wristEncoder.setZeroOffset(Wrist.ANGLE_OFFSET);
+        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
         configureMotors();
 
@@ -76,17 +69,25 @@ public class ArmImpl extends Arm {
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        shoulderTargetAngle = new SmartNumber("Arm/Shoulder Target Angle (deg)", -90);
-        wristTargetAngle = new SmartNumber("Arm/Wrist Target Angle (deg)", 90);
-
         armVisualizer = new ArmVisualizer();
 
         fieldObject = Odometry.getInstance().getField().getObject("Field Arm");
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
+
+        setTargetState(getState());
     }
 
     private void configureMotors() {
+        shoulderEncoder.setZeroOffset(0);
+        wristEncoder.setZeroOffset(0);
+
+        shoulderEncoder.setInverted(true);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+        wristEncoder.setInverted(true);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
         WRIST_CONFIG.configure(wrist);
@@ -101,27 +102,6 @@ public class ArmImpl extends Arm {
     public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(SLMath.map(wristEncoder.getPosition(), 0, 1, -180, 180));
     }
-
-    @Override
-    public Rotation2d getShoulderTargetAngle() {
-        return Rotation2d.fromDegrees(wristTargetAngle.get());
-    }
-
-    @Override
-    public Rotation2d getWristTargetAngle() {
-        return Rotation2d.fromDegrees(wristTargetAngle.get());
-    }
-
-    @Override
-    public void setTargetShoulderAngle(Rotation2d angle) {
-        shoulderTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Shoulder.MIN_ANGLE, Shoulder.MAX_ANGLE));
-    }
-
-    @Override
-    public void setTargetWristAngle(Rotation2d angle) {
-        wristTargetAngle.set(MathUtil.clamp(angle.getDegrees(), Wrist.MIN_ANGLE, Wrist.MAX_ANGLE));
-    }
-
     private void runShoulder(double voltage) {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
@@ -153,8 +133,8 @@ public class ArmImpl extends Arm {
 
     @Override
     public void periodic() {
-        double shoulderOutput = shoulderController.update(Angle.fromDegrees(shoulderTargetAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
-        double wristOutput = wristController.update(Angle.fromDegrees(wristTargetAngle.get()), Angle.fromRotation2d(getWristAngle()));
+        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
+        double wristOutput = wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
 
         // if (Shoulder.DEADZONE_ENABLED.get() & Math.abs(shoulderTargetAngle.get()) < Shoulder.ANGLE_DEADZONE_HIGH & Math.abs(shoulderTargetAngle.get()) > Shoulder.ANGLE_DEADZONE_LOW) {
         //     wristOutput = wristController.update(Angle.k90deg, Angle.fromRotation2d(getWristAngle()));
@@ -165,7 +145,7 @@ public class ArmImpl extends Arm {
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
-        armVisualizer.setTargetAngles(shoulderTargetAngle.get(), wristTargetAngle.get());
+        armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
 
         updateFieldObject();
