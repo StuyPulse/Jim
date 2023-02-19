@@ -2,13 +2,11 @@ package com.stuypulse.robot.subsystems.arm;
 
 import java.util.Optional;
 
-import com.stuypulse.robot.commands.arm.ArmDrive;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -31,11 +29,11 @@ public abstract class Arm extends SubsystemBase {
         return instance;
     }
     
+    // Path planning
     private Optional<ArmBFSField> trajectory = Optional.empty();
-    private ArmState targetState = ArmState.fromDegrees(-90, +90); 
-    // TODO: make arm not dangerous 
+    private ArmState targetState = ArmState.fromDegrees(-90, +90);
 
-    // Read arm state
+    // Read measured state
     public abstract Rotation2d getShoulderAngle();
     public abstract Rotation2d getWristAngle();
 
@@ -44,13 +42,6 @@ public abstract class Arm extends SubsystemBase {
     }
 
     // Read target state
-    public final Rotation2d getShoulderTargetAngle() {
-        return getTargetState().getShoulderState();
-    }
-    public final Rotation2d getWristTargetAngle() {
-        return getTargetState().getWristState();
-    }
-
     private final ArmBFSField.Node getTargetNode() {
         return trajectory.get().getNode(getState()).travel(Settings.Arm.BFS_FIELD_LEAD.getAsDouble());
     }
@@ -63,7 +54,14 @@ public abstract class Arm extends SubsystemBase {
         return targetState;
     }
 
-    // Compare measurement and target
+    public final Rotation2d getShoulderTargetAngle() {
+        return getTargetState().getShoulderState();
+    }
+    public final Rotation2d getWristTargetAngle() {
+        return getTargetState().getWristState();
+    }
+    
+    // Read error between measured and target states
     public final boolean isShoulderAtAngle(Rotation2d maxError) {
         return Math.abs(getShoulderTargetAngle().minus(getShoulderAngle()).getDegrees()) < maxError.getDegrees();
     }
@@ -71,16 +69,18 @@ public abstract class Arm extends SubsystemBase {
         return Math.abs(getWristTargetAngle().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
     }
 
-    public final boolean isArmAtState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
+    public final boolean isArmAtTargetState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
         return isShoulderAtAngle(shoulderEpsilon) && isWristAtAngle(wristEpsilon);
     }
 
-    public final boolean isArmAtTargetState() {
+    public final boolean isArmAtEndState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
+        // Checks if the current target state is the goal / end point of a trajectory
+        // -- this is what is meant by "end" state
         if(trajectory.isPresent() && !getTargetNode().isSetpoint()) {
             return false;
         }
 
-        return isArmAtState(getShoulderTargetAngle(), getWristTargetAngle());
+        return isArmAtTargetState(shoulderEpsilon, wristEpsilon);
     }
 
     // Set target state
@@ -101,7 +101,7 @@ public abstract class Arm extends SubsystemBase {
         this.trajectory = Optional.ofNullable(trajectory);
     }
 
-    // Change target angle
+    // Change target angle (useful for driving)
     public final void moveShoulder(Rotation2d angle) {
         setShoulderTargetState(getShoulderTargetAngle().plus(angle));
     }
