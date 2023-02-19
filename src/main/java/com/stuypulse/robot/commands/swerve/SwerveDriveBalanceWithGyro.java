@@ -11,7 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveEngage extends CommandBase {
+public class SwerveDriveBalanceWithGyro extends CommandBase {
         
     private Controller control;
 
@@ -29,7 +29,7 @@ public class SwerveDriveEngage extends CommandBase {
     private SwerveDrive swerve;
     private Odometry odometry;
 
-    public SwerveDriveEngage() {
+    public SwerveDriveBalanceWithGyro() {
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
