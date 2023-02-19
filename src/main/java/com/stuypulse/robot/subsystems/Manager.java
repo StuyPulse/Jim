@@ -103,7 +103,9 @@ public class Manager extends SubsystemBase {
         intakeSide = IntakeSide.FRONT;
         scoreSide = ScoreSide.SAME;
 
-        routine = Routine.NEUTRAL;
+        // Doesn't matter what this starts at because
+        // the arm doesn't start with a trajectory.
+        routine = Routine.MANUAL_CONTROL;
 
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
