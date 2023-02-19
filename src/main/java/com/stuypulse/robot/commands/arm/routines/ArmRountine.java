@@ -9,7 +9,7 @@ import com.stuypulse.robot.util.ArmBFSField;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ArmSetRoutine extends CommandBase {
+public class ArmRountine extends CommandBase {
     
     private Arm arm;
     private Manager manager;
@@ -17,7 +17,7 @@ public class ArmSetRoutine extends CommandBase {
     private Supplier<ArmBFSField> trajectory;
     private Routine routine;
 
-    public ArmSetRoutine(Routine routine, Supplier<ArmBFSField> trajectory) {
+    public ArmRountine(Routine routine, Supplier<ArmBFSField> trajectory) {
         arm = Arm.getInstance();
         manager = Manager.getInstance();
 
