@@ -1,11 +1,9 @@
 package com.stuypulse.robot.subsystems;
 
-import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
-import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.constants.Constraints;
 
 
@@ -13,14 +11,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -75,12 +69,14 @@ public class Manager extends SubsystemBase {
         OPPOSITE
     }
 
+    // Direction that describes a scoring position
     public enum Direction {
         LEFT,
         CENTER,
         RIGHT
     }
 
+    // Routine for the arm 
     public enum Routine {
         INTAKE,
         NEUTRAL,
