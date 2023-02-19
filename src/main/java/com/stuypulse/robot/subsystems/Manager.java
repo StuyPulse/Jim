@@ -83,7 +83,7 @@ public class Manager extends SubsystemBase {
         READY,
         SCORE,
 
-        BLAY_MODE
+        MANUAL_CONTROL
     }
 
 
@@ -288,6 +288,7 @@ public class Manager extends SubsystemBase {
     }
 
     /** Change and Read State **/
+
     public GamePiece getGamePiece() {
         return gamePiece;
     }
@@ -353,5 +354,6 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
         SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
+        SmartDashboard.putString("Manager/Routine", routine.name());
     }
 }
