@@ -165,10 +165,10 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);
 
-            double VEL_LIMIT = 0.5;
-            double ACCEL_LIMIT = 0.4;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 10.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 20.0);
 
-            Rotation2d TOLERANCE = Rotation2d.fromDegrees(1);
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 1.0);
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3);
@@ -205,12 +205,10 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);
 
-            double VEL_LIMIT = 1.0;
-            double ACCEL_LIMIT = 0.8;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 5.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 10.0);
 
-            double ANGLE_OFFSET = 0;
-
-            Rotation2d TOLERANCE = Rotation2d.fromDegrees(2);
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 3.0);
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5);

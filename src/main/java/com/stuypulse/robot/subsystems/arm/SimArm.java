@@ -41,13 +41,19 @@ public class SimArm extends Arm {
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
                                     .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-                                    .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT))
-                                    .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));;
+                                    .setSetpointFilter(
+                                        new AMotionProfile(
+                                            Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
+                                            Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number()))
+                                    .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
-                                    .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT))
+                                    .setSetpointFilter(
+                                        new AMotionProfile(
+                                            Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
+                                            Wrist.MAX_VELOCITY.filtered(Math::toRadians).number()))
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));

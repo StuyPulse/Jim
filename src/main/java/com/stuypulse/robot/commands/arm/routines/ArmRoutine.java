@@ -9,6 +9,7 @@ import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmRoutine extends CommandBase {
@@ -35,6 +36,10 @@ public class ArmRoutine extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return arm.isArmAtTargetState(Shoulder.TOLERANCE, Wrist.TOLERANCE) || manager.getRoutine() != routine;
+        boolean atTargetState = arm.isArmAtTargetState(
+            Rotation2d.fromDegrees(Shoulder.TOLERANCE.get()),
+            Rotation2d.fromDegrees(Wrist.TOLERANCE.get()));
+
+        return atTargetState || manager.getRoutine() != routine;
     }
 }
