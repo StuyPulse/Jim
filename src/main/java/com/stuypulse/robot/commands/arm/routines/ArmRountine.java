@@ -2,6 +2,8 @@ package com.stuypulse.robot.commands.arm.routines;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -33,7 +35,6 @@ public class ArmRountine extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // TODO: this is not the real final setpoint (this is along the arm bfs field)
-        return arm.isArmAtTargetState() || manager.getRoutine() != routine;
+        return arm.isArmAtTargetState(Shoulder.TOLERANCE, Wrist.TOLERANCE) || manager.getRoutine() != routine;
     }
 }

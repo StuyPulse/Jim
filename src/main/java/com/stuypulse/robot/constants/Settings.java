@@ -5,14 +5,10 @@
 
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
-import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -150,6 +146,7 @@ public interface Settings {
     public interface Arm {
 
         public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
+
         public interface Shoulder {
             int MOTORS = 2;
             double REDUCTION = 63.0;
@@ -166,17 +163,12 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            double MIN_ANGLE = Units.degreesToRadians(-180);
-            double MAX_ANGLE = Units.degreesToRadians(0);
-
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);//.plus(Rotation2d.fromDegrees(90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);
 
             double VEL_LIMIT = 0.5;
             double ACCEL_LIMIT = 0.4;
 
-            double ANGLE_OFFSET = 0;
-
-            double TOLERANCE = 3;
+            Rotation2d TOLERANCE = Rotation2d.fromDegrees(1);
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3);
@@ -211,17 +203,14 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            double MIN_ANGLE = Double.NEGATIVE_INFINITY;
-            double MAX_ANGLE = Double.POSITIVE_INFINITY;
-
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);//.minus(Rotation2d.fromDegrees(90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);
 
             double VEL_LIMIT = 1.0;
             double ACCEL_LIMIT = 0.8;
 
             double ANGLE_OFFSET = 0;
 
-            double TOLERANCE = 5;
+            Rotation2d TOLERANCE = Rotation2d.fromDegrees(2);
     
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5);
