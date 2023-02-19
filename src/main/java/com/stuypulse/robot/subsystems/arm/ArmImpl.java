@@ -10,11 +10,8 @@ import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.util.ArmDynamics;
 import com.stuypulse.robot.util.ArmVisualizer;
-import com.stuypulse.robot.util.FieldArm2d;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
@@ -122,14 +119,6 @@ public class ArmImpl extends Arm {
     public void setFeedbackEnabled(boolean enabled) {
         feedbackEnable.set(enabled);
     }
-
-
-    private Rotation2d lastShoulderAngle;
-    private Rotation2d lastWristAngle;
-    
-    private double lastShoulderVelocity = Double.NaN;
-    private double lastWristVelocity = Double.NaN;
-
 
     @Override
     public void periodic() {
