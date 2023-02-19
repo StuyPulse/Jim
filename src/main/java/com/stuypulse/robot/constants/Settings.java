@@ -5,14 +5,10 @@
 
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
-import com.stuypulse.stuylib.math.Angle;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,6 +53,7 @@ public interface Settings {
         SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Back Roller Speed", 1);
 
 
+        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Settings/Intake/New Gamepiece Time (Falling)", 0.5);
     }
 
     public interface Vision {
@@ -74,8 +71,8 @@ public interface Settings {
         double WIDTH = Units.inchesToMeters(26.504);
         double LENGTH = Units.inchesToMeters(20.508);
         
-        double MAX_SPEED = 4.2;
-        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 3.0);
+        double MAX_SPEED = Units.feetToMeters(15.76);
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 6.28);
 
 
         public interface Motion {
@@ -148,7 +145,7 @@ public interface Settings {
 
     public interface Arm {
 
-        double MAX_DEGREES_PER_SECOND = 90;
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
 
         public interface Shoulder {
             int MOTORS = 2;
@@ -166,24 +163,26 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            double VEL_LIMIT = 0.5;
-            double ACCEL_LIMIT = 0.4;
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);
 
-            double ANGLE_OFFSET = 0;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 10.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 20.0);
 
-            double TOLERANCE = 3;
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 1.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 4);
-                SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3);
+                SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.3);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.24);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.3);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0);
+                // empty kG - 0.275
+                // cone  kG - 0.35
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0);
             }
         }
     
@@ -204,38 +203,38 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            double VEL_LIMIT = 1.0;
-            double ACCEL_LIMIT = 0.8;
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);
 
-            double ANGLE_OFFSET = 0;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 5.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 10.0);
 
-            double TOLERANCE = 5;
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 3.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 10);
-                SmartNumber kI = new SmartNumber("Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Wrist/kD", 0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5);
+                SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
             }
     
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.05);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.1);
+                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0);
             }
         }
     }
-
+    
     public interface LED {
         double MANUAL_UPDATE_TIME = 0.75;
         double BLINK_TIME = 0.5;
     }
         
     public interface Wings {
-        SmartNumber LEFT_LATCH_DELAY = new SmartNumber("Wings/Left Latch Delay", 1.0);
-        SmartNumber RIGHT_LATCH_DELAY = new SmartNumber("Wings/Right Latch Delay", 1.0);
-        SmartNumber LEFT_RETRACT_DELAY = new SmartNumber("Wings/Left Retract Delay", 1.0);
-        SmartNumber RIGHT_RETRACT_DELAY = new SmartNumber("Wings/Right Retract Delay", 1.0);
+        SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 1.0);
+        SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 1.0);
+        SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 1.0);
+        SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 1.0);
     }
 
     public interface Operator {
@@ -249,39 +248,29 @@ public interface Settings {
     }
 
     public interface Driver {
-        
-        // If speed is below this, use quick turn
-        SmartNumber BASE_TURNING_SPEED = new SmartNumber("Driver Settings/Base Turn Speed", 0.45);
-
-        // Low Pass Filter and deadband for Driver Controls
-        SmartNumber SPEED_DEADBAND = new SmartNumber("Driver Settings/Speed Deadband", 0.00);
-        SmartNumber ANGLE_DEADBAND = new SmartNumber("Driver Settings/Turn Deadband", 0.00);
-
-        SmartNumber SPEED_POWER = new SmartNumber("Driver Settings/Speed Power", 2.0);
-        SmartNumber ANGLE_POWER = new SmartNumber("Driver Settings/Turn Power", 1.0);
-
-        SmartNumber SPEED_FILTER = new SmartNumber("DriPver Settings/Speed Filtering", 0.125);
-        SmartNumber ANGLE_FILTER = new SmartNumber("Driver Settings/Turn Filtering", 0.005);
-    
-        
-        SmartNumber DEADBAND = new SmartNumber("Driver Settings/Deadband", 0.05);
-        SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Max Speed", 4.2);
-        SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Max Accleration", 7);
-        SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Max Turning", 6.1);
-
-        SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Max Slow Speed", Units.feetToMeters(1));
-        SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Setings/Max Slow Turning", Units.degreesToRadians(10));
-
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
+
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 6.5);
+
+            SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(1));
         }
 
         public interface Turn {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+
+            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
+
+            SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(10));
         }
 
     }

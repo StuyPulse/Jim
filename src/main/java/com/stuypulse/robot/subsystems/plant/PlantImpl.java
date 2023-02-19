@@ -23,15 +23,15 @@ public class PlantImpl extends Plant {
     }
 
     public void engage() {
-        solenoid.set(Value.kForward);
+        solenoid.set(Value.kReverse);
     }
 
     public void disengage() {
-        solenoid.set(Value.kReverse);
+        solenoid.set(Value.kForward);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kForward);
+        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
     }
 }

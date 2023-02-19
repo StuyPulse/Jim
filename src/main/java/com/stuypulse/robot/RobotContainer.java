@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
@@ -74,7 +75,7 @@ public class RobotContainer {
         configureAutons();
         
         DriverStation.silenceJoystickConnectionWarning(true);
-        // CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
 
     /****************/
@@ -83,7 +84,6 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        arm.setDefaultCommand(new ArmDrive(operator));
     }
 
     /***************/
@@ -98,8 +98,8 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingRetractLeft());
-        driver.getStartButton().onTrue(new WingRetractRight());
+        driver.getSelectButton().onTrue(new WingsToggleRed());
+        driver.getStartButton().onTrue(new WingsToggleWhite());
 
         // arm
         driver.getBottomButton()
@@ -111,18 +111,19 @@ public class RobotContainer {
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
-        // driver.getLeftBumper()
-        //     .whileTrue(new SwerveDrivePlantDrive(driver));
 
-        driver.getRightButton().whileTrue(new SwerveDriveEngage());
     }
 
     private void configureOperatorBindings() {
+        // manual control
+        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > 0.1).onTrue(new ArmDrive(operator));
+        
         // intaking
         operator.getRightTriggerButton()
             .onTrue(new ArmIntake().andThen(new IntakeAcquire()))
@@ -149,7 +150,7 @@ public class RobotContainer {
     
         // set game piece
         operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE));
+        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
         // operator.getBottomButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
         // flip intake side

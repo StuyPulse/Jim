@@ -13,7 +13,7 @@ import com.stuypulse.robot.constants.Ports.Swerve.*;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.stuylib.network.SmartNumber;
 
-public class SwerveDrive extends SubsystemBase {
+public class TestSwerveDrive extends SubsystemBase {
 
     private SmartNumber turningVoltage;
     private SmartNumber drivingVoltage;
@@ -36,7 +36,7 @@ public class SwerveDrive extends SubsystemBase {
     private RelativeEncoder driveEncoderFL;
     private RelativeEncoder driveEncoderFR;
 
-    public SwerveDrive() {
+    public TestSwerveDrive() {
 
         turningVoltage = new SmartNumber("Swerve/Turning Voltage", 0.0);
         drivingVoltage = new SmartNumber("Swerve/Drive Voltage", 0.0);

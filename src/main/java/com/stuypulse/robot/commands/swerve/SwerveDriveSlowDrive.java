@@ -26,19 +26,19 @@ public class SwerveDriveSlowDrive extends CommandBase {
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
-                new VDeadZone(Settings.Driver.SPEED_DEADBAND),
+                new VDeadZone(Settings.Driver.Drive.DEADBAND),
                 x -> x.clamp(1.0),
                 x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
-                x -> x.mul(Settings.Driver.MAX_SLOW_SPEED.get())
+                x -> x.mul(Settings.Driver.Drive.MAX_SLOW_SPEED.get())
                 // new VLowPassFilter(Settings.Driver.Drive.RC),
                 // new VRateLimit(Settings.Driver.MAX_SLOW_ACCEL)
             );
 
         turn = IStream.create(driver::getRightX)
             .filtered(
-                x -> SLMath.deadband(x, Settings.Driver.ANGLE_DEADBAND.get()),
+                x -> SLMath.deadband(x, Settings.Driver.Turn.DEADBAND.get()),
                 x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
-                x -> x * Settings.Driver.MAX_SLOW_TURNING.get()
+                x -> x * Settings.Driver.Turn.MAX_SLOW_TURNING.get()
                 // new LowPassFilter(Settings.Driver.Turn.RC)
             );
         
