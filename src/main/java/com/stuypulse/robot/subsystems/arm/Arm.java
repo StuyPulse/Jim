@@ -69,16 +69,18 @@ public abstract class Arm extends SubsystemBase {
         return Math.abs(getWristTargetAngle().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
     }
 
-    public final boolean isArmAtCurrentState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
+    public final boolean isArmAtTargetState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
         return isShoulderAtAngle(shoulderEpsilon) && isWristAtAngle(wristEpsilon);
     }
 
-    public final boolean isArmAtTargetState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
+    public final boolean isArmAtEndState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
+        // Checks if the current target state is the goal / end point of a trajectory
+        // -- this is what is meant by "end" state
         if(trajectory.isPresent() && !getTargetNode().isSetpoint()) {
             return false;
         }
 
-        return isArmAtCurrentState(shoulderEpsilon, wristEpsilon);
+        return isArmAtTargetState(shoulderEpsilon, wristEpsilon);
     }
 
     // Set target state

@@ -36,7 +36,7 @@ public class ArmRoutine extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        boolean atTargetState = arm.isArmAtTargetState(
+        boolean atTargetState = arm.isArmAtEndState(
             Rotation2d.fromDegrees(Shoulder.TOLERANCE.get()),
             Rotation2d.fromDegrees(Wrist.TOLERANCE.get()));
 
