@@ -1,13 +1,17 @@
 package com.stuypulse.robot.subsystems.arm;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
+
+import static com.stuypulse.robot.constants.Settings.Arm.*;
+
 import com.stuypulse.robot.util.ArmDynamics;
 import com.stuypulse.robot.util.ArmVisualizer;
-import com.stuypulse.robot.util.DoubleJointedArmSim;
+import com.stuypulse.robot.util.TwoJointArmSimulation;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
@@ -20,21 +24,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimArm extends Arm {
 
-    private final DoubleJointedArmSim armSim;
+    private final ArmDynamics dynamics;
+    private final TwoJointArmSimulation simulation;
 
-    private SmartNumber shoulderTargetAngle;
-    private SmartNumber wristTargetAngle;
+    private final AngleController shoulderController; 
+    private final AngleController wristController;
 
     private final ArmVisualizer armVisualizer;
 
     public SimArm() { 
-        armSim = new DoubleJointedArmSim(
-            // shoulder
-            DCMotor.getNEO(2), Shoulder.REDUCTION, Shoulder.MOI, Units.inchesToMeters(Shoulder.LENGTH), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 
-            // wrist
-            DCMotor.getNEO(1), Wrist.REDUCTION, Wrist.MOI, Units.inchesToMeters(Wrist.LENGTH),Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY
-
-        );
+        dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
+        simulation = new TwoJointArmSimulation(-Math.PI/2, Math.PI/2, dynamics);
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
                                     .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
@@ -64,7 +64,7 @@ public class SimArm extends Arm {
 
     @Override
     public Rotation2d getWristAngle() {
-        return Rotation2d.fromRadians(simulation.getWristPositionRadians()).plus(getShoulderAngle());
+        return Rotation2d.fromDegrees(simulation.getWristPositionRadians()).plus(getShoulderAngle());
     }
 
     public ArmVisualizer getVisualizer() {
@@ -79,8 +79,7 @@ public class SimArm extends Arm {
         double shoulderOutput = shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput = wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
     
-        armSim.setInput(shoulderOutput, wristOutput);
-        armSim.update(Settings.DT);
+        simulation.update(shoulderOutput, wristOutput, Settings.DT);
 
         armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
@@ -99,5 +98,4 @@ public class SimArm extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderOutput);
         SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristOutput);
     }
-    
 }
