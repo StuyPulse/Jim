@@ -12,7 +12,6 @@ import static com.stuypulse.robot.constants.Settings.Arm.*;
 
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmVisualizer;
-import com.stuypulse.robot.util.FieldArm2d;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
@@ -38,7 +37,6 @@ public class ArmImpl extends Arm {
     private final AngleController wristController;
 
     private final ArmVisualizer armVisualizer;
-    private final FieldArm2d fieldArmVisualizer;
 
     private SmartBoolean feedbackEnable;
 
@@ -63,8 +61,7 @@ public class ArmImpl extends Arm {
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(new AMotionProfile(Wrist.VEL_LIMIT, Wrist.ACCEL_LIMIT));
 
-        armVisualizer = new ArmVisualizer();
-        fieldArmVisualizer = new FieldArm2d(Odometry.getInstance().getField().getObject("Field Arm"));
+        armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
 
@@ -127,7 +124,7 @@ public class ArmImpl extends Arm {
 
         armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
-        fieldArmVisualizer.update(Odometry.getInstance().getPose(), getState());
+        armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
