@@ -49,7 +49,7 @@ public class ArmDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        Manager.getInstance().setRoutine(Routine.BLAY_MODE);
+        Manager.getInstance().setRoutine(Routine.MANUAL_CONTROL);
         timer.reset();
     }
     
@@ -63,6 +63,6 @@ public class ArmDrive extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Manager.getInstance().getRoutine() != Routine.BLAY_MODE;
+        return Manager.getInstance().getRoutine() != Routine.MANUAL_CONTROL;
     }
 }

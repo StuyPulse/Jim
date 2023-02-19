@@ -1,11 +1,9 @@
 package com.stuypulse.robot.subsystems;
 
-import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
-import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.constants.Constraints;
 
 
@@ -13,14 +11,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -75,19 +69,21 @@ public class Manager extends SubsystemBase {
         OPPOSITE
     }
 
+    // Direction that describes a scoring position
     public enum Direction {
         LEFT,
         CENTER,
         RIGHT
     }
 
+    // Routine for the arm 
     public enum Routine {
         INTAKE,
         NEUTRAL,
         READY,
         SCORE,
 
-        BLAY_MODE
+        MANUAL_CONTROL
     }
 
 
@@ -107,7 +103,9 @@ public class Manager extends SubsystemBase {
         intakeSide = IntakeSide.FRONT;
         scoreSide = ScoreSide.SAME;
 
-        routine = Routine.NEUTRAL;
+        // Doesn't matter what this starts at because
+        // the arm doesn't start with a trajectory.
+        routine = Routine.MANUAL_CONTROL;
 
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
@@ -292,6 +290,7 @@ public class Manager extends SubsystemBase {
     }
 
     /** Change and Read State **/
+
     public GamePiece getGamePiece() {
         return gamePiece;
     }
@@ -357,5 +356,6 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
         SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
+        SmartDashboard.putString("Manager/Routine", routine.name());
     }
 }
