@@ -3,6 +3,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -37,9 +38,9 @@ public class ArmVisualizer {
     private MechanismRoot2d pegRootTop;
     private MechanismRoot2d intakeDirectionRoot;
 
-    private FieldObject2d fieldObject;
+    private FieldArm2d fieldArm2d;
 
-    public ArmVisualizer() {
+    public ArmVisualizer(FieldObject2d fieldArm) {
 
         // ligament initialization
         arm = new Mechanism2d(16, 8);
@@ -90,10 +91,9 @@ public class ArmVisualizer {
         intakeDirectionRoot.append(intakeDirection);
 
         baseLigament.setAngle(-90);
-        
-        SmartDashboard.putData("Arm Mech2d", arm);
 
-        fieldObject =  Odometry.getInstance().getField().getObject("Field Arm");
+        fieldArm2d = new FieldArm2d(fieldArm);
+        SmartDashboard.putData("Arm Mech2d", arm);
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
@@ -117,16 +117,6 @@ public class ArmVisualizer {
 
         shoulderLigament.setAngle(shoulderAngle);
         wristLigament.setAngle(wristAngle);
-
-        double distanceFromSwerveCenter = Math.cos(Math.toRadians(shoulderAngle)) * Shoulder.LENGTH + Math.cos(Math.toRadians(wristAngle)) * Wrist.LENGTH;
-
-        Pose2d swervePose = Odometry.getInstance().getPose();
-        Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, swervePose.getRotation());
-        
-        fieldObject.setPose(new Pose2d(
-            topDownTranslation.plus(swervePose.getTranslation()),
-            swervePose.getRotation()
-        ));
     }
 
     public void setIntakingDirection(double frontDirection, double backDirection) {
@@ -136,6 +126,26 @@ public class ArmVisualizer {
             intakeDirection.setLength(+frontDirection * 2);
 
         intakeDirection.setAngle(wristLigament.getAngle() + 90);
+    }
 
+    public void setIntakingPiece(GamePiece gamePiece) {
+        Color8Bit color = new Color8Bit(0, 0, 0);
+        switch (gamePiece) {
+            case CUBE:
+                color = new Color8Bit(220, 30, 220);
+                break;
+            case CONE_TIP_IN:
+                color = new Color8Bit(255, 255, 63);
+                break;
+            case CONE_TIP_OUT:
+                color = new Color8Bit(255, 127, 0);
+                break;
+        }
+
+        intakeDirection.setColor(color);
+    }
+
+    public void setFieldArm(Pose2d robotPose, ArmState armState) { 
+        fieldArm2d.update(robotPose, armState);
     }
 }

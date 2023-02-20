@@ -16,10 +16,8 @@ public interface Ports {
     public interface Intake {
         int FRONT_MOTOR_PORT = 30;
         int BACK_MOTOR_PORT = 31;
-        int FRONT_RIGHT_SENSOR = 0;
-        int FRONT_LEFT_SENSOR = 1;
-        int BACK_LEFT_SENSOR = 2;
-        int BACK_RIGHT_SENSOR = 3;
+        int FRONT_SENSOR = 0;
+        int BACK_SENSOR = 1;
     }
     
     public interface Swerve {
@@ -33,12 +31,12 @@ public interface Ports {
             int TURN = 13;
         }
 
-        public interface BackRight{
+        public interface BackLeft{
             int DRIVE = 14;
             int TURN = 15;
         }
 
-        public interface BackLeft{
+        public interface BackRight {
             int DRIVE = 16;
             int TURN = 17; 
         }
@@ -60,11 +58,11 @@ public interface Ports {
     }
     
     public interface Wings {
-        int LEFT_DEPLOY_FORWARD = 2;
-        int LEFT_DEPLOY_REVERSE = 3;
-        int RIGHT_DEPLOY_FORWARD = 4;
-        int RIGHT_DEPLOY_REVERSE = 5;
-        int LEFT_LATCH = 6;
-        int RIGHT_LATCH = 7;
+        int RED_DEPLOY_FORWARD = 2;
+        int RED_DEPLOY_REVERSE = 3;
+        int WHITE_DEPLOY_FORWARD = 4;
+        int WHITE_DEPLOY_REVERSE = 5;
+        int RED_LATCH = 6;
+        int WHITE_LATCH = 7;
     }
 }

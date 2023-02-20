@@ -4,9 +4,14 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Pump;
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestbotContainer {
 
@@ -15,17 +20,21 @@ public class TestbotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     
     // // Subsystem
-    public final Intake intake = new Intake();
-    public final SwerveDrive swerve = new SwerveDrive();
-    public final Arm arm = new Arm();
-    public final Plant plant = new Plant();
-    public final Wings wings = new Wings();
+    public final TestIntake intake = new TestIntake();
+    public final TestSwerveDrive swerve = new TestSwerveDrive();
+    public final TestArm arm = new TestArm();
+    public final TestPlant plant = new TestPlant();
+    public final TestWings wings = new TestWings();
     
     public final Pump pump = new Pump();
 
     public TestbotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+
+        DriverStation.silenceJoystickConnectionWarning(true);
+
+        CameraServer.startAutomaticCapture();
     }
 
     private void configureButtonBindings() {
@@ -59,7 +68,7 @@ public class TestbotContainer {
             .onFalse(swerve.runOnce(swerve::stop));
 
         driver.getBottomButton()
-            .onTrue(swerve.runOnce(swerve::driveMotorFR))
+            .onTrue(swerve.runOnce(swerve::driveMotorBL))
             .onFalse(swerve.runOnce(swerve::stop));
 
         // wings
@@ -88,14 +97,28 @@ public class TestbotContainer {
             .onFalse(intake.runOnce(intake::stop));
     }
 
+    private final SmartNumber SHOULDER_VOLTS = new SmartNumber("Arm/Shoulder Input Volts", 0);
+    private final SmartNumber WRIST_VOLTS = new SmartNumber("Arm/Wrist Input Volts", 0);
+    private final SmartBoolean ARM_DRIVE = new SmartBoolean("Arm/Arm Drive", false);
+
     private void configureDefaultCommands() {
         // arm
         arm.setDefaultCommand(arm.run(() -> {
-            double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 10;
-            double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 10;
-
-            arm.runShoulder(shoulderVolts);
-            arm.runWrist(wristVolts);
+            if (!SmartDashboard.getBoolean("Arm/Setpoint Control", false)) {
+                if (ARM_DRIVE.get()) {
+                    double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 3;
+                    double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 5;
+        
+                    SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
+                    SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
+        
+                    arm.runShoulder(shoulderVolts);
+                    arm.runWrist(wristVolts);
+                } else {
+                    arm.runShoulder(MathUtil.clamp(SHOULDER_VOLTS.get(), -3, 3));
+                    arm.runWrist(MathUtil.clamp(WRIST_VOLTS.get(), -5, 5));
+                }
+            }
         }));
     }
     
