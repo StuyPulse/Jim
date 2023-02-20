@@ -23,7 +23,7 @@ import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.wings.*;
-
+import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
@@ -50,8 +50,8 @@ public class RobotContainer {
     public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
     // // Subsystem
-    public final Intake intake = Intake.getInstance();
     public final SwerveDrive swerve = SwerveDrive.getInstance();
+    public final Intake intake = Intake.getInstance();
     public final Vision vision = Vision.getInstance();
     public final Odometry odometry = Odometry.getInstance();
     public final Arm arm = Arm.getInstance();
@@ -76,6 +76,8 @@ public class RobotContainer {
         
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
+
+        ArmFields.load();
     }
 
     /****************/

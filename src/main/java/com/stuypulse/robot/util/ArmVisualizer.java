@@ -129,11 +129,20 @@ public class ArmVisualizer {
     }
 
     public void setIntakingPiece(GamePiece gamePiece) {
-        if (gamePiece.isCube()) {
-            intakeDirection.setColor(new Color8Bit(220, 30, 220));
-        } else {
-            intakeDirection.setColor(new Color8Bit(255, 255, 63));
+        Color8Bit color = new Color8Bit(0, 0, 0);
+        switch (gamePiece) {
+            case CUBE:
+                color = new Color8Bit(220, 30, 220);
+                break;
+            case CONE_TIP_IN:
+                color = new Color8Bit(255, 255, 63);
+                break;
+            case CONE_TIP_OUT:
+                color = new Color8Bit(255, 127, 0);
+                break;
         }
+
+        intakeDirection.setColor(color);
     }
 
     public void setFieldArm(Pose2d robotPose, ArmState armState) { 

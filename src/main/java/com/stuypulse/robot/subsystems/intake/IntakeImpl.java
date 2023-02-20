@@ -138,7 +138,7 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void deacquireCone(){
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
+        if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
             frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {
