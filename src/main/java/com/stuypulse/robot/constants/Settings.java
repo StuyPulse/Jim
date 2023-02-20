@@ -37,14 +37,14 @@ public interface Settings {
     double DT = 0.02;
 
     public interface Intake{
-        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.2);
-        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 20);
+        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.05);
+        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 60);
 
         SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Front Roller Speed", 1);
-        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Back Roller Speed", 0.5);
+        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Back Roller Speed", 1);
 
         SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Front Roller Speed", 1);
-        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Back Roller Speed", 0.5);
+        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Back Roller Speed", 1);
 
         SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Front Roller Speed", 1);
         SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Back Roller Speed", 1);

@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.intake;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Intake extends SubsystemBase {
@@ -9,8 +10,12 @@ public abstract class Intake extends SubsystemBase {
     
     public static Intake getInstance() {
         if (instance == null) {
-            instance = new NoIntake();
-            // instance = Settings.ROBOT == Robot.JIM ? new IntakeImpl() : new NoIntake();
+            if (RobotBase.isSimulation())
+                instance = new SimIntake();
+            else if (Settings.ROBOT == Robot.JIM)
+                instance = new IntakeImpl();
+            else
+                instance = new SimIntake();
         }
         return instance;
     }
@@ -20,8 +25,6 @@ public abstract class Intake extends SubsystemBase {
 
     public abstract void deacquireCube();
     public abstract void deacquireCone();
-
-    public abstract boolean hasNewGamepiece();
 
     public abstract void stop();
 

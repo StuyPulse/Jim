@@ -197,6 +197,8 @@ public class ArmBFSField {
     private final double mArmDegOffset;
     private final double mWristDegOffset;
     private final Node[] mNodeMap;
+    
+    private static int instances = 0;
 
     public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
         this(targetArmDeg, targetWristDeg, constraints, new ArmBFSField(-180 - targetArmDeg, -180 - targetWristDeg, constraints, null));
@@ -269,6 +271,8 @@ public class ArmBFSField {
                 }
             }
         }
+
+        System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {
