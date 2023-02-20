@@ -7,10 +7,7 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Back Left": {
-          "open": true
-        },
-        "Back Right": {
+        "Arm": {
           "open": true
         },
         "DriPver Settings": {
@@ -22,10 +19,7 @@
         "Driver Settings": {
           "open": true
         },
-        "Front Left": {
-          "open": true
-        },
-        "Front Right": {
+        "Intake": {
           "open": true
         },
         "Odometry": {
@@ -38,6 +32,9 @@
           "open": true
         },
         "Settings": {
+          "Intake": {
+            "open": true
+          },
           "open": true
         },
         "Swerve": {
@@ -122,7 +119,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Wrist Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Shoulder Angle"
             },
             {
               "color": [
@@ -131,25 +128,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Arm Angle (deg)"
-            },
-            {
-              "color": [
-                0.7686275243759155,
-                0.30588236451148987,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Arm/Target Wrist Angle (deg)"
-            },
-            {
-              "color": [
-                0.3333333432674408,
-                0.658823549747467,
-                0.4078431725502014,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Arm/Target Arm Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Target Shoulder Angle (deg)"
             }
           ]
         }
@@ -160,7 +139,8 @@
         {
           "axis": [
             {
-              "autoFit": true
+              "lockMax": true,
+              "lockMin": true
             }
           ],
           "height": 0,
@@ -172,7 +152,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Right/Angle"
+              "id": "NT:/SmartDashboard/Arm/Wrist Angle"
             },
             {
               "color": [
@@ -181,7 +161,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Right/Target Angle"
+              "id": "NT:/SmartDashboard/Arm/Target Wrist Angle (deg)"
             }
           ]
         }
@@ -281,7 +261,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <5>": {
       "plots": [
@@ -317,7 +300,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <6>": {
       "plots": [
@@ -349,7 +335,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <7>": {
       "plots": [
@@ -381,7 +370,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <8>": {
       "plots": [
@@ -413,7 +405,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <9>": {
       "plots": [
@@ -445,7 +440,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
