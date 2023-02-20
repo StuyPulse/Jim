@@ -38,8 +38,9 @@ public class PerfectArm extends Arm {
 
     @Override
     public void periodic() {
-        shoulderAngle = getShoulderTargetAngle();
-        wristAngle = getWristTargetAngle();
+        var targetState = getTargetState();
+        shoulderAngle = targetState.getShoulderState();
+        wristAngle = targetState.getWristState();
 
         visualizer.setMeasuredAngles(shoulderAngle.getDegrees(), wristAngle.getDegrees());
         visualizer.setTargetAngles(shoulderAngle.getDegrees(), wristAngle.getDegrees());

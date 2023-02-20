@@ -16,7 +16,6 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.util.ArmDynamics;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -28,7 +27,6 @@ import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
 
@@ -133,17 +131,22 @@ public class ArmImpl extends Arm {
 
     @Override
     public void periodic() {
+        var targetState = getTargetState();
         double shoulderVolts = 
-            shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
+            shoulderController.update(
+                Angle.fromRotation2d(targetState.getShoulderState()), 
+                Angle.fromRotation2d(getShoulderAngle()));
         
         double wristVolts =
-            wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
+            wristController.update(
+                Angle.fromRotation2d(targetState.getWristState()), 
+                Angle.fromRotation2d(getWristAngle()));
 
         runShoulder(shoulderVolts);
         runWrist(wristVolts);
 
         if (Settings.isDebug()) { 
-            armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
+            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
             armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
             armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
         

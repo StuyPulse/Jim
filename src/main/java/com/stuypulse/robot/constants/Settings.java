@@ -39,10 +39,11 @@ public interface Settings {
 
     double DT = 0.02;
 
-    SmartBoolean DEBUG_MODE = new SmartBoolean("Debug Mode", false);
+    // SmartBoolean DEBUG_MODE = new SmartBoolean("Debug Mode", false);
+    boolean DEBUG_MODE = false;
 
     public static boolean isDebug() {
-        return DEBUG_MODE.get() || RobotBase.isSimulation();
+        return DEBUG_MODE; // DEBUG_MODE.get();// || RobotBase.isSimulation();
     }
 
     public static void putNumber(String key, double value) {

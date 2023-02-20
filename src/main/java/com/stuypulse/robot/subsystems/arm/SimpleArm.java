@@ -23,7 +23,6 @@ import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimpleArm extends Arm {
 
@@ -123,14 +122,15 @@ public class SimpleArm extends Arm {
 
     @Override
     public void periodic() {
-        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
-        double wristOutput = wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
+        var targetState = getTargetState();
+        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
+        double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
 
         runShoulder(shoulderOutput);
         runWrist(wristOutput);
 
         if (Settings.isDebug()) {
-            armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
+            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getShoulderState().getDegrees());
             armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
             armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
         
@@ -140,7 +140,6 @@ public class SimpleArm extends Arm {
             Settings.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
             Settings.putNumber("Arm/Wrist/Raw Angle (deg)", Units.rotationsToDegrees(wristEncoder.getPosition()));
 
-            var targetState = getTargetState();
             Settings.putNumber("Arm/Shoulder/Target (deg)", targetState.getShoulderState().getDegrees());
             Settings.putNumber("Arm/Wrist/Target (deg)", targetState.getWristState().getDegrees());
 

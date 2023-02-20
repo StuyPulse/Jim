@@ -15,18 +15,21 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
 
+    private CommandScheduler scheduler;
+
     /*************************/
     /*** ROBOT SCHEDULEING ***/
     /*************************/
 
     @Override
     public void robotInit() {
+        scheduler = CommandScheduler.getInstance();
         robot = new RobotContainer();
     }
 
     @Override
     public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+        scheduler.run();
     }
 
     /*********************/
@@ -87,7 +90,7 @@ public class Robot extends TimedRobot {
     public void testInit() {
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
-        CommandScheduler.getInstance().cancelAll();
+        scheduler.cancelAll();
     }
 
     @Override

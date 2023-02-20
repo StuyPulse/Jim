@@ -78,7 +78,7 @@ public class RobotContainer {
 
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
-        CameraServer.startAutomaticCapture();
+        // CameraServer.startAutomaticCapture();
 
         ArmFields.load();
     }
