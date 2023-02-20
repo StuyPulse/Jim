@@ -34,41 +34,42 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
 
-    private static SwerveDrive instance = null;
-    
-    public static SwerveDrive getInstance() {
-        if (instance == null) {
-            if (RobotBase.isReal()) {
-                if (Settings.ROBOT == Robot.JIM) {
-                    // instance = new SwerveDrive(
-                    //     new MAX_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
-                    //     new MAX_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
-                    //     new MAX_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
-                    //     new MAX_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
-                    // );
-                    instance = new SwerveDrive(
-                        new SL_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
-                        new SL_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
-                        new SL_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
-                        new SL_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
-                    );
-                } else {
-                    instance = new SwerveDrive(
-                        SacrodModule.createFrontRight(),
-                        SacrodModule.createFrontLeft(),
-                        SacrodModule.createBackLeft(),
-                        SacrodModule.createBackRight()
-                    );
-                }
+    private static final SwerveDrive instance; 
+
+    static {
+        if (RobotBase.isReal()) {
+            if (Settings.ROBOT == Robot.JIM) {
+                // instance = new SwerveDrive(
+                //     new MAX_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
+                //     new MAX_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
+                //     new MAX_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
+                //     new MAX_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
+                // );
+                instance = new SwerveDrive(
+                    new SL_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
+                    new SL_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
+                    new SL_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
+                    new SL_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
+                );
             } else {
                 instance = new SwerveDrive(
-                    new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
-                    new SimModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET),
-                    new SimModule(BackLeft.ID, BackLeft.MODULE_OFFSET),
-                    new SimModule(BackRight.ID, BackRight.MODULE_OFFSET)
+                    SacrodModule.createFrontRight(),
+                    SacrodModule.createFrontLeft(),
+                    SacrodModule.createBackLeft(),
+                    SacrodModule.createBackRight()
                 );
             }
+        } else {
+            instance = new SwerveDrive(
+                new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
+                new SimModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET),
+                new SimModule(BackLeft.ID, BackLeft.MODULE_OFFSET),
+                new SimModule(BackRight.ID, BackRight.MODULE_OFFSET)
+            );
         }
+    }
+    
+    public static SwerveDrive getInstance() {
         return instance;
     }
 

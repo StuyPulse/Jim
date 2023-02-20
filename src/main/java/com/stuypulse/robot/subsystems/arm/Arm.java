@@ -15,17 +15,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class Arm extends SubsystemBase {
 
     // Singleton
-    private static Arm instance = null;
+    private static final Arm instance;
 
-    public synchronized static Arm getInstance() {
-        if (instance == null) {
-            if (RobotBase.isSimulation())
-                instance = new SimArm();
-            else if (Settings.ROBOT == Robot.JIM)
-                instance = new ArmImpl();
-            else
-                instance = new PerfectArm();
-        }
+    static {
+        if (RobotBase.isSimulation())
+            instance = new SimArm();
+        else if (Settings.ROBOT == Robot.JIM)
+            instance = new ArmImpl();
+        else
+            instance = new PerfectArm();
+    }
+
+    public static Arm getInstance() {
         return instance;
     }
     
