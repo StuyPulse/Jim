@@ -8,26 +8,26 @@ public final class ArmFields {
     static {
         StopWatch timer = new StopWatch();
 
-        Neutral.kTrajectory.getSetpoint();
-        Intake.kTrajectory.getSetpoint();
+        Neutral.kTrajectory.getSize();
+        Intake.kTrajectory.getSize();
 
-        Ready.Low.kConeTipInOpposite.getSetpoint();
+        Ready.Low.kConeTipInOpposite.getSize();
 
-        Ready.Mid.kConeTipInSame.getSetpoint();
-        Ready.Mid.kConeTipInOpposite.getSetpoint();
-        Ready.Mid.kConeTipOutSame.getSetpoint();
-        Ready.Mid.kCube.getSetpoint();
+        Ready.Mid.kConeTipInSame.getSize();
+        Ready.Mid.kConeTipInOpposite.getSize();
+        Ready.Mid.kConeTipOutSame.getSize();
+        Ready.Mid.kCube.getSize();
 
-        Ready.High.kConeTipInSame.getSetpoint();
-        Ready.High.kConeTipInOpposite.getSetpoint();
-        Ready.High.kCube.getSetpoint();
+        Ready.High.kConeTipInSame.getSize();
+        Ready.High.kConeTipInOpposite.getSize();
+        Ready.High.kCube.getSize();
 
-        Score.Mid.kConeTipInSame.getSetpoint();
-        Score.Mid.kConeTipInOpposite.getSetpoint();
-        Score.Mid.kConeTipOutSame.getSetpoint();
+        Score.Mid.kConeTipInSame.getSize();
+        Score.Mid.kConeTipInOpposite.getSize();
+        Score.Mid.kConeTipOutSame.getSize();
 
-        Score.High.kConeTipInSame.getSetpoint();
-        Score.High.kConeTipInOpposite.getSetpoint();
+        Score.High.kConeTipInSame.getSize();
+        Score.High.kConeTipInOpposite.getSize();
 
         System.out.println("ArmBFSFields Generated in " + timer.reset() + " seconds.");
     }

@@ -5,11 +5,19 @@ import java.util.Queue;
 
 public class ArmBFSField {
 
+    private static double flippedZero(double degrees) {
+        return normalizeZero(-180 - degrees);
+    }
+
     public interface Constraint {
         public boolean isInvalid(double armDeg, double wristDeg);
 
         public default Constraint add(Constraint next) {
             return (a, w) -> this.isInvalid(a, w) || next.isInvalid(a, w);
+        }
+
+        public default Constraint flip() {
+            return (a, w) -> this.isInvalid(flippedZero(a), flippedZero(w));
         }
     }
 
@@ -26,7 +34,7 @@ public class ArmBFSField {
     // kBinning = 1) 360 x 360
     // kBinning = 2) 180 x 180
     // kBinning = 3) 120 x 120
-    public static final int kBinning = 3;
+    public static final int kBinning = 4;
 
     private static int normalize(int degrees) {
         return degrees - kDegreeRange * Math.floorDiv(degrees, kDegreeRange);
@@ -157,7 +165,8 @@ public class ArmBFSField {
         }
 
         public ArmState getArmState() {
-            return ArmState.fromDegrees(getArmDeg(), getWristDeg());
+            var state = ArmState.fromDegrees(getArmDeg(), getWristDeg());
+            return mFlipped ? state.flip() : state;
         }
 
         private Node getNeighbor(int dx, int dy) {
@@ -190,28 +199,30 @@ public class ArmBFSField {
         }
     }
 
-    private ArmBFSField mFlipped;
     private final Constraint mConstraints;
-    private final double mTargetArmDeg;
-    private final double mTargetWristDeg;
     private final double mArmDegOffset;
     private final double mWristDegOffset;
     private final Node[] mNodeMap;
-    
+
+    private final boolean mFlipped;
+    private final ArmBFSField mFlippedField; 
+
     private static int instances = 0;
 
-    public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
-        this(targetArmDeg, targetWristDeg, constraints, new ArmBFSField(-180 - targetArmDeg, -180 - targetWristDeg, constraints, null));
-        mFlipped.mFlipped = this;
+    private ArmBFSField(ArmBFSField flipped) {
+        mConstraints = flipped.mConstraints;
+        mArmDegOffset = flipped.mArmDegOffset;
+        mWristDegOffset = flipped.mWristDegOffset;
+
+        System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
+
+        mNodeMap = flipped.mNodeMap;
+        mFlipped = true;
+        mFlippedField = flipped;
     }
 
-    private ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints, ArmBFSField flipped) {
-        mFlipped = flipped;
-
+    public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
         mConstraints = constraints;
-
-        mTargetArmDeg = normalizeZero(targetArmDeg);
-        mTargetWristDeg = normalizeZero(targetWristDeg);
 
         mArmDegOffset = targetArmDeg - kBinning * Math.round(targetArmDeg / kBinning);
         mWristDegOffset = targetWristDeg - kBinning * Math.round(targetWristDeg / kBinning);
@@ -273,6 +284,9 @@ public class ArmBFSField {
         }
 
         System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
+
+        mFlipped = false;
+        mFlippedField = new ArmBFSField(this);
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {
@@ -289,22 +303,25 @@ public class ArmBFSField {
         return mNodeMap[getIndex(armDeg, wristDeg)];
     }
 
-    public Node getNode(double armDeg, double wristDeg) {
+    private Node getNode(double armDeg, double wristDeg) {
         return getRawNode(
                 (int) Math.round(armDeg - mArmDegOffset + kBinning / 2.0),
                 (int) Math.round(wristDeg - mWristDegOffset + kBinning / 2.0));
     }
 
     public Node getNode(ArmState measuredState) {
+        if (mFlipped) {
+            measuredState = measuredState.flip();
+        }
         return getNode(measuredState.getShoulderState().getDegrees(), measuredState.getWristState().getDegrees());
     }
 
-    public ArmState getSetpoint() {
-        return ArmState.fromDegrees(mTargetArmDeg, mTargetWristDeg);
+    public int getSize() {
+        return mNodeMap.length;
     }
 
     public ArmBFSField flipped() {
-        return mFlipped;
+        return mFlippedField;
     }
 
     public static void main(String... args) {
