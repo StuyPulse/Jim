@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports.Swerve.*;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.stuylib.network.SmartNumber;
@@ -134,15 +135,15 @@ public class TestSwerveDrive extends SubsystemBase {
     @Override
     public void periodic() {
         // log encoder stuff
-        SmartDashboard.putNumber("Swerve/Turn/Back Left", absoluteEncoderBL.getPosition());
-        SmartDashboard.putNumber("Swerve/Turn/Back Right", absoluteEncoderBR.getPosition());
-        SmartDashboard.putNumber("Swerve/Turn/Front Left", absoluteEncoderFL.getPosition());
-        SmartDashboard.putNumber("Swerve/Turn/Front Right", absoluteEncoderFR.getPosition());
+        Settings.putNumber("Swerve/Turn/Back Left", absoluteEncoderBL.getPosition());
+        Settings.putNumber("Swerve/Turn/Back Right", absoluteEncoderBR.getPosition());
+        Settings.putNumber("Swerve/Turn/Front Left", absoluteEncoderFL.getPosition());
+        Settings.putNumber("Swerve/Turn/Front Right", absoluteEncoderFR.getPosition());
 
-        SmartDashboard.putNumber("Swerve/Drive/Back Left Rotations", driveEncoderBL.getPosition());
-        SmartDashboard.putNumber("Swerve/Drive/Back Right Rotations", driveEncoderBR.getPosition());
-        SmartDashboard.putNumber("Swerve/Drive/Front Left Rotations", driveEncoderFL.getPosition());
-        SmartDashboard.putNumber("Swerve/Drive/Front Right Rotations", driveEncoderFR.getPosition());
+        Settings.putNumber("Swerve/Drive/Back Left Rotations", driveEncoderBL.getPosition());
+        Settings.putNumber("Swerve/Drive/Back Right Rotations", driveEncoderBR.getPosition());
+        Settings.putNumber("Swerve/Drive/Front Left Rotations", driveEncoderFL.getPosition());
+        Settings.putNumber("Swerve/Drive/Front Right Rotations", driveEncoderFR.getPosition());
 
     }
 }

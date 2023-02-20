@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class Vision extends SubsystemBase {
 
     /** SINGLETON **/
-    private static Vision instance;
+    private static final Vision instance;
+
+    static { 
+        instance = new VisionImpl();
+    }
 
     public static Vision getInstance() {
-        if(instance == null) {
-            instance = new VisionImpl();
-        } 
         return instance; 
     }
 

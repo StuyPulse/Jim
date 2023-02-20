@@ -5,6 +5,8 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
+import java.lang.annotation.Target;
+
 import com.stuypulse.robot.util.ArmDynamics;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.TwoJointArmSimulation;
@@ -74,26 +76,26 @@ public class SimArm extends Arm {
 
     @Override
     public void periodic() {
-        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
-        double wristOutput = wristController.update(Angle.fromRotation2d(getWristTargetAngle()), Angle.fromRotation2d(getWristAngle()));
+        var targetState = getTargetState();
+        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
+        double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
     
         simulation.update(shoulderOutput, wristOutput, Settings.DT);
 
-        armVisualizer.setTargetAngles(getShoulderTargetAngle().getDegrees(), getWristTargetAngle().getDegrees());
+        armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
-        SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
+        Settings.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
+        Settings.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
 
-        var targetState = getTargetState();
-        SmartDashboard.putNumber("Arm/Shoulder/Target (deg)", targetState.getShoulderState().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Target (deg)", targetState.getWristState().getDegrees());
+        Settings.putNumber("Arm/Shoulder/Target (deg)", targetState.getShoulderState().getDegrees());
+        Settings.putNumber("Arm/Wrist/Target (deg)", targetState.getWristState().getDegrees());
 
-        SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
+        Settings.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
+        Settings.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
 
-        SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderOutput);
-        SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristOutput);
+        Settings.putNumber("Arm/Shoulder/Output (V)", shoulderOutput);
+        Settings.putNumber("Arm/Wrist/Output (V)", wristOutput);
     }
 }

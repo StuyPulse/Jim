@@ -4,6 +4,7 @@ import static com.stuypulse.robot.constants.ArmFields.*;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
 
@@ -345,12 +346,14 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+        if (Settings.isDebug()) {
+            Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
-        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
-        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
-        SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
-        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
-        SmartDashboard.putString("Manager/Routine", routine.name());
+            Settings.putString("Manager/Game Piece", gamePiece.name());
+            Settings.putString("Manager/Node Level", nodeLevel.name());
+            Settings.putString("Manager/Intake Side", intakeSide.name());
+            Settings.putString("Manager/Score Side", scoreSide.name());
+            Settings.putString("Manager/Routine", routine.name());
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.stuypulse.robot.commands.manager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.Direction;
 
@@ -16,7 +18,7 @@ public class ManagerSetScoreIndex extends InstantCommand {
                 // Direction.values(); // is this in the right order?
                 { Direction.LEFT, Direction.CENTER, Direction.RIGHT };
 
-            if (DriverStation.getAlliance() == Alliance.Blue) {
+            if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
                 manager.setGridSection(dirs[index / 3]);
                 manager.setGridColumn(dirs[index % 3]);
             } else {
