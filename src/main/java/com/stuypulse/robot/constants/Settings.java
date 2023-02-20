@@ -299,24 +299,4 @@ public interface Settings {
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
     }
-
-    public interface AutoBalance {
-
-        public interface Tilt {
-            SmartNumber P = new SmartNumber("Auto Balance/kP", 0.05);
-            SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
-            SmartNumber D = new SmartNumber("Auto Balance/Translation/kD", 0);
-        }
-
-        public interface Translation {
-            SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 1);
-            SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
-            SmartNumber D = new SmartNumber("Auto Balance/Translation/kD", 0);
-        }
-
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Angle Threshold", 2);
-        SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Distance Threshold", 0.05);
-
-    }
-    
 }
