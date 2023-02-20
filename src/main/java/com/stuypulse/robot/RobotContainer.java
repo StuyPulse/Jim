@@ -5,6 +5,8 @@
 
 package com.stuypulse.robot;
 
+import java.util.function.Supplier;
+
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
@@ -33,6 +35,7 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -110,7 +113,7 @@ public class RobotContainer {
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveToScorePose());
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveBlayBalance().pointWheels());
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveSequentialBalance());
         driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
 
