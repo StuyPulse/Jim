@@ -7,6 +7,7 @@ package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
 
@@ -235,6 +236,22 @@ public interface Settings {
         SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 1.0);
         SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 1.0);
         SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 1.0);
+    }
+
+    public interface AutoEngage {
+        SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 7);
+        public interface Translation {
+            SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);
+            SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
+            SmartNumber D = new SmartNumber("Auto Balance/Translation/kD", 0);
+        }
+    
+        public interface Tilt {
+            SmartNumber P = new SmartNumber("Auto Balance/Tilt/kP", 0.05);
+            SmartNumber I = new SmartNumber("Auto Balance/Tilt/kI", 0);
+            SmartNumber D = new SmartNumber("Auto Balance/Tilt/kD", 0);
+        }
     }
 
     public interface Operator {
