@@ -15,26 +15,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 * @author Tracey Lin
 *
 */
-public class Plant extends SubsystemBase {
+public class TestPlant extends SubsystemBase {
     
     private final DoubleSolenoid solenoid;
 
-    public Plant() {
+    public TestPlant() {
         this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD, REVERSE);
         disengage();
     }
 
     public void engage() {
-        solenoid.set(Value.kForward);
+        solenoid.set(Value.kReverse);
     }
 
     public void disengage() {
-        solenoid.set(Value.kReverse);
+        solenoid.set(Value.kForward);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kForward);
+        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
     }
 }
 

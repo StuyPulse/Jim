@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase{
+public class TestIntake extends SubsystemBase{
 
     private SmartNumber frontDutyCycle;
     private SmartNumber backDutyCycle;
@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase{
     private DigitalInput frontSensor;
     private DigitalInput backSensor;
 
-    public Intake() {
+    public TestIntake() {
         frontDutyCycle = new SmartNumber("Intake/Front Duty Cycle", 0.0);
         backDutyCycle = new SmartNumber("Intake/Back Duty Cycle", 0.0);
 

@@ -1,23 +1,20 @@
 package com.stuypulse.robot.subsystems;
 
-import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmBFSField;
+import com.stuypulse.robot.constants.Constraints;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -80,10 +77,21 @@ public class Manager extends SubsystemBase {
         }
     }
 
+    // Direction that describes a scoring position
     public enum Direction {
         LEFT,
         CENTER,
         RIGHT
+    }
+
+    // Routine for the arm 
+    public enum Routine {
+        INTAKE,
+        NEUTRAL,
+        READY,
+        SCORE,
+
+        MANUAL_CONTROL
     }
 
 
@@ -95,41 +103,62 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
+    private Routine routine;
+
     public Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         intakeSide = IntakeSide.FRONT;
         scoreSide = ScoreSide.SAME;
 
+        // Doesn't matter what this starts at because
+        // the arm doesn't start with a trajectory.
+        routine = Routine.MANUAL_CONTROL;
+
         gridSection = Direction.CENTER;
         gridColumn = Direction.CENTER;
     }
 
+    public ArmBFSField getTrajectory() {
+        switch (routine) {
+            case INTAKE:
+                return getIntakeTrajectory();
+            case NEUTRAL:
+                return getNeutralTrajectory();
+            case READY:
+                return getReadyTrajectory();
+            case SCORE:
+                return getScoreTrajectory();
+            default:
+                return getNeutralTrajectory(); // TODO: BOOM
+        }
+    }
+
     /** Generate Intake Trajectories **/
 
-    public ArmTrajectory getIntakeTrajectory() {
-        final ArmTrajectory intakeTrajectory = 
-            new ArmTrajectory().addState(ArmState.fromDegrees(-60, 0));
+    private static ArmBFSField kIntakeTrajectory = new ArmBFSField(-55, 0, Constraints.CONSTRAINT);
 
-        return intakeSide == IntakeSide.FRONT ? intakeTrajectory : intakeTrajectory.flipped();
+    public ArmBFSField getIntakeTrajectory() {
+        if (intakeSide == IntakeSide.FRONT) 
+            return kIntakeTrajectory;
+        return kIntakeTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/
 
     /** puts the trajectory on the correct side */
     /** NOTE: trajectory that score "opposite side" must have angles between -90 and -180. **/
-    private ArmTrajectory normalize(ArmTrajectory trajectory) {
+    private ArmBFSField normalize(ArmBFSField field) {
         boolean needsFlip = (scoreSide == ScoreSide.SAME && intakeSide == IntakeSide.BACK) ||
             (scoreSide == ScoreSide.OPPOSITE && intakeSide == IntakeSide.FRONT);
-
-        return needsFlip ? trajectory.flipped() : trajectory;
+        return needsFlip ? field.flipped() : field;
     }
     
 
-    public ArmTrajectory getReadyTrajectory() {
+    public ArmBFSField getReadyTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getLowScoreTrajectory();
+                return getNeutralTrajectory();
 
             case MID:
                 return getMidReadyTrajectory();
@@ -142,45 +171,34 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private ArmTrajectory getLowScoreTrajectory() {
-        if (scoreSide == ScoreSide.OPPOSITE && gamePiece.isCone())
-            return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-50, -150)));
-        
-        return getIntakeTrajectory();
-    }
+    private static ArmBFSField kMidReadyTrajectoryCone = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
+    private static ArmBFSField kMidReadyTrajectoryCube = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
 
-    private ArmTrajectory getMidReadyTrajectory() {
+    private ArmBFSField getMidReadyTrajectory() {
         switch (gamePiece) {
-            case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.OPPOSITE)
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -60)));
-                else
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -75)));
-
             case CONE_TIP_OUT:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-20, 85)));
+            case CONE_TIP_IN:
+                return normalize(kMidReadyTrajectoryCone);
 
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(-10, 120)));
+                return normalize(kMidReadyTrajectoryCube);
 
             default:
-                return getNeutralTrajectory();
+                return normalize(kNeutralTrajectory);
         }
     }
 
-    private ArmTrajectory getHighReadyTrajectory() {
+
+    private static ArmBFSField kHighReadyTrajectoryCone = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
+    private static ArmBFSField kHighReadyTrajectoryCube = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
+
+    private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.OPPOSITE)
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -30)));
-                else
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, 0)));
-            
+                return normalize(kHighReadyTrajectoryCone);
+
             case CUBE:
-                return normalize(ArmTrajectory.fromStates(
-                    ArmState.fromDegrees(10, 120)));
+                return normalize(kHighReadyTrajectoryCube);
 
             default:
                 return getNeutralTrajectory();
@@ -189,29 +207,26 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Trajectories **/
 
-    public ArmTrajectory getScoreTrajectory() {
+    public static ArmBFSField kScoreMidTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
+    public static ArmBFSField kScoreMidTrajectoryCone = new ArmBFSField(-30, 0, Constraints.CONSTRAINT);
+
+    public static ArmBFSField kScoreHighTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
+    public static ArmBFSField kScoreHighTrajectoryCone = new ArmBFSField(10, -45, Constraints.CONSTRAINT);
+
+    public ArmBFSField getScoreTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getLowScoreTrajectory();
+                return getNeutralTrajectory();
             case MID:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                    return normalize(kScoreMidTrajectoryCube);
                 
-                else if (gamePiece == GamePiece.CONE_TIP_OUT)
-                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-35, 90)));
-
-                if (scoreSide == ScoreSide.OPPOSITE)
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-5, -90)));
-                else
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(-5, -85)));
+                return normalize(kScoreMidTrajectoryCone);
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(new ArmTrajectory().addState(ArmState.fromDegrees(-15, 45)));
+                    return normalize(kScoreHighTrajectoryCube);
 
-                if (scoreSide == ScoreSide.OPPOSITE)
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -45)));
-                else
-                    return normalize(ArmTrajectory.fromStates(ArmState.fromDegrees(0, -20)));
+                return normalize(kScoreHighTrajectoryCone);
             default:
                 return getNeutralTrajectory();
         }
@@ -219,8 +234,10 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
-    public ArmTrajectory getNeutralTrajectory() {
-        return ArmTrajectory.fromStates(ArmState.fromDegrees(-90, +90));
+    private static ArmBFSField kNeutralTrajectory = new ArmBFSField(-90, 90, Constraints.CONSTRAINT);
+
+    public ArmBFSField getNeutralTrajectory() {
+        return kNeutralTrajectory;
     }
 
     /** Generate Score Pose **/
@@ -281,6 +298,7 @@ public class Manager extends SubsystemBase {
     }
 
     /** Change and Read State **/
+
     public GamePiece getGamePiece() {
         return gamePiece;
     }
@@ -329,6 +347,14 @@ public class Manager extends SubsystemBase {
         this.gridColumn = gridColumn;
     }
 
+    public Routine getRoutine() {
+        return routine;
+    }
+
+    public void setRoutine(Routine routine) {
+        this.routine = routine;
+    }
+
     @Override
     public void periodic() {
         Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
@@ -338,5 +364,6 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
         SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
+        SmartDashboard.putString("Manager/Routine", routine.name());
     }
 }

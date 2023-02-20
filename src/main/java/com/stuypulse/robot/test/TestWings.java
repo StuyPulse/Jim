@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Wings extends SubsystemBase {
+public class TestWings extends SubsystemBase {
 
     // left solenoids
     private final DoubleSolenoid leftDeploy;
@@ -18,7 +18,7 @@ public class Wings extends SubsystemBase {
     private final DoubleSolenoid rightDeploy;
     private final Solenoid rightLatch;
 
-    public Wings() {
+    public TestWings() {
         leftDeploy = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RED_DEPLOY_FORWARD, RED_DEPLOY_REVERSE);
         leftLatch = new Solenoid(PneumaticsModuleType.CTREPCM, RED_LATCH);
 

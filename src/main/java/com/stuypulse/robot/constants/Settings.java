@@ -5,16 +5,14 @@
 
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.robot.util.ArmJoint;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -147,73 +145,86 @@ public interface Settings {
 
     public interface Arm {
 
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 20);
+
         public interface Shoulder {
-            double GEARING = 80;
-            double LENGTH = Units.inchesToMeters(43.75);
-            double MAX_ANGLE = 0; 
-            double MIN_ANGLE = -180;
-            double MASS = 0.01; 
-            double WEIGHT = MASS * 9.81; 
-            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
+            int MOTORS = 2;
+            double REDUCTION = 63.0;
+            double MASS = 3.054; // kg
+            double LENGTH = 1.1557; // m, length
+            double MOI = 0.369; // kg m^2
+            double RADIUS = 0.305; // m, radius to cg
 
-            double VEL_LIMIT = 0.5;
-            double ACCEL_LIMIT = 0.4;
+            ArmJoint JOINT = 
+                new ArmJoint(
+                    DCMotor.getNEO(MOTORS).withReduction(REDUCTION),
+                    MASS, 
+                    LENGTH, 
+                    MOI, 
+                    RADIUS);
 
-            double ANGLE_OFFSET = 0;
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);
 
-            SmartBoolean DEADZONE_ENABLED = new SmartBoolean("Arm/Deadzone Enabled", true);
-            double ANGLE_DEADZONE = 30;
-            double ANGLE_DEADZONE_HIGH = 90 + ANGLE_DEADZONE;
-            double ANGLE_DEADZONE_LOW = 90 - ANGLE_DEADZONE;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 10.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 20.0);
 
-            double TOLERANCE = 3;
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 1.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 16);
-                SmartNumber kI = new SmartNumber ("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3);
+                SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.3);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.24);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.3);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0);
+                // empty kG - 0.275
+                // cone  kG - 0.35
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0);
             }
         }
     
         public interface Wrist {
-            double GEARING = 50;
-            double LENGTH = Units.inchesToMeters(17);
-            double MAX_ANGLE = Double.POSITIVE_INFINITY; 
-            double MIN_ANGLE = Double.NEGATIVE_INFINITY;
-            double MASS = 0.001;
-            double WEIGHT = MASS * 9.81;
-            double JKG = 0.33 * MASS * (Math.pow(LENGTH, 2));
-            SmartNumber wristSpeedDegrees = new SmartNumber("Arm/Wrist/Speed", 15); // degrees per second
             
-            double VEL_LIMIT = 1.0;
-            double ACCEL_LIMIT = 0.8;
+            int MOTORS = 1;
+            double REDUCTION = 70.0;
+            double MASS = 1.317; // kg
+            double LENGTH = 0.44298; // m, length
+            double MOI = 0.033; // kg m^2
+            double RADIUS = 0.2443 + 1.065; // m, radius to cg
 
-            double ANGLE_OFFSET = 0;
+            ArmJoint JOINT = 
+                new ArmJoint(
+                    DCMotor.getNEO(MOTORS).withReduction(REDUCTION),
+                    MASS, 
+                    LENGTH, 
+                    MOI, 
+                    RADIUS);
 
-            double TOLERANCE = 5;
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);
+
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 5.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 10.0);
+
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 3.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Wrist/kP", 10);
-                SmartNumber kI = new SmartNumber ("Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Wrist/kD", 0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5);
+                SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
             }
     
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.1);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.05);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.1);
+                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0);
             }
         }
     }
-
+    
     public interface LED {
         double MANUAL_UPDATE_TIME = 0.75;
         double BLINK_TIME = 0.5;

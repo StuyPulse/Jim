@@ -1,0 +1,21 @@
+NT: Got a NT4 connection from 10.6.94.188 port 53074
+NT: CONNECTED NT4 client 'glass@1' (from 10.6.94.188:53074)
+NT: DISCONNECTED NT4 client 'glass@1' (from 10.6.94.188:53074): transmit stalled
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+# SIGSEGV (0xb) at pc=0x000000a0, pid=7382, tid=7414
+#
+# JRE version: OpenJDK Runtime Environment (17.0.3.7) (build 17.0.3.7-frc+0-2023-17.0.5u7-1)
+# Java VM: OpenJDK Client VM (17.0.3.7-frc+0-2023-17.0.5u7-1, mixed mode, emulated-client, g1 gc, linux-arm)
+# Problematic frame:
+# C 0x000000a0
+#
+# No core dump will be written. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# An error report file with more information is saved as:
+# /tmp/hs_err_pid7382.log
+#
+# If you would like to submit a bug report, please visit:
+# https://bugreport.java.com/bugreport/crash.jsp
+#
