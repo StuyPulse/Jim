@@ -97,7 +97,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     @Override 
     public boolean isFinished() {
-        return gyroController.isDone(2);
+        return gyroController.isDone(7);
     }
 
     @Override 
