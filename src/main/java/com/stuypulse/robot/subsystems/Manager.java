@@ -274,47 +274,13 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private Rotation2d getWestEastAngle(Rotation2d angle) {
-        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) > 90
-            ? Rotation2d.fromDegrees(180)
-            : Rotation2d.fromDegrees(0);
-    }
-
-    public ScoreSide currentScoringSide() {
-        Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
-
-        if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
-            if (intakeSide == IntakeSide.FRONT)
-                return ScoreSide.OPPOSITE;
-            else
-                return ScoreSide.SAME;
-        } else {
-            if (intakeSide == IntakeSide.FRONT)
-                return ScoreSide.SAME;
-            else
-                return ScoreSide.OPPOSITE;
-        }
-    }
-
-    public boolean possibleScoringMotion(NodeLevel level, GamePiece piece, ScoreSide side) {
-        if (piece == GamePiece.CONE_TIP_OUT) {
-            if (level == NodeLevel.HIGH)
-                return false;
-            
-            else if (level == NodeLevel.MID && side == ScoreSide.OPPOSITE)
-                return false;
-        }
-        
-        return true;
-    }
-
     public Pose2d getScorePose() {
-        ScoreSide side = currentScoringSide();
-        Rotation2d currentHeading = SwerveDrive.getInstance().getGyroAngle();
-        
-        Rotation2d rotation = possibleScoringMotion(nodeLevel, gamePiece, side)
-            ? getWestEastAngle(currentHeading)
-            : getWestEastAngle(currentHeading).rotateBy(Rotation2d.fromDegrees(180));
+        Rotation2d rotation = new Rotation2d();
+
+        if (intakeSide == IntakeSide.FRONT && scoreSide == ScoreSide.SAME)
+            rotation = Rotation2d.fromDegrees(180);
+        else if (intakeSide == IntakeSide.BACK && scoreSide == ScoreSide.OPPOSITE)
+            rotation = Rotation2d.fromDegrees(180);
 
         return new Pose2d(getScoreTranslation(), rotation);
     }
@@ -385,7 +351,6 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
-        SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
         SmartDashboard.putString("Manager/Routine", routine.name());
     }
 }
