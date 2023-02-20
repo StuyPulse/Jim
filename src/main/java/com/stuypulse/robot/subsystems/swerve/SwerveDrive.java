@@ -90,8 +90,6 @@ public class SwerveDrive extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
 
         module2ds = new FieldObject2d[modules.length];
-
-        odometry = Odometry.getInstance();
     }
 
     public void initFieldObjects(Field2d field) {
