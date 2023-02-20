@@ -27,7 +27,7 @@ public class IntakeImpl extends Intake{
     private DigitalInput backSensor;
 
     private BStream stalling;
-    private BStream hasNewGamepiece;
+    private BStream newGamePiece;
 
     private Arm arm;
 
@@ -45,15 +45,13 @@ public class IntakeImpl extends Intake{
         arm = Arm.getInstance();
 
         stalling = BStream.create(this::isMomentarilyStalling)
-            .filtered(new BDebounce.Rising(STALL_TIME))
-            .polling(Settings.DT/2);
+            .filtered(new BDebounce.Rising(STALL_TIME));
 
-        hasNewGamepiece =
-                BStream.create(this::hasGamepiece)
+        newGamePiece =
+                BStream.create(this::hasGamePiece)
                         .filtered(
                                 new BButton.Pressed(),
-                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
-                        .polling(0.01);
+                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME));
     }
 
     // CONE DETECTION (stall detection)
@@ -84,12 +82,8 @@ public class IntakeImpl extends Intake{
 
     // GAMEPIECE DETECTION
 
-    private boolean hasGamepiece() {
+    private boolean hasGamePiece() {
         return isStalling() || hasCube();
-    }
-
-    public boolean hasNewGamepiece() {
-        return hasNewGamepiece.get();
     }
 
     // WRIST ORIENTATION
@@ -152,11 +146,14 @@ public class IntakeImpl extends Intake{
 
     @Override
     public boolean hasNewGamePiece() {
-        return false;
+        return newGamePiece.get();
     }
     
     @Override
     public void periodic(){
+        stalling.get();
+        newGamePiece.get();
+
         if (isStalling() || hasCube()) {
             stop();
         }
