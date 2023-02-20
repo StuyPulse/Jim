@@ -17,7 +17,7 @@ public abstract class Arm extends SubsystemBase {
     // Singleton
     private static Arm instance = null;
 
-    public static Arm getInstance() {
+    public synchronized static Arm getInstance() {
         if (instance == null) {
             if (RobotBase.isSimulation())
                 instance = new SimArm();

@@ -67,7 +67,7 @@ public class OdometryImpl extends Odometry {
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
+        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
         odometryPose2d = field.getObject("Odometry Pose");

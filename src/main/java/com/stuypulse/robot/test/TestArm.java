@@ -166,7 +166,7 @@ public class TestArm extends SubsystemBase {
                 MathUtil.clamp(u_ff.get(1, 0), -12, 12));
     
             double shoulderVolts = 
-                u_ff.get(0, 0) +
+                // u_ff.get(0, 0) +
                 shoulderController.update(Angle.fromDegrees(targetShoulderAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
             
             double wristVolts =

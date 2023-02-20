@@ -47,6 +47,7 @@ public class ArmImpl extends Arm {
     private SmartBoolean feedbackEnable;
 
     public ArmImpl() {
+        System.out.println("CREATING ARM IMPL ");
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -170,7 +171,7 @@ public class ArmImpl extends Arm {
             MathUtil.clamp(u_ff.get(1, 0), -12, 12));
 
         double shoulderVolts = 
-            u_ff.get(0, 0) +
+            // u_ff.get(0, 0) +
             shoulderController.update(Angle.fromRotation2d(getShoulderTargetAngle()), Angle.fromRotation2d(getShoulderAngle()));
         
         double wristVolts =

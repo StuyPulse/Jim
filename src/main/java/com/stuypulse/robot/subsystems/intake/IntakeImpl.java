@@ -29,13 +29,20 @@ public class IntakeImpl extends Intake{
     private BStream stalling;
     private BStream hasNewGamepiece;
 
+    private Arm arm;
+
     public IntakeImpl(){
        
+        frontSensor = new DigitalInput(FRONT_SENSOR);
+        backSensor = new DigitalInput(BACK_SENSOR);
+
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
+
+        arm = Arm.getInstance();
 
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
@@ -47,9 +54,6 @@ public class IntakeImpl extends Intake{
                                 new BButton.Pressed(),
                                 new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
                         .polling(0.01);
-
-        frontSensor = new DigitalInput(FRONT_SENSOR);
-        backSensor = new DigitalInput(BACK_SENSOR);
     }
 
     // CONE DETECTION (stall detection)
@@ -75,7 +79,7 @@ public class IntakeImpl extends Intake{
         return !backSensor.get();
     }
     private boolean hasCube() {
-        return isFlipped()? hasCubeBack() : hasCubeFront();
+        return isFlipped() ? hasCubeBack() : hasCubeFront();
     }
 
     // GAMEPIECE DETECTION
@@ -91,7 +95,6 @@ public class IntakeImpl extends Intake{
     // WRIST ORIENTATION
 
     private boolean isFlipped() {
-        Arm arm = Arm.getInstance();
         return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
     }
 
@@ -158,7 +161,7 @@ public class IntakeImpl extends Intake{
             stop();
         }
 
-        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+        arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
         SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
         SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());

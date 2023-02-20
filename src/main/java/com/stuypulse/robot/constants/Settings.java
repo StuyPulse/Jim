@@ -163,7 +163,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.607869);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.604953);
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 10.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 20.0);
@@ -181,7 +181,7 @@ public interface Settings {
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0);
                 // empty kG - 0.275
                 // cone  kG - 0.35
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.35);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0);
             }
         }
@@ -203,7 +203,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.638070);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.661537);
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 5.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 10.0);
