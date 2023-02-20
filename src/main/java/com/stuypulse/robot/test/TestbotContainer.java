@@ -1,6 +1,7 @@
 package com.stuypulse.robot.test;
 
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Pump;
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -109,8 +110,8 @@ public class TestbotContainer {
                     double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 3;
                     double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 5;
         
-                    SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
-                    SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
+                    Settings.putNumber("Arm/Shoulder Voltage", shoulderVolts);
+                    Settings.putNumber("Arm/Wrist Voltage", wristVolts);
         
                     arm.runShoulder(shoulderVolts);
                     arm.runWrist(wristVolts);

@@ -1,6 +1,9 @@
 package com.stuypulse.robot.subsystems.wings;
 
 import static com.stuypulse.robot.constants.Settings.Wings.*;
+
+import com.stuypulse.robot.constants.Settings;
+
 import static com.stuypulse.robot.constants.Ports.Wings.*;
 import com.stuypulse.stuylib.util.StopWatch;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -105,16 +108,19 @@ public class WingsImpl extends Wings {
             whiteRetractTime = -1.0;
         }
 
-        SmartDashboard.putBoolean("Wings/White Latch Engaged", whiteLatch.get());
-        SmartDashboard.putBoolean("Wings/White Deploy Engaged", isEngaged(whiteDeploy));
-        SmartDashboard.putBoolean("Wings/Red Latch Engaged", redLatch.get());
-        SmartDashboard.putBoolean("Wings/Red Deploy Engaged", isEngaged(redDeploy));
 
-        SmartDashboard.putNumber("Wings/Current Time", timer.getTime());
-        SmartDashboard.putNumber("Wings/Red Deploy Time", redDeployTime);
-        SmartDashboard.putNumber("Wings/White Deploy Time", whiteDeployTime);
-        SmartDashboard.putNumber("Wings/Red Retract Time", redRetractTime);
-        SmartDashboard.putNumber("Wings/White Retract Time", whiteRetractTime);
+        if (Settings.isDebug()) {
+            Settings.putBoolean("Wings/White Latch Engaged", whiteLatch.get());
+            Settings.putBoolean("Wings/White Deploy Engaged", isEngaged(whiteDeploy));
+            Settings.putBoolean("Wings/Red Latch Engaged", redLatch.get());
+            Settings.putBoolean("Wings/Red Deploy Engaged", isEngaged(redDeploy));
+
+            Settings.putNumber("Wings/Current Time", timer.getTime());
+            Settings.putNumber("Wings/Red Deploy Time", redDeployTime);
+            Settings.putNumber("Wings/White Deploy Time", whiteDeployTime);
+            Settings.putNumber("Wings/Red Retract Time", redRetractTime);
+            Settings.putNumber("Wings/White Retract Time", whiteRetractTime);
+        }
     }
 
     @Override

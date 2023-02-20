@@ -103,13 +103,13 @@ public class TestArm extends SubsystemBase {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
 
-        SmartDashboard.putNumber("Arm/Shoulder Voltage", voltage);
+        Settings.putNumber("Arm/Shoulder Voltage", voltage);
     }
 
     public void runWrist(double voltage) {
         wrist.setVoltage(voltage);
 
-        SmartDashboard.putNumber("Arm/Wrist Voltage", voltage);
+        Settings.putNumber("Arm/Wrist Voltage", voltage);
     }
 
     public void configureMotors() {
@@ -177,11 +177,12 @@ public class TestArm extends SubsystemBase {
             runShoulder(shoulderVolts);
             runWrist(wristVolts);
         }
+        if (Settings.isDebug()) {
+            Settings.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
+            Settings.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
 
-        SmartDashboard.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
-        SmartDashboard.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
-
-        SmartDashboard.putNumber("Arm/Shoulder Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+            Settings.putNumber("Arm/Shoulder Angle", getShoulderAngle().getDegrees());
+            Settings.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+        }
     }
 }

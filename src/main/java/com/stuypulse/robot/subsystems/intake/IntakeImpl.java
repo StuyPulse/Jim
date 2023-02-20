@@ -158,18 +158,20 @@ public class IntakeImpl extends Intake{
             stop();
         }
 
-        arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+        if (Settings.isDebug()) {
+            arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+       
+            Settings.putNumber("Intake/Front Roller Speed", frontMotor.get());
+            Settings.putNumber("Intake/Back Roller Speed", backMotor.get());
+            Settings.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
+            Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
+            Settings.putBoolean("Intake/Is Flipped", isFlipped());
+            Settings.putBoolean("Intake/Is Stalling", isStalling());
+            Settings.putBoolean("Intake/Has Cube", hasCube());
     
-        SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
-        SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
-        SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
-        SmartDashboard.putBoolean("Intake/Is Flipped", isFlipped());
-        SmartDashboard.putBoolean("Intake/Is Stalling", isStalling());
-        SmartDashboard.putBoolean("Intake/Has Cube", hasCube());
-
-        SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
-        SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
+            Settings.putNumber("Intake/Front Motor", frontMotor.get());
+            Settings.putNumber("Intake/Back Motor", backMotor.get());
+        }
     }
 
 }

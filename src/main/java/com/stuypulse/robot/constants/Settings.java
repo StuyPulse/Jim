@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*-
@@ -40,13 +41,17 @@ public interface Settings {
 
     SmartBoolean DEBUG_MODE = new SmartBoolean("Debug Mode", false);
 
+    public static boolean isDebug() {
+        return DEBUG_MODE.get() || RobotBase.isSimulation();
+    }
+
     public static void putNumber(String key, double value) {
-        if (DEBUG_MODE.get())
+        if (isDebug())
             SmartDashboard.putNumber(key, value);
     }
 
-    public static void putBooelan(String key, boolean value) {
-        if (DEBUG_MODE.get())
+    public static void putBoolean(String key, boolean value) {
+        if (isDebug())
             SmartDashboard.putBoolean(key, value);
     }
 

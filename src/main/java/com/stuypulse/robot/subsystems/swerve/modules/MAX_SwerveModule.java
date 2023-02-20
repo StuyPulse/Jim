@@ -173,9 +173,11 @@ public class MAX_SwerveModule extends SwerveModule {
         
         prevVelocity = vel;
 
-        SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-        SmartDashboard.putNumber(id + "/Angle", getAngle().getDegrees());
-        SmartDashboard.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber(id + "/Velocity", vel);
+        if (Settings.isDebug()) {
+            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber(id + "/Angle", getAngle().getDegrees());
+            Settings.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
+            Settings.putNumber(id + "/Velocity", vel);
+        }
     }
 }

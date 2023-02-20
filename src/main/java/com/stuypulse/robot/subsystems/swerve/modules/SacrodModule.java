@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -196,16 +197,18 @@ public class SacrodModule extends SwerveModule {
                 Angle.fromRotation2d(getRotation2d())));
         driveMotor.setVoltage(driveController.update(targetState.speedMetersPerSecond, getSpeed()));
 
-        SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-        SmartDashboard.putNumber(id + "/Angle", getRotation2d().getDegrees());
-        SmartDashboard.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber(id + "/Angle Voltage", turnController.getOutput());
-        SmartDashboard.putNumber(id + "/Absolute Angle", getAbsolutePosition().getDegrees());
+        if (Settings.isDebug()) {
+            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber(id + "/Angle", getRotation2d().getDegrees());
+            Settings.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
+            Settings.putNumber(id + "/Angle Voltage", turnController.getOutput());
+            Settings.putNumber(id + "/Absolute Angle", getAbsolutePosition().getDegrees());
 
-        SmartDashboard.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber(id + "/Speed", getSpeed());
-        SmartDashboard.putNumber(id + "/Speed Error", driveController.getError());
-        SmartDashboard.putNumber(id + "/Speed Voltage", driveController.getOutput());
+            Settings.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
+            Settings.putNumber(id + "/Speed", getSpeed());
+            Settings.putNumber(id + "/Speed Error", driveController.getError());
+            Settings.putNumber(id + "/Speed Voltage", driveController.getOutput());
+        }
 
     }
 }
