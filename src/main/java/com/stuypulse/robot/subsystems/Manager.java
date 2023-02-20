@@ -347,10 +347,10 @@ public class Manager extends SubsystemBase {
     public void periodic() {
         Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
-        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
-        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
-        SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
-        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
-        SmartDashboard.putString("Manager/Routine", routine.name());
+        // SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
+        // SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
+        // SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
+        // SmartDashboard.putString("Manager/Score Side", scoreSide.name());
+        // SmartDashboard.putString("Manager/Routine", routine.name());
     }
 }

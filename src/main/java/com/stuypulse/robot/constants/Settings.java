@@ -6,6 +6,7 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*-
  * File containing tunable settings for every subsystem on the robot.
@@ -35,6 +37,21 @@ public interface Settings {
     Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
+
+    SmartBoolean DEBUG_MODE = new SmartBoolean("Debug Mode", false);
+
+    public static void putNumber(String key, double value) {
+        if (DEBUG_MODE.get())
+            SmartDashboard.putNumber(key, value);
+    }
+
+    public static void putBooelan(String key, boolean value) {
+        if (DEBUG_MODE.get())
+            SmartDashboard.putBoolean(key, value);
+    }
+
+    public static void putString(String key, String value) {
+    }
 
     public interface Intake{
         SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.05);
