@@ -32,7 +32,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.JIM;
+    Robot ROBOT = Robot.BLAY_MODE;
 
     double DT = 0.02;
 

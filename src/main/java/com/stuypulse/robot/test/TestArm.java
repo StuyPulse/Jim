@@ -79,6 +79,14 @@ public class TestArm extends SubsystemBase {
         configureMotors();
     }
 
+    public void moveShoulder(Rotation2d delta) {
+        targetShoulderAngle.set(targetShoulderAngle.get() + delta.getDegrees());
+    }
+
+    public void moveWrist(Rotation2d delta) {
+        targetWristAngle.set(targetWristAngle.get() + delta.getDegrees());
+    }
+
     public Rotation2d getShoulderAngle() {
         return Rotation2d.fromRotations(shoulderEncoder.getPosition()).minus(Shoulder.ZERO_ANGLE);
     }

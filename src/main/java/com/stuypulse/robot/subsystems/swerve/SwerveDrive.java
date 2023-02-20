@@ -39,7 +39,7 @@ public class SwerveDrive extends SubsystemBase {
     public static SwerveDrive getInstance() {
         if (instance == null) {
             if (RobotBase.isReal()) {
-                if (Settings.ROBOT == Robot.JIM) {
+                // if (Settings.ROBOT == Robot.JIM) {
                     // instance = new SwerveDrive(
                     //     new MAX_SwerveModule(FrontRight.ID, FrontRight.MODULE_OFFSET, Ports.Swerve.FrontRight.TURN, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE),
                     //     new MAX_SwerveModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET, Ports.Swerve.FrontLeft.TURN, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE),
@@ -52,14 +52,14 @@ public class SwerveDrive extends SubsystemBase {
                         new SL_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
                         new SL_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
                     );
-                } else {
-                    instance = new SwerveDrive(
-                        SacrodModule.createFrontRight(),
-                        SacrodModule.createFrontLeft(),
-                        SacrodModule.createBackLeft(),
-                        SacrodModule.createBackRight()
-                    );
-                }
+                // } else {
+                //     instance = new SwerveDrive(
+                //         SacrodModule.createFrontRight(),
+                //         SacrodModule.createFrontLeft(),
+                //         SacrodModule.createBackLeft(),
+                //         SacrodModule.createBackRight()
+                //     );
+                // }
             } else {
                 instance = new SwerveDrive(
                     new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
@@ -91,7 +91,7 @@ public class SwerveDrive extends SubsystemBase {
 
         module2ds = new FieldObject2d[modules.length];
 
-        odometry = Odometry.getInstance();
+        // odometry = Odometry.getInstance();
     }
 
     public void initFieldObjects(Field2d field) {

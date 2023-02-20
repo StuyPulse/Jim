@@ -29,7 +29,7 @@ public class IntakeImpl extends Intake{
     private BStream stalling;
     private BStream hasNewGamepiece;
 
-    private Arm arm;
+    private boolean deacquiring;
 
     public IntakeImpl(){
        
@@ -42,8 +42,6 @@ public class IntakeImpl extends Intake{
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
 
-        arm = Arm.getInstance();
-
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME))
             .polling(Settings.DT/2);
@@ -54,6 +52,8 @@ public class IntakeImpl extends Intake{
                                 new BButton.Pressed(),
                                 new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME))
                         .polling(0.01);
+        
+        deacquiring = false;
     }
 
     // CONE DETECTION (stall detection)
@@ -95,7 +95,8 @@ public class IntakeImpl extends Intake{
     // WRIST ORIENTATION
 
     private boolean isFlipped() {
-        return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
+        // return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
+        return false;
     }
 
     // INTAKING MODES
@@ -108,6 +109,8 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void acquireCube(){
+        deacquiring = false;
+        
         if (isFlipped()) {
             frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
             backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
@@ -119,6 +122,8 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void acquireCone() {
+        deacquiring = false;
+        
         if (isFlipped()) {
             frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
@@ -130,6 +135,8 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void deacquireCube(){
+        deacquiring = true;
+        
         if (isFlipped()) {
             frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
             backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
@@ -141,7 +148,9 @@ public class IntakeImpl extends Intake{
 
     @Override
     public void deacquireCone(){
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+        deacquiring = true;
+        
+        if (isFlipped()) {
             frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {
@@ -157,11 +166,11 @@ public class IntakeImpl extends Intake{
     
     @Override
     public void periodic(){
-        if (isStalling() || hasCube()) {
+        if (!deacquiring && (isStalling() || hasCube())) {
             stop();
         }
 
-        arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+        // arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
         SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
         SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
