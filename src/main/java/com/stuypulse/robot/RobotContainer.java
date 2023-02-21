@@ -113,7 +113,7 @@ public class RobotContainer {
         driver.getBottomButton()
             // .onTrue(new IntakeScore())
             // .onFalse(new IntakeStop());
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new ArmReady())
             .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
@@ -140,14 +140,14 @@ public class RobotContainer {
         
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
             // .whileTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .whileTrue(new ArmIntake().alongWith(new IntakeDeacquire()))
             // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
