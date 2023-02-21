@@ -41,8 +41,8 @@ public interface Constraints {
         final boolean isNotUp = Math.abs(w - 90) > 10;
         final boolean isNotSideways = Math.abs(w - 90) < 30;
         
-        final boolean isOverMiddle = Math.abs(s - (-90)) < 10;
-        final boolean isOverBumper = Math.abs(s - (-90)) < 30;
+        final boolean isOverMiddle = Math.abs(s - (-90)) < 5;
+        final boolean isOverBumper = Math.abs(s - (-90)) < 25;
 
         return (
             (isOverMiddle && isNotUp) ||
