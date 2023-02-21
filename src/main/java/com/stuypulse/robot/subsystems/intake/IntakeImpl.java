@@ -11,6 +11,7 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
@@ -87,6 +88,10 @@ public class IntakeImpl extends Intake{
 
     // WRIST ORIENTATION
 
+    private boolean acquiringIsFlipped() {
+        return Manager.getInstance().getIntakeSide() == IntakeSide.FRONT;
+    }
+
     private boolean isFlipped() {
         return Arm.getInstance().getWristAngle().getDegrees() > 90 || Arm.getInstance().getWristAngle().getDegrees() < -90;
     }
@@ -99,63 +104,87 @@ public class IntakeImpl extends Intake{
         backMotor.stopMotor();
     }
 
+    private void setState(double speed, boolean isCone, boolean flipped) {
+        if (flipped) {
+            speed *= -1;
+        }
+
+        double front = speed;
+        double back = speed;
+
+        if (isCone) {
+            back *= -1;
+        }
+
+        frontMotor.set(front);
+        backMotor.set(back);
+    }
+
     @Override
     public void acquireCube(){
         deacquiring = false;
+
+        setState(+INTAKE_CUBE_ROLLER.get(), false, acquiringIsFlipped());
         
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
-        }
+        // if (isFlipped()) {
+        //     frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
+        //     backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
+        // } else {
+        //     frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
+        //     backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
+        // }
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
+
+        setState(+INTAKE_CONE_ROLLER.get(), true, acquiringIsFlipped());
         
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
-        }
+        // if (isFlipped()) {
+        //     frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
+        //     backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
+        // } else {
+        //     frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
+        //     backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
+        // }
     }
 
     @Override
     public void deacquireCube(){
         deacquiring = true;
+
+        setState(-OUTTAKE_CUBE_ROLLER.get(), false, isFlipped());
         
-        if (isFlipped()) {
-            frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
-        }
+        // if (isFlipped()) {
+        //     frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
+        //     backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
+        // } else {
+        //     frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
+        //     backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
+        // }
     }
 
     @Override
     public void deacquireCone(){
         deacquiring = true;
+
+        setState(-OUTTAKE_CONE_ROLLER.get(), true, !acquiringIsFlipped());
         
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
-            frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
-        }
+        // if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
+        //     frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
+        //     backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
+        // } else {
+        //     frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
+        //     backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
+        // }
     }
 
     @Override
     public boolean hasNewGamePiece() {
         return newGamePiece.get();
     }
-    
+
     @Override
     public void periodic(){
         if (!deacquiring) {

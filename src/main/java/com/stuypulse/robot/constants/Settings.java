@@ -65,17 +65,13 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
-        SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Intake/Intake Cone Front Roller Speed", 1);
-        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Intake/Intake Cone Back Roller Speed", 1);
+        SmartNumber INTAKE_CONE_ROLLER = new SmartNumber("Intake/Intake Cone Roller Speed", 1);
 
-        SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Intake/Intake Cube Front Roller Speed", 0.5);
-        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Intake/Intake Cube Back Roller Speed", 0.5);
+        SmartNumber INTAKE_CUBE_ROLLER = new SmartNumber("Intake/Intake Cube Roller Speed", 0.5);
 
-        SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Intake/Outtake Cone Front Roller Speed", 1);
-        SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Intake/Outtake Cone Back Roller Speed", 1);
+        SmartNumber OUTTAKE_CONE_ROLLER = new SmartNumber("Intake/Outtake Cone Roller Speed", 0.5);
 
-        SmartNumber OUTTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Intake/Outtake Cube Front Roller Speed", 1);
-        SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Intake/Outtake Cube Back Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_ROLLER = new SmartNumber("Intake/Outtake Cube Roller Speed", 1);
 
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
@@ -170,7 +166,7 @@ public interface Settings {
 
     public interface Arm {
 
-        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 50);
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 30 );
 
         public interface Shoulder {
             int MOTORS = 2;
@@ -188,7 +184,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.604953);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.604953 + (6.0 / 360.0));
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 90.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360.0);
@@ -196,7 +192,7 @@ public interface Settings {
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 6);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 7);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.3);
             }
@@ -206,7 +202,7 @@ public interface Settings {
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.035);
                 // empty kG - 0.275
                 // cone  kG - 0.35
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.35);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.7);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.07);
             }
         }
@@ -228,7 +224,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.661537);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.661537 - (6.0 / 360.0));
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 180.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 720.0);
