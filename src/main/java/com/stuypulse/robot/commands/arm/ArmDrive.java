@@ -10,7 +10,6 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,6 +24,8 @@ public class ArmDrive extends CommandBase {
     private final IStream wrist;
 
     private final StopWatch timer;
+
+    private final SmartNumber number;
    
     public ArmDrive(Gamepad gamepad){
         this.arm = Arm.getInstance();
@@ -43,6 +44,8 @@ public class ArmDrive extends CommandBase {
         // timer is used to get deg from deg / s (by multiplying by time)
         timer = new StopWatch();
 
+        number = new SmartNumber("Arm/sex", 0);
+
         addRequirements(arm);
     }
 
@@ -56,13 +59,10 @@ public class ArmDrive extends CommandBase {
     public void execute(){
         final double dt = timer.reset();
 
-        if (Odometry.getInstance().getPose().getRotation().getDegrees() < 180) {
-            arm.moveShoulder(Rotation2d.fromDegrees(shoulder.get() * dt));
-            arm.moveWrist(Rotation2d.fromDegrees(wrist.get() * dt));
-        } else {
-            arm.moveShoulder(Rotation2d.fromDegrees(-shoulder.get() * dt));
-            arm.moveWrist(Rotation2d.fromDegrees(-wrist.get() * dt));
-        }
+        double sign = Rotation2d.fromDegrees(number.get()).getCos() > 0 ? 1 : -1;
+
+        arm.moveShoulder(Rotation2d.fromDegrees(sign * shoulder.get() * dt));
+        arm.moveWrist(Rotation2d.fromDegrees(sign * wrist.get() * dt));
     }
 
     @Override
