@@ -24,8 +24,6 @@ public class ArmDrive extends CommandBase {
     private final IStream wrist;
 
     private final StopWatch timer;
-
-    private final SmartNumber number;
    
     public ArmDrive(Gamepad gamepad){
         this.arm = Arm.getInstance();
@@ -44,8 +42,6 @@ public class ArmDrive extends CommandBase {
         // timer is used to get deg from deg / s (by multiplying by time)
         timer = new StopWatch();
 
-        number = new SmartNumber("Arm/sex", 0);
-
         addRequirements(arm);
     }
 
@@ -59,7 +55,7 @@ public class ArmDrive extends CommandBase {
     public void execute(){
         final double dt = timer.reset();
 
-        double sign = Rotation2d.fromDegrees(number.get()).getCos() > 0 ? 1 : -1;
+        double sign = Odometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
 
         arm.moveShoulder(Rotation2d.fromDegrees(sign * shoulder.get() * dt));
         arm.moveWrist(Rotation2d.fromDegrees(sign * wrist.get() * dt));
