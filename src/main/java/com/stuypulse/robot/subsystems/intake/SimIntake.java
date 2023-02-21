@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.intake;
 
 import static com.stuypulse.robot.constants.Settings.Intake.*;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -55,7 +56,7 @@ public class SimIntake extends Intake {
 
     @Override
     public void deacquireCone(){
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
             frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {
@@ -77,7 +78,9 @@ public class SimIntake extends Intake {
 
     @Override
     public void periodic() {
-        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+        if (Settings.isDebug()) {
+            Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+        }
     }
     
 }

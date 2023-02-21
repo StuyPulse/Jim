@@ -6,17 +6,18 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Intake extends SubsystemBase {
-    private static Intake instance;
+    private static final Intake instance;
+
+    static {
+        if (RobotBase.isSimulation())
+            instance = new SimIntake();
+        else if (Settings.ROBOT == Robot.JIM)
+            instance = new IntakeImpl();
+        else
+            instance = new SimIntake();
+    }
     
     public static Intake getInstance() {
-        if (instance == null) {
-            if (RobotBase.isSimulation())
-                instance = new SimIntake();
-            else if (Settings.ROBOT == Robot.JIM)
-                instance = new IntakeImpl();
-            else
-                instance = new SimIntake();
-        }
         return instance;
     }
 

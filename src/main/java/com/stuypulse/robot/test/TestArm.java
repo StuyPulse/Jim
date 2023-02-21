@@ -79,6 +79,14 @@ public class TestArm extends SubsystemBase {
         configureMotors();
     }
 
+    public void moveShoulder(Rotation2d delta) {
+        targetShoulderAngle.set(targetShoulderAngle.get() + delta.getDegrees());
+    }
+
+    public void moveWrist(Rotation2d delta) {
+        targetWristAngle.set(targetWristAngle.get() + delta.getDegrees());
+    }
+
     public Rotation2d getShoulderAngle() {
         return Rotation2d.fromRotations(shoulderEncoder.getPosition()).minus(Shoulder.ZERO_ANGLE);
     }
@@ -103,13 +111,13 @@ public class TestArm extends SubsystemBase {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
 
-        SmartDashboard.putNumber("Arm/Shoulder Voltage", voltage);
+        Settings.putNumber("Arm/Shoulder Voltage", voltage);
     }
 
     public void runWrist(double voltage) {
         wrist.setVoltage(voltage);
 
-        SmartDashboard.putNumber("Arm/Wrist Voltage", voltage);
+        Settings.putNumber("Arm/Wrist Voltage", voltage);
     }
 
     public void configureMotors() {
@@ -166,7 +174,7 @@ public class TestArm extends SubsystemBase {
                 MathUtil.clamp(u_ff.get(1, 0), -12, 12));
     
             double shoulderVolts = 
-                u_ff.get(0, 0) +
+                // u_ff.get(0, 0) +
                 shoulderController.update(Angle.fromDegrees(targetShoulderAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
             
             double wristVolts =
@@ -177,11 +185,12 @@ public class TestArm extends SubsystemBase {
             runShoulder(shoulderVolts);
             runWrist(wristVolts);
         }
+        if (Settings.isDebug()) {
+            Settings.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
+            Settings.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
 
-        SmartDashboard.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
-        SmartDashboard.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
-
-        SmartDashboard.putNumber("Arm/Shoulder Angle", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+            Settings.putNumber("Arm/Shoulder Angle", getShoulderAngle().getDegrees());
+            Settings.putNumber("Arm/Wrist Angle", getWristAngle().getDegrees());
+        }
     }
 }

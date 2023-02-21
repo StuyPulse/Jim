@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
@@ -67,9 +68,9 @@ public class VisionImpl extends Vision {
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
-        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
-        SmartDashboard.putNumber("Vision/Distance", distance);
-        SmartDashboard.putNumber("Vision/Tag ID", data.id);
+        Settings.putNumber("Vision/Angle to Tag", angleDegrees);
+        Settings.putNumber("Vision/Distance", distance);
+        Settings.putNumber("Vision/Tag ID", data.id);
 
 
         if (Math.abs(angleDegrees) > TRUST_ANGLE)
@@ -134,16 +135,20 @@ public class VisionImpl extends Vision {
             Optional<AprilTagData> aprilTagData = ll.getAprilTagData();
             
             if (aprilTagData.isPresent()) {
-                SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
-                SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
-                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
+                if (Settings.isDebug()) {
+                    Settings.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
+                    Settings.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
+                    Settings.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
+                }
                 pose2d.setPose(aprilTagData.get().pose);
 
                 results.add(process(aprilTagData.get()));
             } else {
-                SmartDashboard.putNumber("Vision/" + name + "/X" , Double.NaN);
-                SmartDashboard.putNumber("Vision/" + name + "/Y" , Double.NaN);
-                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
+                if (Settings.isDebug()) {
+                    Settings.putNumber("Vision/" + name + "/X" , Double.NaN);
+                    Settings.putNumber("Vision/" + name + "/Y" , Double.NaN);
+                    Settings.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
+                }
                 pose2d.setPose(kNoPose);
             }
         }

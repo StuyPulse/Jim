@@ -46,7 +46,7 @@ public interface Ports {
         int SHOULDER_LEFT = 20;
         int SHOULDER_RIGHT =  21;
         int WRIST = 22;
-    }
+}
 
     public interface LEDController {
         int PORT = 8; // PWM

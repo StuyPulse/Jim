@@ -3,6 +3,7 @@ import static com.stuypulse.robot.constants.Motors.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -49,14 +50,14 @@ public class TestIntake extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
+        Settings.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
+        Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
 
-        SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
-        SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
+        Settings.putNumber("Intake/Front Motor", frontMotor.get());
+        Settings.putNumber("Intake/Back Motor", backMotor.get());
 
-        SmartDashboard.putBoolean("Intake/Front Sensor", frontSensor.get());
-        SmartDashboard.putBoolean("Intake/Back Sensor", backSensor.get());
+        Settings.putBoolean("Intake/Front Sensor", frontSensor.get());
+        Settings.putBoolean("Intake/Back Sensor", backSensor.get());
     }
 
 }

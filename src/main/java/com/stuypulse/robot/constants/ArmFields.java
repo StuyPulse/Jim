@@ -8,26 +8,26 @@ public final class ArmFields {
     static {
         StopWatch timer = new StopWatch();
 
-        Neutral.kTrajectory.getSetpoint();
-        Intake.kTrajectory.getSetpoint();
+        Neutral.kTrajectory.getSize();
+        Intake.kTrajectory.getSize();
 
-        Ready.Low.kConeTipInOpposite.getSetpoint();
+        Ready.Low.kConeTipInOpposite.getSize();
 
-        Ready.Mid.kConeTipInSame.getSetpoint();
-        Ready.Mid.kConeTipInOpposite.getSetpoint();
-        Ready.Mid.kConeTipOutSame.getSetpoint();
-        Ready.Mid.kCube.getSetpoint();
+        Ready.Mid.kConeTipInSame.getSize();
+        Ready.Mid.kConeTipInOpposite.getSize();
+        Ready.Mid.kConeTipOutSame.getSize();
+        Ready.Mid.kCube.getSize();
 
-        Ready.High.kConeTipInSame.getSetpoint();
-        Ready.High.kConeTipInOpposite.getSetpoint();
-        Ready.High.kCube.getSetpoint();
+        Ready.High.kConeTipInSame.getSize();
+        Ready.High.kConeTipInOpposite.getSize();
+        Ready.High.kCube.getSize();
 
-        Score.Mid.kConeTipInSame.getSetpoint();
-        Score.Mid.kConeTipInOpposite.getSetpoint();
-        Score.Mid.kConeTipOutSame.getSetpoint();
+        Score.Mid.kConeTipInSame.getSize();
+        Score.Mid.kConeTipInOpposite.getSize();
+        Score.Mid.kConeTipOutSame.getSize();
 
-        Score.High.kConeTipInSame.getSetpoint();
-        Score.High.kConeTipInOpposite.getSetpoint();
+        Score.High.kConeTipInSame.getSize();
+        Score.High.kConeTipInOpposite.getSize();
 
         System.out.println("ArmBFSFields Generated in " + timer.reset() + " seconds.");
     }
@@ -37,7 +37,8 @@ public final class ArmFields {
     }
 
     public interface Intake {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-55, 0, Constraints.CONSTRAINT);
+        public static final ArmBFSField kTrajectory = new ArmBFSField(-70, 5, Constraints.CONSTRAINT);
+        // public static final ArmBFSField kBackTrajectory = new ArmBFSField(-103, 170, Constraints.CONSTRAINT);
     }
 
     public interface Neutral {
@@ -60,7 +61,7 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(0, -75, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = new ArmBFSField(-5, -20, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -60, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-20, 85, Constraints.CONSTRAINT);
@@ -69,7 +70,7 @@ public final class ArmFields {
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(0, -30, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = new ArmBFSField(11, -22, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -30, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = new ArmBFSField(-20, 70, Constraints.CONSTRAINT);;
@@ -90,7 +91,7 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-5, -85, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = new ArmBFSField(-8, -28, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-5, -90, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-35, 90, Constraints.CONSTRAINT);
@@ -99,7 +100,7 @@ public final class ArmFields {
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(0, -70, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = new ArmBFSField(11, -32, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -70, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = Ready.High.kCube;

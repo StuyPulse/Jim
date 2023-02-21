@@ -15,17 +15,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class Arm extends SubsystemBase {
 
     // Singleton
-    private static Arm instance = null;
+    private static final Arm instance;
+
+    static {
+        if (RobotBase.isSimulation())
+            instance = new SimArm();
+        else if (Settings.ROBOT == Robot.JIM)
+            instance = new ArmImpl();
+        else
+            instance = new PerfectArm();
+    }
 
     public static Arm getInstance() {
-        if (instance == null) {
-            if (RobotBase.isSimulation())
-                instance = new SimArm();
-            else if (Settings.ROBOT == Robot.JIM)
-                instance = new ArmImpl();
-            else
-                instance = new PerfectArm();
-        }
         return instance;
     }
     
@@ -54,19 +55,12 @@ public abstract class Arm extends SubsystemBase {
         return targetState;
     }
 
-    public final Rotation2d getShoulderTargetAngle() {
-        return getTargetState().getShoulderState();
-    }
-    public final Rotation2d getWristTargetAngle() {
-        return getTargetState().getWristState();
-    }
-    
     // Read error between measured and target states
     public final boolean isShoulderAtAngle(Rotation2d maxError) {
-        return Math.abs(getShoulderTargetAngle().minus(getShoulderAngle()).getDegrees()) < maxError.getDegrees();
+        return Math.abs(targetState.getShoulderState().minus(getShoulderAngle()).getDegrees()) < maxError.getDegrees();
     }
     public final boolean isWristAtAngle(Rotation2d maxError) {
-        return Math.abs(getWristTargetAngle().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
+        return Math.abs(targetState.getWristState().minus(getWristAngle()).getDegrees()) < maxError.getDegrees();
     }
 
     public final boolean isArmAtTargetState(Rotation2d shoulderEpsilon, Rotation2d wristEpsilon) {
@@ -90,11 +84,11 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final void setShoulderTargetState(Rotation2d shoulder) {
-        setTargetState(new ArmState(shoulder, getWristTargetAngle()));
+        setTargetState(new ArmState(shoulder, targetState.getWristState()));
     }
 
     public final void setWristTargetState(Rotation2d wrist) {
-        setTargetState(new ArmState(getShoulderTargetAngle(),wrist));
+        setTargetState(new ArmState(targetState.getShoulderState(),wrist));
     }
 
     public final void setTrajectory(ArmBFSField trajectory) {
@@ -103,11 +97,11 @@ public abstract class Arm extends SubsystemBase {
 
     // Change target angle (useful for driving)
     public final void moveShoulder(Rotation2d angle) {
-        setShoulderTargetState(getShoulderTargetAngle().plus(angle));
+        setShoulderTargetState(targetState.getShoulderState().plus(angle));
     }
 
     public final void moveWrist(Rotation2d angle) {
-        setWristTargetState(getWristTargetAngle().plus(angle));
+        setWristTargetState(targetState.getWristState().plus(angle));
     }
 
     // Enable feedback control

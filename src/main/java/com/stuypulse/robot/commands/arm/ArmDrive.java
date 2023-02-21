@@ -29,16 +29,14 @@ public class ArmDrive extends CommandBase {
 
 
         // these give values in deg / s
-        this.shoulder = IStream.create(gamepad::getRightY).filtered(
+        this.shoulder = IStream.create(gamepad::getLeftY).filtered(
             x -> SLMath.deadband(x, DEADBAND.get()),
             x -> SLMath.spow(x, 2),
-            new LowPassFilter(SHOULDER_FILTERING),
             x -> x * SHOULDER_TELEOP_SPEED.get());
 
-        this.wrist = IStream.create(gamepad::getLeftY).filtered(
+        this.wrist = IStream.create(gamepad::getRightY).filtered(
             x -> SLMath.deadband(x, DEADBAND.get()),
             x -> SLMath.spow(x, 2),
-            new LowPassFilter(WRIST_FILTERING),
             x -> x * WRIST_TELEOP_SPEED.get());
 
         // timer is used to get deg from deg / s (by multiplying by time)

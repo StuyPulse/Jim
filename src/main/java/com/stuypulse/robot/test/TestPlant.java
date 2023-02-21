@@ -2,6 +2,8 @@ package com.stuypulse.robot.test;
 
 import static com.stuypulse.robot.constants.Ports.Plant.*;
 
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -34,7 +36,7 @@ public class TestPlant extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
+        Settings.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
     }
 }
 

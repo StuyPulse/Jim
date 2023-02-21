@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.odometry;
 
 import java.util.List;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.Vision.Noise;
@@ -67,7 +68,7 @@ public class OdometryImpl extends Odometry {
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
+        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
         odometryPose2d = field.getObject("Odometry Pose");
@@ -78,17 +79,18 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+        // return poseEstimator.getEstimatedPosition();
+        return odometry.getPoseMeters();
     }
 
     @Override
     public void reset(Pose2d pose) {
         SwerveDrive drive = SwerveDrive.getInstance();
-        poseEstimator.resetPosition(
-                    drive.getGyroAngle(), 
-                    drive.getModulePositions(), 
-                    pose
-        );
+        // poseEstimator.resetPosition(
+        //             drive.getGyroAngle(), 
+        //             drive.getModulePositions(), 
+        //             pose
+        // );
         odometry.resetPosition(drive.getGyroAngle(), 
         drive.getModulePositions(), 
         pose);
@@ -100,9 +102,6 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
-        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
-        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
-
         for (Result result : results) {
             switch (result.getNoise()) {
                 case LOW:
@@ -129,23 +128,26 @@ public class OdometryImpl extends Odometry {
     public void periodic() {
 
         SwerveDrive drive = SwerveDrive.getInstance();
+        poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
+        odometry.update(drive.getGyroAngle(), drive.getModulePositions());
+
         Vision vision = Vision.getInstance();
         List<Result> results = vision.getResults();
         processResults(results, drive, vision);        
 
-        field.setRobotPose(getPose());
-
-        Pose2d pose = odometry.getPoseMeters();
-        odometryPose2d.setPose(pose);
-        SmartDashboard.putNumber("Odometry/Odometry Pose X", pose.getX());
-        SmartDashboard.putNumber("Odometry/Odometry Pose Y", pose.getY());
-        SmartDashboard.putNumber("Odometry/Odometry Rotation", pose.getRotation().getDegrees());
-
+        if (Settings.isDebug()) {
+            field.setRobotPose(getPose());
+            odometryPose2d.setPose(odometry.getPoseMeters());
         
-        SmartDashboard.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
-        SmartDashboard.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        
+            Settings.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
+            Settings.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
+            Settings.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
+
+            
+            Settings.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
+            Settings.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
+            Settings.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        }
     }
 
 }
