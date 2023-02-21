@@ -57,12 +57,13 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
         double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
 
+        SmartDashboard.putNumber("facingSlope", Math.signum(facingSlope));
+
         return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
     }
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", -1 * getBalanceAngle().getDegrees());
         balanceAngle = getBalanceAngle().getDegrees();
         var speed = control.update(
             0,
@@ -70,6 +71,10 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             speed, 0, 0, odometry.getRotation()));
+
+        SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", balanceAngle);
+        SmartDashboard.putNumber("Auto Balance/Speed", speed);
+        SmartDashboard.putNumber("Auto Balance/Odometry Angle", odometry.getRotation().getDegrees());
     }
 
     @Override

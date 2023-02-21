@@ -16,6 +16,18 @@
           },
           "open": true
         },
+        "Auto Balance": {
+          "Translation": {
+            "open": true
+          },
+          "With Gyro": {
+            "open": true
+          },
+          "With Plant": {
+            "open": true
+          },
+          "open": true
+        },
         "DriPver Settings": {
           "open": true
         },
@@ -118,7 +130,7 @@
               "lockMin": true
             }
           ],
-          "height": 464,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -151,7 +163,7 @@
               "lockMin": true
             }
           ],
-          "height": 464,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -183,7 +195,7 @@
               "autoFit": true
             }
           ],
-          "height": 464
+          "height": 0
         }
       ]
     },
@@ -195,7 +207,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": 0,
           "series": [
             {
               "color": [

@@ -34,7 +34,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.SACROD;
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -86,7 +86,7 @@ public interface Settings {
         double TRUST_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight"};
+            String [] LIMELIGHTS = {"limelight-front", "limelight-back"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
         }
     }
@@ -263,7 +263,7 @@ public interface Settings {
 
     public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 4);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 6);
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
         SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.5);

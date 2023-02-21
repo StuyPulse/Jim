@@ -36,8 +36,10 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
+import 
+edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -75,6 +77,9 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
+
+        DataLogManager.start();
+
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
@@ -122,7 +127,7 @@ public class RobotContainer {
         // swerve
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveBalanceWithPlant().thenPointWheels());
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveBalanceWithPlant());
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override

@@ -72,9 +72,11 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
         double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
 
+        SmartDashboard.putNumber("facingSlope", Math.signum(facingSlope));
+
         return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
     }
-
+    
     @Override
     public void execute() {
 
@@ -85,7 +87,7 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         double velocity;
 
         if (controller.isDone(DISTANCE_THRESHOLD.doubleValue())) {
-            velocity = gyroController.update(0, -1 * balanceAngle);
+            velocity = gyroController.update(0, balanceAngle);
             swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                                             new ChassisSpeeds(velocity, 0.0, 0.0), 
                                             odometry.getRotation()));
