@@ -257,10 +257,10 @@ public interface Settings {
     }
         
     public interface Wings {
-        SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 1.0);
-        SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 1.0);
-        SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 1.0);
-        SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 1.0);
+        SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.5);
+        SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 0.5);
+        SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.5);
+        SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 0.5);
     }
 
     public interface AutoEngage {
@@ -304,7 +304,7 @@ public interface Settings {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
 
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
