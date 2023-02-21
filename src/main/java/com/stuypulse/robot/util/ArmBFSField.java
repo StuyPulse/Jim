@@ -1,15 +1,88 @@
 package com.stuypulse.robot.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class ArmBFSField {
+import com.stuypulse.robot.constants.Constraints;
 
-    public interface Constraint {
+import edu.wpi.first.wpilibj.Filesystem;
+
+public class ArmBFSField implements Serializable {
+
+    public static ArmBFSField create(double targetArmDeg, double targetWristDeg, Constraint constraints) {
+        final String fileName = 
+            Filesystem.getDeployDirectory().getPath() + "/fields/" +
+            Long.toUnsignedString(Double.doubleToLongBits(targetArmDeg), Character.MAX_RADIX) + "_" + 
+            Long.toUnsignedString(Double.doubleToLongBits(targetWristDeg), Character.MAX_RADIX) + "_" +
+            Long.toUnsignedString(Constraint.getHashCode(constraints), Character.MAX_RADIX) + "_" +
+            Long.toUnsignedString(Constraints.HASH.hashCode(), Character.MAX_RADIX) + ".BFS";
+
+        try {
+            try {
+                FileInputStream file = new FileInputStream(fileName); 
+                ObjectInputStream input = new ObjectInputStream(file);
+                ArmBFSField field = (ArmBFSField)input.readObject();
+                input.close();
+                file.close();
+                return field;
+            } catch (ClassCastException | ClassNotFoundException | FileNotFoundException e) {
+                ArmBFSField result = new ArmBFSField(targetArmDeg, targetWristDeg, constraints);
+                File f = new File(fileName);
+                f.createNewFile();
+                FileOutputStream file = new FileOutputStream(fileName);
+                ObjectOutputStream output = new ObjectOutputStream(file);
+                output.writeObject(result);
+                output.close();
+                file.close();
+                return result;
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();    
+            System.exit(-1);
+            return null;
+        }
+    }
+
+    public interface Constraint extends Serializable {
         public boolean isInvalid(double armDeg, double wristDeg);
 
         public default Constraint add(Constraint next) {
             return (a, w) -> this.isInvalid(a, w) || next.isInvalid(a, w);
+        }
+        
+        public static Long getHashCode(Constraint constraint) {
+            final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            
+            try {
+                final ObjectOutputStream output = new ObjectOutputStream(bytes);
+                output.writeObject(constraint);
+                output.close();
+            } catch (IOException e) {
+                return 0L;
+            }
+
+            final long INITIAL_SEED = 0xc4ceb9fe1a85ec53L;
+            final long INPUT_MULT = 0xff51afd7ed558ccdL;
+
+            long hpool = INITIAL_SEED;
+
+            for (byte c : bytes.toByteArray()) {
+                hpool ^= hpool << 13;
+                hpool ^= hpool >>> 7;
+                hpool ^= hpool << 17;
+                hpool ^= c * INPUT_MULT;
+            }
+
+            return hpool;
         }
     }
 
@@ -36,7 +109,7 @@ public class ArmBFSField {
         return degrees - kDegreeRange * Math.round(degrees / kDegreeRange);
     }
 
-    public class Node {
+    public class Node implements Serializable {
 
         private final boolean mValid;
 
@@ -200,7 +273,7 @@ public class ArmBFSField {
     
     private static int instances = 0;
 
-    public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
+    private ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
         this(targetArmDeg, targetWristDeg, constraints, new ArmBFSField(-180 - targetArmDeg, -180 - targetWristDeg, constraints, null));
         mFlipped.mFlipped = this;
     }

@@ -1,11 +1,13 @@
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.stuylib.util.HashBuilder;
+
 import com.stuypulse.robot.util.ArmBFSField.Constraint;
 
 import edu.wpi.first.math.util.Units;
 
 public interface Constraints {
-    
+
     double INFLATION = Units.inchesToMeters(0.0);
 
     double SHOULDER_HEIGHT = Units.inchesToMeters(48);
@@ -27,6 +29,9 @@ public interface Constraints {
         }
     };
 
+    double SHOULDER_TOLERANCE = 10;
+    double WRIST_TOLERANCE = 10;
+
     Constraint FLIP_CONSTRAINT = (s, w) -> {
         double shoulderTolerance = 10;
         double wristTolerance = 10;
@@ -40,4 +45,16 @@ public interface Constraints {
     };
 
     Constraint CONSTRAINT = BUMPER_CONSTRAINT.add(SHOULDER_CONSTRAINT).add(FLIP_CONSTRAINT);
+    
+    public static final HashBuilder HASH = new HashBuilder()
+        .append(INFLATION)
+        .append(SHOULDER_HEIGHT)
+        .append(SHOULDER_LENGTH)
+        .append(WRIST_LENGTH)
+        .append(BUMPER_WIDTH)
+        .append(BUMPER_HEIGHT)
+        .append(FLOOR_HEIGHT)
+        .append(SHOULDER_TOLERANCE)
+        .append(WRIST_TOLERANCE)
+        .append(MAX_SHOULDER_ANGLE);
 }

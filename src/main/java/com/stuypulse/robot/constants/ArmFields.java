@@ -37,12 +37,12 @@ public final class ArmFields {
     }
 
     public interface Intake {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-70, 5, Constraints.CONSTRAINT);
-        // public static final ArmBFSField kBackTrajectory = new ArmBFSField(-103, 170, Constraints.CONSTRAINT);
+        public static final ArmBFSField kTrajectory = ArmBFSField.create(-70, 5, Constraints.CONSTRAINT);
+        // public static final ArmBFSField kBackTrajectory = ArmBFSField.create(-103, 170, Constraints.CONSTRAINT);
     }
 
     public interface Neutral {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-90, +90, Constraints.CONSTRAINT);
+        public static final ArmBFSField kTrajectory = ArmBFSField.create(-90, +90, Constraints.CONSTRAINT);
     }
 
     /* Intaking */
@@ -52,7 +52,7 @@ public final class ArmFields {
     public interface Ready {
         public interface Low {
             ArmBFSField kConeTipInSame = Intake.kTrajectory;
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(-40, -150, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = ArmBFSField.create(-40, -150, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = Intake.kTrajectory;
             ArmBFSField kConeTipOutOpposite = kConeTipInOpposite;
@@ -61,19 +61,19 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-5, -20, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -60, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = ArmBFSField.create(-5, -20, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = ArmBFSField.create(0, -60, Constraints.CONSTRAINT);
             
-            ArmBFSField kConeTipOutSame = new ArmBFSField(-20, 85, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipOutSame = ArmBFSField.create(-20, 85, Constraints.CONSTRAINT);
             
-            ArmBFSField kCube = new ArmBFSField(-45, 60, Constraints.CONSTRAINT);
+            ArmBFSField kCube = ArmBFSField.create(-45, 60, Constraints.CONSTRAINT);
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(11, -22, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -30, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = ArmBFSField.create(11, -22, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = ArmBFSField.create(0, -30, Constraints.CONSTRAINT);
             
-            ArmBFSField kCube = new ArmBFSField(-20, 70, Constraints.CONSTRAINT);;
+            ArmBFSField kCube = ArmBFSField.create(-20, 70, Constraints.CONSTRAINT);;
         }
     }
 
@@ -91,17 +91,17 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-8, -28, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(-5, -90, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = ArmBFSField.create(-8, -28, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = ArmBFSField.create(-5, -90, Constraints.CONSTRAINT);
             
-            ArmBFSField kConeTipOutSame = new ArmBFSField(-35, 90, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipOutSame = ArmBFSField.create(-35, 90, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = Ready.Mid.kCube;
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(11, -32, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -70, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInSame = ArmBFSField.create(11, -32, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = ArmBFSField.create(0, -70, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = Ready.High.kCube;
         }
