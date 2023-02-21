@@ -7,24 +7,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SwerveDriveBalanceAlign extends SwerveDriveToPose {
     public SwerveDriveBalanceAlign() {
-        super(() -> new Pose2d(Odometry.getInstance().getTranslation(), new Rotation2d(getAngle())));
+        super(() -> {
+            var odometry = Odometry.getInstance();
+            return new Pose2d(odometry.getTranslation(), getSnappedAngle(odometry.getRotation()));
+        });
     }
     
-    private static double getAngle() {
-        double angle = 0;
-
-        double currentAngle = Odometry.getInstance().getRotation().getDegrees();
+    private static Rotation2d getSnappedAngle(Rotation2d angle) {
+        double currentAngle = angle.getDegrees();
         // angle
         if (currentAngle > -45 && currentAngle <= 45) {
-            angle = 0;
+            currentAngle = 0;
         } else if (currentAngle > 45 && currentAngle <= 135) {
-            angle = 90;
+            currentAngle = 90;
         } else if (currentAngle < -45 && currentAngle >= -135) {
-            angle = -90;
+            currentAngle = -90;
         } else if (currentAngle < -135 && currentAngle >= 135 ) {
-            angle = 180;
+            currentAngle = 180;
         }
 
-        return angle;
+        return Rotation2d.fromDegrees(currentAngle);
     }
 }

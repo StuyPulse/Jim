@@ -16,21 +16,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SwerveDriveBlayBalance extends CommandBase {
+public class SwerveDriveBalanceBlay extends CommandBase {
 
-    public interface Gyro {
-        SmartNumber kMaxTilt = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
-        SmartNumber kMaxEngageSpeed = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.65);
-
-        SmartNumber kT_u = new SmartNumber("Auto Engage/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> kMaxEngageSpeed.get() / kMaxTilt.get()).number();  // from Zieger-Nichols tuning method
+    private interface Constants {
+        SmartNumber kT_u = new SmartNumber("Auto Engage/Balance with Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
+        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoEngage.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
 
         Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
         SmartNumber kI = new SmartNumber("", 0);
         Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
     }
 
-    private static SmartNumber ANGLE_TOLERANCE = new SmartNumber("Auto Engage/Blay Balance/Tolerance Angle (deg)", 8);
+    private static Number MAX_SPEED;
+
+    private static Number ANGLE_THRESHOLD;
 
     private Controller control;
 
@@ -39,11 +38,14 @@ public class SwerveDriveBlayBalance extends CommandBase {
 
     private double balanceAngle;
 
-    public SwerveDriveBlayBalance() {
+    public SwerveDriveBalanceBlay() {
+        MAX_SPEED = AutoEngage.MAX_SPEED.doubleValue();
+
+        ANGLE_THRESHOLD = AutoEngage.ANGLE_THRESHOLD.doubleValue();
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
-        control = new PIDController(Gyro.kP, Gyro.kI, Gyro.kD);
+        control = new PIDController(Constants.kP, Constants.kI, Constants.kD);
 
         balanceAngle = 0;
     }
@@ -73,7 +75,7 @@ public class SwerveDriveBlayBalance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return control.isDone(ANGLE_TOLERANCE.doubleValue());
+        return control.isDone(ANGLE_THRESHOLD.doubleValue());
     }
 
     @Override
@@ -85,15 +87,14 @@ public class SwerveDriveBlayBalance extends CommandBase {
     }
 
     public Command pointWheels() {
-        return new SwerveDriveBlayBalance().andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
+        return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
     }
 
-    public Command withTolerance(double maxSpeed, double distanceTolerance, double angleTolerance) {
-        Gyro.kMaxEngageSpeed.set(maxSpeed);
+    public Command withTolerance(double maxSpeed, double angleTolerance) {
+        MAX_SPEED = maxSpeed;
 
-        AutoEngage.ANGLE_THRESHOLD.set(distanceTolerance);
-        AutoEngage.DISTANCE_THRESHOLD.set(distanceTolerance);
+        ANGLE_THRESHOLD = angleTolerance;
 
-        return new SwerveDriveBalanceWithDualPID();
+        return this;
     }
 }

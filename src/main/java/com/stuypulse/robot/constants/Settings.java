@@ -241,6 +241,10 @@ public interface Settings {
     public interface AutoEngage {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
         SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 7);
+
+        SmartNumber MAX_TILT = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.65);
+
         public interface Translation {
             SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);
             SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
@@ -251,6 +255,15 @@ public interface Settings {
             SmartNumber P = new SmartNumber("Auto Balance/Tilt/kP", 0.05);
             SmartNumber I = new SmartNumber("Auto Balance/Tilt/kI", 0);
             SmartNumber D = new SmartNumber("Auto Balance/Tilt/kD", 0);
+        }
+
+        public interface Gyro {
+            SmartNumber kT_u = new SmartNumber("Auto Engage/Tu", 0.2);  // from Zieger-Nichols tuning method
+            Number kK_u = IStream.create(() -> MAX_SPEED.get() / MAX_TILT.get()).number();  // from Zieger-Nichols tuning method
+
+            Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+            SmartNumber kI = new SmartNumber("", 0);
+            Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
         }
     }
 

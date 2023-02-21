@@ -21,17 +21,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
-    public interface Gyro {
-        SmartNumber kMaxTilt = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
-        SmartNumber kMaxEngageSpeed = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.65);
-
-        SmartNumber kT_u = new SmartNumber("Auto Engage/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> kMaxEngageSpeed.get() / kMaxTilt.get()).number();  // from Zieger-Nichols tuning method
+    private interface Constants {
+        SmartNumber kT_u = new SmartNumber("Auto Engage/Balance with Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
+        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoEngage.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
 
         Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
         SmartNumber kI = new SmartNumber("", 0);
         Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
     }
+
+    private static Number MAX_SPEED;
+
+    private static Number DISTANCE_THRESHOLD;
+    private static Number ANGLE_THRESHOLD;
 
     private final SwerveDrive swerve;
     private final Odometry odometry;
@@ -40,13 +42,18 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     private final Controller gyroController;
     
     public SwerveDriveBalanceWithDualPID() {
+        MAX_SPEED = AutoEngage.MAX_SPEED.doubleValue();
+
+        DISTANCE_THRESHOLD = AutoEngage.DISTANCE_THRESHOLD.doubleValue();
+        ANGLE_THRESHOLD = AutoEngage.ANGLE_THRESHOLD.doubleValue();
+
         this.swerve = SwerveDrive.getInstance();
         this.odometry = Odometry.getInstance();
 
         tiltController = new PIDController(Tilt.P, Tilt.I, Tilt.D);
         translationController = new PIDController(Translation.P, Translation.I, Translation.D);
 
-        gyroController = new PIDController(Gyro.kP, Gyro.kI, Gyro.kD);
+        gyroController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
 
         addRequirements(swerve);
     }
@@ -110,15 +117,15 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     }
 
     public Command pointWheels() {
-        return new SwerveDriveBalanceWithDualPID().andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
+        return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
     }
 
     public Command withTolerance(double maxSpeed, double distanceTolerance, double angleTolerance) {
-        Gyro.kMaxEngageSpeed.set(maxSpeed);
+        MAX_SPEED = maxSpeed;
 
-        AutoEngage.ANGLE_THRESHOLD.set(distanceTolerance);
-        AutoEngage.DISTANCE_THRESHOLD.set(distanceTolerance);
+        ANGLE_THRESHOLD = angleTolerance;
+        DISTANCE_THRESHOLD = distanceTolerance;
 
-        return new SwerveDriveBalanceWithDualPID();
+        return this;
     }
 }
