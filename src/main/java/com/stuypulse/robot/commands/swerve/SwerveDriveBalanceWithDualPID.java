@@ -32,8 +32,8 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     private static Number MAX_SPEED;
 
-    private static Number DISTANCE_THRESHOLD;
-    private static Number ANGLE_THRESHOLD;
+    private Number DISTANCE_THRESHOLD;
+    private Number ANGLE_THRESHOLD;
 
     private final SwerveDrive swerve;
     private final Odometry odometry;
@@ -85,7 +85,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
         double velocity;
 
-        if (translationController.isDone(AutoEngage.DISTANCE_THRESHOLD.getAsDouble())) {
+        if (translationController.isDone(DISTANCE_THRESHOLD.doubleValue())) {
             velocity = gyroController.update(0, -1 * balanceAngle);
             swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                                             new ChassisSpeeds(velocity, 0.0, 0.0), 
@@ -105,7 +105,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     @Override 
     public boolean isFinished() {
-        return gyroController.isDone(AutoEngage.ANGLE_THRESHOLD.getAsDouble());
+        return gyroController.isDone(ANGLE_THRESHOLD.doubleValue());
     }
 
     @Override 
@@ -116,7 +116,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
         Plant.getInstance().engage();
     }
 
-    public Command pointWheels() {
+    public Command thenPointWheels() {
         return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
     }
 

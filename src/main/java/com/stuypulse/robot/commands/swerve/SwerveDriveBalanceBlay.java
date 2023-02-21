@@ -1,7 +1,6 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings.AutoEngage;
-import com.stuypulse.robot.constants.Settings.AutoEngage.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -29,7 +28,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     private static Number MAX_SPEED;
 
-    private static Number ANGLE_THRESHOLD;
+    private Number ANGLE_THRESHOLD;
 
     private Controller control;
 
@@ -86,7 +85,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         Plant.getInstance().engage();
     }
 
-    public Command pointWheels() {
+    public Command thenPointWheels() {
         return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
     }
 
