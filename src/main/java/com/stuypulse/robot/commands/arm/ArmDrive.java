@@ -5,8 +5,10 @@ package com.stuypulse.robot.commands.arm;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
 import com.stuypulse.stuylib.util.StopWatch;
@@ -26,7 +28,6 @@ public class ArmDrive extends CommandBase {
    
     public ArmDrive(Gamepad gamepad){
         this.arm = Arm.getInstance();
-
 
         // these give values in deg / s
         this.shoulder = IStream.create(gamepad::getLeftY).filtered(
@@ -55,8 +56,13 @@ public class ArmDrive extends CommandBase {
     public void execute(){
         final double dt = timer.reset();
 
-        arm.moveShoulder(Rotation2d.fromDegrees(shoulder.get() * dt));
-        arm.moveWrist(Rotation2d.fromDegrees(wrist.get() * dt));
+        if (Odometry.getInstance().getPose().getRotation().getDegrees() < 180) {
+            arm.moveShoulder(Rotation2d.fromDegrees(shoulder.get() * dt));
+            arm.moveWrist(Rotation2d.fromDegrees(wrist.get() * dt));
+        } else {
+            arm.moveShoulder(Rotation2d.fromDegrees(-shoulder.get() * dt));
+            arm.moveWrist(Rotation2d.fromDegrees(-wrist.get() * dt));
+        }
     }
 
     @Override
