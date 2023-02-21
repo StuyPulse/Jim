@@ -35,6 +35,7 @@ import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -72,10 +73,11 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
+        DataLogManager.start();
+
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
-
 
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -109,9 +111,11 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
-            .onFalse(new ArmReady())
+            .onTrue(new IntakeScore())
             .onFalse(new IntakeStop());
+            // .onTrue(new ArmScore().andThen(new IntakeScore()))
+            // .onFalse(new ArmReady())
+            // .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
@@ -159,9 +163,11 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper().whileTrue(new ArmReady());
         operator.getRightBumper()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new ArmReady())
+            .onTrue(new IntakeScore())
             .onFalse(new IntakeStop());
+            // .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+            // .onFalse(new ArmReady())
+            // .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
