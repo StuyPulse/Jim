@@ -37,8 +37,8 @@ public class ArmBFSField {
     }
 
     private static double distance(double dx, double dy) {
-        // return Math.hypot(dx, dy); // Diagonal
-        return Math.abs(dx) + Math.abs(dy);
+        return Math.hypot(dx, dy); // Diagonal
+        // return Math.abs(dx) + Math.abs(dy);
     }
 
     public class Node {
