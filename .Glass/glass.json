@@ -22,23 +22,13 @@
         "Driver Setings": {
           "open": true
         },
-        "Driver Settings": {
-          "Drive": {
-            "open": true
-          },
-          "open": true
-        },
         "Manager": {
-          "open": true
-        },
-        "Operator Settings": {
           "open": true
         },
         "Settings": {
           "Intake": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Swerve": {
           "Drive": {
@@ -104,7 +94,7 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT4)",
+    "mode": "Client (NT3)",
     "serverTeam": "10.6.94.2"
   },
   "Plots": {
@@ -182,7 +172,18 @@
               "autoFit": true
             }
           ],
-          "height": 464
+          "height": 464,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Auto Balance/Balance Angle (deg)"
+            }
+          ]
         }
       ]
     },

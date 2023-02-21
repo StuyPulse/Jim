@@ -111,11 +111,11 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .onTrue(new IntakeScore())
-            .onFalse(new IntakeStop());
-            // .onTrue(new ArmScore().andThen(new IntakeScore()))
-            // .onFalse(new ArmReady())
+            // .onTrue(new IntakeScore())
             // .onFalse(new IntakeStop());
+            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
@@ -163,11 +163,11 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper().whileTrue(new ArmReady());
         operator.getRightBumper()
-            .onTrue(new IntakeScore())
-            .onFalse(new IntakeStop());
-            // .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            // .onFalse(new ArmReady())
+            // .onTrue(new IntakeScore())
             // .onFalse(new IntakeStop());
+            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+            .onFalse(new ArmReady())
+            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
