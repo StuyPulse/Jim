@@ -12,10 +12,8 @@ import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,12 +35,9 @@ public class SwerveDriveToPose extends CommandBase{
         this.swerve = SwerveDrive.getInstance();
         this.targetPoses = targetPoses;
 
-        xController = new PIDController(Translation.P,Translation.I,Translation.D)
-            .setSetpointFilter(new MotionProfile(3, 2));
-        yController = new PIDController(Translation.P, Translation.I, Translation.D)
-            .setSetpointFilter(new MotionProfile(3, 2));
-        angleController =new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
-            .setSetpointFilter(new AMotionProfile(5, 4));
+        xController = new PIDController(Translation.P,Translation.I,Translation.D);
+        yController = new PIDController(Translation.P, Translation.I, Translation.D);
+        angleController = new AnglePIDController(Rotation.P, Rotation.I, Rotation.D);
         
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
         
@@ -51,7 +46,7 @@ public class SwerveDriveToPose extends CommandBase{
 
     private boolean isAligned() {
         return xController.isDone(Alignment.ALIGNED_THRESHOLD_X.get())
-            && xController.isDone(Alignment.ALIGNED_THRESHOLD_Y.get())
+            && yController.isDone(Alignment.ALIGNED_THRESHOLD_Y.get())
             && angleController.isDoneDegrees(Alignment.ALIGNED_THRESHOLD_ANGLE.get());
     }
 
@@ -63,9 +58,12 @@ public class SwerveDriveToPose extends CommandBase{
 
         boolean alignY = xController.isDone(Units.inchesToMeters(6));
 
+        xController.update(targetPose.getX(), currentState.getX());
+        yController.update(targetPose.getY(), currentState.getY());
+        
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            xController.update(targetPose.getX(), currentState.getX()),
-            alignY ? yController.update(targetPose.getY(), currentState.getY()) : 0,
+            alignY ? 0 : xController.getOutput(),
+            alignY ? yController.getOutput() : 0,
             angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation())),
             currentState.getRotation()
         );
@@ -73,13 +71,12 @@ public class SwerveDriveToPose extends CommandBase{
         swerve.setChassisSpeeds(chassisSpeeds);
     }
 
-
     @Override
     public boolean isFinished(){
         return aligned.get();
     }
 
-    public void end(boolean interuppted) {
+    public void end(boolean interupted) {
         swerve.stop();
     }
     

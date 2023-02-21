@@ -23,11 +23,11 @@ GRID_DEPTH = inches_to_meters(54.25)
 args = len(sys.argv) - 1
 
 if args < 3:
-    print('Usage: pathgen path_name start_point [mid_point...] end_point')
+    print('Usage: generate_path_from_score_spots path_name start_point [mid_point...] end_point')
     print('Point types:')
     print('  peg<0-5>')
     print('  cube<0-2>')
-    print('ex. pathgen "Four Piece" peg0 cube0 cube1 cube3')
+    print('ex. generate_path_from_score_spots "Four Piece" peg0 cube0 cube1 cube3')
     exit(1)
 
 peg_y_values = list(map(inches_to_meters, [
@@ -89,7 +89,7 @@ for i in range(args - 1):
         i != 0,
         i != args - 2))
 
-with open('src/main/deploy/pathplanner/' + sys.argv[1] + '.path', 'w') as f:
+with open('../src/main/deploy/pathplanner/' + sys.argv[1] + '.path', 'w') as f:
     f.write(json.dumps({
         'waypoints': waypoints,
         'markers': []

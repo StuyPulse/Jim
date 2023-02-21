@@ -7,10 +7,13 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Back Left": {
-          "open": true
-        },
-        "Back Right": {
+        "Arm": {
+          "Shoulder": {
+            "open": true
+          },
+          "Wrist": {
+            "open": true
+          },
           "open": true
         },
         "DriPver Settings": {
@@ -20,24 +23,21 @@
           "open": true
         },
         "Driver Settings": {
+          "Drive": {
+            "open": true
+          },
           "open": true
         },
-        "Front Left": {
-          "open": true
-        },
-        "Front Right": {
-          "open": true
-        },
-        "Odometry": {
+        "Manager": {
           "open": true
         },
         "Operator Settings": {
           "open": true
         },
-        "Pump": {
-          "open": true
-        },
         "Settings": {
+          "Intake": {
+            "open": true
+          },
           "open": true
         },
         "Swerve": {
@@ -46,8 +46,7 @@
           },
           "Turn": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -55,8 +54,7 @@
           },
           "limelight": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Wrist": {
           "open": true
@@ -114,7 +112,13 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 355,
+          "axis": [
+            {
+              "lockMax": true,
+              "lockMin": true
+            }
+          ],
+          "height": 464,
           "series": [
             {
               "color": [
@@ -123,7 +127,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Wrist Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Angle (deg)"
             },
             {
               "color": [
@@ -132,25 +136,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Arm Angle (deg)"
-            },
-            {
-              "color": [
-                0.7686275243759155,
-                0.30588236451148987,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Arm/Target Wrist Angle (deg)"
-            },
-            {
-              "color": [
-                0.3333333432674408,
-                0.658823549747467,
-                0.4078431725502014,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Arm/Target Arm Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Target (deg)"
             }
           ]
         }
@@ -161,10 +147,11 @@
         {
           "axis": [
             {
-              "autoFit": true
+              "lockMax": true,
+              "lockMin": true
             }
           ],
-          "height": 446,
+          "height": 464,
           "series": [
             {
               "color": [
@@ -173,7 +160,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Right/Angle"
+              "id": "NT:/SmartDashboard/Arm/Wrist/Angle (deg)"
             },
             {
               "color": [
@@ -182,7 +169,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Front Right/Target Angle"
+              "id": "NT:/SmartDashboard/Arm/Wrist/Target (deg)"
             }
           ]
         }
@@ -196,27 +183,7 @@
               "autoFit": true
             }
           ],
-          "height": 447,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Front Left/Angle"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Front Left/Target Angle"
-            }
-          ]
+          "height": 464
         }
       ]
     },
@@ -228,7 +195,7 @@
               "autoFit": true
             }
           ],
-          "height": 424,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -260,7 +227,7 @@
               "autoFit": true
             }
           ],
-          "height": 425,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -282,12 +249,15 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <5>": {
       "plots": [
         {
-          "height": 355,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -318,7 +288,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <6>": {
       "plots": [
@@ -328,7 +301,7 @@
               "autoFit": true
             }
           ],
-          "height": 447,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -350,7 +323,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <7>": {
       "plots": [
@@ -360,7 +336,7 @@
               "autoFit": true
             }
           ],
-          "height": 446,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -382,7 +358,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <8>": {
       "plots": [
@@ -392,7 +371,7 @@
               "autoFit": true
             }
           ],
-          "height": 425,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -414,7 +393,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <9>": {
       "plots": [
@@ -424,7 +406,7 @@
               "autoFit": true
             }
           ],
-          "height": 424,
+          "height": 128,
           "series": [
             {
               "color": [
@@ -446,7 +428,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

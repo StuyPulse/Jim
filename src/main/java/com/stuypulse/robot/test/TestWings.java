@@ -2,6 +2,9 @@ package com.stuypulse.robot.test;
 
 
 import static com.stuypulse.robot.constants.Ports.Wings.*;
+
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -69,11 +72,11 @@ public class TestWings extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Wings/Right Latch Engaged", rightLatch.get());
-        SmartDashboard.putBoolean("Wings/Left Latch Engaged", leftLatch.get());
+        Settings.putBoolean("Wings/Right Latch Engaged", rightLatch.get());
+        Settings.putBoolean("Wings/Left Latch Engaged", leftLatch.get());
 
-        SmartDashboard.putBoolean("Wings/Right Deployed", rightDeploy.get() == DoubleSolenoid.Value.kForward);
-        SmartDashboard.putBoolean("Wings/Left Deployed", leftDeploy.get() == DoubleSolenoid.Value.kForward);
+        Settings.putBoolean("Wings/Right Deployed", rightDeploy.get() == DoubleSolenoid.Value.kForward);
+        Settings.putBoolean("Wings/Left Deployed", leftDeploy.get() == DoubleSolenoid.Value.kForward);
 
     }
 }

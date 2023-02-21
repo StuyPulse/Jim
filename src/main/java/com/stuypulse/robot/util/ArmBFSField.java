@@ -26,7 +26,7 @@ public class ArmBFSField {
     // kBinning = 1) 360 x 360
     // kBinning = 2) 180 x 180
     // kBinning = 3) 120 x 120
-    public static final int kBinning = 3;
+    public static final int kBinning = 4;
 
     private static int normalize(int degrees) {
         return degrees - kDegreeRange * Math.floorDiv(degrees, kDegreeRange);
@@ -197,6 +197,8 @@ public class ArmBFSField {
     private final double mArmDegOffset;
     private final double mWristDegOffset;
     private final Node[] mNodeMap;
+    
+    private static int instances = 0;
 
     public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
         this(targetArmDeg, targetWristDeg, constraints, new ArmBFSField(-180 - targetArmDeg, -180 - targetWristDeg, constraints, null));
@@ -269,6 +271,8 @@ public class ArmBFSField {
                 }
             }
         }
+
+        System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {
@@ -301,6 +305,10 @@ public class ArmBFSField {
 
     public ArmBFSField flipped() {
         return mFlipped;
+    }
+
+    public int getSize() {
+        return mNodeMap.length;
     }
 
     public static void main(String... args) {

@@ -3,11 +3,11 @@ import com.stuypulse.robot.subsystems.Manager;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class ManagerFlipIntakeSide extends InstantCommand {
-    public ManagerFlipIntakeSide() {
+public class ManagerFlipScoreSide extends InstantCommand {
+    public ManagerFlipScoreSide() {
         super(() -> {
             var manager = Manager.getInstance();
-            manager.setIntakeSide(manager.getIntakeSide().getOpposite());
+            manager.setScoreSide(manager.getScoreSide().getOpposite());
         });
     }
 }

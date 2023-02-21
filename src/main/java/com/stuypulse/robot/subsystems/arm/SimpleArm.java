@@ -1,21 +1,16 @@
 package com.stuypulse.robot.subsystems.arm;
 
-import static com.stuypulse.robot.constants.Motors.Arm.SHOULDER_LEFT_CONFIG;
-import static com.stuypulse.robot.constants.Motors.Arm.SHOULDER_RIGHT_CONFIG;
-import static com.stuypulse.robot.constants.Motors.Arm.WRIST_CONFIG;
-import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_LEFT;
-import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_RIGHT;
-import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
-
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
+import static com.stuypulse.robot.constants.Motors.Arm.*;
+import static com.stuypulse.robot.constants.Ports.Arm.*;
+import static com.stuypulse.robot.constants.Settings.Arm.*;
+
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
@@ -29,7 +24,7 @@ import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
-public class ArmImpl extends Arm {
+public class SimpleArm extends Arm {
 
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -45,8 +40,7 @@ public class ArmImpl extends Arm {
 
     private SmartBoolean feedbackEnable;
 
-    public ArmImpl() {
-        System.out.println("CREATING ARM IMPL ");
+    public SimpleArm() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -77,8 +71,7 @@ public class ArmImpl extends Arm {
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
 
-        setTrajectory(Manager.getInstance().getNeutralTrajectory());
-        // setTargetState(getState());
+        setTargetState(getState());
     }
 
     private void configureMotors() {
@@ -110,10 +103,6 @@ public class ArmImpl extends Arm {
         return getRelativeWristAngle().plus(getShoulderAngle());
     }
 
-    private Rotation2d getRelativeWristTargetAngle() {
-        return getWristAngle().minus(getShoulderAngle());
-    }
-
     private void runShoulder(double voltage) {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
@@ -134,21 +123,14 @@ public class ArmImpl extends Arm {
     @Override
     public void periodic() {
         var targetState = getTargetState();
-        double shoulderVolts = 
-            shoulderController.update(
-                Angle.fromRotation2d(targetState.getShoulderState()), 
-                Angle.fromRotation2d(getShoulderAngle()));
-        
-        double wristVolts =
-            wristController.update(
-                Angle.fromRotation2d(targetState.getWristState()), 
-                Angle.fromRotation2d(getWristAngle()));
+        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
+        double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
 
-        runShoulder(shoulderVolts);
-        runWrist(wristVolts);
+        runShoulder(shoulderOutput);
+        runWrist(wristOutput);
 
-        if (Settings.isDebug()) { 
-            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
+        if (Settings.isDebug()) {
+            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getShoulderState().getDegrees());
             armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
             armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
         
@@ -158,14 +140,14 @@ public class ArmImpl extends Arm {
             Settings.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
             Settings.putNumber("Arm/Wrist/Raw Angle (deg)", Units.rotationsToDegrees(wristEncoder.getPosition()));
 
-            Settings.putNumber("Arm/Shoulder/Target (deg)", shoulderController.getSetpoint().toDegrees());
-            Settings.putNumber("Arm/Wrist/Target (deg)", shoulderController.getSetpoint().toDegrees());
+            Settings.putNumber("Arm/Shoulder/Target (deg)", targetState.getShoulderState().getDegrees());
+            Settings.putNumber("Arm/Wrist/Target (deg)", targetState.getWristState().getDegrees());
 
             Settings.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
             Settings.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
 
-            Settings.putNumber("Arm/Shoulder/Output (V)", shoulderVolts);
-            Settings.putNumber("Arm/Wrist/Output (V)", wristVolts);
+            Settings.putNumber("Arm/Shoulder/Output (V)", shoulderOutput);
+            Settings.putNumber("Arm/Wrist/Output (V)", wristOutput);
         }
-    }   
+    }
 }

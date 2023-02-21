@@ -2,6 +2,8 @@ package com.stuypulse.robot.util;
 
 import java.util.Optional;
 
+import com.stuypulse.robot.RobotContainer;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -50,7 +52,7 @@ public class Limelight {
 
     public void updateAprilTagData() {
         double[] botposeData;
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
             botposeData = blueBotposeEntry.get();
         } else {
             botposeData = redBotposeEntry.get();

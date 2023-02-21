@@ -1,10 +1,12 @@
 package com.stuypulse.robot.subsystems;
 
+import static com.stuypulse.robot.constants.ArmFields.*;
+
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
-import com.stuypulse.robot.constants.Constraints;
 
 
 import edu.wpi.first.math.MathUtil;
@@ -60,13 +62,21 @@ public class Manager extends SubsystemBase {
     // side to intake on
     public enum IntakeSide {
         FRONT, 
-        BACK
+        BACK;
+
+        public IntakeSide getOpposite() {
+            return (this == FRONT) ? BACK : FRONT;
+        }
     }
 
     // side to score on (relative to intake side)
     public enum ScoreSide {
         SAME,
-        OPPOSITE
+        OPPOSITE;
+
+        public ScoreSide getOpposite() {
+            return (this == SAME) ? OPPOSITE : SAME;
+        }
     }
 
     // Direction that describes a scoring position
@@ -128,12 +138,11 @@ public class Manager extends SubsystemBase {
 
     /** Generate Intake Trajectories **/
 
-    private static ArmBFSField kIntakeTrajectory = new ArmBFSField(-55, 0, Constraints.CONSTRAINT);
 
     public ArmBFSField getIntakeTrajectory() {
         if (intakeSide == IntakeSide.FRONT) 
-            return kIntakeTrajectory;
-        return kIntakeTrajectory.flipped();
+            return Intake.kTrajectory;
+        return Intake.kTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/
@@ -150,7 +159,7 @@ public class Manager extends SubsystemBase {
     public ArmBFSField getReadyTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getIntakeTrajectory();
+                return getLowReadyTrajectory();
 
             case MID:
                 return getMidReadyTrajectory();
@@ -163,34 +172,54 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private static ArmBFSField kMidReadyTrajectoryCone = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
-    private static ArmBFSField kMidReadyTrajectoryCube = new ArmBFSField(-10, 120, Constraints.CONSTRAINT);
+    private ArmBFSField getLowReadyTrajectory() {
+        switch (gamePiece) {
+            case CONE_TIP_OUT:
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Ready.Low.kConeTipOutSame);
+                return normalize(Ready.Low.kConeTipOutOpposite);
+            
+            case CONE_TIP_IN:
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Ready.Low.kConeTipInSame);
+                return normalize(Ready.Low.kConeTipInOpposite);
+            
+            case CUBE:
+                return normalize(Ready.Low.kCube);
+            
+            default:
+                return Neutral.kTrajectory;
+        }
+    }
 
     private ArmBFSField getMidReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_OUT:
+                // impossible to score tip out opposite side on mid
+                return normalize(Ready.Mid.kConeTipOutSame);
+
             case CONE_TIP_IN:
-                return normalize(kMidReadyTrajectoryCone);
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Ready.Mid.kConeTipInSame);
+                return normalize(Ready.Mid.kConeTipInOpposite);
 
             case CUBE:
-                return normalize(kMidReadyTrajectoryCube);
+                return normalize(Ready.Mid.kCube);
 
             default:
-                return normalize(kNeutralTrajectory);
+                return getNeutralTrajectory();
         }
     }
-
-
-    private static ArmBFSField kHighReadyTrajectoryCone = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
-    private static ArmBFSField kHighReadyTrajectoryCube = new ArmBFSField(10, 120, Constraints.CONSTRAINT);
 
     private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                return normalize(kHighReadyTrajectoryCone);
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Ready.High.kConeTipInSame);
+                return normalize(Ready.High.kConeTipInOpposite);
 
             case CUBE:
-                return normalize(kHighReadyTrajectoryCube);
+                return normalize(Ready.High.kCube);
 
             default:
                 return getNeutralTrajectory();
@@ -199,26 +228,30 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Trajectories **/
 
-    public static ArmBFSField kScoreMidTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
-    public static ArmBFSField kScoreMidTrajectoryCone = new ArmBFSField(-30, 0, Constraints.CONSTRAINT);
-
-    public static ArmBFSField kScoreHighTrajectoryCube = new ArmBFSField(-15, 45, Constraints.CONSTRAINT);
-    public static ArmBFSField kScoreHighTrajectoryCone = new ArmBFSField(10, -45, Constraints.CONSTRAINT);
-
     public ArmBFSField getScoreTrajectory() {
         switch (nodeLevel) {
             case LOW:
-                return getNeutralTrajectory();
+                return getLowReadyTrajectory();
+
             case MID:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(kScoreMidTrajectoryCube);
+                    return normalize(Score.Mid.kCube);
                 
-                return normalize(kScoreMidTrajectoryCone);
+                if (gamePiece == GamePiece.CONE_TIP_OUT)
+                    return normalize(Score.Mid.kConeTipOutSame);
+
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Score.Mid.kConeTipInSame);
+                return normalize(Score.Mid.kConeTipInOpposite);
+
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
-                    return normalize(kScoreHighTrajectoryCube);
+                    return normalize(Score.High.kCube);
 
-                return normalize(kScoreHighTrajectoryCone);
+                if (scoreSide == ScoreSide.SAME)
+                    return normalize(Score.High.kConeTipInSame);
+                return normalize(Score.High.kConeTipInOpposite);
+
             default:
                 return getNeutralTrajectory();
         }
@@ -226,10 +259,8 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
-    private static ArmBFSField kNeutralTrajectory = new ArmBFSField(-90, 90, Constraints.CONSTRAINT);
-
     public ArmBFSField getNeutralTrajectory() {
-        return kNeutralTrajectory;
+        return Neutral.kTrajectory;
     }
 
     /** Generate Score Pose **/
@@ -244,47 +275,13 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private Rotation2d getWestEastAngle(Rotation2d angle) {
-        return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) > 90
-            ? Rotation2d.fromDegrees(180)
-            : Rotation2d.fromDegrees(0);
-    }
-
-    private ScoreSide currentScoringSide() {
-        Rotation2d normalizedHeading = getWestEastAngle(Odometry.getInstance().getRotation());
-
-        if (normalizedHeading.equals(Rotation2d.fromDegrees(180))) {
-            if (intakeSide == IntakeSide.FRONT)
-                return ScoreSide.OPPOSITE;
-            else
-                return ScoreSide.SAME;
-        } else {
-            if (intakeSide == IntakeSide.FRONT)
-                return ScoreSide.SAME;
-            else
-                return ScoreSide.OPPOSITE;
-        }
-    }
-
-    private boolean possibleScoringMotion(NodeLevel level, GamePiece piece, ScoreSide side) {
-        if (piece == GamePiece.CONE_TIP_OUT) {
-            if (level == NodeLevel.HIGH)
-                return false;
-            
-            else if (level == NodeLevel.MID && side == ScoreSide.OPPOSITE)
-                return false;
-        }
-        
-        return true;
-    }
-
     public Pose2d getScorePose() {
-        ScoreSide side = currentScoringSide();
-        Rotation2d currentHeading = SwerveDrive.getInstance().getGyroAngle();
-        
-        Rotation2d rotation = possibleScoringMotion(nodeLevel, gamePiece, side)
-            ? getWestEastAngle(currentHeading)
-            : getWestEastAngle(currentHeading).rotateBy(Rotation2d.fromDegrees(180));
+        Rotation2d rotation = new Rotation2d();
+
+        if (intakeSide == IntakeSide.FRONT && scoreSide == ScoreSide.SAME)
+            rotation = Rotation2d.fromDegrees(180);
+        else if (intakeSide == IntakeSide.BACK && scoreSide == ScoreSide.OPPOSITE)
+            rotation = Rotation2d.fromDegrees(180);
 
         return new Pose2d(getScoreTranslation(), rotation);
     }
@@ -349,13 +346,14 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+        if (Settings.isDebug()) {
+            Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
-        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
-        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
-        SmartDashboard.putString("Manager/Intake Side", intakeSide.name());
-        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
-        SmartDashboard.putString("Manager/Measured Scoring Side", currentScoringSide().name());
-        SmartDashboard.putString("Manager/Routine", routine.name());
+            Settings.putString("Manager/Game Piece", gamePiece.name());
+            Settings.putString("Manager/Node Level", nodeLevel.name());
+            Settings.putString("Manager/Intake Side", intakeSide.name());
+            Settings.putString("Manager/Score Side", scoreSide.name());
+            Settings.putString("Manager/Routine", routine.name());
+        }
     }
 }
