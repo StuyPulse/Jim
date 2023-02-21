@@ -123,7 +123,7 @@ public class ArmVisualizer {
         if (frontDirection == 0 && backDirection == 0)
             intakeDirection.setLength(0);
         else
-            intakeDirection.setLength(+frontDirection * 2);
+            intakeDirection.setLength(+backDirection * 2);
 
         intakeDirection.setAngle(wristLigament.getAngle() + 90);
     }

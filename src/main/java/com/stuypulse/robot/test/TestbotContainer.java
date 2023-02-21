@@ -127,13 +127,11 @@ public class TestbotContainer {
     private final IStream shoulder  = IStream.create(operator::getLeftY).filtered(
         x -> SLMath.deadband(x, Settings.Operator.DEADBAND.get()),
         x -> SLMath.spow(x, 2),
-        new LowPassFilter(Settings.Operator.SHOULDER_FILTERING),
         x -> x * Settings.Operator.SHOULDER_TELEOP_SPEED.get());
 
     private final IStream wrist = IStream.create(operator::getRightY).filtered(
         x -> SLMath.deadband(x, Settings.Operator.DEADBAND.get()),
         x -> SLMath.spow(x, 2),
-        new LowPassFilter(Settings.Operator.WRIST_FILTERING),
         x -> x * Settings.Operator.WRIST_TELEOP_SPEED.get());
 
     private void configureDefaultCommands() {

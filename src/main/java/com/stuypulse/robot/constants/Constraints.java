@@ -6,14 +6,14 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constraints {
     
-    double INFLATION = Units.inchesToMeters(1.0);
+    double INFLATION = Units.inchesToMeters(0.0);
 
     double SHOULDER_HEIGHT = Units.inchesToMeters(48);
     double WRIST_LENGTH = Units.inchesToMeters(17);
     double SHOULDER_LENGTH = Units.inchesToMeters(42.25);
 
     double BUMPER_WIDTH = Units.inchesToMeters(32) + 2 * INFLATION;
-    double BUMPER_HEIGHT = Units.inchesToMeters(8) + INFLATION;
+    double BUMPER_HEIGHT = Units.inchesToMeters(5.5) + INFLATION;
     double FLOOR_HEIGHT = Units.inchesToMeters(0) + INFLATION;
 
     Constraint BUMPER_CONSTRAINT = (s, w) -> {
@@ -28,15 +28,16 @@ public interface Constraints {
     };
 
     Constraint FLIP_CONSTRAINT = (s, w) -> {
-        return Math.abs(s - (-90)) < 5 && !(Math.abs(w - 90) < 5);
+        double shoulderTolerance = 10;
+        double wristTolerance = 10;
+        return (Math.abs(s - (-90)) < shoulderTolerance) && (Math.abs(w - 90) > wristTolerance);
     };
 
-    double MAX_SHOULDER_ANGLE = 10.0; // degrees
+    double MAX_SHOULDER_ANGLE = 25.0; // degrees
 
     Constraint SHOULDER_CONSTRAINT = (s, w) -> {
         return MAX_SHOULDER_ANGLE < s && s < (180 - MAX_SHOULDER_ANGLE);
     };
 
     Constraint CONSTRAINT = BUMPER_CONSTRAINT.add(SHOULDER_CONSTRAINT).add(FLIP_CONSTRAINT);
-
 }

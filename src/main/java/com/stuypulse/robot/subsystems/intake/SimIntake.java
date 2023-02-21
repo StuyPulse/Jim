@@ -56,7 +56,7 @@ public class SimIntake extends Intake {
 
     @Override
     public void deacquireCone(){
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
             frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {

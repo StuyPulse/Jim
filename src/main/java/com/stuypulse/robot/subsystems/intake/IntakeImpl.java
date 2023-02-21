@@ -88,8 +88,7 @@ public class IntakeImpl extends Intake{
     // WRIST ORIENTATION
 
     private boolean isFlipped() {
-        // return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
-        return false;
+        return Arm.getInstance().getWristAngle().getDegrees() > 90 || Arm.getInstance().getWristAngle().getDegrees() < -90;
     }
 
     // INTAKING MODES
@@ -143,7 +142,7 @@ public class IntakeImpl extends Intake{
     public void deacquireCone(){
         deacquiring = true;
         
-        if (isFlipped()) {
+        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
             frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
             backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
         } else {
@@ -162,12 +161,15 @@ public class IntakeImpl extends Intake{
         stalling.get();
         newGamePiece.get();
 
-        if (!deacquiring && (isStalling() || hasCube())) {
+        // if (!deacquiring && (isStalling() || hasCube())) {
+        //     stop();
+        // }
+        if (isStalling()) {
             stop();
         }
 
         if (Settings.isDebug()) {
-            arm.getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
+            Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
        
             Settings.putNumber("Intake/Front Roller Speed", frontMotor.get());
             Settings.putNumber("Intake/Back Roller Speed", backMotor.get());

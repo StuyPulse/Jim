@@ -25,6 +25,7 @@ import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.wings.*;
 import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
 
@@ -113,10 +114,13 @@ public class RobotContainer {
             .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
+        driver.getRightButton().onTrue(new ManagerFlipScoreSide());
+
         // swerve
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadDown().onTrue(new OdometryRealign());
         // right trigger -> robotrelative override
 
@@ -128,24 +132,34 @@ public class RobotContainer {
 
     private void configureOperatorBindings() {
         // manual control
-        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > 0.1).onTrue(new ArmDrive(operator));
+        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get()).onTrue(new ArmDrive(operator));
         
         // intaking
         operator.getRightTriggerButton()
-            .onTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            .whileTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            // .whileTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
         // outtake
         operator.getLeftTriggerButton()
-            .onTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .whileTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
+        // operator.getRightTriggerButton()
+        //     .whileTrue(new IntakeAcquire())
+        //     .onFalse(new IntakeStop());
+
+        // operator.getLeftTriggerButton()
+        //     .whileTrue(new IntakeDeacquire())
+        //     .onFalse(new IntakeStop());
+
         // ready & score
-        operator.getLeftBumper().onTrue(new ArmReady());
+        operator.getLeftBumper().whileTrue(new ArmReady());
         operator.getRightBumper()
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
+            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new ArmReady())
             .onFalse(new IntakeStop());
 
@@ -164,7 +178,7 @@ public class RobotContainer {
 
         // arm to neutral
         operator.getDPadRight()
-            .onTrue(new ArmNeutral())
+            .whileTrue(new ArmNeutral())
             .onTrue(new IntakeStop());
 
         // manual overrides

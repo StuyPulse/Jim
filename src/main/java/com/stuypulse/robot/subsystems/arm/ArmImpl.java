@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
@@ -76,7 +77,8 @@ public class ArmImpl extends Arm {
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
 
-        setTargetState(getState());
+        setTrajectory(Manager.getInstance().getNeutralTrajectory());
+        // setTargetState(getState());
     }
 
     private void configureMotors() {

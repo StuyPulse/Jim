@@ -8,6 +8,12 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
+          "Shoulder": {
+            "open": true
+          },
+          "Wrist": {
+            "open": true
+          },
           "open": true
         },
         "DriPver Settings": {
@@ -17,18 +23,15 @@
           "open": true
         },
         "Driver Settings": {
+          "Drive": {
+            "open": true
+          },
           "open": true
         },
-        "Intake": {
-          "open": true
-        },
-        "Odometry": {
+        "Manager": {
           "open": true
         },
         "Operator Settings": {
-          "open": true
-        },
-        "Pump": {
           "open": true
         },
         "Settings": {
@@ -43,8 +46,7 @@
           },
           "Turn": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -52,8 +54,7 @@
           },
           "limelight": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Wrist": {
           "open": true
@@ -110,7 +111,13 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 0,
+          "axis": [
+            {
+              "lockMax": true,
+              "lockMin": true
+            }
+          ],
+          "height": 464,
           "series": [
             {
               "color": [
@@ -119,7 +126,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Shoulder Angle"
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Angle (deg)"
             },
             {
               "color": [
@@ -128,7 +135,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Target Shoulder Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Target (deg)"
             }
           ]
         }
@@ -143,7 +150,7 @@
               "lockMin": true
             }
           ],
-          "height": 0,
+          "height": 464,
           "series": [
             {
               "color": [
@@ -152,7 +159,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Wrist Angle"
+              "id": "NT:/SmartDashboard/Arm/Wrist/Angle (deg)"
             },
             {
               "color": [
@@ -161,7 +168,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Target Wrist Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Wrist/Target (deg)"
             }
           ]
         }
@@ -175,27 +182,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Front Left/Angle"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Front Left/Target Angle"
-            }
-          ]
+          "height": 464
         }
       ]
     },
@@ -207,7 +194,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -418,7 +405,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 128,
           "series": [
             {
               "color": [
