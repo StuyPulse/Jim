@@ -76,7 +76,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     @Override
     public void execute() {
-        double balanceAngle = -1 * getBalanceAngle().getDegrees();
+        double balanceAngle = getBalanceAngle().getDegrees();
         double target = Units.inchesToMeters(CHARGING_STATION_CENTER.get());
         double offset = tiltController.update(0, balanceAngle) / Math.cos(Math.toRadians(balanceAngle));
 
