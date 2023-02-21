@@ -28,7 +28,7 @@ public interface Constraints {
     };
 
     Constraint FLIP_CONSTRAINT = (s, w) -> {
-        double shoulderTolerance = 10;
+        double shoulderTolerance = 12;
         double wristTolerance = 10;
         return (Math.abs(s - (-90)) < shoulderTolerance) && (Math.abs(w - 90) > wristTolerance);
     };

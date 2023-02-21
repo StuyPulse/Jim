@@ -62,23 +62,23 @@ public interface Settings {
     }
 
     public interface Intake{
-        SmartNumber STALL_TIME = new SmartNumber("Settings/Intake/Stall Time", 0.05);
-        SmartNumber STALL_CURRENT = new SmartNumber("Settings/Intake/Stall Current", 60);
+        SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time", 0.05);
+        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
-        SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Front Roller Speed", 1);
-        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cone Back Roller Speed", 1);
+        SmartNumber INTAKE_CONE_FRONT_ROLLER = new SmartNumber("Intake/Intake Cone Front Roller Speed", 1);
+        SmartNumber INTAKE_CONE_BACK_ROLLER = new SmartNumber("Intake/Intake Cone Back Roller Speed", 1);
 
-        SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Front Roller Speed", 0.5);
-        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Intake Cube Back Roller Speed", 0.5);
+        SmartNumber INTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Intake/Intake Cube Front Roller Speed", 0.5);
+        SmartNumber INTAKE_CUBE_BACK_ROLLER = new SmartNumber("Intake/Intake Cube Back Roller Speed", 0.5);
 
-        SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Front Roller Speed", 1);
-        SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cone Back Roller Speed", 1);
+        SmartNumber OUTTAKE_CONE_FRONT_ROLLER = new SmartNumber("Intake/Outtake Cone Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CONE_BACK_ROLLER = new SmartNumber("Intake/Outtake Cone Back Roller Speed", 1);
 
-        SmartNumber OUTTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Front Roller Speed", 1);
-        SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Settings/Intake/Outtake Cube Back Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_FRONT_ROLLER = new SmartNumber("Intake/Outtake Cube Front Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_BACK_ROLLER = new SmartNumber("Intake/Outtake Cube Back Roller Speed", 1);
 
 
-        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Settings/Intake/New Gamepiece Time (Falling)", 0.5);
+        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
     }
 
     public interface Vision {
@@ -170,7 +170,7 @@ public interface Settings {
 
     public interface Arm {
 
-        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 30);
+        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 50);
 
         public interface Shoulder {
             int MOTORS = 2;

@@ -158,14 +158,14 @@ public class IntakeImpl extends Intake{
     
     @Override
     public void periodic(){
-        stalling.get();
-        newGamePiece.get();
-
-        // if (!deacquiring && (isStalling() || hasCube())) {
-        //     stop();
-        // }
-        if (isStalling()) {
-            stop();
+        if (!deacquiring) {
+            if (Manager.getInstance().getGamePiece().isCone() && isStalling()) {
+                stop();
+            }
+    
+            if (Manager.getInstance().getGamePiece().isCube() && hasCube()) {
+                stop();
+            }
         }
 
         if (Settings.isDebug()) {
@@ -178,6 +178,8 @@ public class IntakeImpl extends Intake{
             Settings.putBoolean("Intake/Is Flipped", isFlipped());
             Settings.putBoolean("Intake/Is Stalling", isStalling());
             Settings.putBoolean("Intake/Has Cube", hasCube());
+            Settings.putBoolean("Intake/Deacquiring", deacquiring);
+
     
             Settings.putNumber("Intake/Front Motor", frontMotor.get());
             Settings.putNumber("Intake/Back Motor", backMotor.get());

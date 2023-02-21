@@ -37,7 +37,7 @@ public final class ArmFields {
     }
 
     public interface Intake {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-70, 5, Constraints.CONSTRAINT);
+        public static final ArmBFSField kTrajectory = new ArmBFSField(-77, -8, Constraints.CONSTRAINT);
         // public static final ArmBFSField kBackTrajectory = new ArmBFSField(-103, 170, Constraints.CONSTRAINT);
     }
 
