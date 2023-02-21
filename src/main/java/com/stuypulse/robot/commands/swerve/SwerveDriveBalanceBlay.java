@@ -63,7 +63,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", -1 * getBalanceAngle().getDegrees());
-        balanceAngle = -1 * getBalanceAngle().getDegrees();
+        balanceAngle = getBalanceAngle().getDegrees();
         var speed = control.update(
             0,
             balanceAngle);
