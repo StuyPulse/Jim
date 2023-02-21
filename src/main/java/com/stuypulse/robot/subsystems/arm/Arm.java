@@ -30,6 +30,29 @@ public abstract class Arm extends SubsystemBase {
         return instance;
     }
     
+    // Voltage override :(
+
+    public static class Voltages {
+        public final double wristVoltage;
+        public final double shoulderVoltage;
+
+        public Voltages(double wristVoltage, double shoulderVoltage) {
+            this.wristVoltage = wristVoltage;
+            this.shoulderVoltage = shoulderVoltage;
+        }
+
+        public static Voltages fromFieldRelativeVoltages(double wristVoltage, double shoulderVoltage, Rotation2d facing) {
+            if (facing.getCos() > 0) {
+                wristVoltage *= -1;
+                shoulderVoltage *= -1;
+            }
+
+            return new Voltages(wristVoltage, shoulderVoltage);
+        }
+    }    
+
+    private Optional<Voltages> voltages = Optional.empty();
+
     // Path planning
     private Optional<ArmBFSField> trajectory = Optional.empty();
     private ArmState targetState = ArmState.fromDegrees(-90, +90);
@@ -80,6 +103,7 @@ public abstract class Arm extends SubsystemBase {
     // Set target state
     public final void setTargetState(ArmState state) {
         trajectory = Optional.empty();
+        voltages = Optional.empty();
         targetState = state;
     }
 
@@ -93,6 +117,7 @@ public abstract class Arm extends SubsystemBase {
 
     public final void setTrajectory(ArmBFSField trajectory) {
         this.trajectory = Optional.ofNullable(trajectory);
+        voltages = Optional.empty();
     }
 
     // Change target angle (useful for driving)
@@ -105,14 +130,25 @@ public abstract class Arm extends SubsystemBase {
     }
 
     // Enable feedback control
-    public abstract void setFeedbackEnabled(boolean enabled);
-
-    public final void enableFeedback() {
-        setFeedbackEnabled(true);
+    public final void setVoltageControl(Voltages voltages) {
+        trajectory = Optional.empty();
+        this.voltages = Optional.of(voltages);
     }
 
-    public final void disableFeedback() {
-        setFeedbackEnabled(false);
+    public final void enableVoltageControl() {
+        setVoltageControl(new Voltages(0, 0));
+    }
+
+    public final void disableVoltageControl() {
+        this.voltages = Optional.empty();
+    }
+
+    public final boolean isVoltageControl() {
+        return voltages.isPresent();
+    }
+
+    protected final Optional<Voltages> getVoltageControl() {
+        return voltages;
     }
 
     // Get arm visualizer

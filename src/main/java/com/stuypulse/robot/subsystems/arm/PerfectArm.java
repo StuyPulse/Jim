@@ -27,11 +27,6 @@ public class PerfectArm extends Arm {
     }
 
     @Override
-    public void setFeedbackEnabled(boolean enabled) {
-        
-    }
-
-    @Override
     public ArmVisualizer getVisualizer() {
         return visualizer;
     }

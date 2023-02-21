@@ -71,16 +71,22 @@ public class SimArm extends Arm {
         return armVisualizer;
     }
 
-    public void setFeedbackEnabled(boolean enabled) {
+    public void setVoltageControlEnabled(boolean enabled) {
+        
     }
 
     @Override
     public void periodic() {
         var targetState = getTargetState();
-        double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
-        double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
-    
-        simulation.update(shoulderOutput, wristOutput, Settings.DT);
+        var voltageControl = getVoltageControl();
+        if (voltageControl.isPresent()) {
+            simulation.update(voltageControl.get().shoulderVoltage, voltageControl.get().wristVoltage, 0.02);
+        } else {
+            double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
+            double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
+        
+            simulation.update(shoulderOutput, wristOutput, Settings.DT);
+        }
 
         armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
@@ -95,7 +101,7 @@ public class SimArm extends Arm {
         Settings.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
         Settings.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
 
-        Settings.putNumber("Arm/Shoulder/Output (V)", shoulderOutput);
-        Settings.putNumber("Arm/Wrist/Output (V)", wristOutput);
+        Settings.putNumber("Arm/Shoulder/Output (V)", shoulderController.getOutput());
+        Settings.putNumber("Arm/Wrist/Output (V)", shoulderController.getOutput());
     }
 }

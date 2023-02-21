@@ -182,8 +182,8 @@ public class RobotContainer {
             .onTrue(new IntakeStop());
 
         // manual overrides
-        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
-        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
+        operator.getSelectButton().onTrue(arm.runOnce(arm::enableVoltageControl));
+        operator.getStartButton().onTrue(arm.runOnce(arm::disableVoltageControl));
 
     }
 

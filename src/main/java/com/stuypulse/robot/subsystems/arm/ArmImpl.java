@@ -134,18 +134,25 @@ public class ArmImpl extends Arm {
     @Override
     public void periodic() {
         var targetState = getTargetState();
-        double shoulderVolts = 
-            shoulderController.update(
-                Angle.fromRotation2d(targetState.getShoulderState()), 
-                Angle.fromRotation2d(getShoulderAngle()));
-        
-        double wristVolts =
-            wristController.update(
-                Angle.fromRotation2d(targetState.getWristState()), 
-                Angle.fromRotation2d(getWristAngle()));
+        var voltageControl = getVoltageControl();
 
-        runShoulder(shoulderVolts);
-        runWrist(wristVolts);
+        if (voltageControl.isPresent()) {
+            runShoulder(voltageControl.get().shoulderVoltage);
+            runWrist(voltageControl.get().wristVoltage);
+        } else {
+            double shoulderVolts = 
+                shoulderController.update(
+                    Angle.fromRotation2d(targetState.getShoulderState()), 
+                    Angle.fromRotation2d(getShoulderAngle()));
+        
+            double wristVolts =
+                wristController.update(
+                    Angle.fromRotation2d(targetState.getWristState()), 
+                    Angle.fromRotation2d(getWristAngle()));
+
+            runShoulder(shoulderVolts);
+            runWrist(wristVolts);
+        }
 
         if (Settings.isDebug()) { 
             armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
@@ -164,8 +171,8 @@ public class ArmImpl extends Arm {
             Settings.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
             Settings.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
 
-            Settings.putNumber("Arm/Shoulder/Output (V)", shoulderVolts);
-            Settings.putNumber("Arm/Wrist/Output (V)", wristVolts);
+            Settings.putNumber("Arm/Shoulder/Output (V)", voltageControl.isPresent() ? voltageControl.get().shoulderVoltage : shoulderController.getOutput());
+            Settings.putNumber("Arm/Wrist/Output (V)", voltageControl.isPresent() ? voltageControl.get().wristVoltage : wristController.getOutput());
         }
     }   
 }

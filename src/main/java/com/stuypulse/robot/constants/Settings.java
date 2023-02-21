@@ -266,8 +266,10 @@ public interface Settings {
         SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.2);
 
         SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 90); // deg per second
-        
         SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 60); // deg per second
+
+        SmartNumber MAX_WRIST_VOLTAGE = new SmartNumber("Operator Settings/Wrist Voltage", 12.0); // deg per second
+        SmartNumber MAX_SHOULDER_VOLTAGE = new SmartNumber("Operator Settings/Shoulder Voltage", 12.0); // deg per second
     }
 
     public interface Driver {
