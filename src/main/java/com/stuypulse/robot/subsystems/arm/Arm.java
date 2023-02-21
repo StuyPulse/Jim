@@ -94,8 +94,8 @@ public abstract class Arm extends SubsystemBase {
     public final void setTrajectory(ArmBFSField trajectory) {
         this.trajectory = Optional.ofNullable(trajectory);
 
-        Settings.putNumber("Arm/Shoulder Trajectory Endpoint (deg)", trajectory.getSetpoint().getShoulderState().getDegrees());
-        Settings.putNumber("Arm/Wrist Trajectory Endpoint (deg)", trajectory.getSetpoint().getWristState().getDegrees());
+        Settings.putNumber("Arm/Shoulder/Trajectory Endstate (deg)", trajectory.getSetpoint().getShoulderState().getDegrees());
+        Settings.putNumber("Arm/Wrist/Trajectory Endstate (deg)", trajectory.getSetpoint().getWristState().getDegrees());
     }
 
     // Change target angle (useful for driving)
