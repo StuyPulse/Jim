@@ -31,9 +31,9 @@ public interface Constraints {
     }
 
     Constraint BUMPER_CONSTRAINT = (s, w) -> {
-        return isInvalid(s, w, WRIST_LENGTH) ||
-        isInvalid(s, w + CUBE_SUPPORT_ANGLE, CUBE_SUPPORT_LENGTH) ||
-        isInvalid(s, w + CUBE_SUPPORT_ANGLE, CUBE_SUPPORT_LENGTH);
+        return isInvalid(s, w, WRIST_LENGTH); /* || */
+        // isInvalid(s, w + CUBE_SUPPORT_ANGLE, CUBE_SUPPORT_LENGTH) ||
+        // isInvalid(s, w + CUBE_SUPPORT_ANGLE, CUBE_SUPPORT_LENGTH);
 
     };
 
