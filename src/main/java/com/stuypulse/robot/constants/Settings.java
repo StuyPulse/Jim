@@ -36,7 +36,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.SACROD;
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -267,8 +267,8 @@ public interface Settings {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
         SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 7);
 
-        SmartNumber MAX_TILT = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
-        SmartNumber MAX_SPEED = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.65);
+        SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.65);
 
         public interface Translation {
             SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);
