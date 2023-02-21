@@ -65,13 +65,17 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
-        SmartNumber INTAKE_CONE_ROLLER = new SmartNumber("Intake/Intake Cone Roller Speed", 1);
+        SmartNumber INTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cone Roller Front Speed", 1);
+        SmartNumber INTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Intake Cone Roller Back Speed", 1);
 
-        SmartNumber INTAKE_CUBE_ROLLER = new SmartNumber("Intake/Intake Cube Roller Speed", 0.5);
+        SmartNumber INTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cube Roller Front Speed", 0.5);
+        SmartNumber INTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Intake Cube Roller Back Speed", 0.5);
 
-        SmartNumber OUTTAKE_CONE_ROLLER = new SmartNumber("Intake/Outtake Cone Roller Speed", 0.5);
+        SmartNumber OUTTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cone Roller Front Speed", 0.5);
+        SmartNumber OUTTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cone Roller Back Speed", 0.3);
 
-        SmartNumber OUTTAKE_CUBE_ROLLER = new SmartNumber("Intake/Outtake Cube Roller Speed", 1);
+        SmartNumber OUTTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cube Roller Front Speed", 1);
+        SmartNumber OUTTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cube Roller Back Speed", 1);
 
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
@@ -186,24 +190,24 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.604953 + (6.0 / 360.0));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 90.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 120.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 720.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 7);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.3);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.6);
             }
             
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.035);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.07);
                 // empty kG - 0.275
                 // cone  kG - 0.35
                 SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.7);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.07);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.28);
             }
         }
     
@@ -226,22 +230,22 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.661537 - (6.0 / 360.0));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 180.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 720.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 240.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 1440.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 6.0);
     
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.7);
             }
     
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
                 SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.06);
                 SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.12);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.24);
             }
         }
     }

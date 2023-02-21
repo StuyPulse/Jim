@@ -30,6 +30,8 @@ public class IntakeImpl extends Intake{
     private BStream stalling;
     private BStream newGamePiece;
 
+    // private IntakeSide intookSide;
+
     private boolean deacquiring;
 
     public IntakeImpl(){
@@ -89,7 +91,7 @@ public class IntakeImpl extends Intake{
     // WRIST ORIENTATION
 
     private boolean acquiringIsFlipped() {
-        return Manager.getInstance().getIntakeSide() == IntakeSide.FRONT;
+        return Manager.getInstance().getIntakeSide() == IntakeSide.BACK;
     }
 
     private boolean isFlipped() {
@@ -104,27 +106,25 @@ public class IntakeImpl extends Intake{
         backMotor.stopMotor();
     }
 
-    private void setState(double speed, boolean isCone, boolean flipped) {
+    private void setState(double frontSpeed, double backSpeed, boolean isCone, boolean flipped) {
         if (flipped) {
-            speed *= -1;
+            frontSpeed *= -1;
+            backSpeed *= -1;
         }
-
-        double front = speed;
-        double back = speed;
 
         if (isCone) {
-            back *= -1;
+            backSpeed *= -1;
         }
 
-        frontMotor.set(front);
-        backMotor.set(back);
+        frontMotor.set(frontSpeed);
+        backMotor.set(backSpeed);
     }
 
     @Override
     public void acquireCube(){
         deacquiring = false;
 
-        setState(+INTAKE_CUBE_ROLLER.get(), false, acquiringIsFlipped());
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
         
         // if (isFlipped()) {
         //     frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
@@ -139,7 +139,7 @@ public class IntakeImpl extends Intake{
     public void acquireCone() {
         deacquiring = false;
 
-        setState(+INTAKE_CONE_ROLLER.get(), true, acquiringIsFlipped());
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
         
         // if (isFlipped()) {
         //     frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
@@ -154,7 +154,7 @@ public class IntakeImpl extends Intake{
     public void deacquireCube(){
         deacquiring = true;
 
-        setState(-OUTTAKE_CUBE_ROLLER.get(), false, isFlipped());
+        setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
         
         // if (isFlipped()) {
         //     frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
@@ -169,7 +169,7 @@ public class IntakeImpl extends Intake{
     public void deacquireCone(){
         deacquiring = true;
 
-        setState(-OUTTAKE_CONE_ROLLER.get(), true, !acquiringIsFlipped());
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
         
         // if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
         //     frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
