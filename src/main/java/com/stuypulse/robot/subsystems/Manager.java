@@ -89,6 +89,7 @@ public class Manager extends SubsystemBase {
     // Routine for the arm 
     public enum Routine {
         INTAKE,
+        OUTTAKE,
         NEUTRAL,
         READY,
         SCORE,
@@ -125,6 +126,8 @@ public class Manager extends SubsystemBase {
         switch (routine) {
             case INTAKE:
                 return getIntakeTrajectory();
+            case OUTTAKE:
+                return getOuttakeTrajectory();
             case NEUTRAL:
                 return getNeutralTrajectory();
             case READY:
@@ -143,6 +146,12 @@ public class Manager extends SubsystemBase {
         if (intakeSide == IntakeSide.FRONT) 
             return Intake.kTrajectory;
         return Intake.kTrajectory.flipped();
+    }
+
+    public ArmBFSField getOuttakeTrajectory() {
+        if (intakeSide == IntakeSide.FRONT) 
+            return Outtake.kTrajectory;
+        return Outtake.kTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/

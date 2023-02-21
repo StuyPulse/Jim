@@ -111,10 +111,7 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            // .onTrue(new IntakeScore())
-            // .onFalse(new IntakeStop());
             .onTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new ArmReady())
             .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
@@ -147,7 +144,7 @@ public class RobotContainer {
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmIntake().alongWith(new IntakeDeacquire()))
+            .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
             // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
@@ -163,10 +160,7 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper().whileTrue(new ArmReady());
         operator.getRightBumper()
-            // .onTrue(new IntakeScore())
-            // .onFalse(new IntakeStop());
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new ArmReady())
             .onFalse(new IntakeStop());
 
         // set level to score at
