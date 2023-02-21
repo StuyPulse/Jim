@@ -1,6 +1,6 @@
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.robot.constants.Settings.AutoEngage;
+import com.stuypulse.robot.constants.Settings.AutoBalance;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SwerveDriveBalanceBlay extends CommandBase {
 
     private interface Constants {
-        SmartNumber kT_u = new SmartNumber("Auto Engage/Balance with Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoEngage.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+        SmartNumber kT_u = new SmartNumber("Auto Balance/With Gyro/Tu", 0.2);  // from Zieger-Nichols tuning method
+        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
 
         Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
         SmartNumber kI = new SmartNumber("", 0);
@@ -38,9 +38,9 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     private double balanceAngle;
 
     public SwerveDriveBalanceBlay() {
-        MAX_SPEED = AutoEngage.MAX_SPEED.doubleValue();
+        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
 
-        ANGLE_THRESHOLD = AutoEngage.ANGLE_THRESHOLD.doubleValue();
+        ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
@@ -62,7 +62,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Auto Engage/angle (deg)", getBalanceAngle().getDegrees());
+        SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", -1 * getBalanceAngle().getDegrees());
         balanceAngle = -1 * getBalanceAngle().getDegrees();
         var speed = control.update(
             0,

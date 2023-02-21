@@ -6,7 +6,6 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -16,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*-
@@ -263,12 +261,12 @@ public interface Settings {
         SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 1.0);
     }
 
-    public interface AutoEngage {
+    public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
         SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 7);
 
-        SmartNumber MAX_TILT = new SmartNumber("Auto Engage/Max Tilt (deg)", 15.0); 
-        SmartNumber MAX_SPEED = new SmartNumber("Auto Engage/Max Engage Speed (m per s)", 0.65);
+        SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.65);
 
         public interface Translation {
             SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);

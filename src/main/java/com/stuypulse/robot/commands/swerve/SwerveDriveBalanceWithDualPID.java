@@ -2,8 +2,8 @@ package com.stuypulse.robot.commands.swerve;
 
 import static com.stuypulse.robot.constants.Field.*;
 
-import com.stuypulse.robot.constants.Settings.AutoEngage;
-import com.stuypulse.robot.constants.Settings.AutoEngage.*;
+import com.stuypulse.robot.constants.Settings.AutoBalance;
+import com.stuypulse.robot.constants.Settings.AutoBalance.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     private interface Constants {
-        SmartNumber kT_u = new SmartNumber("Auto Engage/Balance with Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoEngage.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+        SmartNumber kT_u = new SmartNumber("Auto Balance/With Dual PID/Tu", 0.2);  // from Zieger-Nichols tuning method
+        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
 
         Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
         SmartNumber kI = new SmartNumber("", 0);
@@ -42,10 +42,10 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     private final Controller gyroController;
     
     public SwerveDriveBalanceWithDualPID() {
-        MAX_SPEED = AutoEngage.MAX_SPEED.doubleValue();
+        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
 
-        DISTANCE_THRESHOLD = AutoEngage.DISTANCE_THRESHOLD.doubleValue();
-        ANGLE_THRESHOLD = AutoEngage.ANGLE_THRESHOLD.doubleValue();
+        DISTANCE_THRESHOLD = AutoBalance.DISTANCE_THRESHOLD.doubleValue();
+        ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         this.swerve = SwerveDrive.getInstance();
         this.odometry = Odometry.getInstance();
@@ -76,7 +76,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
     @Override
     public void execute() {
-        double balanceAngle = getBalanceAngle().getDegrees();
+        double balanceAngle = -1 * getBalanceAngle().getDegrees();
         double target = Units.inchesToMeters(CHARGING_STATION_CENTER.get());
         double offset = tiltController.update(0, balanceAngle) / Math.cos(Math.toRadians(balanceAngle));
 
@@ -97,9 +97,9 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
                                             new ChassisSpeeds(velocity, 0.0, 0.0), 
                                             odometry.getRotation()));
             
-            SmartDashboard.putNumber("Auto Engage/Balance Angle", balanceAngle);
-            SmartDashboard.putNumber("Auto Engage/Velocity", velocity);
-            SmartDashboard.putNumber("Auto Engage/Target", target);
+            SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
+            SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
+            SmartDashboard.putNumber("Auto Balance/Target", target);
         }
     }
 
