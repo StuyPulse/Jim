@@ -75,9 +75,9 @@ public final class ArmFields {
 
         public interface High {
             ArmBFSField kConeTipInSame = new ArmBFSField(11, -22, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -30, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = new ArmBFSField(-15, 15, Constraints.CONSTRAINT);
             
-            ArmBFSField kCube = new ArmBFSField(-30, 10, Constraints.CONSTRAINT);;
+            ArmBFSField kCube = new ArmBFSField(-180 - (-175), 180 - 130, Constraints.CONSTRAINT);
         }
     }
 
@@ -105,7 +105,7 @@ public final class ArmFields {
 
         public interface High {
             ArmBFSField kConeTipInSame = new ArmBFSField(11, -32, Constraints.CONSTRAINT);
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -70, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = new ArmBFSField(-7, 20, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = Ready.High.kCube;
         }
