@@ -113,7 +113,8 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         swerve.stop();
         odometry.overrideNoise(false);
 
-        Plant.getInstance().engage();
+        if (!interrupted)
+            Plant.getInstance().engage();
     }
 
     public Command thenPointWheels() {

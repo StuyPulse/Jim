@@ -84,10 +84,10 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
         swerve.stop();
         
-        Plant.getInstance().engage();
+        if (!interrupted)
+            Plant.getInstance().engage();
     }
 
     public Command thenPointWheels() {
