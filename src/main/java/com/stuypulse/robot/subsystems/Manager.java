@@ -8,16 +8,10 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmBFSField;
 
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Manager extends SubsystemBase {
@@ -224,7 +218,7 @@ public class Manager extends SubsystemBase {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 if (scoreSide == ScoreSide.SAME)
-                    return normalize(Ready.High.kConeTipInSame);
+                    return getNeutralTrajectory();
                 return normalize(Ready.High.kConeTipInOpposite);
 
             case CUBE:
@@ -258,7 +252,7 @@ public class Manager extends SubsystemBase {
                     return normalize(Score.High.kCube);
 
                 if (scoreSide == ScoreSide.SAME)
-                    return normalize(Score.High.kConeTipInSame);
+                    return getNeutralTrajectory();
                 return normalize(Score.High.kConeTipInOpposite);
 
             default:
