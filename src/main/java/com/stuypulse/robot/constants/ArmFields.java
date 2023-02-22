@@ -9,7 +9,8 @@ public final class ArmFields {
         StopWatch timer = new StopWatch();
 
         Neutral.kTrajectory.getSize();
-        Intake.kTrajectory.getSize();
+        Acquire.kTrajectory.getSize();
+        Deacquire.kTrajectory.getSize();
 
         Ready.Low.kConeTipInOpposite.getSize();
 
@@ -32,17 +33,16 @@ public final class ArmFields {
         System.out.println("Hello World!");
     }
 
-    public interface Intake {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-80, 0 /*-8*/, Constraints.CONSTRAINT);
-        // public static final ArmBFSField kBackTrajectory = new ArmBFSField(-103, 170, Constraints.CONSTRAINT);
+    public interface Acquire {
+        ArmBFSField kTrajectory = new ArmBFSField(-80, 0 /*-8*/, Constraints.CONSTRAINT);
     }
 
-    public interface Outtake {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-80, 10, Constraints.CONSTRAINT);
+    public interface Deacquire {
+        ArmBFSField kTrajectory = new ArmBFSField(-80, 10, Constraints.CONSTRAINT);
     }
 
     public interface Neutral {
-        public static final ArmBFSField kTrajectory = new ArmBFSField(-90, +90, Constraints.CONSTRAINT);
+        ArmBFSField kTrajectory = new ArmBFSField(-80, +70, Constraints.CONSTRAINT);
     }
 
     /* Intaking */
@@ -51,13 +51,13 @@ public final class ArmFields {
 
     public interface Ready {
         public interface Low {
-            ArmBFSField kConeTipInSame = Intake.kTrajectory;
+            ArmBFSField kConeTipInSame = Acquire.kTrajectory;
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-40, -150, Constraints.CONSTRAINT);
             
-            ArmBFSField kConeTipOutSame = Intake.kTrajectory;
+            ArmBFSField kConeTipOutSame = Acquire.kTrajectory;
             ArmBFSField kConeTipOutOpposite = kConeTipInOpposite;
 
-            ArmBFSField kCube = Intake.kTrajectory;
+            ArmBFSField kCube = Acquire.kTrajectory;
         }
 
         public interface Mid {
