@@ -37,8 +37,7 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import 
-edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -111,8 +110,10 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .onTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new IntakeStop());
+            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+            .onFalse(new IntakeStop())
+            .onFalse(arm.runOnce(() -> arm.setTargetState(arm.getState())));
+        
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
@@ -121,9 +122,13 @@ public class RobotContainer {
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveAlignThenBalance());
-        driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
-        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
         // right trigger -> robotrelative override
+
+        // odometry
+        driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
+        driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
+        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
+        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(+90)));
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
@@ -149,8 +154,10 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .whileTrue(new ArmReady())
-            .onTrue(new ManagerValidateState().andThen(new ManagerChooseScoreSide()));
+            .whileTrue(
+                new ManagerValidateState()
+                    .andThen(new ManagerChooseScoreSide())
+                    .andThen(new ArmReady()));
 
         operator.getRightBumper()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))

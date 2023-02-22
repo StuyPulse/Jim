@@ -196,6 +196,8 @@ public class IntakeImpl extends Intake{
     
             Settings.putNumber("Intake/Front Motor", frontMotor.get());
             Settings.putNumber("Intake/Back Motor", backMotor.get());
+
+            Settings.putString("Intake/Intook Side", intookSide.name());
         }
     }
 
