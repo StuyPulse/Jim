@@ -17,26 +17,28 @@ public class ArmBFSField implements Serializable {
         final File file = FieldFileUtil.getFieldFile(name);
 
         try {
-            try {
-                FileInputStream fileInput = new FileInputStream(file); 
-                ObjectInputStream input = new ObjectInputStream(fileInput);
-                ArmBFSField field = (ArmBFSField)input.readObject();
+            try (FileInputStream fileInput = new FileInputStream(file); 
+                    ObjectInputStream input = new ObjectInputStream(fileInput);) {
+                    ArmBFSField field = (ArmBFSField)input.readObject();
                 input.close();
                 fileInput.close();
                 return field;
-            } catch (ClassCastException | ClassNotFoundException | FileNotFoundException e) {
+            } catch (ClassCastException | ClassNotFoundException | FileNotFoundException exception) {
                 ArmBFSField result = new ArmBFSField(targetArmDeg, targetWristDeg, constraints);
+                
                 file.createNewFile();
-                FileOutputStream fileOutput = new FileOutputStream(file);
-                ObjectOutputStream output = new ObjectOutputStream(fileOutput);
-                output.writeObject(result);
-                output.close();
-                fileOutput.close();
 
-                System.out.println("Finished serializing \"" + name + "\"");
+                try (FileOutputStream fileOutput = new FileOutputStream(file);
+                        ObjectOutputStream output = new ObjectOutputStream(fileOutput);) {
+                    output.writeObject(result);
+                    output.close();
+                    fileOutput.close();
 
-                return result;
-            } 
+                    System.out.println("Finished serializing \"" + name + "\"");
+        
+                    return result;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
