@@ -81,21 +81,21 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public Pose2d getPose() {
-        // return poseEstimator.getEstimatedPosition();
-        return odometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     @Override
     public void reset(Pose2d pose) {
         SwerveDrive drive = SwerveDrive.getInstance();
-        // poseEstimator.resetPosition(
-        //             drive.getGyroAngle(), 
-        //             drive.getModulePositions(), 
-        //             pose
-        // );
-        odometry.resetPosition(drive.getGyroAngle(), 
-        drive.getModulePositions(), 
-        pose);
+        poseEstimator.resetPosition(
+                    drive.getGyroAngle(), 
+                    drive.getModulePositions(), 
+                    pose);
+
+        odometry.resetPosition(
+            drive.getGyroAngle(), 
+            drive.getModulePositions(), 
+            pose);
     }
 
     @Override
