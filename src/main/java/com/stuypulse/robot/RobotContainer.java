@@ -154,8 +154,10 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .whileTrue(new ArmReady())
-            .onTrue(new ManagerValidateState().andThen(new ManagerChooseScoreSide()));
+            .whileTrue(
+                new ManagerValidateState()
+                    .andThen(new ManagerChooseScoreSide())
+                    .andThen(new ArmReady()));
 
         operator.getRightBumper()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
