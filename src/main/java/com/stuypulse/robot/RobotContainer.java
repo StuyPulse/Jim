@@ -120,9 +120,13 @@ public class RobotContainer {
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveAlignThenBalance());
-        driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
-        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
         // right trigger -> robotrelative override
+
+        // odometry
+        driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
+        driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(+90)));
+        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
+        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
