@@ -5,6 +5,8 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.TeleopInit;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -72,6 +74,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        new TeleopInit().schedule();
+
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
         if (auto != null) {
