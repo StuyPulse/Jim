@@ -35,6 +35,7 @@ import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -76,7 +77,6 @@ public class RobotContainer {
         configureButtonBindings();
         configureAutons();
 
-
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
@@ -109,8 +109,7 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .onTrue(new ArmScore().andThen(new IntakeScore()))
-            .onFalse(new ArmReady())
+            .onTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new IntakeStop());
         driver.getTopButton().onTrue(new ArmReady());
 
@@ -136,14 +135,14 @@ public class RobotContainer {
         
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeAcquire()))
+            .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
             // .whileTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmIntake().andThen(new IntakeDeacquire()))
+            .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
             // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
@@ -160,7 +159,6 @@ public class RobotContainer {
         operator.getLeftBumper().whileTrue(new ArmReady());
         operator.getRightBumper()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new ArmReady())
             .onFalse(new IntakeStop());
 
         // set level to score at

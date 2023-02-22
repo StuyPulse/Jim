@@ -20,7 +20,7 @@ public class ArmBFSField {
     public static final double kEpsilon = kConstraintDistCost / 2.0;
 
     public static final int kArmNodeSpeed = 1;
-    public static final int kWristNodeSpeed = 2;
+    public static final int kWristNodeSpeed = 1;
 
     // Amount to downscale the field by
     // kBinning = 1) 360 x 360
@@ -34,6 +34,11 @@ public class ArmBFSField {
 
     private static double normalizeZero(double degrees) {
         return degrees - kDegreeRange * Math.round(degrees / kDegreeRange);
+    }
+
+    private static double distance(double dx, double dy) {
+        return Math.hypot(dx, dy); // Diagonal
+        // return Math.abs(dx) + Math.abs(dy);
     }
 
     public class Node {
@@ -63,7 +68,7 @@ public class ArmBFSField {
         private double getDistanceCost(Node previous) {
             final double dx = normalizeZero(this.mArmDeg - previous.mArmDeg);
             final double dy = normalizeZero(this.mWristDeg - previous.mWristDeg);
-            return Math.hypot(dx, dy);
+            return distance(dx, dy);
         }
 
         private Node makeSetpoint() {
@@ -272,7 +277,7 @@ public class ArmBFSField {
             }
         }
 
-        System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
+        System.out.println("Initialized " + ++instances + "/31 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {

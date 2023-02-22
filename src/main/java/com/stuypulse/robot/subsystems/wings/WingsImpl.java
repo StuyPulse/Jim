@@ -44,8 +44,8 @@ public class WingsImpl extends Wings {
         redLatch.set(true);
         whiteLatch.set(true);
 
-        whiteDeploy.set(DoubleSolenoid.Value.kReverse);
-        redDeploy.set(DoubleSolenoid.Value.kReverse);
+        whiteDeploy.set(DoubleSolenoid.Value.kForward);
+        redDeploy.set(DoubleSolenoid.Value.kForward);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WingsImpl extends Wings {
     @Override
     public void retractRed() {
         if (!redLatch.get() && isEngaged(redDeploy)) {
-            redDeploy.set(DoubleSolenoid.Value.kReverse);
+            redDeploy.set(DoubleSolenoid.Value.kForward);
             redRetractTime = timer.getTime();
         }
     }
@@ -75,13 +75,13 @@ public class WingsImpl extends Wings {
     @Override
     public void retractWhite() {
         if(!whiteLatch.get() && isEngaged(whiteDeploy)){
-            whiteDeploy.set(DoubleSolenoid.Value.kReverse);
+            whiteDeploy.set(DoubleSolenoid.Value.kForward);
             whiteRetractTime = timer.getTime();
         }
     }
 
     public boolean isEngaged(DoubleSolenoid solenoid){
-        if(solenoid.get() == DoubleSolenoid.Value.kForward){
+        if(solenoid.get() == DoubleSolenoid.Value.kReverse){
             return true;
         }
         else{
@@ -92,11 +92,11 @@ public class WingsImpl extends Wings {
     @Override
     public void periodic() {
         if(redDeployTime > 0 && timer.getTime() - redDeployTime >= RED_LATCH_DELAY.get()){
-            redDeploy.set(DoubleSolenoid.Value.kForward); // dont set off
+            redDeploy.set(DoubleSolenoid.Value.kReverse); // dont set off
             redDeployTime = -1.0;
         }
         if(whiteDeployTime > 0 && timer.getTime() - whiteDeployTime >= WHITE_LATCH_DELAY.get()){
-            whiteDeploy.set(DoubleSolenoid.Value.kForward);
+            whiteDeploy.set(DoubleSolenoid.Value.kReverse);
             whiteDeployTime = -1.0;
         }
         if(redRetractTime > 0 && timer.getTime() - redRetractTime >= RED_RETRACT_DELAY.get()){
