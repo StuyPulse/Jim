@@ -14,6 +14,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.commands.wings.*;
 import com.stuypulse.robot.commands.intake.*;
 

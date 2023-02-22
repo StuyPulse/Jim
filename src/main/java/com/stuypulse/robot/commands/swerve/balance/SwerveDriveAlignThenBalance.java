@@ -1,4 +1,6 @@
-package com.stuypulse.robot.commands.swerve;
+package com.stuypulse.robot.commands.swerve.balance;
+
+import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

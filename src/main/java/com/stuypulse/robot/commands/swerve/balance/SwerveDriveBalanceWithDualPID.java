@@ -1,7 +1,8 @@
-package com.stuypulse.robot.commands.swerve;
+package com.stuypulse.robot.commands.swerve.balance;
 
 import static com.stuypulse.robot.constants.Field.*;
 
+import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 import com.stuypulse.robot.constants.Settings.AutoBalance;
 import com.stuypulse.robot.constants.Settings.AutoBalance.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
