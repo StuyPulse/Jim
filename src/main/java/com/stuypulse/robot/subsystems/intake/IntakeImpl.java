@@ -10,14 +10,11 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake{
 
@@ -30,7 +27,7 @@ public class IntakeImpl extends Intake{
     private BStream stalling;
     private BStream newGamePiece;
 
-    // private IntakeSide intookSide;
+    private IntakeSide intookSide;
 
     private boolean deacquiring;
 
@@ -53,6 +50,8 @@ public class IntakeImpl extends Intake{
                         .filtered(
                                 new BButton.Pressed(),
                                 new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME));
+
+        intookSide = IntakeSide.FRONT;
         deacquiring = false;
     }
 
@@ -95,10 +94,6 @@ public class IntakeImpl extends Intake{
 
     // WRIST ORIENTATION
 
-    private boolean acquiringIsFlipped() {
-        return Manager.getInstance().getIntakeSide() == IntakeSide.BACK;
-    }
-
     private boolean isFlipped() {
         Arm arm = Arm.getInstance();
         return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
@@ -123,13 +118,13 @@ public class IntakeImpl extends Intake{
     @Override
     public void acquireCube() {
         deacquiring = false;
-        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
-        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     // NOTE: if called when wrist is on opposite side of final setpoint, direction will be wrong
@@ -143,7 +138,7 @@ public class IntakeImpl extends Intake{
     public void deacquireCone() {
         deacquiring = true;
 
-        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, intookSide == IntakeSide.BACK);
     }
 
     @Override
@@ -162,6 +157,10 @@ public class IntakeImpl extends Intake{
             if (Manager.getInstance().getGamePiece().isCube() && hasCube()) {
                 stop();
             }
+        }
+
+        if (hasNewGamePiece()) {
+            intookSide = Manager.getInstance().getIntakeSide();
         }
 
         if (Settings.isDebug()) {
