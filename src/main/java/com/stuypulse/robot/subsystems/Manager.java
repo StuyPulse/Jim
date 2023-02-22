@@ -255,6 +255,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
+    // wrist faces away from scoring direction for cube
     public ArmBFSField getNeutralTrajectory() {
         if (Intake.getInstance().getIntookSide() == IntakeSide.FRONT)
             return Neutral.kTrajectory;
