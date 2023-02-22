@@ -179,6 +179,10 @@ public class IntakeImpl extends Intake{
             Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
             Settings.putBoolean("Intake/Is Flipped", isFlipped());
             Settings.putBoolean("Intake/Is Stalling", isStalling());
+            Settings.putBoolean("Intake/Front IR Sensor", !frontSensor.get());
+            Settings.putBoolean("Intake/Back IR Sensor", !backSensor.get());
+            Settings.putBoolean("Intake/Has Cube Front", frontCube.get());
+            Settings.putBoolean("Intake/Has Cube Back", backCube.get());
             Settings.putBoolean("Intake/Has Cube", hasCube());
             Settings.putBoolean("Intake/Deacquiring", deacquiring);
 
