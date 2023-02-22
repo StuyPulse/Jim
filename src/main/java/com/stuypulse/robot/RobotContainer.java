@@ -12,7 +12,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.wings.*;
+import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
 
 import com.stuypulse.robot.subsystems.*;
@@ -21,8 +21,8 @@ import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
+import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.subsystems.wings.*;
 import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -59,7 +59,7 @@ public class RobotContainer {
     public final Odometry odometry = Odometry.getInstance();
     public final Arm arm = Arm.getInstance();
     public final Plant plant = Plant.getInstance();
-    public final Wings wings = Wings.getInstance();
+    public final Wing wing = Wing.getInstance();
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
@@ -104,8 +104,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingsToggleRed());
-        driver.getStartButton().onTrue(new WingsToggleWhite());
+        driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getBottomButton()
