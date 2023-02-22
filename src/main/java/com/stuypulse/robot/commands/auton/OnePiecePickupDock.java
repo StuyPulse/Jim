@@ -66,7 +66,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
                     
-            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     

@@ -6,8 +6,8 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
 
@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*-
@@ -87,7 +86,7 @@ public interface Settings {
         double TRUST_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight"};
+            String [] LIMELIGHTS = {"limelight-front", "limelight-back"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
         }
     }
@@ -262,6 +261,35 @@ public interface Settings {
         SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 0.5);
     }
 
+    public interface AutoBalance {
+        SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 6);
+
+        SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.5);
+
+        public interface Translation {
+            SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);
+            SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);
+            SmartNumber D = new SmartNumber("Auto Balance/Translation/kD", 0);
+        }
+    
+        public interface Tilt {
+            SmartNumber P = new SmartNumber("Auto Balance/Tilt/kP", 0.05);
+            SmartNumber I = new SmartNumber("Auto Balance/Tilt/kI", 0);
+            SmartNumber D = new SmartNumber("Auto Balance/Tilt/kD", 0);
+        }
+
+        public interface Gyro {
+            SmartNumber kT_u = new SmartNumber("Auto Engage/Tu", 0.2);  // from Zieger-Nichols tuning method
+            Number kK_u = IStream.create(() -> MAX_SPEED.get() / MAX_TILT.get()).number();  // from Zieger-Nichols tuning method
+
+            Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+            SmartNumber kI = new SmartNumber("", 0);
+            Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
+        }
+    }
+
     public interface Operator {
         SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.2);
 
@@ -322,5 +350,4 @@ public interface Settings {
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
     }
-    
 }

@@ -123,7 +123,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .fieldRelative()
                     .addEvent("ArmNeutral", new ArmNeutral()),
 
-            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     }

@@ -32,6 +32,8 @@ public class OdometryImpl extends Odometry {
         public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
         public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
 
+        public static final Vector<N3> OVERRIDE = VecBuilder.fill(1,1,Math.toRadians(10));
+
         private StandardDeviations() {}
 
         public static Vector<N3> get(Noise noise) {
@@ -63,6 +65,8 @@ public class OdometryImpl extends Odometry {
 
     private final FieldObject2d odometryPose2d;
 
+    private boolean overrideNoise;
+
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -71,7 +75,9 @@ public class OdometryImpl extends Odometry {
         // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
-        odometryPose2d = field.getObject("Odometry Pose");
+        overrideNoise = false;
+
+        odometryPose2d = field.getObject("Odometry Pose2d");
 
         swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
@@ -101,24 +107,20 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
+    public void overrideNoise(boolean overrideNoise) {
+        this.overrideNoise = overrideNoise;
+    }
+
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
         for (Result result : results) {
             switch (result.getNoise()) {
-                case LOW:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
-                    break;
-
-                case MID:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
-                    break;
-
                 case HIGH:
+                    break;
+                default:
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        StandardDeviations.get(result.getNoise()));
                     break;
             }
         }  
@@ -133,7 +135,7 @@ public class OdometryImpl extends Odometry {
 
         Vision vision = Vision.getInstance();
         List<Result> results = vision.getResults();
-        processResults(results, drive, vision);        
+        processResults(results, drive, vision);
 
         if (Settings.isDebug()) {
             field.setRobotPose(getPose());
