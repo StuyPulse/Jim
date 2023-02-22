@@ -110,8 +110,10 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .onTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new IntakeStop());
+            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+            .onFalse(new IntakeStop())
+            .onFalse(arm.runOnce(() -> arm.setTargetState(arm.getState())));
+        
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
