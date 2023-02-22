@@ -123,46 +123,19 @@ public class IntakeImpl extends Intake{
     @Override
     public void acquireCube(){
         deacquiring = false;
-
         setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
-        
-        // if (isFlipped()) {
-        //     frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
-        //     backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
-        // } else {
-        //     frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
-        //     backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
-        // }
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
-
         setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
-        
-        // if (isFlipped()) {
-        //     frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
-        //     backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
-        // } else {
-        //     frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
-        //     backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
-        // }
     }
 
     @Override
     public void deacquireCube(){
         deacquiring = true;
-
         setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
-        
-        // if (isFlipped()) {
-        //     frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
-        //     backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
-        // } else {
-        //     frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
-        //     backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
-        // }
     }
 
     @Override
@@ -170,14 +143,6 @@ public class IntakeImpl extends Intake{
         deacquiring = true;
 
         setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
-        
-        // if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
-        //     frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
-        //     backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
-        // } else {
-        //     frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
-        //     backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
-        // }
     }
 
     @Override
