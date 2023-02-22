@@ -6,7 +6,6 @@ import com.stuypulse.robot.constants.ArmFields.Neutral;
 import com.stuypulse.robot.constants.ArmFields.Outtake;
 import com.stuypulse.robot.constants.ArmFields.Ready;
 import com.stuypulse.robot.constants.ArmFields.Score;
-import com.stuypulse.robot.constants.Constraints;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -132,8 +131,6 @@ public class Manager extends SubsystemBase {
                 return getReadyTrajectory();
             case SCORE:
                 return getScoreTrajectory();
-            case MANUAL_CONTROL: 
-                return getManualControl();
             default:
                 return getNeutralTrajectory(); // TODO: BOOM
         }
@@ -262,12 +259,6 @@ public class Manager extends SubsystemBase {
 
     public ArmBFSField getNeutralTrajectory() {
         return Neutral.kTrajectory;
-    }
-
-    /** Set To Manual Control **/
-
-    public ArmBFSField getManualControl() {
-        return new ArmBFSField(Arm.getInstance().getShoulderAngle().getDegrees(), Arm.getInstance().getWristAngle().getDegrees(), Constraints.CONSTRAINT);
     }
 
     /** Generate Score Pose **/
