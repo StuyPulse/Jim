@@ -34,7 +34,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.SACROD;
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
