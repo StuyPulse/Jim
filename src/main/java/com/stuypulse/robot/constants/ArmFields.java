@@ -117,6 +117,8 @@ public final class ArmFields {
         }
 
         System.out.println("Deleted old bfs fields");
+
+        load();
     }
 
 }
