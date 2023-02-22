@@ -132,6 +132,7 @@ public class IntakeImpl extends Intake{
         setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
     }
 
+    // NOTE: if called when wrist is on opposite side of final setpoint, direction will be wrong
     @Override
     public void deacquireCube() {
         deacquiring = true;
