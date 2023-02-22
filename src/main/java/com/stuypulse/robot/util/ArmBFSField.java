@@ -277,7 +277,7 @@ public class ArmBFSField {
             }
         }
 
-        System.out.println("Initialized " + ++instances + "/31 ArmBFSFields");
+        System.out.println("Initialized " + ++instances + "/24 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {

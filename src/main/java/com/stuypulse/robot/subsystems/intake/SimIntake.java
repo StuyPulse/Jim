@@ -87,6 +87,11 @@ public class SimIntake extends Intake {
     }
 
     @Override
+    public IntakeSide getIntookSide() {
+        return intookSide;
+    }
+
+    @Override
     public void periodic() {
         if (hasNewGamePiece()) {
             intookSide = Manager.getInstance().getIntakeSide();

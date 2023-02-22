@@ -9,6 +9,7 @@ import com.stuypulse.robot.constants.ArmFields.Score;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmBFSField;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -141,14 +142,14 @@ public class Manager extends SubsystemBase {
 
     public ArmBFSField getIntakeTrajectory() {
         if (intakeSide == IntakeSide.FRONT) 
-            return Intake.kTrajectory;
-        return Intake.kTrajectory.flipped();
+            return Acquire.kTrajectory;
+        return Acquire.kTrajectory.flipped();
     }
 
     public ArmBFSField getOuttakeTrajectory() {
         if (intakeSide == IntakeSide.FRONT) 
-            return Outtake.kTrajectory;
-        return Outtake.kTrajectory.flipped();
+            return Deacquire.kTrajectory;
+        return Deacquire.kTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/
@@ -257,8 +258,11 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
+    // wrist faces away from scoring direction for cube
     public ArmBFSField getNeutralTrajectory() {
-        return Neutral.kTrajectory;
+        if (Intake.getInstance().getIntookSide() == IntakeSide.FRONT)
+            return Neutral.kTrajectory;
+        return Neutral.kTrajectory.flipped();
     }
 
     /** Generate Score Pose **/

@@ -157,6 +157,11 @@ public class IntakeImpl extends Intake{
     }
 
     @Override
+    public IntakeSide getIntookSide() {
+        return intookSide;
+    }
+
+    @Override
     public void periodic(){
         if (!deacquiring) {
             if (Manager.getInstance().getGamePiece().isCone() && isStalling()) {
