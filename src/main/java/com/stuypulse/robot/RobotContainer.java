@@ -76,9 +76,6 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
-
-        DataLogManager.start();
-
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
