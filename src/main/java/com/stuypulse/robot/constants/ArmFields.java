@@ -42,7 +42,7 @@ public final class ArmFields {
     }
 
     public interface Neutral {
-        ArmBFSField kTrajectory = new ArmBFSField(-80, +70, Constraints.CONSTRAINT);
+        ArmBFSField kTrajectory = new ArmBFSField(-90, +90, Constraints.CONSTRAINT);
     }
 
     /* Intaking */
