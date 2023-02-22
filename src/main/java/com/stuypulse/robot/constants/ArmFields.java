@@ -2,6 +2,7 @@ package com.stuypulse.robot.constants;
 
 import java.io.File;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.util.ArmBFSField;
 import com.stuypulse.robot.util.FieldFileUtil;
 import com.stuypulse.stuylib.util.StopWatch;
@@ -9,6 +10,18 @@ import com.stuypulse.stuylib.util.StopWatch;
 public final class ArmFields {
 
     public static void load() {
+        if (Robot.isSimulation()) {
+            File[] files = FieldFileUtil.getFieldDirectory().listFiles();
+
+            if (files != null) {
+                for (File f : files) {
+                    f.delete();
+                }
+            }
+    
+            System.out.println("Deleted old bfs fields");
+        }
+
         StopWatch timer = new StopWatch();
 
         Neutral.kTrajectory.getSize();
@@ -105,20 +118,6 @@ public final class ArmFields {
             
             ArmBFSField kCube = Ready.High.kCube;
         }
-    }
-
-    public static void main(String... args) {
-        File[] files = FieldFileUtil.getFieldDirectory().listFiles();
-
-        if (files != null) {
-            for (File f : files) {
-                f.delete();
-            }
-        }
-
-        System.out.println("Deleted old bfs fields");
-
-        load();
     }
 
 }
