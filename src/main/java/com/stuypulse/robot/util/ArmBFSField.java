@@ -1,6 +1,5 @@
 package com.stuypulse.robot.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,41 +11,31 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.stuypulse.robot.constants.Constraints;
-
-import edu.wpi.first.wpilibj.Filesystem;
-
 public class ArmBFSField implements Serializable {
 
-    public static ArmBFSField create(double targetArmDeg, double targetWristDeg, Constraint constraints) {
-        final String fileName = 
-            Filesystem.getDeployDirectory().getPath() + "/fields/" +
-            Long.toUnsignedString(Double.doubleToLongBits(targetArmDeg), Character.MAX_RADIX) + "_" + 
-            Long.toUnsignedString(Double.doubleToLongBits(targetWristDeg), Character.MAX_RADIX) + "_" +
-            Long.toUnsignedString(Constraint.getHashCode(constraints), Character.MAX_RADIX) + "_" +
-            Long.toUnsignedString(Constraints.HASH.hashCode(), Character.MAX_RADIX) + ".BFS";
+    public static ArmBFSField create(double targetArmDeg, double targetWristDeg, Constraint constraints, String name) {
+        final File file = FieldFileUtil.getFieldFile(name);
 
         try {
             try {
-                FileInputStream file = new FileInputStream(fileName); 
-                ObjectInputStream input = new ObjectInputStream(file);
+                FileInputStream fileInput = new FileInputStream(file); 
+                ObjectInputStream input = new ObjectInputStream(fileInput);
                 ArmBFSField field = (ArmBFSField)input.readObject();
                 input.close();
-                file.close();
+                fileInput.close();
                 return field;
             } catch (ClassCastException | ClassNotFoundException | FileNotFoundException e) {
                 ArmBFSField result = new ArmBFSField(targetArmDeg, targetWristDeg, constraints);
-                File f = new File(fileName);
-                f.createNewFile();
-                FileOutputStream file = new FileOutputStream(fileName);
-                ObjectOutputStream output = new ObjectOutputStream(file);
+                file.createNewFile();
+                FileOutputStream fileOutput = new FileOutputStream(file);
+                ObjectOutputStream output = new ObjectOutputStream(fileOutput);
                 output.writeObject(result);
                 output.close();
-                file.close();
+                fileOutput.close();
                 return result;
             } 
         } catch (IOException e) {
-            e.printStackTrace();    
+            e.printStackTrace();
             System.exit(-1);
             return null;
         }
@@ -57,32 +46,6 @@ public class ArmBFSField implements Serializable {
 
         public default Constraint add(Constraint next) {
             return (a, w) -> this.isInvalid(a, w) || next.isInvalid(a, w);
-        }
-        
-        public static Long getHashCode(Constraint constraint) {
-            final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            
-            try {
-                final ObjectOutputStream output = new ObjectOutputStream(bytes);
-                output.writeObject(constraint);
-                output.close();
-            } catch (IOException e) {
-                return 0L;
-            }
-
-            final long INITIAL_SEED = 0xc4ceb9fe1a85ec53L;
-            final long INPUT_MULT = 0xff51afd7ed558ccdL;
-
-            long hpool = INITIAL_SEED;
-
-            for (byte c : bytes.toByteArray()) {
-                hpool ^= hpool << 13;
-                hpool ^= hpool >>> 7;
-                hpool ^= hpool << 17;
-                hpool ^= c * INPUT_MULT;
-            }
-
-            return hpool;
         }
     }
 
