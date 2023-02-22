@@ -11,6 +11,7 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
@@ -28,6 +29,8 @@ public class IntakeImpl extends Intake{
 
     private BStream stalling;
     private BStream newGamePiece;
+
+    // private IntakeSide intookSide;
 
     private boolean deacquiring;
 
@@ -87,6 +90,10 @@ public class IntakeImpl extends Intake{
 
     // WRIST ORIENTATION
 
+    private boolean acquiringIsFlipped() {
+        return Manager.getInstance().getIntakeSide() == IntakeSide.BACK;
+    }
+
     private boolean isFlipped() {
         return Arm.getInstance().getWristAngle().getDegrees() > 90 || Arm.getInstance().getWristAngle().getDegrees() < -90;
     }
@@ -99,73 +106,60 @@ public class IntakeImpl extends Intake{
         backMotor.stopMotor();
     }
 
+    private void setState(double frontSpeed, double backSpeed, boolean isCone, boolean flipped) {
+        if (flipped) {
+            frontSpeed *= -1;
+            backSpeed *= -1;
+        }
+
+        if (isCone) {
+            backSpeed *= -1;
+        }
+
+        frontMotor.set(frontSpeed);
+        backMotor.set(backSpeed);
+    }
+
     @Override
     public void acquireCube(){
         deacquiring = false;
-        
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
-        }
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
-        
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
-        }
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
     }
 
     @Override
     public void deacquireCube(){
         deacquiring = true;
-        
-        if (isFlipped()) {
-            frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
-        }
+        setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
     }
 
     @Override
     public void deacquireCone(){
         deacquiring = true;
-        
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
-            frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
-        }
+
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
     }
 
     @Override
     public boolean hasNewGamePiece() {
         return newGamePiece.get();
     }
-    
+
     @Override
     public void periodic(){
-        stalling.get();
-        newGamePiece.get();
-
-        // if (!deacquiring && (isStalling() || hasCube())) {
-        //     stop();
-        // }
-        if (isStalling()) {
-            stop();
+        if (!deacquiring) {
+            if (Manager.getInstance().getGamePiece().isCone() && isStalling()) {
+                stop();
+            }
+    
+            if (Manager.getInstance().getGamePiece().isCube() && hasCube()) {
+                stop();
+            }
         }
 
         if (Settings.isDebug()) {
@@ -178,6 +172,8 @@ public class IntakeImpl extends Intake{
             Settings.putBoolean("Intake/Is Flipped", isFlipped());
             Settings.putBoolean("Intake/Is Stalling", isStalling());
             Settings.putBoolean("Intake/Has Cube", hasCube());
+            Settings.putBoolean("Intake/Deacquiring", deacquiring);
+
     
             Settings.putNumber("Intake/Front Motor", frontMotor.get());
             Settings.putNumber("Intake/Back Motor", backMotor.get());
