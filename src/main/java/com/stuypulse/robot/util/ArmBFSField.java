@@ -1,8 +1,9 @@
 package com.stuypulse.robot.util;
+
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public final class ArmBFSField {
+public class ArmBFSField {
 
     public interface Constraint {
         public boolean isInvalid(double armDeg, double wristDeg);
@@ -11,6 +12,8 @@ public final class ArmBFSField {
             return (a, w) -> this.isInvalid(a, w) || next.isInvalid(a, w);
         }
     }
+
+    public static final int kDegreeRange = 360;
 
     // This value does not matter as much as long as its small.
     public static final double kConstraintDistCost = (1 / 16.0);
@@ -25,52 +28,34 @@ public final class ArmBFSField {
     // kBinning = 3) 120 x 120
     public static final int kBinning = 4;
 
-    public static final int kDegreeRange = 360;
-    public static final int kIndexRange = kDegreeRange / kBinning;
-
-    private static int loopIndex(int idx) {
-        if (kIndexRange <= idx)
-            return idx - kIndexRange;
-
-        if (idx < 0)
-            return idx + kIndexRange;
-
-        return idx;
+    private static int normalize(int degrees) {
+        return degrees - kDegreeRange * Math.floorDiv(degrees, kDegreeRange);
     }
 
-    private static int loopIndexZero(int idx) {
-        if (kIndexRange / 2 <= idx)
-            return idx - kIndexRange;
-
-        if (idx < -kIndexRange / 2)
-            return idx + kIndexRange;
-
-        return idx;
-    }
-
-    private static double normalizeDeg(double degrees) {
+    private static double normalizeZero(double degrees) {
         return degrees - kDegreeRange * Math.round(degrees / kDegreeRange);
     }
 
     private static double distance(double dx, double dy) {
         return Math.hypot(dx, dy); // Diagonal
+        // return Math.abs(dx) + Math.abs(dy);
     }
 
-    public final class Node {
+    public class Node {
 
         private final boolean mValid;
 
-        private final int mArmIdx;
-        private final int mWristIdx;
+        private final int mArmDeg;
+        private final int mWristDeg;
 
         private double mConstraintCost;
         private double mSetpointCost;
 
         private Node mNextNode;
 
-        public Node(int armIdx, int wristIdx) {
-            mArmIdx = loopIndex(armIdx);
-            mWristIdx = loopIndex(wristIdx);
+        public Node(int armDeg, int wristDeg) {
+            mArmDeg = normalize(armDeg);
+            mWristDeg = normalize(wristDeg);
 
             mValid = !mConstraints.isInvalid(getArmDeg(), getWristDeg());
 
@@ -81,8 +66,8 @@ public final class ArmBFSField {
         }
 
         private double getDistanceCost(Node previous) {
-            final double dx = kBinning * loopIndexZero(this.mArmIdx - previous.mArmIdx);
-            final double dy = kBinning * loopIndexZero(this.mWristIdx - previous.mWristIdx);
+            final double dx = normalizeZero(this.mArmDeg - previous.mArmDeg);
+            final double dy = normalizeZero(this.mWristDeg - previous.mWristDeg);
             return distance(dx, dy);
         }
 
@@ -142,7 +127,7 @@ public final class ArmBFSField {
             }
 
             // when escaping you only want to move one mech at a time
-            if (mArmIdx != previous.mArmIdx && mWristIdx != previous.mWristIdx) {
+            if (mArmDeg != previous.mArmDeg && mWristDeg != previous.mWristDeg) {
                 return false;
             }
 
@@ -169,11 +154,11 @@ public final class ArmBFSField {
         }
 
         public double getArmDeg() {
-            return normalizeDeg(kBinning * mArmIdx + mArmDegOffset);
+            return normalizeZero(mArmDeg + mArmDegOffset);
         }
 
         public double getWristDeg() {
-            return normalizeDeg(kBinning * mWristIdx + mWristDegOffset);
+            return normalizeZero(mWristDeg + mWristDegOffset);
         }
 
         public ArmState getArmState() {
@@ -181,7 +166,7 @@ public final class ArmBFSField {
         }
 
         private Node getNeighbor(int dx, int dy) {
-            return mNodeMap[getIndex(mArmIdx + dx, mWristIdx + dy)];
+            return getRawNode(mArmDeg + kBinning * dx, mWristDeg + kBinning * dy);
         }
 
         public Node next() {
@@ -217,7 +202,7 @@ public final class ArmBFSField {
     private final double mArmDegOffset;
     private final double mWristDegOffset;
     private final Node[] mNodeMap;
-
+    
     private static int instances = 0;
 
     public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
@@ -230,19 +215,19 @@ public final class ArmBFSField {
 
         mConstraints = constraints;
 
-        mTargetArmDeg = normalizeDeg(targetArmDeg);
-        mTargetWristDeg = normalizeDeg(targetWristDeg);
+        mTargetArmDeg = normalizeZero(targetArmDeg);
+        mTargetWristDeg = normalizeZero(targetWristDeg);
 
         mArmDegOffset = targetArmDeg - kBinning * Math.round(targetArmDeg / kBinning);
         mWristDegOffset = targetWristDeg - kBinning * Math.round(targetWristDeg / kBinning);
 
-        mNodeMap = new Node[kIndexRange * kIndexRange];
+        mNodeMap = new Node[getIndex(kDegreeRange - 1, kDegreeRange - 1) + 1];
 
-        Queue<Node> openSet = new ArrayDeque<>(kIndexRange * kIndexRange);
+        Queue<Node> openSet = new ArrayDeque<>(kDegreeRange);
 
         // initialize all nodes and test to see if they fit the constraints
-        for (int arm = 0; arm < kIndexRange; ++arm) {
-            for (int wrist = 0; wrist < kIndexRange; ++wrist) {
+        for (int arm = 0; arm < kDegreeRange; arm += kBinning) {
+            for (int wrist = 0; wrist < kDegreeRange; wrist += kBinning) {
                 final Node node = new Node(arm, wrist);
 
                 // if the node is a member of the constraints,
@@ -263,10 +248,6 @@ public final class ArmBFSField {
         while ((next = openSet.poll()) != null) {
             for (int dx = -1; dx <= 1; ++dx) {
                 for (int dy = -1; dy <= 1; ++dy) {
-                    if (dx == 0 && dy == 0) {
-                        continue;
-                    }
-
                     final Node node = next.getNeighbor(dx, dy);
                     if (node.expandConstraint(next)) {
                         openSet.add(node);
@@ -276,15 +257,11 @@ public final class ArmBFSField {
         }
 
         // do a standard BFS on all of the valid nodes.
-        openSet.add(getNode(mTargetArmDeg, mTargetWristDeg).makeSetpoint());
+        openSet.add(getNode(targetArmDeg, targetWristDeg).makeSetpoint());
 
         while ((next = openSet.poll()) != null) {
             for (int dx = -kArmNodeSpeed; dx <= kArmNodeSpeed; ++dx) {
                 for (int dy = -kWristNodeSpeed; dy <= kWristNodeSpeed; ++dy) {
-                    if (dx == 0 && dy == 0) {
-                        continue;
-                    }
-
                     final Node node = next.getNeighbor(dx, dy);
 
                     if (node.expandSearch(next)) {
@@ -307,14 +284,20 @@ public final class ArmBFSField {
         this(setpointState.getShoulderState().getDegrees(), setpointState.getWristState().getDegrees(), constraint);
     }
 
-    private int getIndex(int armIdx, int wristIdx) {
-        return loopIndex(armIdx) * kIndexRange + loopIndex(wristIdx);
+    private int getIndex(int armDeg, int wristDeg) {
+        armDeg = normalize(armDeg) / kBinning;
+        wristDeg = normalize(wristDeg) / kBinning;
+        return armDeg * (kDegreeRange / kBinning) + wristDeg;
+    }
+
+    private Node getRawNode(int armDeg, int wristDeg) {
+        return mNodeMap[getIndex(armDeg, wristDeg)];
     }
 
     public Node getNode(double armDeg, double wristDeg) {
-        return mNodeMap[getIndex(
-                (int) Math.round((normalizeDeg(armDeg) - mArmDegOffset) / kBinning),
-                (int) Math.round((normalizeDeg(wristDeg) - mWristDegOffset) / kBinning))];
+        return getRawNode(
+                (int) Math.round(armDeg - mArmDegOffset + kBinning / 2.0),
+                (int) Math.round(wristDeg - mWristDegOffset + kBinning / 2.0));
     }
 
     public Node getNode(ArmState measuredState) {
