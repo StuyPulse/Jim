@@ -1,11 +1,7 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.RobotContainer;
-import com.stuypulse.robot.constants.ArmFields.Intake;
-import com.stuypulse.robot.constants.ArmFields.Neutral;
-import com.stuypulse.robot.constants.ArmFields.Outtake;
-import com.stuypulse.robot.constants.ArmFields.Ready;
-import com.stuypulse.robot.constants.ArmFields.Score;
+import com.stuypulse.robot.constants.ArmFields.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
