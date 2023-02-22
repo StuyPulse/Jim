@@ -10,14 +10,11 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake{
 
@@ -29,6 +26,9 @@ public class IntakeImpl extends Intake{
 
     private BStream stalling;
     private BStream newGamePiece;
+
+    private BStream frontCube;
+    private BStream backCube;
 
     // private IntakeSide intookSide;
 
@@ -48,11 +48,17 @@ public class IntakeImpl extends Intake{
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
 
-        newGamePiece =
-                BStream.create(this::hasGamePiece)
-                        .filtered(
-                                new BButton.Pressed(),
-                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME));
+        newGamePiece = BStream.create(this::hasGamePiece)
+            .filtered(
+                    new BButton.Pressed(),
+                    new BDebounce.Falling(NEW_GAMEPIECE_TIME));
+
+        frontCube = BStream.create(frontSensor::get).not()
+            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
+
+        backCube = BStream.create(backSensor::get).not()
+            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
+
         deacquiring = false;
     }
 
@@ -73,10 +79,10 @@ public class IntakeImpl extends Intake{
     // CUBE DETECTION (ir sensors)
 
     private boolean hasCubeFront() {
-        return !frontSensor.get();
+        return frontCube.get();
     }
     private boolean hasCubeBack() {
-        return !backSensor.get();
+        return backCube.get();
     }
     private boolean hasCube() {
         return isFlipped() ? hasCubeBack() : hasCubeFront();

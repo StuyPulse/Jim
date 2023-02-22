@@ -62,7 +62,7 @@ public interface Settings {
     }
 
     public interface Intake{
-        SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time", 0.05);
+        SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
         SmartNumber INTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cone Roller Front Speed", 1);
@@ -79,6 +79,8 @@ public interface Settings {
 
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
+
+        SmartNumber IR_SENSOR_TIME = new SmartNumber("Intake/IR Sensor Debounce Time (Rising)", 0.1);
     }
 
     public interface Vision {
