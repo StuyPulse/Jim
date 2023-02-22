@@ -12,7 +12,7 @@ public class SwerveDriveAlignThenBalance extends SequentialCommandGroup {
 
 
         addCommands(
-            new SwerveDriveBalanceAlign(),
+            // new SwerveDriveBalanceAlign(),
             new SwerveDriveBalanceBlay(),
             new SwerveDrivePointWheels(Rotation2d.fromDegrees(90))
         );
