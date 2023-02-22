@@ -32,6 +32,9 @@ public class ArmBFSField implements Serializable {
                 output.writeObject(result);
                 output.close();
                 fileOutput.close();
+
+                System.out.println("Finished serializing \"" + name + "\"");
+
                 return result;
             } 
         } catch (IOException e) {
@@ -242,6 +245,8 @@ public class ArmBFSField implements Serializable {
     }
 
     private ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints, ArmBFSField flipped) {
+        System.out.println("Starting "  + ++instances + "/30 ArmBFSFields");
+
         mFlipped = flipped;
 
         mConstraints = constraints;
@@ -308,7 +313,7 @@ public class ArmBFSField implements Serializable {
             }
         }
 
-        System.out.println("Initialized " + ++instances + "/30 ArmBFSFields");
+        System.out.println("Finished "  + instances + "/30 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {
