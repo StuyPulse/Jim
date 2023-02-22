@@ -12,7 +12,9 @@ public class ManagerValidateState extends InstantCommand {
         super(() -> {
             var manager = Manager.getInstance();
 
-            if (manager.getNodeLevel() == NodeLevel.HIGH && manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
+            if (manager.getNodeLevel() == NodeLevel.HIGH && 
+                manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
+
                 manager.setNodeLevel(NodeLevel.MID);
             }
 

@@ -202,8 +202,6 @@ public class Manager extends SubsystemBase {
                 return normalize(Ready.Mid.kConeTipOutSame);
 
             case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Ready.Mid.kConeTipInSame);
                 return normalize(Ready.Mid.kConeTipInOpposite);
 
             case CUBE:
@@ -217,8 +215,6 @@ public class Manager extends SubsystemBase {
     private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.SAME)
-                    return getNeutralTrajectory();
                 return normalize(Ready.High.kConeTipInOpposite);
 
             case CUBE:
@@ -243,16 +239,12 @@ public class Manager extends SubsystemBase {
                 if (gamePiece == GamePiece.CONE_TIP_OUT)
                     return normalize(Score.Mid.kConeTipOutSame);
 
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Score.Mid.kConeTipInSame);
                 return normalize(Score.Mid.kConeTipInOpposite);
 
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(Score.High.kCube);
 
-                if (scoreSide == ScoreSide.SAME)
-                    return getNeutralTrajectory();
                 return normalize(Score.High.kConeTipInOpposite);
 
             default:

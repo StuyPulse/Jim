@@ -13,7 +13,6 @@ public final class ArmFields {
 
         Ready.Low.kConeTipInOpposite.getSize();
 
-        Ready.Mid.kConeTipInSame.getSize();
         Ready.Mid.kConeTipInOpposite.getSize();
         Ready.Mid.kConeTipOutSame.getSize();
         Ready.Mid.kCube.getSize();
@@ -21,7 +20,6 @@ public final class ArmFields {
         Ready.High.kConeTipInOpposite.getSize();
         Ready.High.kCube.getSize();
 
-        Score.Mid.kConeTipInSame.getSize();
         Score.Mid.kConeTipInOpposite.getSize();
         Score.Mid.kConeTipOutSame.getSize();
 
@@ -63,7 +61,6 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-5, -20, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -60, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-25, 60, Constraints.CONSTRAINT);
@@ -92,7 +89,6 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-8, -28, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-5, -90, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-35, 40, Constraints.CONSTRAINT);
