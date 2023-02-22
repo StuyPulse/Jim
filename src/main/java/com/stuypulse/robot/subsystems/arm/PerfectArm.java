@@ -32,6 +32,11 @@ public class PerfectArm extends Arm {
     }
 
     @Override
+    public void setLimpWristEnabled(boolean enabled) {
+        
+    }
+
+    @Override
     public ArmVisualizer getVisualizer() {
         return visualizer;
     }

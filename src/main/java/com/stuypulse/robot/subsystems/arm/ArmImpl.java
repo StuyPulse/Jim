@@ -9,6 +9,7 @@ import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -45,9 +46,9 @@ public class ArmImpl extends Arm {
     private final ArmVisualizer armVisualizer;
 
     private SmartBoolean feedbackEnable;
+    private SmartBoolean limpWristEnable;
 
     public ArmImpl() {
-        System.out.println("CREATING ARM IMPL ");
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -77,6 +78,7 @@ public class ArmImpl extends Arm {
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
+        limpWristEnable = new SmartBoolean("Arm/Limp Wrist Enable", false);
 
         setTrajectory(Manager.getInstance().getNeutralTrajectory());
         // setTargetState(getState());
@@ -132,6 +134,10 @@ public class ArmImpl extends Arm {
         feedbackEnable.set(enabled);
     }
 
+    public void setLimpWristEnabled(boolean enabled) {
+        limpWristEnable.set(enabled);
+    }
+
     @Override
     public void periodic() {
         var targetState = getTargetState();
@@ -146,7 +152,14 @@ public class ArmImpl extends Arm {
                 Angle.fromRotation2d(getWristAngle()));
 
         runShoulder(shoulderVolts);
-        runWrist(wristVolts);
+
+        if (limpWristEnable.get()) {
+            wrist.setIdleMode(IdleMode.kCoast);
+        } else {
+            wrist.setIdleMode(IdleMode.kBrake);
+
+            runWrist(wristVolts);
+        }
 
         if (Settings.isDebug()) { 
             armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());

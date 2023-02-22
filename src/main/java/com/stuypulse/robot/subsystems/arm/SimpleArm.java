@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -39,6 +40,7 @@ public class SimpleArm extends Arm {
     private final ArmVisualizer armVisualizer;
 
     private SmartBoolean feedbackEnable;
+    private SmartBoolean limpWristEnable;
 
     public SimpleArm() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
@@ -112,12 +114,19 @@ public class SimpleArm extends Arm {
         wrist.setVoltage(voltage);
     }
 
+    @Override
     public ArmVisualizer getVisualizer() {
         return armVisualizer;
     }
 
+    @Override
     public void setFeedbackEnabled(boolean enabled) {
         feedbackEnable.set(enabled);
+    }
+
+    @Override
+    public void setLimpWristEnabled(boolean enabled) {
+        limpWristEnable.set(enabled);
     }
 
     @Override
@@ -127,7 +136,14 @@ public class SimpleArm extends Arm {
         double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
 
         runShoulder(shoulderOutput);
-        runWrist(wristOutput);
+        
+        if (limpWristEnable.get()) {
+            wrist.setIdleMode(IdleMode.kCoast);
+        } else {
+            wrist.setIdleMode(IdleMode.kBrake);
+
+            runWrist(wristOutput);
+        }
 
         if (Settings.isDebug()) {
             armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());

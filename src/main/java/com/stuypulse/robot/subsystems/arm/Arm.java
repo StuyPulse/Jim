@@ -119,6 +119,17 @@ public abstract class Arm extends SubsystemBase {
         setFeedbackEnabled(false);
     }
 
+    // Enable limp wrist
+    public abstract void setLimpWristEnabled(boolean enabled);
+
+    public final void enableLimpWrist() {
+        setLimpWristEnabled(true);
+    }
+
+    public final void disableLimpWrist() {
+        setLimpWristEnabled(false);
+    }
+
     // Get arm visualizer
     public abstract ArmVisualizer getVisualizer();
 }

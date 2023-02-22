@@ -15,6 +15,7 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
@@ -31,6 +32,8 @@ public class SimArm extends Arm {
     private final AngleController wristController;
 
     private final ArmVisualizer armVisualizer;
+
+    private SmartBoolean limpWristEnable;
 
     public SimArm() { 
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
@@ -55,6 +58,8 @@ public class SimArm extends Arm {
                                     .setOutputFilter(x -> MathUtil.clamp(x, -RoboRioSim.getVInVoltage(), +RoboRioSim.getVInVoltage() ));
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
+
+        limpWristEnable = new SmartBoolean("Arm/Limp Wrist", false);
     }
 
     @Override
@@ -67,11 +72,18 @@ public class SimArm extends Arm {
         return Rotation2d.fromRadians(simulation.getWristPositionRadians()).plus(getShoulderAngle());
     }
 
+    @Override
     public ArmVisualizer getVisualizer() {
         return armVisualizer;
     }
 
+    @Override
     public void setFeedbackEnabled(boolean enabled) {
+    }
+
+    @Override
+    public void setLimpWristEnabled(boolean enabled) {
+        limpWristEnable.set(enabled);
     }
 
     @Override
@@ -80,6 +92,10 @@ public class SimArm extends Arm {
         double shoulderOutput = shoulderController.update(Angle.fromRotation2d(targetState.getShoulderState()), Angle.fromRotation2d(getShoulderAngle()));
         double wristOutput = wristController.update(Angle.fromRotation2d(targetState.getWristState()), Angle.fromRotation2d(getWristAngle()));
     
+        if (!limpWristEnable.get()) {
+            wristOutput = 0;
+        }
+
         simulation.update(shoulderOutput, wristOutput, Settings.DT);
 
         armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());
