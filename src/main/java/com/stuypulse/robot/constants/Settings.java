@@ -268,6 +268,8 @@ public interface Settings {
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
         SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.5);
 
+        SmartNumber kT_u = new SmartNumber("Auto Balance/With Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
+
         public interface Translation {
             SmartNumber P = new SmartNumber("Auto Balance/Translation/kP", 0.05);
             SmartNumber I = new SmartNumber("Auto Balance/Translation/kI", 0);

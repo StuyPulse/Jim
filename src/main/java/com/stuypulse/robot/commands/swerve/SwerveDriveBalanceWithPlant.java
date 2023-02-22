@@ -20,17 +20,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceWithPlant extends CommandBase {
-    private interface Constants {
-        SmartNumber kT_u = new SmartNumber("Auto Balance/With Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
 
-        Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
-        SmartNumber kI = new SmartNumber("", 0);
-        Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
-    }
-
-    private static Number MAX_SPEED;
-
+    private double MAX_SPEED;
+    
+    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
+    
     private Number DISTANCE_THRESHOLD;
     private Number ANGLE_THRESHOLD;
 
@@ -43,6 +39,7 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
     private double balanceAngle;
 
     public SwerveDriveBalanceWithPlant() {
+
         MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
 
         DISTANCE_THRESHOLD = AutoBalance.DISTANCE_THRESHOLD.doubleValue();
@@ -52,7 +49,7 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         odometry = Odometry.getInstance();
 
         controller = new PIDController(Translation.P, Translation.I, Translation.D);
-        gyroController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+        gyroController = new PIDController(kP, 0, kD);
 
         balanceAngle = 0;
 

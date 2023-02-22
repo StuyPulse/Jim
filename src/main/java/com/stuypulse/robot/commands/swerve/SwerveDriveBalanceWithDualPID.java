@@ -9,7 +9,6 @@ import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,16 +20,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
-    private interface Constants {
-        SmartNumber kT_u = new SmartNumber("Auto Balance/With Dual PID/Tu", 0.2);  // from Zieger-Nichols tuning method
-        Number kK_u = IStream.create(() -> MAX_SPEED.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
-
-        Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
-        SmartNumber kI = new SmartNumber("", 0);
-        Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
-    }
-
-    private static Number MAX_SPEED;
+    private double MAX_SPEED;
+    
+    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
     private Number DISTANCE_THRESHOLD;
     private Number ANGLE_THRESHOLD;
@@ -53,7 +47,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
         tiltController = new PIDController(Tilt.P, Tilt.I, Tilt.D);
         translationController = new PIDController(Translation.P, Translation.I, Translation.D);
 
-        gyroController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+        gyroController = new PIDController(kP, 0, kD);
 
         addRequirements(swerve);
     }
