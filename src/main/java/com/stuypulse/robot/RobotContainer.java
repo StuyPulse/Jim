@@ -5,6 +5,8 @@
 
 package com.stuypulse.robot;
 
+import java.util.function.Supplier;
+
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
@@ -12,7 +14,8 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.wings.*;
+import com.stuypulse.robot.commands.swerve.balance.*;
+import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
 
 import com.stuypulse.robot.subsystems.*;
@@ -21,8 +24,8 @@ import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
+import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.subsystems.wings.*;
 import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -34,15 +37,15 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import 
+edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -59,7 +62,7 @@ public class RobotContainer {
     public final Odometry odometry = Odometry.getInstance();
     public final Arm arm = Arm.getInstance();
     public final Plant plant = Plant.getInstance();
-    public final Wings wings = Wings.getInstance();
+    public final Wing wing = Wing.getInstance();
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
@@ -73,6 +76,9 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
+
+        DataLogManager.start();
+
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
@@ -104,8 +110,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingsToggleRed());
-        driver.getStartButton().onTrue(new WingsToggleWhite());
+        driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getBottomButton()
@@ -118,9 +123,9 @@ public class RobotContainer {
         // swerve
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
+        driver.getLeftTriggerButton().whileTrue(new SwerveDriveAlignThenBalance());
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
-        driver.getDPadDown().onTrue(new OdometryRealign());
+        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
         // right trigger -> robotrelative override
 
         // plant
@@ -136,27 +141,20 @@ public class RobotContainer {
         // intaking
         operator.getRightTriggerButton()
             .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
-            // .whileTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
         // outtake
         operator.getLeftTriggerButton()
             .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
-            // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
-        // operator.getRightTriggerButton()
-        //     .whileTrue(new IntakeAcquire())
-        //     .onFalse(new IntakeStop());
-
-        // operator.getLeftTriggerButton()
-        //     .whileTrue(new IntakeDeacquire())
-        //     .onFalse(new IntakeStop());
-
         // ready & score
-        operator.getLeftBumper().whileTrue(new ArmReady());
+        operator.getLeftBumper()
+            .whileTrue(new ArmReady())
+            .onTrue(new ManagerValidateState().andThen(new ManagerChooseScoreSide()));
+
         operator.getRightBumper()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new IntakeStop());
@@ -167,17 +165,23 @@ public class RobotContainer {
         operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
         // set game piece
-        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
-        operator.getBottomButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
+        operator.getLeftButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+
+        operator.getTopButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+
+        operator.getBottomButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.SAME));
 
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
         // arm to neutral
-        operator.getDPadRight()
-            .whileTrue(new ArmNeutral())
-            .onTrue(new IntakeStop());
+        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
 
         // manual overrides
         operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));

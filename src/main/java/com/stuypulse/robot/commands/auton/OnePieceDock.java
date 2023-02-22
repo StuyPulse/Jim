@@ -7,6 +7,7 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,7 +47,7 @@ public class OnePieceDock extends SequentialCommandGroup {
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
 
-            new SwerveDriveEngage().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     

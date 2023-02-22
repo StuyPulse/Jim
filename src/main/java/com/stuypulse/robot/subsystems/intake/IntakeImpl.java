@@ -27,6 +27,9 @@ public class IntakeImpl extends Intake{
     private BStream stalling;
     private BStream newGamePiece;
 
+    private BStream frontCube;
+    private BStream backCube;
+
     private IntakeSide intookSide;
 
     private boolean deacquiring;
@@ -45,13 +48,19 @@ public class IntakeImpl extends Intake{
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
 
-        newGamePiece =
-                BStream.create(this::hasGamePiece)
-                        .filtered(
-                                new BButton.Pressed(),
-                                new BDebounce.Falling(Settings.Intake.NEW_GAMEPIECE_TIME));
+        newGamePiece = BStream.create(this::hasGamePiece)
+            .filtered(
+                    new BButton.Pressed(),
+                    new BDebounce.Falling(NEW_GAMEPIECE_TIME));
+
+        frontCube = BStream.create(frontSensor::get).not()
+            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
+
+        backCube = BStream.create(backSensor::get).not()
+            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
 
         intookSide = IntakeSide.FRONT;
+
         deacquiring = false;
     }
 
@@ -72,10 +81,10 @@ public class IntakeImpl extends Intake{
     // CUBE DETECTION (ir sensors)
 
     private boolean hasCubeFront() {
-        return !frontSensor.get();
+        return frontCube.get();
     }
     private boolean hasCubeBack() {
-        return !backSensor.get();
+        return backCube.get();
     }
     private boolean hasCube() {
         return isFlipped() ? hasCubeBack() : hasCubeFront();
@@ -172,6 +181,10 @@ public class IntakeImpl extends Intake{
             Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
             Settings.putBoolean("Intake/Is Flipped", isFlipped());
             Settings.putBoolean("Intake/Is Stalling", isStalling());
+            Settings.putBoolean("Intake/Front IR Sensor", !frontSensor.get());
+            Settings.putBoolean("Intake/Back IR Sensor", !backSensor.get());
+            Settings.putBoolean("Intake/Has Cube Front", frontCube.get());
+            Settings.putBoolean("Intake/Has Cube Back", backCube.get());
             Settings.putBoolean("Intake/Has Cube", hasCube());
             Settings.putBoolean("Intake/Deacquiring", deacquiring);
 
