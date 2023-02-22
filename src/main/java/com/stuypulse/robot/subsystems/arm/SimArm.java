@@ -82,7 +82,7 @@ public class SimArm extends Arm {
     
         simulation.update(shoulderOutput, wristOutput, Settings.DT);
 
-        armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
+        armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 

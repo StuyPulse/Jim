@@ -88,6 +88,11 @@ public class IntakeImpl extends Intake{
         return isStalling() || hasCube();
     }
 
+    @Override
+    public boolean hasNewGamePiece() {
+        return newGamePiece.get();
+    }
+
     // WRIST ORIENTATION
 
     private boolean acquiringIsFlipped() {
@@ -95,16 +100,11 @@ public class IntakeImpl extends Intake{
     }
 
     private boolean isFlipped() {
-        return Arm.getInstance().getWristAngle().getDegrees() > 90 || Arm.getInstance().getWristAngle().getDegrees() < -90;
+        Arm arm = Arm.getInstance();
+        return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
     }
 
     // INTAKING MODES
-
-    @Override
-    public void stop(){
-        frontMotor.stopMotor();
-        backMotor.stopMotor();
-    }
 
     private void setState(double frontSpeed, double backSpeed, boolean isCone, boolean flipped) {
         if (flipped) {
@@ -121,7 +121,7 @@ public class IntakeImpl extends Intake{
     }
 
     @Override
-    public void acquireCube(){
+    public void acquireCube() {
         deacquiring = false;
         setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
     }
@@ -132,22 +132,24 @@ public class IntakeImpl extends Intake{
         setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
     }
 
+    // NOTE: if called when wrist is on opposite side of final setpoint, direction will be wrong
     @Override
-    public void deacquireCube(){
+    public void deacquireCube() {
         deacquiring = true;
         setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
     }
 
     @Override
-    public void deacquireCone(){
+    public void deacquireCone() {
         deacquiring = true;
 
         setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
     }
 
     @Override
-    public boolean hasNewGamePiece() {
-        return newGamePiece.get();
+    public void stop() {
+        frontMotor.stopMotor();
+        backMotor.stopMotor();
     }
 
     @Override

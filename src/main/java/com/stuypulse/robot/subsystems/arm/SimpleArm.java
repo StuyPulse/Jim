@@ -130,7 +130,7 @@ public class SimpleArm extends Arm {
         runWrist(wristOutput);
 
         if (Settings.isDebug()) {
-            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getShoulderState().getDegrees());
+            armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());
             armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
             armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
         
