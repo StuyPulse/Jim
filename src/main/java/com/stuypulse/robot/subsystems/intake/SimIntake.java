@@ -16,7 +16,14 @@ public class SimIntake extends Intake {
 
     SmartBoolean hasNewGamePiece = new SmartBoolean("Intake/Has New Gamepiece", false);
 
+    private IntakeSide intookSide;
+
     private boolean deacquiring;
+
+    public SimIntake() {
+        intookSide = IntakeSide.FRONT;
+        deacquiring = false;
+    }
 
     // GAMEPIECE DETECTION
 
@@ -26,10 +33,6 @@ public class SimIntake extends Intake {
     }
 
     // WRIST ORIENTATION
-
-    private boolean acquiringIsFlipped() {
-        return Manager.getInstance().getIntakeSide() == IntakeSide.BACK;
-    }
 
     private boolean isFlipped() {
         Arm arm = Arm.getInstance();
@@ -55,13 +58,13 @@ public class SimIntake extends Intake {
     @Override
     public void acquireCube() {
         deacquiring = false;
-        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
-        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class SimIntake extends Intake {
     public void deacquireCone() {
         deacquiring = true;
 
-        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, intookSide == IntakeSide.BACK);
     }
 
     @Override
@@ -85,6 +88,10 @@ public class SimIntake extends Intake {
 
     @Override
     public void periodic() {
+        if (hasNewGamePiece()) {
+            intookSide = Manager.getInstance().getIntakeSide();
+        }
+
         if (Settings.isDebug()) {
             Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
         }

@@ -30,7 +30,7 @@ public class IntakeImpl extends Intake{
     private BStream frontCube;
     private BStream backCube;
 
-    // private IntakeSide intookSide;
+    private IntakeSide intookSide;
 
     private boolean deacquiring;
 
@@ -58,6 +58,8 @@ public class IntakeImpl extends Intake{
 
         backCube = BStream.create(backSensor::get).not()
             .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
+
+        intookSide = IntakeSide.FRONT;
 
         deacquiring = false;
     }
@@ -101,10 +103,6 @@ public class IntakeImpl extends Intake{
 
     // WRIST ORIENTATION
 
-    private boolean acquiringIsFlipped() {
-        return Manager.getInstance().getIntakeSide() == IntakeSide.BACK;
-    }
-
     private boolean isFlipped() {
         Arm arm = Arm.getInstance();
         return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
@@ -129,13 +127,13 @@ public class IntakeImpl extends Intake{
     @Override
     public void acquireCube() {
         deacquiring = false;
-        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, acquiringIsFlipped());
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
     public void acquireCone() {
         deacquiring = false;
-        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     // NOTE: if called when wrist is on opposite side of final setpoint, direction will be wrong
@@ -149,7 +147,7 @@ public class IntakeImpl extends Intake{
     public void deacquireCone() {
         deacquiring = true;
 
-        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, acquiringIsFlipped());
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, intookSide == IntakeSide.BACK);
     }
 
     @Override
@@ -168,6 +166,10 @@ public class IntakeImpl extends Intake{
             if (Manager.getInstance().getGamePiece().isCube() && hasCube()) {
                 stop();
             }
+        }
+
+        if (hasNewGamePiece()) {
+            intookSide = Manager.getInstance().getIntakeSide();
         }
 
         if (Settings.isDebug()) {
@@ -189,6 +191,8 @@ public class IntakeImpl extends Intake{
     
             Settings.putNumber("Intake/Front Motor", frontMotor.get());
             Settings.putNumber("Intake/Back Motor", backMotor.get());
+
+            Settings.putString("Intake/Intook Side", intookSide.name());
         }
     }
 
