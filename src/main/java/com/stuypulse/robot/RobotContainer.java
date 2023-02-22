@@ -35,14 +35,12 @@ import com.stuypulse.stuylib.input.gamepads.*;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -120,7 +118,7 @@ public class RobotContainer {
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveEngage());
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
-        driver.getDPadDown().onTrue(new OdometryRealign());
+        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
         // right trigger -> robotrelative override
 
         // plant
@@ -136,27 +134,20 @@ public class RobotContainer {
         // intaking
         operator.getRightTriggerButton()
             .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
-            // .whileTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
         // outtake
         operator.getLeftTriggerButton()
             .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
-            // .whileTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
-        // operator.getRightTriggerButton()
-        //     .whileTrue(new IntakeAcquire())
-        //     .onFalse(new IntakeStop());
-
-        // operator.getLeftTriggerButton()
-        //     .whileTrue(new IntakeDeacquire())
-        //     .onFalse(new IntakeStop());
-
         // ready & score
-        operator.getLeftBumper().whileTrue(new ArmReady());
+        operator.getLeftBumper()
+            .whileTrue(new ArmReady())
+            .onTrue(new ManagerValidateState().andThen(new ManagerChooseScoreSide()));
+
         operator.getRightBumper()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new IntakeStop());
@@ -167,17 +158,23 @@ public class RobotContainer {
         operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
     
         // set game piece
-        operator.getLeftButton().onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
-        operator.getTopButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
-        operator.getBottomButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
+        operator.getLeftButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+
+        operator.getTopButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+
+        operator.getBottomButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT))
+            .onTrue(new ManagerSetScoreSide(ScoreSide.SAME));
 
         // flip intake side
         operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
 
         // arm to neutral
-        operator.getDPadRight()
-            .whileTrue(new ArmNeutral())
-            .onTrue(new IntakeStop());
+        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
 
         // manual overrides
         operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
