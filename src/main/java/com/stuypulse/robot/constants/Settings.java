@@ -258,9 +258,7 @@ public interface Settings {
         
     public interface Wings {
         SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.5);
-        SmartNumber WHITE_LATCH_DELAY = new SmartNumber("Wings/White Latch Delay", 0.5);
         SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.5);
-        SmartNumber WHITE_RETRACT_DELAY = new SmartNumber("Wings/White Retract Delay", 0.5);
     }
 
     public interface AutoBalance {
