@@ -13,20 +13,16 @@ public final class ArmFields {
 
         Ready.Low.kConeTipInOpposite.getSize();
 
-        Ready.Mid.kConeTipInSame.getSize();
         Ready.Mid.kConeTipInOpposite.getSize();
         Ready.Mid.kConeTipOutSame.getSize();
         Ready.Mid.kCube.getSize();
 
-        Ready.High.kConeTipInSame.getSize();
         Ready.High.kConeTipInOpposite.getSize();
         Ready.High.kCube.getSize();
 
-        Score.Mid.kConeTipInSame.getSize();
         Score.Mid.kConeTipInOpposite.getSize();
         Score.Mid.kConeTipOutSame.getSize();
 
-        Score.High.kConeTipInSame.getSize();
         Score.High.kConeTipInOpposite.getSize();
 
         System.out.println("ArmBFSFields Generated in " + timer.reset() + " seconds.");
@@ -65,7 +61,6 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-5, -20, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(0, -60, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-25, 60, Constraints.CONSTRAINT);
@@ -74,7 +69,6 @@ public final class ArmFields {
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(11, -22, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-15, 15, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = new ArmBFSField(-180 - (-175), 180 - 130, Constraints.CONSTRAINT);
@@ -95,7 +89,6 @@ public final class ArmFields {
         }
 
         public interface Mid {
-            ArmBFSField kConeTipInSame = new ArmBFSField(-8, -28, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-5, -90, Constraints.CONSTRAINT);
             
             ArmBFSField kConeTipOutSame = new ArmBFSField(-35, 40, Constraints.CONSTRAINT);
@@ -104,7 +97,6 @@ public final class ArmFields {
         }
 
         public interface High {
-            ArmBFSField kConeTipInSame = new ArmBFSField(11, -32, Constraints.CONSTRAINT);
             ArmBFSField kConeTipInOpposite = new ArmBFSField(-7, 20, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = Ready.High.kCube;
