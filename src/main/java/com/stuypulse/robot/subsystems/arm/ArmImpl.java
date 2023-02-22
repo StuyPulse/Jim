@@ -128,6 +128,24 @@ public class ArmImpl extends Arm {
         return armVisualizer;
     }
 
+    public boolean armIsStalling() {
+        double shoulderVolts = 
+            shoulderController.update(
+                Angle.fromRotation2d(getTargetState().getShoulderState()), 
+                Angle.fromRotation2d(getShoulderAngle()));
+        return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts > Shoulder.STALLING_VOLTAGE.doubleValue() ||
+                wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
+    }
+
+    public boolean wristIsStalling() {
+        double wristVolts = wristController.update(
+            Angle.fromRotation2d(getTargetState().getWristState()), 
+            Angle.fromRotation2d(getWristAngle()));
+        return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
+                shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
+                shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
+    }
+
     public void setFeedbackEnabled(boolean enabled) {
         feedbackEnable.set(enabled);
     }
@@ -144,6 +162,14 @@ public class ArmImpl extends Arm {
             wristController.update(
                 Angle.fromRotation2d(targetState.getWristState()), 
                 Angle.fromRotation2d(getWristAngle()));
+
+        if (wristIsStalling()) {
+            wristVolts = 0;
+        }
+
+        if (armIsStalling()) {
+            shoulderVolts = 0;
+        }
 
         runShoulder(shoulderVolts);
         runWrist(wristVolts);
