@@ -31,6 +31,4 @@ public abstract class Odometry extends SubsystemBase {
     public final Rotation2d getRotation() {
         return getPose().getRotation();
     }
-
-    public abstract void overrideNoise(boolean overrideNoise);
 }
