@@ -59,11 +59,6 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         addRequirements(swerve);
     }
 
-    @Override
-    public void initialize() {
-        odometry.overrideNoise(true);
-    }
-
     private Rotation2d getBalanceAngle() {
         Rotation2d pitch = swerve.getGyroPitch();
         Rotation2d roll = swerve.getGyroRoll();
@@ -111,7 +106,6 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
     @Override   
     public void end(boolean interrupted) {
         swerve.stop();
-        odometry.overrideNoise(false);
 
         Plant.getInstance().engage();
     }
