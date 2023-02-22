@@ -20,7 +20,7 @@ public class IntakeScore extends InstantCommand {
     public void initialize() {
         var manager = Manager.getInstance();
 
-        if (manager.getNodeLevel() != NodeLevel.LOW && manager.getGamePiece() == GamePiece.CONE_TIP_IN) {
+        if (manager.getNodeLevel() != NodeLevel.LOW && manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
             return;
         }
 
