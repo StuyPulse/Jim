@@ -65,8 +65,6 @@ public class OdometryImpl extends Odometry {
 
     private final FieldObject2d odometryPose2d;
 
-    private boolean overrideNoise;
-
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -74,8 +72,6 @@ public class OdometryImpl extends Odometry {
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
         // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
-
-        overrideNoise = false;
 
         odometryPose2d = field.getObject("Odometry Pose2d");
 
@@ -85,30 +81,26 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public Pose2d getPose() {
-        // return poseEstimator.getEstimatedPosition();
-        return odometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     @Override
     public void reset(Pose2d pose) {
         SwerveDrive drive = SwerveDrive.getInstance();
-        // poseEstimator.resetPosition(
-        //             drive.getGyroAngle(), 
-        //             drive.getModulePositions(), 
-        //             pose
-        // );
-        odometry.resetPosition(drive.getGyroAngle(), 
-        drive.getModulePositions(), 
-        pose);
+        poseEstimator.resetPosition(
+                    drive.getGyroAngle(), 
+                    drive.getModulePositions(), 
+                    pose);
+
+        odometry.resetPosition(
+            drive.getGyroAngle(), 
+            drive.getModulePositions(), 
+            pose);
     }
 
     @Override
     public Field2d getField() {
         return field;
-    }
-
-    public void overrideNoise(boolean overrideNoise) {
-        this.overrideNoise = overrideNoise;
     }
 
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
