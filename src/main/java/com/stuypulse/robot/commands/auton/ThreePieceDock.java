@@ -4,11 +4,13 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -36,6 +38,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
         // initial setup
         addCommands(
+            new LEDSet(LEDColor.RAINBOW),
             new ManagerSetNodeLevel(NodeLevel.HIGH),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
             new ManagerSetIntakeSide(IntakeSide.FRONT),
@@ -44,11 +47,13 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
         // score first piece
         addCommands(
+            new LEDSet(LEDColor.YELLOW.pulse()),
             new ArmReady(),
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
+            new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
         );
 
@@ -57,19 +62,22 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetNodeLevel(NodeLevel.MID),
 
+            new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two"))
                     .robotRelative()
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
-
+            new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
+            new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
         );
         
         // drive to grid and score second piece
         addCommands(
+            new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
@@ -79,28 +87,33 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
             new ManagerSetScoreIndex(1),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
-
+            new LEDSet(LEDColor.YELLOW.pulse()),
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
+            new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
         );
 
         // drive to and intake third piece
         addCommands(
+            new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Three"))
                     .robotRelative()
                     .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
+            new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
+            new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
         );
 
         // drive to grid and score third piece
         addCommands(
+            new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Three"))
                     .fieldRelative()
@@ -110,22 +123,26 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
+            new LEDSet(LEDColor.YELLOW),
             new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
+            new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
         );
 
         // dock and engage
         addCommands(
+            new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
                     .addEvent("ArmNeutral", new ArmNeutral()),
-
+            new LEDSet(LEDColor.RED.pulse()),
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
-            new PlantEngage()
+            new PlantEngage(),
+            new LEDSet(LEDColor.BLUE)
         );
     }
 }
