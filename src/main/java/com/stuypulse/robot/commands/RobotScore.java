@@ -36,7 +36,7 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void initialize() {
-        manager.setRoutine(Routine.READY);
+        manager.setRoutine(Routine.SCORE);
         arm.setTrajectory(manager.getScoreTrajectory());
 
 
