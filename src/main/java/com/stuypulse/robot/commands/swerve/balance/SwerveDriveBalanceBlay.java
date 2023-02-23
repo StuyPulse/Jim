@@ -68,9 +68,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             speed, 0, 0, odometry.getRotation()));
 
-        SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", balanceAngle);
         SmartDashboard.putNumber("Auto Balance/Speed", speed);
-        SmartDashboard.putNumber("Auto Balance/Odometry Angle", odometry.getRotation().getDegrees());
     }
 
     @Override
