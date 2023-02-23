@@ -16,53 +16,68 @@ public class SimIntake extends Intake {
 
     SmartBoolean hasNewGamePiece = new SmartBoolean("Intake/Has New Gamepiece", false);
 
+    private IntakeSide intookSide;
+
+    private boolean deacquiring;
+
+    public SimIntake() {
+        intookSide = IntakeSide.FRONT;
+        deacquiring = false;
+    }
+
+    // GAMEPIECE DETECTION
+
+    @Override
+    public boolean hasNewGamePiece() {
+        return hasNewGamePiece.get();
+    }
+
+    // WRIST ORIENTATION
+
     private boolean isFlipped() {
         Arm arm = Arm.getInstance();
         return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
     }
 
-    @Override
-    public void acquireCube(){
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CUBE_BACK_ROLLER.get());
+    // INTAKING MODES
+
+    private void setState(double frontSpeed, double backSpeed, boolean isCone, boolean flipped) {
+        if (flipped) {
+            frontSpeed *= -1;
+            backSpeed *= -1;
         }
+
+        if (isCone) {
+            backSpeed *= -1;
+        }
+
+        frontMotor.set(frontSpeed);
+        backMotor.set(backSpeed);
+    }
+
+    @Override
+    public void acquireCube() {
+        deacquiring = false;
+        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
     public void acquireCone() {
-        if (isFlipped()) {
-            frontMotor.set(-INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(INTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(INTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-INTAKE_CONE_BACK_ROLLER.get());
-        }
+        deacquiring = false;
+        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
     }
 
     @Override
-    public void deacquireCube(){
-        if (isFlipped()) {
-            frontMotor.set(OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CUBE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CUBE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CUBE_BACK_ROLLER.get());
-        }
+    public void deacquireCube() {
+        deacquiring = true;
+        setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
     }
 
     @Override
-    public void deacquireCone(){
-        if (Manager.getInstance().getIntakeSide() == IntakeSide.FRONT) {
-            frontMotor.set(OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(-OUTTAKE_CONE_BACK_ROLLER.get());
-        } else {
-            frontMotor.set(-OUTTAKE_CONE_FRONT_ROLLER.get());
-            backMotor.set(OUTTAKE_CONE_BACK_ROLLER.get());
-        }
+    public void deacquireCone() {
+        deacquiring = true;
+
+        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, intookSide == IntakeSide.BACK);
     }
 
     @Override
@@ -72,12 +87,16 @@ public class SimIntake extends Intake {
     }
 
     @Override
-    public boolean hasNewGamePiece() {
-        return hasNewGamePiece.get();
+    public IntakeSide getIntookSide() {
+        return intookSide;
     }
 
     @Override
     public void periodic() {
+        if (hasNewGamePiece()) {
+            intookSide = Manager.getInstance().getIntakeSide();
+        }
+
         if (Settings.isDebug()) {
             Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
         }

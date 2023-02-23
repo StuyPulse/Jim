@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems.intake;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
+import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,4 +31,6 @@ public abstract class Intake extends SubsystemBase {
     public abstract void stop();
 
     public abstract boolean hasNewGamePiece();
+
+    public abstract IntakeSide getIntookSide();
 }

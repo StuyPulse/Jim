@@ -33,7 +33,7 @@ public class TestbotContainer {
     public final SwerveDrive swerve = SwerveDrive.getInstance();
     public final TestArm arm = new TestArm();
     public final TestPlant plant = new TestPlant();
-    public final TestWings wings = new TestWings();
+    public final TestWing wings = new TestWing();
     
     public final Pump pump = new Pump();
 
@@ -87,10 +87,8 @@ public class TestbotContainer {
         // operator.getDPadRight().onTrue(wings.runOnce(wings::extendRightDeploy));
         // operator.getDPadDown().onTrue(wings.runOnce(wings::retractRightDeploy));
 
-        operator.getLeftButton().onTrue(wings.runOnce(wings::extendLeftLatch));
-        operator.getTopButton().onTrue(wings.runOnce(wings::retractLeftLatch));
-        operator.getRightButton().onTrue(wings.runOnce(wings::extendRightLatch));
-        operator.getBottomButton().onTrue(wings.runOnce(wings::retractRightLatch));
+        operator.getLeftButton().onTrue(wings.runOnce(wings::extendLatch));
+        operator.getTopButton().onTrue(wings.runOnce(wings::retractLatch));
 
 
         // plant

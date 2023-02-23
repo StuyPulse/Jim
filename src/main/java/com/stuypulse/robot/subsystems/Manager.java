@@ -1,23 +1,17 @@
 package com.stuypulse.robot.subsystems;
 
-import static com.stuypulse.robot.constants.ArmFields.*;
-
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.constants.ArmFields.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmBFSField;
 
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Manager extends SubsystemBase {
@@ -89,6 +83,7 @@ public class Manager extends SubsystemBase {
     // Routine for the arm 
     public enum Routine {
         INTAKE,
+        OUTTAKE,
         NEUTRAL,
         READY,
         SCORE,
@@ -121,28 +116,19 @@ public class Manager extends SubsystemBase {
         gridColumn = Direction.CENTER;
     }
 
-    public ArmBFSField getTrajectory() {
-        switch (routine) {
-            case INTAKE:
-                return getIntakeTrajectory();
-            case NEUTRAL:
-                return getNeutralTrajectory();
-            case READY:
-                return getReadyTrajectory();
-            case SCORE:
-                return getScoreTrajectory();
-            default:
-                return getNeutralTrajectory(); // TODO: BOOM
-        }
-    }
-
     /** Generate Intake Trajectories **/
 
 
     public ArmBFSField getIntakeTrajectory() {
         if (intakeSide == IntakeSide.FRONT) 
-            return Intake.kTrajectory;
-        return Intake.kTrajectory.flipped();
+            return Acquire.kTrajectory;
+        return Acquire.kTrajectory.flipped();
+    }
+
+    public ArmBFSField getOuttakeTrajectory() {
+        if (intakeSide == IntakeSide.FRONT) 
+            return Deacquire.kTrajectory;
+        return Deacquire.kTrajectory.flipped();
     }
 
     /** Generate Ready Trajectories **/
@@ -199,8 +185,6 @@ public class Manager extends SubsystemBase {
                 return normalize(Ready.Mid.kConeTipOutSame);
 
             case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Ready.Mid.kConeTipInSame);
                 return normalize(Ready.Mid.kConeTipInOpposite);
 
             case CUBE:
@@ -214,8 +198,6 @@ public class Manager extends SubsystemBase {
     private ArmBFSField getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Ready.High.kConeTipInSame);
                 return normalize(Ready.High.kConeTipInOpposite);
 
             case CUBE:
@@ -240,16 +222,12 @@ public class Manager extends SubsystemBase {
                 if (gamePiece == GamePiece.CONE_TIP_OUT)
                     return normalize(Score.Mid.kConeTipOutSame);
 
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Score.Mid.kConeTipInSame);
                 return normalize(Score.Mid.kConeTipInOpposite);
 
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(Score.High.kCube);
 
-                if (scoreSide == ScoreSide.SAME)
-                    return normalize(Score.High.kConeTipInSame);
                 return normalize(Score.High.kConeTipInOpposite);
 
             default:
@@ -259,8 +237,11 @@ public class Manager extends SubsystemBase {
 
     /** Generate Neutral Trajectories **/
 
+    // wrist faces away from scoring direction for cube
     public ArmBFSField getNeutralTrajectory() {
-        return Neutral.kTrajectory;
+        if (Intake.getInstance().getIntookSide() == IntakeSide.FRONT)
+            return Neutral.kTrajectory;
+        return Neutral.kTrajectory.flipped();
     }
 
     /** Generate Score Pose **/

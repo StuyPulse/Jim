@@ -17,6 +17,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -58,7 +59,7 @@ public class ArmImpl extends Arm {
         configureMotors();
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-                                    .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
+                                    .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
                                     .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(
                                         new AMotionProfile(
@@ -66,7 +67,7 @@ public class ArmImpl extends Arm {
                                             Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number()));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
-                                    .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
+                                    .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
                                     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD).setOutputFilter(x -> feedbackEnable.get() ? x : 0))
                                     .setSetpointFilter(
                                         new AMotionProfile(
@@ -148,7 +149,7 @@ public class ArmImpl extends Arm {
         runWrist(wristVolts);
 
         if (Settings.isDebug()) { 
-            armVisualizer.setTargetAngles(targetState.getShoulderState().getDegrees(), targetState.getWristState().getDegrees());
+            armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());
             armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
             armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
         

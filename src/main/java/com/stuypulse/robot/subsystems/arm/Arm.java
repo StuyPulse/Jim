@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.arm;
 
 import java.util.Optional;
 
+import com.stuypulse.robot.constants.Constraints;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.util.ArmBFSField;
@@ -10,6 +11,7 @@ import com.stuypulse.robot.util.ArmVisualizer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Arm extends SubsystemBase {
@@ -80,7 +82,11 @@ public abstract class Arm extends SubsystemBase {
     // Set target state
     public final void setTargetState(ArmState state) {
         trajectory = Optional.empty();
-        targetState = state;
+        if (!Constraints.SHOULDER_CONSTRAINT.isInvalid(
+                state.getShoulderState().getDegrees(),
+                state.getWristState().getDegrees())) {
+            targetState = state;
+        }
     }
 
     public final void setShoulderTargetState(Rotation2d shoulder) {
@@ -93,6 +99,9 @@ public abstract class Arm extends SubsystemBase {
 
     public final void setTrajectory(ArmBFSField trajectory) {
         this.trajectory = Optional.ofNullable(trajectory);
+
+        Settings.putNumber("Arm/Shoulder/Trajectory Endstate (deg)", trajectory.getSetpoint().getShoulderState().getDegrees());
+        Settings.putNumber("Arm/Wrist/Trajectory Endstate (deg)", trajectory.getSetpoint().getWristState().getDegrees());
     }
 
     // Change target angle (useful for driving)
