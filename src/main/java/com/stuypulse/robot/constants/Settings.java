@@ -266,7 +266,7 @@ public interface Settings {
         SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 6);
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
-        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.5);
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 1.0);
 
         SmartNumber kT_u = new SmartNumber("Auto Balance/With Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
 

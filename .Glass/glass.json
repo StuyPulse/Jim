@@ -13,8 +13,7 @@
           },
           "Wrist": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Auto Balance": {
           "Translation": {
@@ -34,9 +33,6 @@
         "Driver Setings": {
           "open": true
         },
-        "Manager": {
-          "open": true
-        },
         "Settings": {
           "Intake": {
             "open": true
@@ -48,7 +44,8 @@
           },
           "Turn": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -185,7 +182,7 @@
               "autoFit": true
             }
           ],
-          "height": 464,
+          "height": 0,
           "series": [
             {
               "color": [

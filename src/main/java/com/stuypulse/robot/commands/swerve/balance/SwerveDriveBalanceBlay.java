@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceBlay extends CommandBase {
 
-    private double MAX_SPEED;
+    private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kK_u = IStream.create(() -> AutoBalance.MAX_SPEED.get() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
@@ -35,13 +35,13 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     private double balanceAngle;
 
     public SwerveDriveBalanceBlay() {
-        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
+        maxSpeed = AutoBalance.MAX_SPEED;
 
         ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
-        control = new PIDController(kP, 0, kD);
+        control = new PIDController(kP, 0, kD).setOutputFilter(x -> -x);
 
         balanceAngle = 0;
     }
@@ -77,7 +77,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     }
 
     public Command withTolerance(double maxSpeed, double angleTolerance) {
-        MAX_SPEED = maxSpeed;
+        this.maxSpeed = maxSpeed;
 
         ANGLE_THRESHOLD = angleTolerance;
 

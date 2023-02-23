@@ -185,10 +185,16 @@ public class SwerveDrive extends SubsystemBase {
     }
     
     public Rotation2d getGyroPitch() {
+        if (Settings.ROBOT == Settings.Robot.JIM) {
+            return Rotation2d.fromDegrees(gyro.getRoll());
+        }
         return Rotation2d.fromDegrees(gyro.getPitch());
     }
 
     public Rotation2d getGyroRoll() {
+        if (Settings.ROBOT == Settings.Robot.JIM) {
+            return Rotation2d.fromDegrees(-gyro.getPitch());
+        }
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
 
