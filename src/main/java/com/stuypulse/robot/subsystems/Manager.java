@@ -1,6 +1,7 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.util.ArmTrajectory;
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
