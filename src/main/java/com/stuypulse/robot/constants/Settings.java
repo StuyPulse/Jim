@@ -238,9 +238,9 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 240.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 1440.0);
 
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Wrist/Stalling Voltage", 12.0);
-            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Wrist/Stalling Velocity", 0.2);
-            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Wrist/Stalling Current", 100.0);
+            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Wrist/Stalling/Duty Cycle Minimum", 0.1);
+            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Wrist/Stalling/Velocity Maximum (degrees)", 8);
+            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Wrist/Stalling/Current Minimum", 100.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 6.0);
     

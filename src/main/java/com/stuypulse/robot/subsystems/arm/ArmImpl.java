@@ -137,10 +137,7 @@ public class ArmImpl extends Arm {
                 wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
     }
 
-    public boolean wristIsStalling() {
-        double wristVolts = wristController.update(
-            Angle.fromRotation2d(getTargetState().getWristState()), 
-            Angle.fromRotation2d(getWristAngle()));
+    public boolean getWrist() {
         return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
                 shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
                 shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
