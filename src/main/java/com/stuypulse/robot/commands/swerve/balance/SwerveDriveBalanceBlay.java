@@ -7,6 +7,7 @@ import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 
@@ -45,30 +46,17 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         balanceAngle = 0;
     }
 
-    private Rotation2d getBalanceAngle() {
-        Rotation2d pitch = swerve.getGyroPitch();
-        Rotation2d roll = swerve.getGyroRoll();
-        Rotation2d yaw = odometry.getRotation();
-        
-        double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
-        double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
-
-        SmartDashboard.putNumber("facingSlope", Math.signum(facingSlope));
-
-        return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
-    }
+    // private SmartBoolean enabled = new SmartBoolean("Auto Balance/Enabled", false);
 
     @Override
     public void execute() {
-        balanceAngle = getBalanceAngle().getDegrees();
-        var speed = control.update(
-            0,
-            balanceAngle);
+        balanceAngle = swerve.getBalanceAngle().getDegrees();
+        control.update(0, balanceAngle);
         
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-            speed, 0, 0, odometry.getRotation()));
+            control.getOutput(), 0, 0, odometry.getRotation()));
 
-        SmartDashboard.putNumber("Auto Balance/Speed", speed);
+        SmartDashboard.putNumber("Auto Balance/Speed", control.getOutput());
     }
 
     @Override

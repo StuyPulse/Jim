@@ -197,12 +197,28 @@ public class SwerveDrive extends SubsystemBase {
         return kinematics;
     }
 
+    public Rotation2d getBalanceAngle() {
+        Rotation2d pitch = getGyroPitch();
+        Rotation2d roll = getGyroRoll();
+        Rotation2d yaw = Odometry.getInstance().getRotation();
+        
+        double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
+        double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
+        
+
+        SmartDashboard.putNumber("Swerve/Max Slope", maxSlope);
+        SmartDashboard.putNumber("Swerve/Facing Slope", facingSlope);
+
+        return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
+    }
+
     @Override
     public void periodic() {
         if (Settings.isDebug()) {
             Odometry odometry = Odometry.getInstance();
             Pose2d pose = odometry.getPose();
             Rotation2d angle = odometry.getRotation();
+
             for (int i = 0; i < modules.length; ++i) {
                 module2ds[i].setPose(new Pose2d(
                     pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
@@ -210,7 +226,8 @@ public class SwerveDrive extends SubsystemBase {
                 ));
             }
 
-            Settings.putNumber("Swerve/Gyro Angle", getGyroAngle().getDegrees());
+            Settings.putNumber("Swerve/Balance Angle (deg)", getBalanceAngle().getDegrees());
+            Settings.putNumber("Swerve/Gyro Angle (deg)", getGyroAngle().getDegrees());
             Settings.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
             Settings.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
         }
