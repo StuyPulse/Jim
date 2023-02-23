@@ -37,8 +37,8 @@ public class ManagerChooseScoreSide extends InstantCommand {
         super(() -> {
             var manager = Manager.getInstance();
 
-            // if game piece is cube, automatically choose scoring side
-            if (manager.getGamePiece() == GamePiece.CUBE) {
+            // if game piece is cube or we're scoring low, automatically choose scoring side
+            if (manager.getNodeLevel() == NodeLevel.LOW || manager.getGamePiece() == GamePiece.CUBE) {
                 var currentScoringSide = getCurrentScoringSide(manager.getIntakeSide(), Odometry.getInstance().getRotation());
                 manager.setScoreSide(currentScoringSide);
             }
