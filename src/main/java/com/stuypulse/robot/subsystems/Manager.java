@@ -116,23 +116,6 @@ public class Manager extends SubsystemBase {
         gridColumn = Direction.CENTER;
     }
 
-    public ArmBFSField getTrajectory() {
-        switch (routine) {
-            case INTAKE:
-                return getIntakeTrajectory();
-            case OUTTAKE:
-                return getOuttakeTrajectory();
-            case NEUTRAL:
-                return getNeutralTrajectory();
-            case READY:
-                return getReadyTrajectory();
-            case SCORE:
-                return getScoreTrajectory();
-            default:
-                return getNeutralTrajectory(); // TODO: BOOM
-        }
-    }
-
     /** Generate Intake Trajectories **/
 
 

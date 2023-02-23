@@ -7,6 +7,7 @@ package com.stuypulse.robot;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
@@ -120,10 +121,8 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new IntakeStop())
-            .onFalse(arm.runOnce(() -> arm.setTargetState(arm.getState())));
-        
+            .whileTrue(new RobotScore());
+
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
