@@ -50,7 +50,7 @@ public interface Constraints {
         );
     };
 
-    double MAX_SHOULDER_ANGLE = 25.0; // degrees
+    double MAX_SHOULDER_ANGLE = 17.0; // degrees
 
     Constraint SHOULDER_CONSTRAINT = (s, w) -> {
         return MAX_SHOULDER_ANGLE < s && s < (180 - MAX_SHOULDER_ANGLE);

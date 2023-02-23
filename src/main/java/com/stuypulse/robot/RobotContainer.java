@@ -32,6 +32,8 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
 
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
@@ -102,6 +104,14 @@ public class RobotContainer {
         configureOperatorBindings();
         configureDriverBindings();
         configureChooserBindings();
+
+        new Trigger(new SmartBoolean("BOOM/ACQUIRE", false)::get)
+            .onTrue(new IntakeAcquire())
+            .onFalse(new IntakeStop());
+        
+        new Trigger(new SmartBoolean("BOOM/DEACQUIRE", false)::get)
+            .onTrue(new IntakeDeacquire())
+            .onFalse(new IntakeStop());
     }
 
     private void configureDriverBindings() {
