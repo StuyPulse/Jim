@@ -22,9 +22,9 @@ public abstract class Arm extends SubsystemBase {
         if (RobotBase.isSimulation())
             instance = new SimArm();
         else if (Settings.ROBOT == Robot.JIM)
-            instance = new ArmImpl();
+            instance = new SimArm();
         else
-            instance = new PerfectArm();
+            instance = new SimArm();
     }
 
     public static Arm getInstance() {
