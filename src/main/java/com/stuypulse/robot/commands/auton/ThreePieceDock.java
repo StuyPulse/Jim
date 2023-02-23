@@ -139,10 +139,10 @@ public class ThreePieceDock extends SequentialCommandGroup {
                 paths.get("Dock"))
                     .fieldRelative()
                     .addEvent("ArmNeutral", new ArmNeutral()),
-            new LEDSet(LEDColor.RED.pulse()),
+            
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
-            new PlantEngage(),
-            new LEDSet(LEDColor.BLUE)
+            new PlantEngage()
+            
         );
     }
 }

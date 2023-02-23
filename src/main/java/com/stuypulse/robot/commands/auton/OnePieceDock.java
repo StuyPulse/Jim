@@ -53,10 +53,10 @@ public class OnePieceDock extends SequentialCommandGroup {
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
 
-            new LEDSet(LEDColor.RED.pulse()),
+            
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
-            new PlantEngage(),
-            new LEDSet(LEDColor.BLUE)
+            new PlantEngage()
+            
         );
     
     }

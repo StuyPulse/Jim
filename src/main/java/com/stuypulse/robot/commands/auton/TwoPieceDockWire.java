@@ -101,9 +101,9 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
                     .withEvents(),
 
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
-            new LEDSet(LEDColor.RED.pulse()),
-            new PlantEngage(),
-            new LEDSet(LEDColor.BLUE)
+            
+            new PlantEngage()
+            
         );
     }
 }

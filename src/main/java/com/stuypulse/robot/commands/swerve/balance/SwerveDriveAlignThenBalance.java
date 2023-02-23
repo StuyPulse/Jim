@@ -1,6 +1,8 @@
 package com.stuypulse.robot.commands.swerve.balance;
 
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -12,9 +14,11 @@ public class SwerveDriveAlignThenBalance extends SequentialCommandGroup {
 
 
         addCommands(
+            new LEDSet(LEDColor.RED.pulse()),
             new SwerveDriveBalanceAlign(),
             new SwerveDriveBalanceBlay(),
-            new SwerveDrivePointWheels(Rotation2d.fromDegrees(90))
+            new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)),
+            new LEDSet(LEDColor.BLUE)
         );
     }
 }
