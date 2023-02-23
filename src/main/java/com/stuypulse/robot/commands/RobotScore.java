@@ -85,6 +85,7 @@ public class RobotScore extends CommandBase {
     @Override
     public void end(boolean i) {
         intake.stop();
+        swerve.stop();
 
         // holds arm in place
         arm.setTargetState(arm.getState());
