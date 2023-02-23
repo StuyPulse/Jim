@@ -52,7 +52,6 @@ public final class ArmFields {
 
     public interface Intake {
         ArmBFSField kTrajectory = ArmBFSField.create(-70, 5, Constraints.CONSTRAINT, IntakeBFS.array, "Intake");
-        // ArmBFSField kBackTrajectory = ArmBFSField.create(-103, 170, Constraints.CONSTRAINT);
     }
 
     public interface Neutral {
