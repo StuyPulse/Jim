@@ -8,23 +8,23 @@ public final class ArmFields {
     static {
         StopWatch timer = new StopWatch();
 
-        Neutral.kTrajectory.getSize();
-        Acquire.kTrajectory.getSize();
-        Deacquire.kTrajectory.getSize();
+        // Neutral.kTrajectory.getSize();
+        // Acquire.kTrajectory.getSize();
+        // Deacquire.kTrajectory.getSize();
 
-        Ready.Low.kConeTipInOpposite.getSize();
+        // Ready.Low.kConeTipInOpposite.getSize();
 
-        Ready.Mid.kConeTipInOpposite.getSize();
-        Ready.Mid.kConeTipOutSame.getSize();
-        Ready.Mid.kCube.getSize();
+        // Ready.Mid.kConeTipInOpposite.getSize();
+        // Ready.Mid.kConeTipOutSame.getSize();
+        // Ready.Mid.kCube.getSize();
 
-        Ready.High.kConeTipInOpposite.getSize();
-        Ready.High.kCube.getSize();
+        // Ready.High.kConeTipInOpposite.getSize();
+        // Ready.High.kCube.getSize();
 
-        Score.Mid.kConeTipInOpposite.getSize();
-        Score.Mid.kConeTipOutSame.getSize();
+        // Score.Mid.kConeTipInOpposite.getSize();
+        // Score.Mid.kConeTipOutSame.getSize();
 
-        Score.High.kConeTipInOpposite.getSize();
+        // Score.High.kConeTipInOpposite.getSize();
 
         System.out.println("ArmBFSFields Generated in " + timer.reset() + " seconds.");
     }
