@@ -6,11 +6,13 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.util.StopWatch;
-
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.LEDColor;
+import com.stuypulse.robot.util.TeleopButton;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -53,6 +55,7 @@ public class LEDController extends SubsystemBase {
     private final Mechanism2d ledMech;
     private final MechanismLigament2d ledLigament;
 
+
     public LEDController() {
         this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
@@ -81,6 +84,28 @@ public class LEDController extends SubsystemBase {
     }
 
     private void setLEDConditions() {
+        Manager manager = Manager.getInstance();
+        LEDColor teleopColor;
+        switch(manager.getGamePiece()) {
+            case CONE_TIP_IN:
+                teleopColor = LEDColor.YELLOW;
+                break;
+            case CONE_TIP_OUT:
+                teleopColor = LEDColor.GREEN;
+            case CUBE:
+                teleopColor = LEDColor.PURPLE;
+            default:
+                // this should never run, as there'll always be a gampiece value
+                // when intake/score routine is selected
+                teleopColor = LEDColor.RAINBOW; 
+        }
+        
+        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.INTAKE)) 
+            .whileTrue(new LEDSet(teleopColor));
+
+        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.SCORE)) 
+            .whileTrue(new LEDSet(teleopColor.pulse()));
+
     }
 
     public LEDColor getDefaultColor() {
