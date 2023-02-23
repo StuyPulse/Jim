@@ -79,8 +79,8 @@ public class ArmImpl extends Arm {
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
-        wristStalling = new Debouncer(0.5);
-        armStalling = new Debouncer(0.5);
+        wristStalling = new Debouncer(Wrist.STALLING_TIME.doubleValue());
+        armStalling = new Debouncer(Shoulder.STALLING_TIME.doubleValue());
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
 
