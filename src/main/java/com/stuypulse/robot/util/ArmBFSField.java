@@ -1,43 +1,41 @@
 package com.stuypulse.robot.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class ArmBFSField implements Serializable {
+public class ArmBFSField {
 
-    public static ArmBFSField create(double targetArmDeg, double targetWristDeg, Constraint constraints, String name) {
+    public static ArmBFSField create(double targetArmDeg, double targetWristDeg, Constraint constraints, int[] nodes, String name) {
         final File file = FieldFileUtil.getFieldFile(name);
 
-        try {
-            try (FileInputStream fileInput = new FileInputStream(file); 
-                    ObjectInputStream input = new ObjectInputStream(fileInput);) {
-                    ArmBFSField field = (ArmBFSField)input.readObject();
-                input.close();
-                fileInput.close();
-                return field;
-            } catch (ClassCastException | ClassNotFoundException | FileNotFoundException exception) {
-                ArmBFSField result = new ArmBFSField(targetArmDeg, targetWristDeg, constraints);
-                
-                file.createNewFile();
-
-                try (FileOutputStream fileOutput = new FileOutputStream(file);
-                        ObjectOutputStream output = new ObjectOutputStream(fileOutput);) {
-                    output.writeObject(result);
-                    output.close();
-                    fileOutput.close();
-
-                    System.out.println("Finished serializing \"" + name + "\"");
+        if (file.exists() && !file.isDirectory()) {
+            return new ArmBFSField(nodes, targetArmDeg, targetWristDeg, constraints);
+        }
         
-                    return result;
+        try {
+            ArmBFSField result = new ArmBFSField(targetArmDeg, targetWristDeg, constraints);
+            file.createNewFile();
+            
+            try (FileWriter output = new FileWriter(file);) {
+                output.write(String.format(FieldFileUtil.fileHeader, name));
+
+                for (Node n : result.mNodeMap) {
+                    Node next = n.next();
+
+                    output.write(Integer.toString(getIndex(next.mArmDeg, next.mWristDeg)));
+                    output.write(",");   
                 }
+
+                output.write("\n\t};\n}\n");
+                
+                output.close();
+    
+                System.out.println("Finished serializing \"" + name + "\"");
+    
+                return result;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,7 +44,7 @@ public class ArmBFSField implements Serializable {
         }
     }
 
-    public interface Constraint extends Serializable {
+    public interface Constraint {
         public boolean isInvalid(double armDeg, double wristDeg);
 
         public default Constraint add(Constraint next) {
@@ -77,7 +75,7 @@ public class ArmBFSField implements Serializable {
         return degrees - kDegreeRange * Math.round(degrees / kDegreeRange);
     }
 
-    public class Node implements Serializable {
+    public class Node {
 
         private final boolean mValid;
 
@@ -241,13 +239,43 @@ public class ArmBFSField implements Serializable {
     
     private static int instances = 0;
 
+    private ArmBFSField(int[] nodeMap, double targetArmDeg, double targetWristDeg, Constraint constraints) {
+        System.out.println("Starting "  + ++instances + "/24 ArmBFSFields");
+
+        // mFlipped.mFlipped = this;
+        mConstraints = constraints;
+
+        mTargetArmDeg = targetArmDeg;
+        mTargetWristDeg = targetWristDeg;
+
+        mArmDegOffset = targetArmDeg - kBinning * Math.round(targetArmDeg / kBinning);
+        mWristDegOffset = targetWristDeg - kBinning * Math.round(targetWristDeg / kBinning);
+
+        mNodeMap = new Node[getIndex(kDegreeRange - 1, kDegreeRange - 1) + 1];
+
+        for (int arm = 0; arm < kDegreeRange; arm += kBinning) {
+            for (int wrist = 0; wrist < kDegreeRange; wrist += kBinning) {
+                mNodeMap[getIndex(arm, wrist)] = new Node(arm, wrist);
+            }
+        }
+
+        // initialize all nodes based on precomputed offsets in nodeMap
+        for (int arm = 0; arm < kDegreeRange; arm += kBinning) {
+            for (int wrist = 0; wrist < kDegreeRange; wrist += kBinning) {
+                mNodeMap[getIndex(arm, wrist)].mNextNode = mNodeMap[nodeMap[getIndex(arm, wrist)]];
+            }
+        }
+
+        System.out.println("Finished "  + instances + "/24 ArmBFSFields");
+    }
+
     private ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {
         this(targetArmDeg, targetWristDeg, constraints, new ArmBFSField(-180 - targetArmDeg, -180 - targetWristDeg, constraints, null));
         mFlipped.mFlipped = this;
     }
 
     private ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints, ArmBFSField flipped) {
-        System.out.println("Starting "  + ++instances + "/30 ArmBFSFields");
+        System.out.println("Starting "  + ++instances + "/24 ArmBFSFields");
 
         mFlipped = flipped;
 
@@ -315,14 +343,14 @@ public class ArmBFSField implements Serializable {
             }
         }
 
-        System.out.println("Finished "  + instances + "/30 ArmBFSFields");
+        System.out.println("Finished "  + instances + "/24 ArmBFSFields");
     }
 
     public ArmBFSField(ArmState setpointState, Constraint constraint) {
         this(setpointState.getShoulderState().getDegrees(), setpointState.getWristState().getDegrees(), constraint);
     }
 
-    private int getIndex(int armDeg, int wristDeg) {
+    private static int getIndex(int armDeg, int wristDeg) {
         armDeg = normalize(armDeg) / kBinning;
         wristDeg = normalize(wristDeg) / kBinning;
         return armDeg * (kDegreeRange / kBinning) + wristDeg;
