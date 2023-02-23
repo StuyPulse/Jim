@@ -195,7 +195,7 @@ public interface Settings {
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 720.0);
 
             SmartNumber STALLING_TIME = new SmartNumber("Arm/Shoulder/Stalling Time", 0.5);
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 9.0);
+            SmartNumber MIN_DUTY_CYCLE = new SmartNumber("Arm/Shoulder/Duty Cycle Minimum", 0.1);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
             SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
 
@@ -240,7 +240,7 @@ public interface Settings {
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 1440.0);
 
             SmartNumber STALLING_TIME = new SmartNumber("Arm/Wrist/Stalling Time", 0.5);
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Wrist/Stalling/Duty Cycle Minimum", 0.1);
+            SmartNumber MIN_DUTY_CYCLE = new SmartNumber("Arm/Wrist/Stalling/Duty Cycle Minimum", 0.1);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Wrist/Stalling/Velocity Maximum (degrees)", 8);
             SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Wrist/Stalling/Current Minimum", 100.0);
 

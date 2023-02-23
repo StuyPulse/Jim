@@ -93,10 +93,10 @@ public class ArmImpl extends Arm {
         wristEncoder.setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         wristEncoder.setInverted(true);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
@@ -135,13 +135,13 @@ public class ArmImpl extends Arm {
     }
 
     public boolean getArmStalling() {
-        return armStalling.calculate(shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.STALLING_VOLTAGE.doubleValue() ||
+        return armStalling.calculate(shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.MIN_DUTY_CYCLE.doubleValue() ||
             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue());
     }
 
     public boolean getWristStalling() {
-        return wristStalling.calculate(wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.STALLING_VOLTAGE.doubleValue() ||
+        return wristStalling.calculate(wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.MIN_DUTY_CYCLE.doubleValue() ||
             wrist.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue());
     }
 
