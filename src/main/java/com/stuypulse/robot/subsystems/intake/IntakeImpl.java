@@ -93,7 +93,7 @@ public class IntakeImpl extends Intake{
     // GAMEPIECE DETECTION
 
     private boolean hasGamePiece() {
-        return isStalling() || hasCube();
+        return isStalling() && Manager.getInstance().getGamePiece().isCone() || hasCube() && Manager.getInstance().getGamePiece().isCube();
     }
 
     @Override

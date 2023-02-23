@@ -7,6 +7,7 @@ package com.stuypulse.robot;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
@@ -31,6 +32,8 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
+
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -102,6 +105,14 @@ public class RobotContainer {
         configureOperatorBindings();
         configureDriverBindings();
         configureChooserBindings();
+
+        new Trigger(new SmartBoolean("BOOM/ACQUIRE", false)::get)
+            .onTrue(new IntakeAcquire())
+            .onFalse(new IntakeStop());
+        
+        new Trigger(new SmartBoolean("BOOM/DEACQUIRE", false)::get)
+            .onTrue(new IntakeDeacquire())
+            .onFalse(new IntakeStop());
     }
 
     private void configureDriverBindings() {
@@ -110,10 +121,8 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
-            .onFalse(new IntakeStop())
-            .onFalse(arm.runOnce(() -> arm.setTargetState(arm.getState())));
-        
+            .whileTrue(new RobotScore());
+
         driver.getTopButton().onTrue(new ArmReady());
 
         driver.getRightButton().onTrue(new ManagerFlipScoreSide());
