@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RobotScore extends CommandBase {
     
-    private final static SmartNumber kForwardSpeed = new SmartNumber("Ben Score/Forward Speed (in per s)", 16);
-    private final static SmartNumber kBackupSpeed = new SmartNumber("Ben Score/Backup Speed (in per s)", 24);
+    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 16);
+    private final static SmartNumber kBackupSpeed = new SmartNumber("Robot Score/Backup Speed (in per s)", 24);
 
     private final SwerveDrive swerve;
     private final Arm arm;
