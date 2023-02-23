@@ -13,7 +13,7 @@ public abstract class Intake extends SubsystemBase {
         if (RobotBase.isSimulation())
             instance = new SimIntake();
         else if (Settings.ROBOT == Robot.JIM)
-            instance = new SimIntake();
+            instance = new IntakeImpl();
         else
             instance = new SimIntake();
     }

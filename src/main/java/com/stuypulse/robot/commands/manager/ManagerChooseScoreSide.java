@@ -17,27 +17,6 @@ public class ManagerChooseScoreSide extends InstantCommand {
         return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) < 90;
     }
 
-    public static boolean isScoreMotionPossible(NodeLevel level, GamePiece piece, ScoreSide side) {
-        
-        if (piece == GamePiece.CONE_TIP_OUT) {
-            // cannot score high tip in
-            if (level == NodeLevel.HIGH)
-                return false;
-            
-            // cannot score mid, opposite side tip in
-            else if (level == NodeLevel.MID && side == ScoreSide.OPPOSITE)
-                return false;
-        }
-
-        else if (piece == GamePiece.CONE_TIP_IN) {
-            // cannot score mid or high, same side
-            if (level != NodeLevel.LOW && side == ScoreSide.SAME) 
-                return false;
-        }
-        
-        return true;
-    }
-
     private static ScoreSide getCurrentScoringSide(IntakeSide intakeSide, Rotation2d heading) {
         if (facingAway(heading)) {
             if (intakeSide == IntakeSide.FRONT) {
@@ -57,11 +36,12 @@ public class ManagerChooseScoreSide extends InstantCommand {
     public ManagerChooseScoreSide() {
         super(() -> {
             var manager = Manager.getInstance();
-            var currentScoringSide = getCurrentScoringSide(manager.getIntakeSide(), Odometry.getInstance().getRotation());
-            if (isScoreMotionPossible(manager.getNodeLevel(), manager.getGamePiece(), currentScoringSide))
+
+            // if game piece is cube or we're scoring low, automatically choose scoring side
+            if (manager.getNodeLevel() == NodeLevel.LOW || manager.getGamePiece() == GamePiece.CUBE) {
+                var currentScoringSide = getCurrentScoringSide(manager.getIntakeSide(), Odometry.getInstance().getRotation());
                 manager.setScoreSide(currentScoringSide);
-            else
-                manager.setScoreSide(currentScoringSide.getOpposite());
+            }
         });
     }
 
