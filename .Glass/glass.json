@@ -24,8 +24,7 @@
           },
           "With Plant": {
             "open": true
-          },
-          "open": true
+          }
         },
         "DriPver Settings": {
           "open": true
@@ -44,8 +43,7 @@
           },
           "Turn": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -54,6 +52,9 @@
           "limelight": {
             "open": true
           }
+        },
+        "Wings": {
+          "open": true
         },
         "Wrist": {
           "open": true
