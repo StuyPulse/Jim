@@ -1,6 +1,9 @@
 package com.stuypulse.robot.util;
 
 import java.util.List;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import java.util.ArrayList;
 
 public class ArmTrajectory {
@@ -20,12 +23,19 @@ public class ArmTrajectory {
         return this;
     }
 
-    public ArmTrajectory wristMovesFirst(ArmState initialState) {
+    public ArmTrajectory wristMovesUpFirst(ArmState initialState) {
         ArmTrajectory trajectory = new ArmTrajectory();
+
+        var up = Rotation2d.fromDegrees(+90);
 
         trajectory.addState(new ArmState(
             initialState.getShoulderState(),
-            states.get(0).getWristState()
+            up
+        ));
+
+        trajectory.addState(new ArmState(
+            states.get(0).getShoulderState(),
+            up
         ));
 
         for (int i = 0; i < states.size() - 1; i++) {
@@ -33,7 +43,12 @@ public class ArmTrajectory {
 
             trajectory.addState(new ArmState(
                 states.get(i).getShoulderState(),
-                states.get(i+1).getWristState()
+                up
+            ));
+
+            trajectory.addState(new ArmState(
+                states.get(i+1).getShoulderState(),
+                up
             ));
         }
 

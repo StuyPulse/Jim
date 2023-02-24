@@ -36,7 +36,7 @@ public class ArmRoutine extends CommandBase {
         trajectory =
             ArmTrajectories.generateTrajectory(
                 state,
-                endState.get());
+                endState.get()).wristMovesUpFirst(state);
 
         currentIndex = 0;
     }

@@ -60,6 +60,6 @@ public class ArmNeutral extends ArmRoutine {
 
         trajectory = generateTrajectory(
             state,
-            Manager.getInstance().getNeutralTrajectory());
+            Manager.getInstance().getNeutralTrajectory()).wristMovesUpFirst(state);
     }
 }

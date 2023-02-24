@@ -60,6 +60,6 @@ public class ArmIntake extends ArmRoutine {
 
         trajectory = generateTrajectory(
             state,
-            Manager.getInstance().getIntakeTrajectory());
+            Manager.getInstance().getIntakeTrajectory()).wristMovesUpFirst(state);
     }
 }
