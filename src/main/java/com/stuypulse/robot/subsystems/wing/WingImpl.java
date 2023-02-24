@@ -36,7 +36,7 @@ public class WingImpl extends Wing {
 
     @Override
     public void extend() {
-        if (isLatched() && !isEngaged(deploy)) {
+        if (isLatched() && !isExtended()) {
             setLatched(false);
             deployTime = timer.getTime();
         }
@@ -44,40 +44,15 @@ public class WingImpl extends Wing {
 
     @Override
     public void retract() {
-        if (!isLatched() && isEngaged(deploy)) {
+        if (!isLatched() && isExtended()) {
             deploy.set(DoubleSolenoid.Value.kForward);
             retractTime = timer.getTime();
         }
     }
 
-    public boolean isEngaged(DoubleSolenoid solenoid){
-        return solenoid.get() == DoubleSolenoid.Value.kReverse;
-    }
-
     @Override
-    public void periodic() {
-        if(deployTime > 0 && timer.getTime() - deployTime >= RED_LATCH_DELAY.get()){
-            deploy.set(DoubleSolenoid.Value.kReverse); // dont set off
-            deployTime = -1.0;
-        }
-        if(retractTime > 0 && timer.getTime() - retractTime >= RED_RETRACT_DELAY.get()){
-            setLatched(true);
-            retractTime = -1.0;
-        }
-
-        if (Settings.isDebug()) {
-            Settings.putBoolean("Wings/Latch Engaged", isLatched());
-            Settings.putBoolean("Wings/Deploy Engaged", isEngaged(deploy));
-
-            Settings.putNumber("Wings/Current Time", timer.getTime());
-            Settings.putNumber("Wings/Deploy Time", deployTime);
-            Settings.putNumber("Wings/Retract Time", retractTime);
-        }
-    }
-
-    @Override
-    public boolean isExtended() {
-        return isEngaged(deploy);
+    public boolean isExtended(){
+        return deploy.get() == DoubleSolenoid.Value.kReverse;
     }
 
     private boolean isLatched() {
@@ -86,5 +61,26 @@ public class WingImpl extends Wing {
 
     private void setLatched(boolean latched) {
         latch.set(!latched);
+    }
+
+    @Override
+    public void periodic() {
+        if(deployTime > 0 && timer.getTime() - deployTime >= LATCH_DELAY.get()){
+            deploy.set(DoubleSolenoid.Value.kReverse); // dont set off
+            deployTime = -1.0;
+        }
+        if(retractTime > 0 && timer.getTime() - retractTime >= RETRACT_DELAY.get()){
+            setLatched(true);
+            retractTime = -1.0;
+        }
+
+        if (Settings.isDebug()) {
+            Settings.putBoolean("Wings/Latch Engaged", isLatched());
+            Settings.putBoolean("Wings/Deploy Extended", isExtended());
+
+            Settings.putNumber("Wings/Current Time", timer.getTime());
+            Settings.putNumber("Wings/Deploy Time", deployTime);
+            Settings.putNumber("Wings/Retract Time", retractTime);
+        }
     }
 }
