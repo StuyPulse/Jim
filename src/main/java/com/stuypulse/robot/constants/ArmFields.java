@@ -69,7 +69,7 @@ public final class ArmFields {
         }
 
         public interface High {
-            ArmBFSField kConeTipInOpposite = new ArmBFSField(-15, 15, Constraints.CONSTRAINT);
+            ArmBFSField kConeTipInOpposite = new ArmBFSField(15, -15, Constraints.CONSTRAINT);
             
             ArmBFSField kCube = new ArmBFSField(-180 - (-175), 180 - 130, Constraints.CONSTRAINT);
         }
