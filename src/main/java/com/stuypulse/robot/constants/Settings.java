@@ -109,9 +109,9 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 2.0;
+            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 3.5);
             double kI = 0.0;
-            double kD = 0.1;
+            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0.1);
             
             SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0.25);
             SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0.007);

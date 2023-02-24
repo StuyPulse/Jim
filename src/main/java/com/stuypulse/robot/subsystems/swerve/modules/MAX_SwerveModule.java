@@ -86,9 +86,9 @@ public class MAX_SwerveModule extends SwerveModule {
         turnPID = turnMotor.getPIDController();
         turnPID.setFeedbackDevice(absoluteEncoder);
 
-        turnPID.setP(Turn.kP);
+        turnPID.setP(Turn.kP.get());
         turnPID.setI(Turn.kI);
-        turnPID.setD(Turn.kD);
+        turnPID.setD(Turn.kD.get());
         turnPID.setOutputRange(-1, 1);
 
 
