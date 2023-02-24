@@ -7,7 +7,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class WingExtend extends InstantCommand{
 
     public WingExtend() {
-        super(() -> { Wing.getInstance().extend(); });
+        super(() -> {
+            if (!Wing.getInstance().isExtended())
+                Wing.getInstance().extend();
+        });
     }
 
 }

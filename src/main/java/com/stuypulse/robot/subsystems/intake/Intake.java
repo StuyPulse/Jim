@@ -16,6 +16,7 @@ public abstract class Intake extends SubsystemBase {
             instance = new IntakeImpl();
         else
             instance = new SimIntake();
+        // instance = new SimIntake();
     }
     
     public static Intake getInstance() {
