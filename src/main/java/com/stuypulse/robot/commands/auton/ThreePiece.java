@@ -2,7 +2,6 @@ package com.stuypulse.robot.commands.auton;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.stuypulse.robot.commands.arm.ArmDrive;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
@@ -34,9 +33,8 @@ public class ThreePiece extends SequentialCommandGroup {
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece

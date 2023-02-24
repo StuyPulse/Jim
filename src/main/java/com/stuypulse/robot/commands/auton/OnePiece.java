@@ -21,7 +21,7 @@ public class OnePiece extends SequentialCommandGroup {
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP)
         );
 
         // score first piece

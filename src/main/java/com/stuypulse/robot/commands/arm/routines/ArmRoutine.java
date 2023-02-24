@@ -16,7 +16,7 @@ public class ArmRoutine extends CommandBase {
     private final Arm arm;
     private final Supplier<ArmState> endState;
     
-    private ArmTrajectory trajectory;
+    protected ArmTrajectory trajectory;
     private int currentIndex;
 
     public ArmRoutine(Supplier<ArmState> endState) {
@@ -31,9 +31,9 @@ public class ArmRoutine extends CommandBase {
 
     @Override
     public void initialize() {
-        trajectory = 
+        trajectory =
             ArmTrajectories.generateTrajectory(
-                Arm.getInstance().getState(), 
+                Arm.getInstance().getState(),
                 endState.get());
 
         currentIndex = 0;

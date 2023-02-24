@@ -31,9 +31,8 @@ public class TwoPiecePickup extends SequentialCommandGroup {
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -54,9 +53,9 @@ public class TwoPiecePickup extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake One"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeOne",new ArmIntake().andThen(new IntakeAcquire()))
+                    .addEvent("ReadyIntakeOne",new ArmIntake())
                     .withEvents(),
-
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );

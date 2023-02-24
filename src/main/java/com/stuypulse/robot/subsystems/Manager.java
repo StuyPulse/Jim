@@ -28,7 +28,7 @@ public class Manager extends SubsystemBase {
     // game piece to score
     public enum GamePiece {
         CONE_TIP_IN(false),
-        // CONE_TIP_UP(false),
+        CONE_TIP_UP(false),
         CUBE(true);
 
         private final boolean cube;
@@ -135,6 +135,9 @@ public class Manager extends SubsystemBase {
             case CONE_TIP_IN:
                 return Ready.High.kConeTipInBack;
 
+            case CONE_TIP_UP:
+                return Ready.High.kConeTipUpBack;
+                
             case CUBE:
                 return scoreSide == ScoreSide.FRONT ? Ready.High.kCubeFront : Ready.High.kCubeBack;
 
@@ -162,6 +165,9 @@ public class Manager extends SubsystemBase {
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
                     return scoreSide == ScoreSide.FRONT ? Score.High.kCubeFront : Score.High.kCubeBack;
+
+                else if (gamePiece == GamePiece.CONE_TIP_UP)
+                    return Score.High.kConeTipUpBack;
 
                 return Score.High.kConeTipInBack;
 

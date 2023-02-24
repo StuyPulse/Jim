@@ -153,15 +153,14 @@ public abstract class Arm extends SubsystemBase {
         Rotation2d shoulderTarget = getShoulderTargetAngle();
         Rotation2d wristTarget = getWristTargetAngle();
 
-        if (shoulderTarget.getDegrees() > 5) {
+        double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
+
+        if (normalizedDeg > Shoulder.MAX_SHOULDER_ANGLE.get() + 90) {
             setShoulderTargetAngle(Rotation2d.fromDegrees(Shoulder.MAX_SHOULDER_ANGLE.get()));
-        } else if (Rotation2d.fromDegrees(180).minus(shoulderTarget).getDegrees() > 5) {
+        } else if (normalizedDeg < -90 - Shoulder.MAX_SHOULDER_ANGLE.get()) {
             setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
         }
 
-        // if (shoulderTarget.getDegrees() + 90 < 15) {
-        //     setWristTargetAngle(Rotation2d.fromDegrees(+90));
-        // }
 
         // Run control loops on validated target angles
         shoulderController.update(
