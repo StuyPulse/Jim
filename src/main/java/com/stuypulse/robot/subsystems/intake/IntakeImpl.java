@@ -26,8 +26,7 @@ public class IntakeImpl extends Intake{
     private DigitalInput backSensor;
 
     private BStream stalling;
-    private SmartBoolean newGamePiece = new SmartBoolean("Intake/Has New Gamepiece", false);
-    // private BStream newGamePiece;
+    private BStream newGamePiece;
 
     private BStream frontCube;
     private BStream backCube;
@@ -50,10 +49,10 @@ public class IntakeImpl extends Intake{
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
 
-        // newGamePiece = BStream.create(this::hasGamePiece)
-        //     .filtered(
-        //             new BButton.Pressed(),
-        //             new BDebounce.Falling(NEW_GAMEPIECE_TIME));
+        newGamePiece = BStream.create(this::hasGamePiece)
+            .filtered(
+                    new BButton.Pressed(),
+                    new BDebounce.Falling(NEW_GAMEPIECE_TIME));
 
         frontCube = BStream.create(frontSensor::get).not()
             .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
