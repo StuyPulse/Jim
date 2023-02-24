@@ -174,10 +174,10 @@ public class MAX_SwerveModule extends SwerveModule {
         prevVelocity = vel;
 
         if (Settings.isDebug()) {
-            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber(id + "/Angle", getAngle().getDegrees());
-            Settings.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
-            Settings.putNumber(id + "/Velocity", vel);
+            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
+            Settings.putNumber("Swerve/" + id + "/Velocity", vel);
         }
     }
 }
