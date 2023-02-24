@@ -22,7 +22,7 @@ public class ArmIntake extends ArmRoutine {
 
         // no safe points necessary
         if (srcState == destState) {
-            return out.addState(dest);
+            return out.addState(Acquire.kIntermediate).addState(dest);
         }
 
         // if trying to cross, add both safety poitns
@@ -45,7 +45,7 @@ public class ArmIntake extends ArmRoutine {
             }
         }
 
-        return out.addState(dest);
+        return out.addState(Acquire.kIntermediate).addState(dest);
     }
     
     public ArmIntake() {
