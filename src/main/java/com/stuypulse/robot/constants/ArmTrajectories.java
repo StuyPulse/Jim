@@ -83,9 +83,12 @@ public interface ArmTrajectories {
     /* Intaking */
 
     public interface Acquire {
-        ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Acquire Front Shoulder", -85),
-			new SmartNumber("Arm Trajectories/Acquire Front Wrist", 0));
+        ArmState kCone = new ArmState(
+			new SmartNumber("Arm Trajectories/Acquire Cone Front Shoulder", -85),
+			new SmartNumber("Arm Trajectories/Acquire Cone Front Wrist", 0));
+        ArmState kCube = new ArmState(
+            new SmartNumber("Arm Trajectories/Acquire Cube Front Shoulder", -85),
+            new SmartNumber("Arm Trajectories/Acquire Cube Front Wrist", 0));
     }
 
     public interface Deacquire {

@@ -85,7 +85,10 @@ public class Manager extends SubsystemBase {
 
 
     public ArmState getIntakeTrajectory() {
-        return Acquire.kTrajectory;
+        if (gamePiece.isCone())
+            return Acquire.kCone;
+        else
+            return Acquire.kCube;
     }
 
     public ArmState getOuttakeTrajectory() {
