@@ -45,9 +45,6 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // intake second piece
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.MID),
-            new ManagerSetGamePiece(GamePiece.CUBE),
-
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()

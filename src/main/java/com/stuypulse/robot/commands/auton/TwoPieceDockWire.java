@@ -50,7 +50,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
