@@ -69,7 +69,7 @@ public abstract class Arm extends SubsystemBase {
             .setSetpointFilter(
                 new AMotionProfile(
                     Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number()));
+                    Shoulder.MAX_ACCELERATION.filtered(Math::toRadians).number()));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
@@ -77,7 +77,7 @@ public abstract class Arm extends SubsystemBase {
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Wrist.MAX_VELOCITY.filtered(Math::toRadians).number()));
+                    Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()));
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
     }
