@@ -57,7 +57,6 @@ public class ArmIntake extends ArmRoutine {
         super.initialize();
 
         trajectory = new ArmTrajectory()
-            .addState(Neutral.kTrajectory)
             .addState(new ArmState(
                 Neutral.kTrajectory.getShoulderState(),
                 Acquire.kCube.getWristState()))

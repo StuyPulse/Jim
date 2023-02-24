@@ -7,7 +7,7 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,11 +19,12 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
     private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double ENGAGE_TIME = 3.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 0.5);
+    private static final PathConstraints INTAKE_PIECE = new PathConstraints(3, 2);
+    private static final PathConstraints DOCK = new PathConstraints(0.5, 1);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1.5 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
+            PathPlanner.loadPathGroup("1.5 Piece + Dock", INTAKE_PIECE, DOCK),
             "Intake Piece", "Dock" 
         );
 
@@ -48,7 +49,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .addEvent("ReadyIntakeOne", new ArmIntake())
                     .withEvents(),
 
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
@@ -63,7 +64,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
                     
-            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
+            new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     

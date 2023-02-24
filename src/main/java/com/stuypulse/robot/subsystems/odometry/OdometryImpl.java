@@ -63,6 +63,7 @@ public class OdometryImpl extends Odometry {
     private final Field2d field;
 
     private final FieldObject2d odometryPose2d;
+    private final FieldObject2d poseEstimatorPose2d;
 
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
@@ -73,6 +74,7 @@ public class OdometryImpl extends Odometry {
         field = new Field2d();
 
         odometryPose2d = field.getObject("Odometry Pose2d");
+        poseEstimatorPose2d = field.getObject("Pose Estimator Pose2d");
 
         swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
@@ -112,6 +114,8 @@ public class OdometryImpl extends Odometry {
                         result.getPose(),
                         Timer.getFPGATimestamp() - result.getLatency(),
                         StandardDeviations.get(result.getNoise()));
+
+                    field.getObject("Vision Pose2d").setPose(result.getPose());
                     break;
             }
         }  
@@ -124,12 +128,13 @@ public class OdometryImpl extends Odometry {
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
         odometry.update(drive.getGyroAngle(), drive.getModulePositions());
 
+        poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
+
         Vision vision = Vision.getInstance();
         List<Result> results = vision.getResults();
         processResults(results, drive, vision);
 
         if (Settings.isDebug()) {
-            field.setRobotPose(getPose());
             odometryPose2d.setPose(odometry.getPoseMeters());
         
             Settings.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
