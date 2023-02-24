@@ -229,7 +229,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromDegrees(117 + 180);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromDegrees(8);
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 240.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 1440.0);
