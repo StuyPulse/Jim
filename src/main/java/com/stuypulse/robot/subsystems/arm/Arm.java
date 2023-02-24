@@ -157,6 +157,8 @@ public abstract class Arm extends SubsystemBase {
     protected abstract void setShoulderVoltage(double voltage);
     protected abstract void setWristVoltage(double voltage);
 
+    public void setCoast(boolean coast) {}
+
     public final void setLimp(boolean limp) {
         this.limp = limp;
     }

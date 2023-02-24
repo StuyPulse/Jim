@@ -195,8 +195,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.355135).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 180.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 90.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
@@ -249,7 +249,7 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.312118).plus(Rotation2d.fromDegrees(180));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 270.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
 
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);

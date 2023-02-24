@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ArmRoutine extends CommandBase {
     
     private final Arm arm;
-    private final Supplier<ArmState> endState;
+    protected final Supplier<ArmState> endState;
     
     protected ArmTrajectory trajectory;
     private int currentIndex;

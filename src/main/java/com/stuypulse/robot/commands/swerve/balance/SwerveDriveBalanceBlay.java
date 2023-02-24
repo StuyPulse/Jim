@@ -21,7 +21,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> AutoBalance.MAX_SPEED.get() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
@@ -76,11 +76,15 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
     }
 
-    public Command withTolerance(double maxSpeed, double angleTolerance) {
-        this.maxSpeed = maxSpeed;
+    public Command withTolerance( double angleTolerance) {
 
         ANGLE_THRESHOLD = angleTolerance;
 
+        return this;
+    }
+
+    public SwerveDriveBalanceBlay withMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
         return this;
     }
 }

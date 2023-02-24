@@ -7,6 +7,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.Vision.Noise;
 import com.stuypulse.robot.subsystems.vision.Vision.Result;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -23,6 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class OdometryImpl extends Odometry {
+
+    SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
 
     static class StandardDeviations {
         public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
@@ -106,17 +109,19 @@ public class OdometryImpl extends Odometry {
 
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
         for (Result result : results) {
-            switch (result.getNoise()) {
-                case HIGH:
-                    break;
-                default:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
+            if (!DISABLE_APRIL_TAGS.get()) {
+                switch (result.getNoise()) {
+                    case HIGH:
+                        break;
+                    default:
+                        poseEstimator.addVisionMeasurement(
+                            result.getPose(),
+                            Timer.getFPGATimestamp() - result.getLatency(),
+                            StandardDeviations.get(result.getNoise()));
 
-                    field.getObject("Vision Pose2d").setPose(result.getPose());
-                    break;
+                        field.getObject("Vision Pose2d").setPose(result.getPose());
+                        break;
+                }
             }
         }  
     }
