@@ -2,7 +2,6 @@ package com.stuypulse.robot.commands;
 
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;
@@ -14,8 +13,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RobotRelease extends CommandBase {
-
-    private final static SmartNumber kBackupSpeed = new SmartNumber("Robot Score/Backup Speed (in per s)", 24);
+    
+    private final static SmartNumber kBackwardsSpeed = new SmartNumber("Robot Score/Backwards Speed (in per s)", 16);
 
     private final SwerveDrive swerve;
     private final Arm arm;
@@ -31,28 +30,26 @@ public class RobotRelease extends CommandBase {
         addRequirements(swerve, arm, intake);
     }
 
+
     @Override
     public void initialize() {
-        arm.setTargetState(arm.getState());
-
-        boolean shouldOuttake = manager.getNodeLevel() == NodeLevel.HIGH && manager.getGamePiece() == GamePiece.CONE_TIP_IN;
-        if (shouldOuttake) {
-            if (manager.getGamePiece().isCone()) {
-                intake.deacquireCone();
-            } else {
-                intake.deacquireCube();
-            }
+        if (manager.getGamePiece().isCone()) {
+            intake.deacquireCone();
         }
     }
 
     @Override
     public void execute() {
         if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() == NodeLevel.HIGH) {
+            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackwardsSpeed.get()), 0, 0);
             
-            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackupSpeed.get()), 0, 0);
-
             swerve.setChassisSpeeds(slowSpeeds);
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 
     @Override
@@ -63,6 +60,5 @@ public class RobotRelease extends CommandBase {
         // holds arm in place
         arm.setTargetState(arm.getState());
     }
-
 
 }

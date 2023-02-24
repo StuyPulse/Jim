@@ -161,10 +161,6 @@ public class ArmBFSField {
             return normalizeZero(mWristDeg + mWristDegOffset);
         }
 
-        public ArmState getArmState() {
-            return ArmState.fromDegrees(getArmDeg(), getWristDeg());
-        }
-
         private Node getNeighbor(int dx, int dy) {
             return getRawNode(mArmDeg + kBinning * dx, mWristDeg + kBinning * dy);
         }
@@ -302,10 +298,6 @@ public class ArmBFSField {
 
     public Node getNode(ArmState measuredState) {
         return getNode(measuredState.getShoulderState().getDegrees(), measuredState.getWristState().getDegrees());
-    }
-
-    public ArmState getSetpoint() {
-        return ArmState.fromDegrees(mTargetArmDeg, mTargetWristDeg);
     }
 
     public ArmBFSField flipped() {
