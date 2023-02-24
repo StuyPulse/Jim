@@ -5,8 +5,6 @@
 
 package com.stuypulse.robot;
 
-import java.util.function.Supplier;
-
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
@@ -27,7 +25,6 @@ import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -85,8 +82,6 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
-
-        ArmFields.load();
     }
 
     /****************/
@@ -179,27 +174,13 @@ public class RobotContainer {
     
         // set game piece
         operator.getLeftButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
 
         operator.getTopButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
-
-        operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.SAME));
-
-        // flip intake side
-        operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
         // arm to neutral
         operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
-
-        // manual overrides
-        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
-        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
-
     }
 
     private void configureChooserBindings() {

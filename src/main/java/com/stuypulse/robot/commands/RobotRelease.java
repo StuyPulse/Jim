@@ -12,16 +12,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RobotScore extends CommandBase {
+public class RobotRelease extends CommandBase {
     
-    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 16);
+    private final static SmartNumber kBackwardsSpeed = new SmartNumber("Robot Score/Backwards Speed (in per s)", 16);
 
     private final SwerveDrive swerve;
     private final Arm arm;
     private final Intake intake;
     private final Manager manager;
 
-    public RobotScore() {
+    public RobotRelease() {
         swerve = SwerveDrive.getInstance();
         arm = Arm.getInstance();
         intake = Intake.getInstance();
@@ -33,19 +33,15 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void initialize() {
-        if (manager.getGamePiece().isCube()) {
-            intake.deacquireCube();
+        if (manager.getGamePiece().isCone()) {
+            intake.deacquireCone();
         }
-        
     }
 
     @Override
     public void execute() {
         if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() == NodeLevel.HIGH) {
-            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kForwardSpeed.get()), 0, 0);
-
-            // This assumes the cone tip in always does opposite side
-            slowSpeeds.vxMetersPerSecond *= -1;
+            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackwardsSpeed.get()), 0, 0);
             
             swerve.setChassisSpeeds(slowSpeeds);
         }
