@@ -29,22 +29,22 @@ public class WingImpl extends Wing {
         deployTime = -1.0;
         retractTime = -1.0;
 
-        latch.set(true);
+        setLatched(true);
 
         deploy.set(DoubleSolenoid.Value.kForward);
     }
 
     @Override
     public void extend() {
-        if (latch.get() && !isEngaged(deploy)) {
-            latch.set(false);
+        if (isLatched() && !isEngaged(deploy)) {
+            setLatched(false);
             deployTime = timer.getTime();
         }
     }
 
     @Override
     public void retract() {
-        if (!latch.get() && isEngaged(deploy)) {
+        if (!isLatched() && isEngaged(deploy)) {
             deploy.set(DoubleSolenoid.Value.kForward);
             retractTime = timer.getTime();
         }
@@ -61,12 +61,12 @@ public class WingImpl extends Wing {
             deployTime = -1.0;
         }
         if(retractTime > 0 && timer.getTime() - retractTime >= RED_RETRACT_DELAY.get()){
-            latch.set(true);
+            setLatched(true);
             retractTime = -1.0;
         }
 
         if (Settings.isDebug()) {
-            Settings.putBoolean("Wings/Latch Engaged", latch.get());
+            Settings.putBoolean("Wings/Latch Engaged", isLatched());
             Settings.putBoolean("Wings/Deploy Engaged", isEngaged(deploy));
 
             Settings.putNumber("Wings/Current Time", timer.getTime());
@@ -78,5 +78,13 @@ public class WingImpl extends Wing {
     @Override
     public boolean isExtended() {
         return isEngaged(deploy);
+    }
+
+    private boolean isLatched() {
+        return !latch.get();
+    }
+
+    private void setLatched(boolean latched) {
+        latch.set(!latched);
     }
 }

@@ -5,20 +5,30 @@ import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
+import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class OnePiecePickupWire extends SequentialCommandGroup {
+public class OnePieceMobilityDock extends SequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double INTAKE_ACQUIRE_TIME = 0.5;
+    private static final double ENGAGE_TIME = 15;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints MOBILITY_CONSTRAINTS = new PathConstraints(1, 1);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 1);
+    
+    public OnePieceMobilityDock() {
 
-    public OnePiecePickupWire() {
+        var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("Dock + Mobility", MOBILITY_CONSTRAINTS, DOCK_CONSTRAINTS),
+            "Mobility", "Dock"
+        );
+
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
@@ -36,22 +46,19 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
             new IntakeStop()
         );
 
-        // intake second piece
+        // dock and engage
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
+            new SwerveDriveFollowTrajectory(
+                paths.get("Mobility"))
+                    .robotRelative(),
 
             new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1.5 Piece + Wire", CONSTRAINTS))
-                    .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
-                    .withEvents(),
+                paths.get("Dock")).robotRelative(),
 
-
-            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmNeutral()
+            new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
+            new PlantEngage()
         );
-
+    
     }
 
 }

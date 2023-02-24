@@ -41,6 +41,7 @@ public abstract class Arm extends SubsystemBase {
             instance = new ArmImpl();
         else
             instance = new PerfectArm();
+        // instance = new SimArm();
     }
 
     public static Arm getInstance() {

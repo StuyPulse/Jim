@@ -63,7 +63,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
 
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );
@@ -94,7 +94,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .robotRelative()
                     .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );

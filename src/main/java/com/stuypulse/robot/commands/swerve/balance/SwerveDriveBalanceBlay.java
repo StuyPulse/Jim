@@ -7,6 +7,7 @@ import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 
@@ -18,9 +19,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceBlay extends CommandBase {
 
-    private double MAX_SPEED;
+    private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kK_u = IStream.create(() -> AutoBalance.MAX_SPEED.get() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
@@ -34,43 +35,28 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     private double balanceAngle;
 
     public SwerveDriveBalanceBlay() {
-        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
+        maxSpeed = AutoBalance.MAX_SPEED;
 
         ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
-        control = new PIDController(kP, 0, kD);
+        control = new PIDController(kP, 0, kD).setOutputFilter(x -> -x);
 
         balanceAngle = 0;
     }
 
-    private Rotation2d getBalanceAngle() {
-        Rotation2d pitch = swerve.getGyroPitch();
-        Rotation2d roll = swerve.getGyroRoll();
-        Rotation2d yaw = odometry.getRotation();
-        
-        double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
-        double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
-
-        SmartDashboard.putNumber("facingSlope", Math.signum(facingSlope));
-
-        return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
-    }
+    // private SmartBoolean enabled = new SmartBoolean("Auto Balance/Enabled", false);
 
     @Override
     public void execute() {
-        balanceAngle = getBalanceAngle().getDegrees();
-        var speed = control.update(
-            0,
-            balanceAngle);
+        balanceAngle = swerve.getBalanceAngle().getDegrees();
+        control.update(0, balanceAngle);
         
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-            speed, 0, 0, odometry.getRotation()));
+            control.getOutput(), 0, 0, odometry.getRotation()));
 
-        SmartDashboard.putNumber("Auto Balance/Balance Angle (deg)", balanceAngle);
-        SmartDashboard.putNumber("Auto Balance/Speed", speed);
-        SmartDashboard.putNumber("Auto Balance/Odometry Angle", odometry.getRotation().getDegrees());
+        SmartDashboard.putNumber("Auto Balance/Speed", control.getOutput());
     }
 
     @Override
@@ -91,7 +77,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     }
 
     public Command withTolerance(double maxSpeed, double angleTolerance) {
-        MAX_SPEED = maxSpeed;
+        this.maxSpeed = maxSpeed;
 
         ANGLE_THRESHOLD = angleTolerance;
 

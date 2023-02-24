@@ -19,7 +19,7 @@ public class OnePieceDock extends SequentialCommandGroup {
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double ENGAGE_TIME = 15;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 1);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(0.5, 1);
 
     public OnePieceDock() {
 

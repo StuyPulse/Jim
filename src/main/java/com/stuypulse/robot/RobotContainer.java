@@ -36,6 +36,8 @@ import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -112,15 +114,20 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingToggle());
+        new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
+
+        driver.getSelectButton().onTrue(new WingRetract());
+        driver.getStartButton().onTrue(new WingRetract());
 
         // arm
         driver.getBottomButton()
             .whileTrue(new RobotScore());
+        driver.getRightButton()
+            .whileTrue(new RobotRelease());
 
         driver.getTopButton().onTrue(new ArmReady());
 
-        driver.getRightButton().onTrue(new ManagerFlipScoreSide());
+        driver.getDPadRight().onTrue(new ManagerFlipScoreSide());
 
         // swerve
         driver.getLeftButton()
@@ -132,7 +139,7 @@ public class RobotContainer {
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
         driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
-        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(+90)));
+        
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
@@ -203,6 +210,7 @@ public class RobotContainer {
         autonChooser.addOption("One Piece", new OnePiece());
         autonChooser.addOption("One Piece Wire", new OnePiecePickupWire());
         autonChooser.addOption("One Piece + Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Mobility + Dock", new OnePieceMobilityDock());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());

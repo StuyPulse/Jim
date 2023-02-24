@@ -13,8 +13,7 @@
           },
           "Wrist": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Auto Balance": {
           "Translation": {
@@ -25,16 +24,12 @@
           },
           "With Plant": {
             "open": true
-          },
-          "open": true
+          }
         },
         "DriPver Settings": {
           "open": true
         },
         "Driver Setings": {
-          "open": true
-        },
-        "Manager": {
           "open": true
         },
         "Settings": {
@@ -57,6 +52,9 @@
           "limelight": {
             "open": true
           }
+        },
+        "Wings": {
+          "open": true
         },
         "Wrist": {
           "open": true
@@ -185,7 +183,7 @@
               "autoFit": true
             }
           ],
-          "height": 464,
+          "height": 0,
           "series": [
             {
               "color": [
