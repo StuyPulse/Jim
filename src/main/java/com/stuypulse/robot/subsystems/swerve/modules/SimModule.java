@@ -132,14 +132,16 @@ public class SimModule extends SwerveModule {
             targetState.speedMetersPerSecond, 
             getVelocity());
 
-        SmartDashboard.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-        SmartDashboard.putNumber(id + "/Angle", getAngle().getDegrees());
-        SmartDashboard.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber(id + "/Angle Voltage", turnController.getOutput());
-        SmartDashboard.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber(id + "/Velocity", getVelocity());
-        SmartDashboard.putNumber(id + "/Velocity Error", driveController.getError());
-        SmartDashboard.putNumber(id + "/Velocity Voltage", driveController.getOutput());
+        if (Settings.isDebug()) {
+            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber(id + "/Angle", getAngle().getDegrees());
+            Settings.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
+            Settings.putNumber(id + "/Angle Voltage", turnController.getOutput());
+            Settings.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
+            Settings.putNumber(id + "/Velocity", getVelocity());
+            Settings.putNumber(id + "/Velocity Error", driveController.getError());
+            Settings.putNumber(id + "/Velocity Voltage", driveController.getOutput());
+        }
     }
 
     @Override

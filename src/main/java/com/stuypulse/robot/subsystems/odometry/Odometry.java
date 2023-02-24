@@ -8,12 +8,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Odometry extends SubsystemBase {
     
-    private static Odometry instance;
+    private static final Odometry instance;
+
+    static {
+        instance = new OdometryImpl();
+    }
 
     public static Odometry getInstance(){
-        if(instance == null) {
-            instance = new OdometryImpl();
-        }
         return instance;
     }
 

@@ -58,9 +58,9 @@ public class SwerveDriveDrive extends CommandBase {
             Vector2D s = speed.get();
             Vector2D translation = new Vector2D(s.y, -s.x);
 
-            if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
-                translation = translation.negative();
-            }
+            // if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+            //     translation = translation.negative();
+            // }
 
             swerve.setChassisSpeeds(
                 new ChassisSpeeds(translation.x, translation.y, -turn.get()));

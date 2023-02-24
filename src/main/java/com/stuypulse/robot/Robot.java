@@ -5,6 +5,9 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.TeleopInit;
+
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,18 +18,23 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
 
+    private CommandScheduler scheduler;
+
     /*************************/
     /*** ROBOT SCHEDULEING ***/
     /*************************/
 
     @Override
     public void robotInit() {
+        DataLogManager.start();
+
+        scheduler = CommandScheduler.getInstance();
         robot = new RobotContainer();
     }
 
     @Override
     public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+        scheduler.run();
     }
 
     /*********************/
@@ -66,6 +74,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        new TeleopInit().schedule();
+
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
         if (auto != null) {
@@ -87,7 +97,7 @@ public class Robot extends TimedRobot {
     public void testInit() {
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
-        CommandScheduler.getInstance().cancelAll();
+        scheduler.cancelAll();
     }
 
     @Override
