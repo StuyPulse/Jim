@@ -20,8 +20,13 @@ public class ArmTrajectory {
         return this;
     }
 
-    public ArmTrajectory wristMovesFirst() {
+    public ArmTrajectory wristMovesFirst(ArmState initialState) {
         ArmTrajectory trajectory = new ArmTrajectory();
+
+        trajectory.addState(new ArmState(
+            initialState.getShoulderState(),
+            states.get(0).getWristState()
+        ));
 
         for (int i = 0; i < states.size() - 1; i++) {
             trajectory.addState(states.get(i));

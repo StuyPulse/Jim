@@ -31,10 +31,12 @@ public class ArmRoutine extends CommandBase {
 
     @Override
     public void initialize() {
+        var state = Arm.getInstance().getState();
+
         trajectory =
             ArmTrajectories.generateTrajectory(
-                Arm.getInstance().getState(),
-                endState.get());
+                state,
+                endState.get()).wristMovesFirst(state);
 
         currentIndex = 0;
     }
