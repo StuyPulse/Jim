@@ -208,28 +208,32 @@ public class Manager extends SubsystemBase {
         }
     }
 
+    private ArmTrajectory getLowScoreTrajectory() {
+        if (scoreSide == ScoreSide.OPPOSITE && gamePiece.isCone())
+            return normalize(ArmTrajectory.fromStates(
+                ArmState.fromDegrees(-50, -150)));
+
+        return getIntakeTrajectory();
+    }
+
     /** Generate Score Trajectories **/
 
     public ArmBFSField getScoreTrajectory() {
         switch (nodeLevel) {
             case LOW:
                 return getLowReadyTrajectory();
-
             case MID:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(Score.Mid.kCube);
-                
                 if (gamePiece == GamePiece.CONE_TIP_OUT)
                     return normalize(Score.Mid.kConeTipOutSame);
 
                 return normalize(Score.Mid.kConeTipInOpposite);
-
             case HIGH:
                 if (gamePiece == GamePiece.CUBE)
                     return normalize(Score.High.kCube);
 
                 return normalize(Score.High.kConeTipInOpposite);
-
             default:
                 return getNeutralTrajectory();
         }
