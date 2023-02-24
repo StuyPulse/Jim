@@ -183,6 +183,9 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
+        operator.getRightButton()
+            .onTrue(new ArmHold());
+
         // arm to neutral
         operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
     }
