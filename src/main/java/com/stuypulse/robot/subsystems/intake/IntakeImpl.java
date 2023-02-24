@@ -66,8 +66,8 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void deacquireCube() {
-    frontMotor.set(-INTAKE_CUBE_ROLLER_FRONT.doubleValue());
-        backMotor.set(-INTAKE_CUBE_ROLLER_BACK.doubleValue());
+    frontMotor.set(-OUTTAKE_CUBE_ROLLER_FRONT.doubleValue());
+        backMotor.set(-OUTTAKE_CUBE_ROLLER_BACK.doubleValue());
     }
 
     @Override
