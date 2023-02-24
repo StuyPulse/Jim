@@ -19,7 +19,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
     private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double ENGAGE_TIME = 3.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 0.5);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -45,9 +45,6 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // intake second piece
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.MID),
-            new ManagerSetGamePiece(GamePiece.CUBE),
-
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()

@@ -24,7 +24,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_TWO = new PathConstraints(3, 2);
     private static final PathConstraints INTAKE_PIECE_THREE = new PathConstraints(4, 3);
     private static final PathConstraints SCORE_PIECE_THREE = new PathConstraints(3, 2);
-    private static final PathConstraints DOCK = new PathConstraints(4, 3);
+    private static final PathConstraints DOCK = new PathConstraints(1, 0.5);
 
     public ThreePieceDock() {
         // load paths into hashmap
@@ -54,7 +54,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece Two"))

@@ -48,7 +48,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
         // drive to and intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake One"))

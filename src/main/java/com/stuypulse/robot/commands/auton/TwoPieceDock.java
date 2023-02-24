@@ -22,7 +22,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
 
     public TwoPieceDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -50,7 +50,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
         // drive to and intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
