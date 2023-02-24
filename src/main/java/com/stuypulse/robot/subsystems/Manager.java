@@ -7,6 +7,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmBFSField;
+import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -208,10 +209,9 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    private ArmTrajectory getLowScoreTrajectory() {
+     private ArmBFSField getLowScoreTrajectory() {
         if (scoreSide == ScoreSide.OPPOSITE && gamePiece.isCone())
-            return normalize(ArmTrajectory.fromStates(
-                ArmState.fromDegrees(-50, -150)));
+            return normalize(new ArmBFSField(ArmState.fromDegrees(-50, -150), Constraints.CONSTRAINT));
 
         return getIntakeTrajectory();
     }
