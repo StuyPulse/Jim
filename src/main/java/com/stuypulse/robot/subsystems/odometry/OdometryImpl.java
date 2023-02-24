@@ -136,7 +136,6 @@ public class OdometryImpl extends Odometry {
             Settings.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
             Settings.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
 
-            
             Settings.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
             Settings.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
             Settings.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());

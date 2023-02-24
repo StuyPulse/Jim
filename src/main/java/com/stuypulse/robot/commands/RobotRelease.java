@@ -4,7 +4,6 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
-import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -14,9 +13,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RobotScore extends CommandBase {
-    
-    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 16);
+public class RobotRelease extends CommandBase {
+
     private final static SmartNumber kBackupSpeed = new SmartNumber("Robot Score/Backup Speed (in per s)", 24);
 
     private final SwerveDrive swerve;
@@ -24,7 +22,7 @@ public class RobotScore extends CommandBase {
     private final Intake intake;
     private final Manager manager;
 
-    public RobotScore() {
+    public RobotRelease() {
         swerve = SwerveDrive.getInstance();
         arm = Arm.getInstance();
         intake = Intake.getInstance();
@@ -33,17 +31,12 @@ public class RobotScore extends CommandBase {
         addRequirements(swerve, arm, intake);
     }
 
-
     @Override
     public void initialize() {
-        manager.setRoutine(Routine.SCORE);
-        arm.setTrajectory(manager.getScoreTrajectory());
+        arm.setTargetState(arm.getState());
 
-
-        boolean dontOuttakeInstant = (manager.getNodeLevel() != NodeLevel.LOW && manager.getGamePiece() == GamePiece.CONE_TIP_OUT) ||
-            (manager.getNodeLevel() == NodeLevel.HIGH && manager.getGamePiece() == GamePiece.CONE_TIP_IN);
-
-        if (!dontOuttakeInstant) {
+        boolean shouldOuttake = manager.getNodeLevel() == NodeLevel.HIGH && manager.getGamePiece() == GamePiece.CONE_TIP_IN;
+        if (shouldOuttake) {
             if (manager.getGamePiece().isCone()) {
                 intake.deacquireCone();
             } else {
@@ -56,32 +49,15 @@ public class RobotScore extends CommandBase {
     public void execute() {
         if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() == NodeLevel.HIGH) {
             
-            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kForwardSpeed.get()), 0, 0);
-
-            // THis assumes the cone tip in always does opposite side (which is true for now)
-            if (intake.getIntookSide() == IntakeSide.FRONT) {
-                slowSpeeds.vxMetersPerSecond *= -1;
-            }
-            
-            swerve.setChassisSpeeds(slowSpeeds);
-        }
-
-
-        else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
             ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackupSpeed.get()), 0, 0);
 
-            // THis assumes the cone tip in always does same side (which is true for now)
-            if (intake.getIntookSide() == IntakeSide.FRONT) {
+            // THis assumes the cone tip in always does opposite side (which is true for now)
+            if (intake.getIntookSide() == IntakeSide.BACK) {
                 slowSpeeds.vxMetersPerSecond *= -1;
             }
             
             swerve.setChassisSpeeds(slowSpeeds);
         }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 
     @Override
@@ -92,5 +68,6 @@ public class RobotScore extends CommandBase {
         // holds arm in place
         arm.setTargetState(arm.getState());
     }
+
 
 }

@@ -14,14 +14,20 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class OnePieceDock extends SequentialCommandGroup {
+public class OnePieceMobilityDock extends SequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double ENGAGE_TIME = 15;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(0.5, 1);
+    private static final PathConstraints MOBILITY_CONSTRAINTS = new PathConstraints(1, 1);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 1);
+    
+    public OnePieceMobilityDock() {
 
-    public OnePieceDock() {
+        var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
+            PathPlanner.loadPathGroup("Dock + Mobility", MOBILITY_CONSTRAINTS, DOCK_CONSTRAINTS),
+            "Mobility", "Dock"
+        );
 
         // initial setup
         addCommands(
@@ -43,10 +49,11 @@ public class OnePieceDock extends SequentialCommandGroup {
         // dock and engage
         addCommands(
             new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1 Piece + Dock", CONSTRAINTS))
-                    .robotRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral())
-                    .withEvents(),
+                paths.get("Mobility"))
+                    .robotRelative(),
+
+            new SwerveDriveFollowTrajectory(
+                paths.get("Dock")).robotRelative(),
 
             new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
             new PlantEngage()

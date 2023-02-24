@@ -160,7 +160,7 @@ public class ArmImpl extends Arm {
             Settings.putNumber("Arm/Wrist/Raw Angle (deg)", Units.rotationsToDegrees(wristEncoder.getPosition()));
 
             Settings.putNumber("Arm/Shoulder/Target (deg)", shoulderController.getSetpoint().toDegrees());
-            Settings.putNumber("Arm/Wrist/Target (deg)", shoulderController.getSetpoint().toDegrees());
+            Settings.putNumber("Arm/Wrist/Target (deg)", wristController.getSetpoint().toDegrees());
 
             Settings.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
             Settings.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
