@@ -58,8 +58,7 @@ public class ThreePieceWire extends SequentialCommandGroup {
                     .robotRelative()
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
-
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );
@@ -89,8 +88,7 @@ public class ThreePieceWire extends SequentialCommandGroup {
                     .robotRelative()
                     .addEvent("ReadyIntakeTwo", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
-
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );

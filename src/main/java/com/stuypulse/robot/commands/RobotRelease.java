@@ -51,11 +51,6 @@ public class RobotRelease extends CommandBase {
             
             ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackupSpeed.get()), 0, 0);
 
-            // THis assumes the cone tip in always does opposite side (which is true for now)
-            if (intake.getIntookSide() == IntakeSide.BACK) {
-                slowSpeeds.vxMetersPerSecond *= -1;
-            }
-            
             swerve.setChassisSpeeds(slowSpeeds);
         }
     }

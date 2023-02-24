@@ -59,7 +59,6 @@ public class TwoPieceDock extends SequentialCommandGroup {
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
 
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );

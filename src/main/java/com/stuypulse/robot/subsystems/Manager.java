@@ -239,9 +239,7 @@ public class Manager extends SubsystemBase {
 
     // wrist faces away from scoring direction for cube
     public ArmBFSField getNeutralTrajectory() {
-        if (Intake.getInstance().getIntookSide() == IntakeSide.FRONT)
-            return Neutral.kTrajectory;
-        return Neutral.kTrajectory.flipped();
+        return Neutral.kTrajectory;
     }
 
     /** Generate Score Pose **/

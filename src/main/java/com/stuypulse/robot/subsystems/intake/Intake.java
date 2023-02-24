@@ -30,8 +30,4 @@ public abstract class Intake extends SubsystemBase {
     public abstract void deacquireCone();
 
     public abstract void stop();
-
-    public abstract boolean hasNewGamePiece();
-
-    public abstract IntakeSide getIntookSide();
 }

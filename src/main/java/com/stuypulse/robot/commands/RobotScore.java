@@ -57,11 +57,6 @@ public class RobotScore extends CommandBase {
         if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() == NodeLevel.HIGH) {
             
             ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kForwardSpeed.get()), 0, 0);
-
-            // THis assumes the cone tip in always does opposite side (which is true for now)
-            if (intake.getIntookSide() == IntakeSide.FRONT) {
-                slowSpeeds.vxMetersPerSecond *= -1;
-            }
             
             swerve.setChassisSpeeds(slowSpeeds);
         }
@@ -70,11 +65,6 @@ public class RobotScore extends CommandBase {
         else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
             ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackupSpeed.get()), 0, 0);
 
-            // THis assumes the cone tip in always does same side (which is true for now)
-            if (intake.getIntookSide() == IntakeSide.FRONT) {
-                slowSpeeds.vxMetersPerSecond *= -1;
-            }
-            
             swerve.setChassisSpeeds(slowSpeeds);
         }
     }

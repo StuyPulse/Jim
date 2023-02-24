@@ -47,7 +47,7 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
                     .withEvents(),
 
 
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );

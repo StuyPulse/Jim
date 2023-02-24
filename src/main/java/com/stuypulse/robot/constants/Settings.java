@@ -64,6 +64,8 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
+        SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
+
         SmartNumber INTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cone Roller Front Speed", 1);
         SmartNumber INTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Intake Cone Roller Back Speed", 1);
 

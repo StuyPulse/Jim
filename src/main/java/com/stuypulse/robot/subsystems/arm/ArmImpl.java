@@ -47,7 +47,6 @@ public class ArmImpl extends Arm {
     private SmartBoolean feedbackEnable;
 
     public ArmImpl() {
-        System.out.println("CREATING ARM IMPL ");
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
