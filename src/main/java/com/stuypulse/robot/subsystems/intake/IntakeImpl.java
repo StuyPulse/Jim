@@ -7,6 +7,8 @@ import static com.stuypulse.robot.constants.Ports.Intake.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
@@ -57,20 +59,25 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void acquireCone() {
-        frontMotor.set(-INTAKE_CONE_ROLLER_FRONT.doubleValue());
-        backMotor.set(INTAKE_CONE_ROLLER_BACK.doubleValue());
+        frontMotor.set(INTAKE_CONE_ROLLER_FRONT.doubleValue());
+        backMotor.set(-INTAKE_CONE_ROLLER_BACK.doubleValue());
     }
 
     @Override
     public void deacquireCube() {
-        frontMotor.set(-INTAKE_CUBE_ROLLER_FRONT.doubleValue());
+    frontMotor.set(-INTAKE_CUBE_ROLLER_FRONT.doubleValue());
         backMotor.set(-INTAKE_CUBE_ROLLER_BACK.doubleValue());
     }
 
     @Override
     public void deacquireCone() {
-        frontMotor.set(INTAKE_CONE_ROLLER_FRONT.doubleValue());
-        backMotor.set(-INTAKE_CONE_ROLLER_BACK.doubleValue());
+        if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_UP) {
+            frontMotor.set(OUTTAKE_CONE_ROLLER_FRONT.doubleValue());
+            backMotor.set(-OUTTAKE_CONE_ROLLER_BACK.doubleValue());
+        } else {
+            frontMotor.set(-OUTTAKE_CONE_ROLLER_FRONT.doubleValue());
+            backMotor.set(OUTTAKE_CONE_ROLLER_BACK.doubleValue());
+        }
     }
 
     @Override

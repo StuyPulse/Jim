@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -36,7 +37,7 @@ public class ArmRoutine extends CommandBase {
         trajectory =
             ArmTrajectories.generateTrajectory(
                 state,
-                endState.get()).wristMovesUpFirst(state);
+                endState.get()).wristMovesUpFirst(state, Manager.getInstance().getGamePiece());
 
         currentIndex = 0;
     }

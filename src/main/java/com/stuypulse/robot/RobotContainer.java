@@ -183,8 +183,14 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
+        // ONLY FOR TESTING PURPOSES
+        operator.getBottomButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+
         operator.getRightButton()
-            .onTrue(new ArmHold());
+            // .onTrue(new ArmHold());
+            .onTrue(arm.runOnce(arm::enableLimp))
+            .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
         operator.getDPadRight().onTrue(new ManagerFlipScoreSide());

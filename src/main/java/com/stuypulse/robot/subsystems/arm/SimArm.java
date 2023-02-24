@@ -47,6 +47,10 @@ public class SimArm extends Arm {
 
     @Override
     public void periodicallyCalled() {
-        simulation.update(shoulderVolts, wristVolts, Settings.DT);
+        if (!isWristFeedbackEnabled()) {
+            simulation.update(0, wristVolts, Settings.DT);
+        } else {
+            simulation.update(shoulderVolts, wristVolts, Settings.DT);
+        }
     }
 }
