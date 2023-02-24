@@ -22,7 +22,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
 
     public TwoPieceDockWire(){
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(

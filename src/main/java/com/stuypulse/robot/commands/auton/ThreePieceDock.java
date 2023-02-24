@@ -24,7 +24,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_TWO = new PathConstraints(3, 2);
     private static final PathConstraints INTAKE_PIECE_THREE = new PathConstraints(4, 3);
     private static final PathConstraints SCORE_PIECE_THREE = new PathConstraints(3, 2);
-    private static final PathConstraints DOCK = new PathConstraints(1, 0.5);
+    private static final PathConstraints DOCK = new PathConstraints(4, 3);
 
     public ThreePieceDock() {
         // load paths into hashmap
