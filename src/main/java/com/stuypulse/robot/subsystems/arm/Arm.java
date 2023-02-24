@@ -60,8 +60,8 @@ public abstract class Arm extends SubsystemBase {
     private final ArmVisualizer armVisualizer;
 
     public Arm() {
-        shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle", -90);
-        wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle", +90);
+        shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
+        wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
@@ -180,14 +180,12 @@ public abstract class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", shoulderController.getSetpoint().toDegrees());
-        SmartDashboard.putNumber("Arm/Shoulder/Target Angle (deg)", getShoulderTargetAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderController.getOutput());
 
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Relative Angle (deg)", getRelativeWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Setpoint (deg)", wristController.getSetpoint().toDegrees());
-        SmartDashboard.putNumber("Arm/Wrist/Target Angle (deg)", getWristTargetAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristController.getOutput());
 
