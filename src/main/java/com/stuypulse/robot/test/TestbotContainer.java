@@ -105,16 +105,16 @@ public class TestbotContainer {
         //     .onFalse(intake.runOnce(intake::stop));
 
         operator.getDPadUp()
-            .onTrue(intake.runOnce(intake::acquireCone))
+            .onTrue(intake.runOnce(intake::acquire))
             .onFalse(intake.runOnce(intake::stop));
         operator.getDPadDown()
-            .onTrue(intake.runOnce(intake::deacquireCone))
+            .onTrue(intake.runOnce(intake::deacquire))
             .onFalse(intake.runOnce(intake::stop));
         operator.getDPadLeft()
-            .onTrue(intake.runOnce(intake::acquireCube))
+            .onTrue(intake.runOnce(intake::acquire))
             .onFalse(intake.runOnce(intake::stop));
         operator.getDPadRight()
-            .onTrue(intake.runOnce(intake::deacquireCube))
+            .onTrue(intake.runOnce(intake::deacquire))
             .onFalse(intake.runOnce(intake::stop));
     }
 
