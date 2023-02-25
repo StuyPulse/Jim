@@ -8,37 +8,18 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BButton;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
-public class IntakeImpl extends Intake{
+public class IntakeImpl extends Intake {
 
     private CANSparkMax frontMotor; 
     private CANSparkMax backMotor;
 
-    private DigitalInput frontSensor;
-    private DigitalInput backSensor;
-
     private BStream stalling;
-    private BStream newGamePiece;
 
-    private BStream frontCube;
-    private BStream backCube;
-
-    private IntakeSide intookSide;
-
-    private boolean deacquiring;
-
-    public IntakeImpl(){
-       
-        frontSensor = new DigitalInput(FRONT_SENSOR);
-        backSensor = new DigitalInput(BACK_SENSOR);
-
+    public IntakeImpl() {
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
 
@@ -47,21 +28,6 @@ public class IntakeImpl extends Intake{
 
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
-
-        newGamePiece = BStream.create(this::hasGamePiece)
-            .filtered(
-                    new BButton.Pressed(),
-                    new BDebounce.Falling(NEW_GAMEPIECE_TIME));
-
-        frontCube = BStream.create(frontSensor::get).not()
-            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
-
-        backCube = BStream.create(backSensor::get).not()
-            .filtered(new BDebounce.Rising(IR_SENSOR_TIME));
-
-        intookSide = IntakeSide.FRONT;
-
-        deacquiring = false;
     }
 
     // CONE DETECTION (stall detection)
@@ -78,76 +44,45 @@ public class IntakeImpl extends Intake{
         return stalling.get();
     }
 
-    // CUBE DETECTION (ir sensors)
-
-    private boolean hasCubeFront() {
-        return frontCube.get();
-    }
-    private boolean hasCubeBack() {
-        return backCube.get();
-    }
-    private boolean hasCube() {
-        return isFlipped() ? hasCubeBack() : hasCubeFront();
-    }
-
-    // GAMEPIECE DETECTION
-
-    private boolean hasGamePiece() {
-        return isStalling() && Manager.getInstance().getGamePiece().isCone() || hasCube() && Manager.getInstance().getGamePiece().isCube();
+    private boolean hasCone() {
+        return isStalling();
     }
 
     @Override
-    public boolean hasNewGamePiece() {
-        return newGamePiece.get();
-    }
-
-    // WRIST ORIENTATION
-
-    private boolean isFlipped() {
-        Arm arm = Arm.getInstance();
-        return arm.getWristAngle().getDegrees() > 90 || arm.getWristAngle().getDegrees() < -90;
-    }
-
-    // INTAKING MODES
-
-    private void setState(double frontSpeed, double backSpeed, boolean isCone, boolean flipped) {
-        if (flipped) {
-            frontSpeed *= -1;
-            backSpeed *= -1;
+    public void acquire() {
+        switch (Manager.getInstance().getGamePiece()) {
+            case CUBE:
+                frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
+                backMotor.set(Acquire.CUBE_BACK.doubleValue());
+                break;
+            case CONE_TIP_UP: // not really necessary, we can't pick up cones
+            case CONE_TIP_IN:
+                frontMotor.set(Acquire.CONE_FRONT.doubleValue());
+                backMotor.set(-Acquire.CONE_BACK.doubleValue());    
+                break;
+            default:
+                break;
         }
+    }
 
-        if (isCone) {
-            backSpeed *= -1;
+    @Override
+    public void deacquire() {
+        switch (Manager.getInstance().getGamePiece()) {
+            case CUBE:
+                frontMotor.set(-Deacquire.CUBE_FRONT.doubleValue());
+                backMotor.set(-Deacquire.CUBE_BACK.doubleValue());
+                break;
+            case CONE_TIP_UP:
+                // maybe check if in autonomous 
+                frontMotor.set(Deacquire.CONE_UP_FRONT.doubleValue());
+                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
+            case CONE_TIP_IN:
+                frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
+                backMotor.set(Deacquire.CONE_BACK.doubleValue());    
+                break;
+            default:
+                break;
         }
-
-        frontMotor.set(frontSpeed);
-        backMotor.set(backSpeed);
-    }
-
-    @Override
-    public void acquireCube() {
-        deacquiring = false;
-        setState(+INTAKE_CUBE_ROLLER_FRONT.get(), +INTAKE_CUBE_ROLLER_BACK.get(), false, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
-    }
-
-    @Override
-    public void acquireCone() {
-        deacquiring = false;
-        setState(+INTAKE_CONE_ROLLER_FRONT.get(), +INTAKE_CONE_ROLLER_BACK.get(), true, Manager.getInstance().getIntakeSide() == IntakeSide.BACK);
-    }
-
-    // NOTE: if called when wrist is on opposite side of final setpoint, direction will be wrong
-    @Override
-    public void deacquireCube() {
-        deacquiring = true;
-        setState(-OUTTAKE_CUBE_ROLLER_FRONT.get(), -OUTTAKE_CUBE_ROLLER_BACK.get(), false, isFlipped());
-    }
-
-    @Override
-    public void deacquireCone() {
-        deacquiring = true;
-
-        setState(-OUTTAKE_CONE_ROLLER_FRONT.get(), -OUTTAKE_CONE_ROLLER_BACK.get(), true, intookSide == IntakeSide.BACK);
     }
 
     @Override
@@ -157,24 +92,9 @@ public class IntakeImpl extends Intake{
     }
 
     @Override
-    public IntakeSide getIntookSide() {
-        return intookSide;
-    }
-
-    @Override
-    public void periodic(){
-        if (!deacquiring) {
-            if (Manager.getInstance().getGamePiece().isCone() && isStalling()) {
-                stop();
-            }
-    
-            if (Manager.getInstance().getGamePiece().isCube() && hasCube()) {
-                stop();
-            }
-        }
-
-        if (hasNewGamePiece()) {
-            intookSide = Manager.getInstance().getIntakeSide();
+    public void periodic() {
+        if (hasCone()) {
+            stop();
         }
 
         if (Settings.isDebug()) {
@@ -184,20 +104,10 @@ public class IntakeImpl extends Intake{
             Settings.putNumber("Intake/Back Roller Speed", backMotor.get());
             Settings.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
             Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
-            Settings.putBoolean("Intake/Is Flipped", isFlipped());
             Settings.putBoolean("Intake/Is Stalling", isStalling());
-            Settings.putBoolean("Intake/Front IR Sensor", !frontSensor.get());
-            Settings.putBoolean("Intake/Back IR Sensor", !backSensor.get());
-            Settings.putBoolean("Intake/Has Cube Front", frontCube.get());
-            Settings.putBoolean("Intake/Has Cube Back", backCube.get());
-            Settings.putBoolean("Intake/Has Cube", hasCube());
-            Settings.putBoolean("Intake/Deacquiring", deacquiring);
-
     
             Settings.putNumber("Intake/Front Motor", frontMotor.get());
             Settings.putNumber("Intake/Back Motor", backMotor.get());
-
-            Settings.putString("Intake/Intook Side", intookSide.name());
         }
     }
 

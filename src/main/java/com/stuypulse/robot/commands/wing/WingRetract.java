@@ -7,7 +7,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class WingRetract extends InstantCommand{
 
     public WingRetract() {
-        super(() -> { Wing.getInstance().retract(); });
+        super(() -> {
+            if (Wing.getInstance().isExtended())
+                Wing.getInstance().retract();
+        });
     }
 
 }

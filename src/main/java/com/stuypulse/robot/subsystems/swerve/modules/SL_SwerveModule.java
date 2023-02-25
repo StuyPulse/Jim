@@ -136,14 +136,14 @@ public class SL_SwerveModule extends SwerveModule {
             getVelocity()));
         
         if (Settings.isDebug()) {
-            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber(id + "/Angle", getAngle().getDegrees());
-            Settings.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
-            Settings.putNumber(id + "/Angle Voltage", turnController.getOutput());
-            Settings.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
-            Settings.putNumber(id + "/Velocity", getVelocity());
-            Settings.putNumber(id + "/Velocity Error", driveController.getError());
-            Settings.putNumber(id + "/Velocity Voltage", driveController.getOutput());
+            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+            Settings.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
+            Settings.putNumber("Swerve/" + id + "/Velocity", getVelocity());
+            Settings.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
+            Settings.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
         }
     }
 }

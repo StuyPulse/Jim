@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceWithDualPID extends CommandBase {
 
-    private double MAX_SPEED;
+    private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
@@ -37,7 +37,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     private final Controller gyroController;
     
     public SwerveDriveBalanceWithDualPID() {
-        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
+        maxSpeed = AutoBalance.MAX_SPEED.doubleValue();
 
         DISTANCE_THRESHOLD = AutoBalance.DISTANCE_THRESHOLD.doubleValue();
         ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
@@ -86,11 +86,15 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
             swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                                             new ChassisSpeeds(velocity, 0.0, 0.0), 
                                             odometry.getRotation()));
-            
-            SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
-            SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
-            SmartDashboard.putNumber("Auto Balance/Target", target);
         }
+
+        SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
+        SmartDashboard.putNumber("Auto Balance/Target", target);
+        SmartDashboard.putNumber("Auto Balance/Offset", offset);
+        SmartDashboard.putNumber("Auto Balance/Current Position", currentPosition);
+
+        SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
+        
     }
 
     @Override 
@@ -110,7 +114,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     }
 
     public Command withTolerance(double maxSpeed, double distanceTolerance, double angleTolerance) {
-        MAX_SPEED = maxSpeed;
+        this.maxSpeed = maxSpeed;
 
         ANGLE_THRESHOLD = angleTolerance;
         DISTANCE_THRESHOLD = distanceTolerance;

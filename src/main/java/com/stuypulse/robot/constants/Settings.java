@@ -64,18 +64,26 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
 
-        SmartNumber INTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cone Roller Front Speed", 1);
-        SmartNumber INTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Intake Cone Roller Back Speed", 1);
+        SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
-        SmartNumber INTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cube Roller Front Speed", 0.5);
-        SmartNumber INTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Intake Cube Roller Back Speed", 0.5);
+        public interface Acquire {
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1);
+        
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1);
+        }
 
-        SmartNumber OUTTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cone Roller Front Speed", 0.5);
-        SmartNumber OUTTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cone Roller Back Speed", 0.3);
+        public interface Deacquire {
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Deacquire Front", 0.5);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Deacquire Back", 0.5);
 
-        SmartNumber OUTTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cube Roller Front Speed", 1);
-        SmartNumber OUTTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cube Roller Back Speed", 1);
+            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 1.0);
+            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 1.0);
 
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);
+        }
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
 
@@ -107,9 +115,9 @@ public interface Settings {
         }
         
         public interface Turn {
-            double kP = 2.0;
+            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 3.5);
             double kI = 0.0;
-            double kD = 0.1;
+            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0.1);
             
             SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0.25);
             SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0.007);
@@ -171,9 +179,11 @@ public interface Settings {
 
     public interface Arm {
 
-        public SmartNumber BFS_FIELD_LEAD = new SmartNumber("Arm/Field Lead", 30 );
-
         public interface Shoulder {
+            SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 10.0);
+            SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 20.0);
+            SmartNumber INTAKE_OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 20);
+
             int MOTORS = 2;
             double REDUCTION = 63.0;
             double MASS = 3.054; // kg
@@ -189,10 +199,10 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromDegrees(129.6 + 90);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.355135).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 120.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 720.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270.0);
 
             SmartNumber STALLING_TIME = new SmartNumber("Arm/Shoulder/Stalling Time", 0.5);
             SmartNumber MIN_DUTY_CYCLE = new SmartNumber("Arm/Shoulder/Duty Cycle Minimum", 0.1);
@@ -201,6 +211,20 @@ public interface Settings {
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
+            // public interface PID {
+            //     SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 6.0);
+            //     SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
+            //     SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 1.2);
+            // }
+            
+            // public interface Feedforward {
+            //     SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
+            //     SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.08);
+            //     // empty kG - 0.275
+            //     // cone  kG - 0.35
+            //     SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.0);
+            //     SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.3);
+            // }
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
@@ -234,18 +258,32 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromDegrees(117 + 180);
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.312118).plus(Rotation2d.fromDegrees(180));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 240.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 1440.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
 
             SmartNumber STALLING_TIME = new SmartNumber("Arm/Wrist/Stalling Time", 0.5);
             SmartNumber MIN_DUTY_CYCLE = new SmartNumber("Arm/Wrist/Stalling/Duty Cycle Minimum", 0.1);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Wrist/Stalling/Velocity Maximum (degrees)", 8);
             SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Wrist/Stalling/Current Minimum", 100.0);
 
-            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 6.0);
+            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 10.0);
     
+            // public interface PID {
+            //     SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
+            //     SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
+            //     SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
+            // }
+    
+            // public interface Feedforward {
+            //     SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
+            //     SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
+            //     SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
+            //     SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.5);
+            // }
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
@@ -265,10 +303,9 @@ public interface Settings {
         double MANUAL_UPDATE_TIME = 0.75;
         double BLINK_TIME = 0.5;
     }
-        
     public interface Wings {
-        SmartNumber RED_LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.5);
-        SmartNumber RED_RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.5);
+        SmartNumber LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.5);
+        SmartNumber RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.5);
     }
 
     public interface AutoBalance {
@@ -305,9 +342,9 @@ public interface Settings {
     public interface Operator {
         SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.2);
 
-        SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 90); // deg per second
+        SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 360); // deg per second
         
-        SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 60); // deg per second
+        SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 120); // deg per second
     }
 
     public interface Driver {

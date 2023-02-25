@@ -10,7 +10,6 @@ import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceWithPlant extends CommandBase {
 
-    private double MAX_SPEED;
+    private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> MAX_SPEED / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
     Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
     
@@ -41,7 +40,7 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
 
     public SwerveDriveBalanceWithPlant() {
 
-        MAX_SPEED = AutoBalance.MAX_SPEED.doubleValue();
+        maxSpeed = AutoBalance.MAX_SPEED.doubleValue();
 
         DISTANCE_THRESHOLD = AutoBalance.DISTANCE_THRESHOLD.doubleValue();
         ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
@@ -92,8 +91,10 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
         }
 
         SmartDashboard.putNumber("Auto Balance/Balance Angle", balanceAngle);
-        SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
         SmartDashboard.putNumber("Auto Balance/Target", target);
+        SmartDashboard.putNumber("Auto Balance/Current Position", currentPosition);
+        
+        SmartDashboard.putNumber("Auto Balance/Velocity", velocity);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class SwerveDriveBalanceWithPlant extends CommandBase {
     }
     
     public Command withTolerance(double maxSpeed, double distanceTolerance, double angleTolerance) {
-        MAX_SPEED = maxSpeed;
+        this.maxSpeed = maxSpeed;
 
         ANGLE_THRESHOLD = angleTolerance;
         DISTANCE_THRESHOLD = distanceTolerance;

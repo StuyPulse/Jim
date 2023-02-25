@@ -5,8 +5,6 @@
 
 package com.stuypulse.robot;
 
-import java.util.function.Supplier;
-
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
@@ -27,7 +25,6 @@ import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.constants.ArmFields;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -39,8 +36,9 @@ import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -85,8 +83,6 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
-
-        ArmFields.load();
     }
 
     /****************/
@@ -117,15 +113,20 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingToggle());
+        new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
+
+        driver.getSelectButton().onTrue(new WingRetract());
+        driver.getStartButton().onTrue(new WingRetract());
 
         // arm
         driver.getBottomButton()
             .whileTrue(new RobotScore());
+        driver.getRightButton()
+            .whileTrue(new RobotRelease());
 
         driver.getTopButton().onTrue(new ArmReady());
 
-        driver.getRightButton().onTrue(new ManagerFlipScoreSide());
+        driver.getDPadRight().onTrue(new ManagerFlipScoreSide());
 
         // swerve
         driver.getLeftButton()
@@ -137,7 +138,7 @@ public class RobotContainer {
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
         driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
-        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(+90)));
+        
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
@@ -179,27 +180,22 @@ public class RobotContainer {
     
         // set game piece
         operator.getLeftButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CUBE));
 
         operator.getTopButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.OPPOSITE));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
+        // ONLY FOR TESTING PURPOSES
         operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT))
-            .onTrue(new ManagerSetScoreSide(ScoreSide.SAME));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
 
-        // flip intake side
-        operator.getRightButton().onTrue(new ManagerFlipIntakeSide());
+        operator.getRightButton()
+            // .onTrue(new ArmHold());
+            .onTrue(arm.runOnce(arm::enableLimp))
+            .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
         operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
-
-        // manual overrides
-        operator.getSelectButton().onTrue(arm.runOnce(arm::enableFeedback));
-        operator.getStartButton().onTrue(arm.runOnce(arm::disableFeedback));
-
     }
 
     private void configureChooserBindings() {
@@ -222,6 +218,7 @@ public class RobotContainer {
         autonChooser.addOption("One Piece", new OnePiece());
         autonChooser.addOption("One Piece Wire", new OnePiecePickupWire());
         autonChooser.addOption("One Piece + Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Mobility + Dock", new OnePieceMobilityDock());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());

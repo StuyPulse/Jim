@@ -86,9 +86,9 @@ public class MAX_SwerveModule extends SwerveModule {
         turnPID = turnMotor.getPIDController();
         turnPID.setFeedbackDevice(absoluteEncoder);
 
-        turnPID.setP(Turn.kP);
+        turnPID.setP(Turn.kP.get());
         turnPID.setI(Turn.kI);
-        turnPID.setD(Turn.kD);
+        turnPID.setD(Turn.kD.get());
         turnPID.setOutputRange(-1, 1);
 
 
@@ -174,10 +174,10 @@ public class MAX_SwerveModule extends SwerveModule {
         prevVelocity = vel;
 
         if (Settings.isDebug()) {
-            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber(id + "/Angle", getAngle().getDegrees());
-            Settings.putNumber(id + "/Target Velocity", targetState.speedMetersPerSecond);
-            Settings.putNumber(id + "/Velocity", vel);
+            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
+            Settings.putNumber("Swerve/" + id + "/Velocity", vel);
         }
     }
 }

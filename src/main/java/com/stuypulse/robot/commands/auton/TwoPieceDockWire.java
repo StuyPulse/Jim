@@ -22,7 +22,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
 
     public TwoPieceDockWire(){
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -33,9 +33,8 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -51,15 +50,14 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeOne",new ArmIntake().andThen(new IntakeAcquire()))
+                    .addEvent("ReadyIntakeOne",new ArmIntake().andThen(new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME)))
                     .withEvents(),
 
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new ArmNeutral()
         );
