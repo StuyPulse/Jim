@@ -2,17 +2,15 @@ package com.stuypulse.robot.commands.arm.routines;
 
 import java.util.function.Supplier;
 
-import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ArmRoutine extends CommandBase {
+public abstract class ArmRoutine extends CommandBase {
     
     private final Arm arm;
     protected final Supplier<ArmState> endState;
@@ -30,15 +28,22 @@ public class ArmRoutine extends CommandBase {
         addRequirements(arm);
     }
 
+    protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+        return new ArmTrajectory()
+            .addState(src.getShoulderDegrees(), 90)
+            .addState(dest.getShoulderDegrees(), 90)
+            .addState(dest);
+    }
+
     @Override
     public void initialize() {
-        var state = Arm.getInstance().getState();
-
-        trajectory =
-            ArmTrajectories.generateTrajectory(
-                state,
-                endState.get()).wristMovesUpFirst(state, Manager.getInstance().getGamePiece());
-
+        trajectory = getTrajectory(Arm.getInstance().getTargetState(), endState.get());
+        
+        // for (ArmState state : trajectory.getStates()) {
+        //     System.out.println("Shoulder: " + state.getShoulderDegrees() + ", Wrist: " + state.getWristDegrees());
+        // }
+        // System.out.println();
+        
         currentIndex = 0;
     }
 
@@ -47,6 +52,8 @@ public class ArmRoutine extends CommandBase {
         arm.setTargetState(trajectory.getStates().get(currentIndex));
 
         if (arm.isAtTargetState(Shoulder.TOLERANCE.get(), Wrist.TOLERANCE.get())) {
+            // var targetState = trajectory.getStates().get(currentIndex);
+            // System.out.println("COMPLETED: " + "Shoulder: " + targetState.getShoulderDegrees() + ", Wrist: " + targetState.getWristDegrees());
             currentIndex++;
         }
     }
