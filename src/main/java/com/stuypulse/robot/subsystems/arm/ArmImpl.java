@@ -14,6 +14,9 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.util.AngleVelocity;
+import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
@@ -21,6 +24,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
+
+    private final AngleVelocity wristVelocity;
+    private final AngleVelocity shoulderVelocity;
 
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -33,6 +39,9 @@ public class ArmImpl extends Arm {
     private final BStream armStalling;
 
     public ArmImpl() {
+        wristVelocity = new AngleVelocity();
+        shoulderVelocity = new AngleVelocity();
+
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -42,7 +51,7 @@ public class ArmImpl extends Arm {
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
         wristStalling = BStream.create(this::getWristMomentarilyStalling).filtered(new BDebounce.Rising(Wrist.STALLING_TIME.doubleValue()));
-        armStalling = BStream.create(this::getArmMomentarilyStalling).filtered(new BDebounce.Rising(Shoulder.STALLING_TIME.doubleValue()));
+        armStalling = BStream.create(this::getShoulderMomentarilyStalling).filtered(new BDebounce.Rising(Shoulder.STALLING_TIME.doubleValue()));
 
         configureMotors();
     }
@@ -83,22 +92,24 @@ public class ArmImpl extends Arm {
         wrist.setVoltage(voltage);
     }
 
-    public boolean getArmStalling() {
+    @Override
+    public boolean getShoulderStalling() {
         return armStalling.get();
     }
 
+    @Override
     public boolean getWristStalling() {
         return wristStalling.get();
     }
 
-    private boolean getArmMomentarilyStalling() {
-        return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.MIN_DUTY_CYCLE.doubleValue() ||
+    private boolean getShoulderMomentarilyStalling() {
+        return shoulderVelocity.getOutput() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.MIN_DUTY_CYCLE.doubleValue() ||
             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
     }
 
     private boolean getWristMomentarilyStalling() {
-        return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.MIN_DUTY_CYCLE.doubleValue() ||
+        return wristVelocity.getOutput() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.MIN_DUTY_CYCLE.doubleValue() ||
             wrist.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
     }
 
@@ -111,6 +122,20 @@ public class ArmImpl extends Arm {
 
     @Override
     public void periodicallyCalled() {
+        shoulderVelocity.update(Angle.fromRotation2d(getShoulderAngle()));
+        wristVelocity.update(Angle.fromRotation2d(getWristAngle()));
+
+        if (getShoulderStalling()) {
+            setShoulderVoltage(0);
+            setTargetState(new ArmState(getShoulderAngle(), getWristTargetAngle()));
+        }
+
+        if (getWristStalling()) {
+            setWristVoltage(0);
+            setTargetState(new ArmState(getShoulderTargetAngle(), getWristAngle()));
+        }
+
+
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
 

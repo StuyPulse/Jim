@@ -49,6 +49,7 @@ public abstract class ArmRoutine extends CommandBase {
 
     @Override
     public void execute() {
+
         arm.setTargetState(trajectory.getStates().get(currentIndex));
 
         if (arm.isAtTargetState(Shoulder.TOLERANCE.get(), Wrist.TOLERANCE.get())) {

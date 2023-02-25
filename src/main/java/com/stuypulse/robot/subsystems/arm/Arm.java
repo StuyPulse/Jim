@@ -97,6 +97,10 @@ public abstract class Arm extends SubsystemBase {
         return Math.abs(Units.radiansToDegrees(shoulderVelocity.getOutput())) < Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get();
     }
 
+    public boolean getShoulderStalling() {return false; }
+
+    public boolean getWristStalling() {return false; }
+
     // Target State
     public final Rotation2d getShoulderTargetAngle() {
         return Rotation2d.fromDegrees(shoulderTargetDegrees.get());
