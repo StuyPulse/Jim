@@ -2,6 +2,9 @@ package com.stuypulse.robot.util;
 
 import java.util.List;
 
+import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.stuylib.streams.IStream;
+
 import java.util.ArrayList;
 
 public class ArmTrajectory {
@@ -29,4 +32,8 @@ public class ArmTrajectory {
         return states.size();
     }
 
+    public ArmTrajectory withConstraints(double shoulderMaxVel, double shoulderMaxAccel, double wristMaxVel, double wristMaxAccel) {
+        Arm.getInstance().setConstraints(shoulderMaxVel, shoulderMaxAccel, wristMaxVel, wristMaxAccel);
+        return this;
+    }
 }
