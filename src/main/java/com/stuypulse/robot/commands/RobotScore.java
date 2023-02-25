@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RobotScore extends CommandBase {
     
-    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 16);
+    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4);
+    private final static SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 1);
 
     private final SwerveDrive swerve;
     private final Arm arm;
@@ -33,6 +34,9 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void initialize() {
+
+        arm.setWristVoltage(kWristVoltage.get());
+
         if (manager.getGamePiece().isCube()) {
             intake.deacquire();
         }
@@ -58,11 +62,14 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        intake.stop();
-        swerve.stop();
+        arm.setLimp(false, false);
+        arm.setCoast(false, false);
 
         // holds arm in place
         arm.setTargetState(arm.getState());
+
+        intake.stop();
+        swerve.stop();
     }
 
 }

@@ -133,9 +133,10 @@ public interface ArmTrajectories {
 
         public interface High {
             ArmState kConeTipInBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready High Tip In Back Shoulder", -180 - 0),
-                new SmartNumber("Arm Trajectories/Ready High Tip In Back Wrist", -180 - -15));
+                new SmartNumber("Arm Trajectories/Ready High Tip In Back Shoulder", 177),
+                new SmartNumber("Arm Trajectories/Ready High Tip In Back Wrist", 175));
             
+                
             ArmState kConeTipUpBack = new ArmState(
                 new SmartNumber("Arm Trajectories/Ready High Tip Up Back Shoulder", 180),
                 new SmartNumber("Arm Trajectories/Ready High Tip Up Back Wrist", 120));
@@ -167,8 +168,8 @@ public interface ArmTrajectories {
 
         public interface High {
             ArmState kConeTipInBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Score High Tip In Back Shoulder", -180 - -7),
-                new SmartNumber("Arm Trajectories/Score High Tip In Back Wrist", -180 - 20));
+                new SmartNumber("Arm Trajectories/Score High Tip In Back Shoulder", 177),
+                new SmartNumber("Arm Trajectories/Score High Tip In Back Wrist", -143));
             
             ArmState kConeTipUpBack = Ready.High.kConeTipUpBack;
 
