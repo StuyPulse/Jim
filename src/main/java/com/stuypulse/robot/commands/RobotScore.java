@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class RobotScore extends CommandBase {
     
     private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4);
-    private final static SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 1);
+    private final static SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
 
     private final SwerveDrive swerve;
     private final Arm arm;
@@ -45,7 +45,7 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void execute() {
-        if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() == NodeLevel.HIGH) {
+        if (manager.getGamePiece() == GamePiece.CONE_TIP_IN && manager.getNodeLevel() != NodeLevel.LOW) {
             ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kForwardSpeed.get()), 0, 0);
 
             // This assumes the cone tip in always does opposite side
@@ -62,13 +62,13 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        arm.setLimp(false, false);
-        arm.setCoast(false, false);
-
         // holds arm in place
         arm.setTargetState(arm.getState());
 
-        intake.stop();
+        if (manager.getGamePiece().isCone()) {
+            intake.deacquire();
+        }
+
         swerve.stop();
     }
 
