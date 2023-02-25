@@ -4,27 +4,24 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ArmState {
 
-    public static final ArmState fromDegrees(double shoulderDegrees, double wristDegrees) {
-        return new ArmState(Rotation2d.fromDegrees(shoulderDegrees), Rotation2d.fromDegrees(wristDegrees));
+    private final Number shoulder; 
+    private final Number wrist;
+
+    public ArmState(Number shoulderDegrees, Number wristDegrees) {
+        this.shoulder = shoulderDegrees;
+        this.wrist = wristDegrees;
     }
 
-    private final Rotation2d shoulder; 
-    private final Rotation2d wrist;
-
     public ArmState(Rotation2d shoulder, Rotation2d wrist) {
-        this.shoulder = shoulder;
-        this.wrist = wrist;
+        this(shoulder.getDegrees(), wrist.getDegrees());
     }
 
     public Rotation2d getShoulderState() {
-        return shoulder;
+        return Rotation2d.fromDegrees(shoulder.doubleValue());
     }
 
     public Rotation2d getWristState() {
-        return wrist;
+        return Rotation2d.fromDegrees(wrist.doubleValue());
     }
 
-    public ArmState flip() {
-        return fromDegrees(-180 - shoulder.getDegrees(), -180 - wrist.getDegrees());
-    }
 }

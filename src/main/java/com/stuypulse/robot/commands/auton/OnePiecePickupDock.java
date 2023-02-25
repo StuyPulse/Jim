@@ -7,7 +7,7 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -16,23 +16,23 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePiecePickupDock extends SequentialCommandGroup{
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double INTAKE_ACQUIRE_TIME = 0.5;
+    private static final double INTAKE_ACQUIRE_TIME = 2;
     private static final double ENGAGE_TIME = 3.0;
 
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(1, 0.5);
+    private static final PathConstraints INTAKE_PIECE = new PathConstraints(3, 2);
+    private static final PathConstraints DOCK = new PathConstraints(2, 2);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1.5 Piece + Dock", CONSTRAINTS, CONSTRAINTS),
+            PathPlanner.loadPathGroup("1.5 Piece + Dock", INTAKE_PIECE, DOCK),
             "Intake Piece", "Dock" 
         );
 
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -46,16 +46,13 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // intake second piece
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CUBE),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
-                    .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
-                    .withEvents(),
+                    .robotRelative().alongWith(new WaitCommand(0.08).andThen(new IntakeAcquire().andThen(new ArmIntake()))),
 
-            new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop()
         );
         
@@ -67,7 +64,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
                     
-            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
+            new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     

@@ -137,9 +137,6 @@ public class ArmVisualizer {
             case CONE_TIP_IN:
                 color = new Color8Bit(255, 255, 63);
                 break;
-            case CONE_TIP_OUT:
-                color = new Color8Bit(255, 127, 0);
-                break;
         }
 
         intakeDirection.setColor(color);

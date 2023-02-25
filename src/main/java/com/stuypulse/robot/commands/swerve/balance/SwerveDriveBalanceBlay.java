@@ -7,49 +7,49 @@ import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceBlay extends CommandBase {
 
     private Number maxSpeed;
     
-    Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
-    Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
-    Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
+    private Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    private Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+    private Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
-    private Number ANGLE_THRESHOLD;
+    private Number angleThreshold;
 
     private Controller control;
 
     private SwerveDrive swerve;
     private Odometry odometry;
-
-    private double balanceAngle;
+    private Plant plant;
 
     public SwerveDriveBalanceBlay() {
         maxSpeed = AutoBalance.MAX_SPEED;
 
-        ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
+        angleThreshold = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
+        plant = Plant.getInstance();
         control = new PIDController(kP, 0, kD).setOutputFilter(x -> -x);
 
-        balanceAngle = 0;
+        addRequirements(swerve, plant);
     }
 
     // private SmartBoolean enabled = new SmartBoolean("Auto Balance/Enabled", false);
 
     @Override
     public void execute() {
-        balanceAngle = swerve.getBalanceAngle().getDegrees();
-        control.update(0, balanceAngle);
+        control.update(0, swerve.getBalanceAngle().getDegrees());
         
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             control.getOutput(), 0, 0, odometry.getRotation()));
@@ -59,26 +59,22 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return control.isDone(ANGLE_THRESHOLD.doubleValue());
+        return control.isDone(angleThreshold.doubleValue());
     }
 
     @Override
     public void end(boolean interrupted) {
-
-        swerve.stop();
-        
-        Plant.getInstance().engage();
+        swerve.stop();   
+        plant.engage();
     }
 
-    public Command thenPointWheels() {
-        return andThen(new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)));
-    }
-
-    public Command withTolerance(double maxSpeed, double angleTolerance) {
+    public SwerveDriveBalanceBlay withMaxSpeed(double maxSpeed) {
         this.maxSpeed = maxSpeed;
+        return this;
+    }
 
-        ANGLE_THRESHOLD = angleTolerance;
-
+    public SwerveDriveBalanceBlay withAngleThreshold(double degreesThreshold) {
+        this.angleThreshold = degreesThreshold;
         return this;
     }
 }
