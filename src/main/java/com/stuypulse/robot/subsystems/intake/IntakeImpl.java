@@ -93,7 +93,8 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void periodic() {
-        if (hasCone()) {
+        // forward and stalling
+        if (frontMotor.get() > 0 && hasCone()) {
             stop();
         }
 
