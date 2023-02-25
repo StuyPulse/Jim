@@ -66,18 +66,24 @@ public interface Settings {
 
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
-        SmartNumber INTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cone Roller Front Speed", 1);
-        SmartNumber INTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Intake Cone Roller Back Speed", 1);
+        public interface Acquire {
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1);
+        
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1);
+        }
 
-        SmartNumber INTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Intake Cube Roller Front Speed", 1);
-        SmartNumber INTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Intake Cube Roller Back Speed", 1);
+        public interface Deacquire {
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Deacquire Front", 0.5);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Deacquire Back", 0.5);
 
-        SmartNumber OUTTAKE_CONE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cone Roller Front Speed", 0.5);
-        SmartNumber OUTTAKE_CONE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cone Roller Back Speed", 0.3);
+            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 1.0);
+            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 1.0);
 
-        SmartNumber OUTTAKE_CUBE_ROLLER_FRONT = new SmartNumber("Intake/Outtake Cube Roller Front Speed", 0.5);
-        SmartNumber OUTTAKE_CUBE_ROLLER_BACK = new SmartNumber("Intake/Outtake Cube Roller Back Speed", 0.5);
-
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);
+        }
 
         SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
 
