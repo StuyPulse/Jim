@@ -1,18 +1,12 @@
 package com.stuypulse.robot.commands.arm;
 
-
-
-import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.Routine;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.util.StopWatch;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.stuypulse.robot.constants.Settings.Operator.*;
@@ -47,7 +41,6 @@ public class ArmDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        Manager.getInstance().setRoutine(Routine.MANUAL_CONTROL);
         timer.reset();
     }
     
@@ -57,12 +50,7 @@ public class ArmDrive extends CommandBase {
 
         double sign = Odometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
 
-        arm.moveShoulder(Rotation2d.fromDegrees(sign * shoulder.get() * dt));
-        arm.moveWrist(Rotation2d.fromDegrees(sign * wrist.get() * dt));
-    }
-
-    @Override
-    public boolean isFinished() {
-        return Manager.getInstance().getRoutine() != Routine.MANUAL_CONTROL;
+        arm.moveShoulderTargetAngle(sign * shoulder.get() * dt);
+        arm.moveWristTargetAngle(sign * wrist.get() * dt);
     }
 }

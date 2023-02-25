@@ -1,9 +1,6 @@
 package com.stuypulse.robot.commands.manager;
 
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
-import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
@@ -17,30 +14,17 @@ public class ManagerChooseScoreSide extends InstantCommand {
         return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) < 90;
     }
 
-    private static ScoreSide getCurrentScoringSide(IntakeSide intakeSide, Rotation2d heading) {
-        if (facingAway(heading)) {
-            if (intakeSide == IntakeSide.FRONT) {
-                return ScoreSide.OPPOSITE;
-            } else {
-                return ScoreSide.SAME;
-            }
-        } else {
-            if (intakeSide == IntakeSide.FRONT) {
-                return ScoreSide.SAME;
-            } else {
-                return ScoreSide.OPPOSITE;
-            }
-        }
+    private static ScoreSide getCurrentScoringSide(Rotation2d heading) {
+        return facingAway(heading) ? ScoreSide.BACK : ScoreSide.FRONT;
     }
     
     public ManagerChooseScoreSide() {
         super(() -> {
             var manager = Manager.getInstance();
 
-            // if game piece is cube or we're scoring low, automatically choose scoring side
-            if (manager.getNodeLevel() == NodeLevel.LOW || manager.getGamePiece() == GamePiece.CUBE) {
-                var currentScoringSide = getCurrentScoringSide(manager.getIntakeSide(), Odometry.getInstance().getRotation());
-                manager.setScoreSide(currentScoringSide);
+            // if game piece is cube, automatically choose scoring side
+            if (manager.getGamePiece().isCube()) {
+                manager.setScoreSide(getCurrentScoringSide(Odometry.getInstance().getRotation()));
             }
         });
     }
