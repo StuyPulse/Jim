@@ -8,9 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
@@ -45,39 +43,45 @@ public class IntakeImpl extends Intake {
     private boolean isStalling() {
         return stalling.get();
     }
-    
-    // GAMEPIECE DETECTION
 
     private boolean hasCone() {
         return isStalling();
     }
 
     @Override
-    public void acquireCube() {
-        frontMotor.set(INTAKE_CUBE_ROLLER_FRONT.doubleValue());
-        backMotor.set(INTAKE_CUBE_ROLLER_BACK.doubleValue());
+    public void acquire() {
+        switch (Manager.getInstance().getGamePiece()) {
+            case CUBE:
+                frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
+                backMotor.set(Acquire.CUBE_BACK.doubleValue());
+                break;
+            case CONE_TIP_UP: // not really necessary, we can't pick up cones
+            case CONE_TIP_IN:
+                frontMotor.set(Acquire.CONE_FRONT.doubleValue());
+                backMotor.set(-Acquire.CONE_BACK.doubleValue());    
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    public void acquireCone() {
-        frontMotor.set(INTAKE_CONE_ROLLER_FRONT.doubleValue());
-        backMotor.set(-INTAKE_CONE_ROLLER_BACK.doubleValue());
-    }
-
-    @Override
-    public void deacquireCube() {
-    frontMotor.set(-OUTTAKE_CUBE_ROLLER_FRONT.doubleValue());
-        backMotor.set(-OUTTAKE_CUBE_ROLLER_BACK.doubleValue());
-    }
-
-    @Override
-    public void deacquireCone() {
-        if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_UP) {
-            frontMotor.set(OUTTAKE_CONE_ROLLER_FRONT.doubleValue());
-            backMotor.set(-OUTTAKE_CONE_ROLLER_BACK.doubleValue());
-        } else {
-            frontMotor.set(-OUTTAKE_CONE_ROLLER_FRONT.doubleValue());
-            backMotor.set(OUTTAKE_CONE_ROLLER_BACK.doubleValue());
+    public void deacquire() {
+        switch (Manager.getInstance().getGamePiece()) {
+            case CUBE:
+                frontMotor.set(-Deacquire.CUBE_FRONT.doubleValue());
+                backMotor.set(-Deacquire.CUBE_BACK.doubleValue());
+                break;
+            case CONE_TIP_UP:
+                // maybe check if in autonomous 
+                frontMotor.set(Deacquire.CONE_UP_FRONT.doubleValue());
+                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
+            case CONE_TIP_IN:
+                frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
+                backMotor.set(Deacquire.CONE_BACK.doubleValue());    
+                break;
+            default:
+                break;
         }
     }
 
