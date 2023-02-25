@@ -9,29 +9,27 @@ public class ArmConstraints {
 
     private SmartNumber shoulderMaxVelocity;
     private SmartNumber shoulderMaxAcceleration;
-
     private SmartNumber wristMaxVelocity;
     private SmartNumber wristMaxAcceleration;
 
     private SmartNumber autonShoulderMaxVelocity;
     private SmartNumber autonShoulderMaxAcceleration;
-
     private SmartNumber autonWristMaxVelocity;
     private SmartNumber autonWristMaxAcceleration;
 
-    public ArmConstraints(SmartNumber shoulderMaxVelocity, SmartNumber shoulderMaxAcceleration, SmartNumber wristMaxVelocity, SmartNumber wristMaxAcceleration,
-                          SmartNumber autonShoulderMaxVelocity, SmartNumber autonShoulderMaxAcceleration, SmartNumber autonWristMaxVelocity, SmartNumber autonWristMaxAcceleration) {
-        this.shoulderMaxVelocity = shoulderMaxVelocity;
-        this.shoulderMaxAcceleration = shoulderMaxAcceleration;
+    public ArmConstraints(double shoulderMaxVelocity, double shoulderMaxAcceleration, double wristMaxVelocity, double wristMaxAcceleration,
+                            double autonShoulderMaxVelocity, double autonShoulderMaxAcceleration, double autonWristMaxVelocity, double autonWristMaxAcceleration) {
+        this.shoulderMaxVelocity = new SmartNumber("Arm/Constraints/Shoulder Max Velocity", shoulderMaxVelocity);
+        this.shoulderMaxAcceleration = new SmartNumber("Arm/Constraints/Shoulder Max Acceleration", shoulderMaxAcceleration);
         
-        this.wristMaxVelocity = wristMaxVelocity;
-        this.wristMaxAcceleration = wristMaxAcceleration;
+        this.wristMaxVelocity = new SmartNumber("Arm/Constraints/Wrist Max Velocity", wristMaxVelocity);
+        this.wristMaxAcceleration = new SmartNumber("Arm/Constraints/Wrist Max Acceleration", wristMaxAcceleration);
 
-        this.autonShoulderMaxVelocity = autonShoulderMaxVelocity;
-        this.autonShoulderMaxAcceleration = autonShoulderMaxAcceleration;
+        this.autonShoulderMaxVelocity = new SmartNumber("Arm/Constraints/Auto/Shoulder Max Velocity", autonShoulderMaxVelocity);
+        this.autonShoulderMaxAcceleration = new SmartNumber("Arm/Constraints/Auto/Shoulder Max Acceleration", autonShoulderMaxAcceleration);
         
-        this.autonWristMaxVelocity = autonWristMaxVelocity;
-        this.autonWristMaxAcceleration = autonWristMaxAcceleration;
+        this.autonWristMaxVelocity = new SmartNumber("Arm/Constraints/Auto/Wrist Max Velocity", autonWristMaxVelocity);
+        this.autonWristMaxAcceleration = new SmartNumber("Arm/Constraints/Auto/Wrist Max Acceleration", autonWristMaxAcceleration);
     }
 
     public IStream getShoulderMaxVelocity() {

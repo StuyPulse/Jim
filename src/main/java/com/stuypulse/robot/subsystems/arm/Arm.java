@@ -73,14 +73,14 @@ public abstract class Arm extends SubsystemBase {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
-        constraints = new ArmConstraints(Shoulder.MAX_VELOCITY, 
-                                        Shoulder.MAX_ACCELERATION, 
-                                        Wrist.MAX_VELOCITY, 
-                                        Wrist.MAX_ACCELERATION,
-                                        Shoulder.AUTO_MAX_VELOCITY,
-                                        Shoulder.AUTO_MAX_ACCELERATION,
-                                        Wrist.AUTO_MAX_VELOCITY,
-                                        Wrist.AUTO_MAX_ACCELERATION);
+        constraints = new ArmConstraints(Shoulder.MAX_VELOCITY.get(), 
+                                        Shoulder.MAX_ACCELERATION.get(), 
+                                        Wrist.MAX_VELOCITY.get(), 
+                                        Wrist.MAX_ACCELERATION.get(),
+                                        Shoulder.AUTO_MAX_VELOCITY.get(),
+                                        Shoulder.AUTO_MAX_ACCELERATION.get(),
+                                        Wrist.AUTO_MAX_VELOCITY.get(),
+                                        Wrist.AUTO_MAX_ACCELERATION.get());
 
         shoulderVelocity = new AngleVelocity();
 
