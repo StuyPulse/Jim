@@ -94,10 +94,10 @@ public class ArmImpl extends Arm {
         wristEncoder.setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         wristEncoder.setInverted(true);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
