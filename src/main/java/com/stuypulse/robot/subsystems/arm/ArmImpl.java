@@ -25,8 +25,9 @@ import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -42,8 +43,8 @@ public class ArmImpl extends Arm {
     private final AngleController shoulderController;
     private final AngleController wristController;
 
-    private final Debouncer wristStalling;
-    private final Debouncer armStalling;
+    private final BStream wristStalling;
+    private final BStream armStalling;
 
     private final ArmVisualizer armVisualizer;
 
@@ -79,8 +80,8 @@ public class ArmImpl extends Arm {
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
-        wristStalling = new Debouncer(Wrist.STALLING_TIME.doubleValue());
-        armStalling = new Debouncer(Shoulder.STALLING_TIME.doubleValue());
+        wristStalling = BStream.create(this::getWristMomentarilyStalling).filtered(new BDebounce.Rising(Wrist.STALLING_TIME.doubleValue()));
+        armStalling = BStream.create(this::getArmMomentarilyStalling).filtered(new BDebounce.Rising(Shoulder.STALLING_TIME.doubleValue()));
 
         feedbackEnable = new SmartBoolean("Arm/Feedback Enable", true);
 
@@ -135,14 +136,22 @@ public class ArmImpl extends Arm {
     }
 
     public boolean getArmStalling() {
-        return armStalling.calculate(shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.MIN_DUTY_CYCLE.doubleValue() ||
-            shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
-            shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue());
+        return armStalling.get();
     }
 
     public boolean getWristStalling() {
-        return wristStalling.calculate(wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.MIN_DUTY_CYCLE.doubleValue() ||
-            wrist.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue());
+        return wristStalling.get();
+    }
+
+    private boolean getArmMomentarilyStalling() {
+        return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderLeft.getAppliedOutput() > Shoulder.MIN_DUTY_CYCLE.doubleValue() ||
+            shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
+            shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
+    }
+
+    private boolean getWristMomentarilyStalling() {
+        return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wrist.getOutputCurrent() > Wrist.MIN_DUTY_CYCLE.doubleValue() ||
+            wrist.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
     }
 
     public void setFeedbackEnabled(boolean enabled) {
