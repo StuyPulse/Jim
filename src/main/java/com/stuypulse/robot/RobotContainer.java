@@ -148,7 +148,8 @@ public class RobotContainer {
 
     private void configureOperatorBindings() {
         // manual control
-        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get()).onTrue(new ArmVoltageDrive(operator));
+        new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
+            .onTrue(new ArmDrive(operator));
         
         // intaking
         operator.getRightTriggerButton()

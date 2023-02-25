@@ -277,14 +277,14 @@ public interface Settings {
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.7);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
             }
     
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.24);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.00);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 1.0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.2);
             }
         }
     }
