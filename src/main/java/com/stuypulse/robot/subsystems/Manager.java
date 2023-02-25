@@ -152,7 +152,6 @@ public class Manager extends SubsystemBase {
         switch (nodeLevel) {
             case LOW:
                 return getLowReadyTrajectory();
-
             case MID:
                 if (gamePiece == GamePiece.CUBE)
                     return scoreSide == ScoreSide.FRONT ? Score.Mid.kCubeFront : Score.Mid.kCubeBack;

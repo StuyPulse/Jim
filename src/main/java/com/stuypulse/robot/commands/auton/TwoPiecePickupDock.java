@@ -22,7 +22,7 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
     private static final PathConstraints INTAKE_ONE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_ONE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints INTAKE_TWO_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
     
     public TwoPiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
