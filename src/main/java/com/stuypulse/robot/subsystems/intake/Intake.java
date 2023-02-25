@@ -22,11 +22,7 @@ public abstract class Intake extends SubsystemBase {
         return instance;
     }
 
-    public abstract void acquireCube();
-    public abstract void acquireCone();
-
-    public abstract void deacquireCube();
-    public abstract void deacquireCone();
-
+    public abstract void acquire();
+    public abstract void deacquire();
     public abstract void stop();
 }

@@ -34,7 +34,7 @@ public class RobotScore extends CommandBase {
     @Override
     public void initialize() {
         if (manager.getGamePiece().isCube()) {
-            intake.deacquireCube();
+            intake.deacquire();
         }
         
     }
