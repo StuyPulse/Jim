@@ -15,9 +15,11 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.robot.util.AngleVelocity;
+import com.stuypulse.robot.util.ArmConstraints;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,6 +58,8 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
 
+    private final ArmConstraints constraints;
+
     private final AngleController shoulderController;
     private final AngleController wristController;
 
@@ -69,6 +73,15 @@ public abstract class Arm extends SubsystemBase {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
+        constraints = new ArmConstraints(Shoulder.MAX_VELOCITY, 
+                                        Shoulder.MAX_ACCELERATION, 
+                                        Wrist.MAX_VELOCITY, 
+                                        Wrist.MAX_ACCELERATION,
+                                        Shoulder.AUTO_MAX_VELOCITY,
+                                        Shoulder.AUTO_MAX_ACCELERATION,
+                                        Wrist.AUTO_MAX_VELOCITY,
+                                        Wrist.AUTO_MAX_ACCELERATION);
+
         shoulderVelocity = new AngleVelocity();
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
@@ -76,8 +89,8 @@ public abstract class Arm extends SubsystemBase {
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
-                    Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Shoulder.MAX_ACCELERATION.filtered(Math::toRadians).number()));
+                    constraints.getShoulderMaxVelocity().number(), 
+                    constraints.getShoulderMaxAcceleration().number()));
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
@@ -85,12 +98,18 @@ public abstract class Arm extends SubsystemBase {
                 .setOutputFilter(x -> isWristFeedbackEnabled() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
-                    Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()));
+                    constraints.getWristMaxVelocity().number(), 
+                    constraints.getWristMaxAcceleration().number()));
 
         limp = false;
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
+    }
+
+    // add withConstraints to trajectories
+
+    public final void setConstraints(double shoulderMaxVel, double shoulderMaxAccel, double wristMaxVel, double wristMaxAccel) {
+        this.constraints.update(shoulderMaxVel, shoulderMaxAccel, wristMaxVel, wristMaxAccel);
     }
 
     protected boolean isWristFeedbackEnabled() {
