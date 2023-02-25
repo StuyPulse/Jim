@@ -93,6 +93,12 @@ public class SwerveDrive extends SubsystemBase {
         module2ds = new FieldObject2d[modules.length];
     }
 
+    public void setCoast(boolean coast) {
+        for (SwerveModule module : modules) {
+            module.setCoast(coast);
+        }
+    }
+
     public void initFieldObjects(Field2d field) {
         for (int i = 0; i < modules.length; i++) {
             module2ds[i] = field.getObject(modules[i].getID()+"-2d");

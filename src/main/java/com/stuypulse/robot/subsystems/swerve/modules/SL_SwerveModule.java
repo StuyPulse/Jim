@@ -89,6 +89,12 @@ public class SL_SwerveModule extends SwerveModule {
         Motors.Swerve.TURN.configure(turnMotor);
         Motors.Swerve.DRIVE.configure(turnMotor);
     }   
+
+    @Override
+    public void setCoast(boolean coast) {
+        turnMotor.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+        driveMotor.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+    }
     
     @Override
     public String getID() {

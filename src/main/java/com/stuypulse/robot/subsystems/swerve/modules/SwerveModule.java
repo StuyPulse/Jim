@@ -6,6 +6,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class SwerveModule extends SubsystemBase {
+    public void setCoast(boolean coast) {};
+
     public abstract String getID();
     public abstract Translation2d getOffset();
     public abstract SwerveModuleState getState();

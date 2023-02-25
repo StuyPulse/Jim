@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.TeleopInit;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,6 +20,8 @@ public class Robot extends TimedRobot {
     private Command auto;
 
     private CommandScheduler scheduler;
+
+    private double disableStartTime;
 
     /*************************/
     /*** ROBOT SCHEDULEING ***/
@@ -43,7 +46,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+        disableStartTime = Timer.getFPGATimestamp();
         robot.arm.setCoast(true);
+        if (Timer.getFPGATimestamp() - disableStartTime >= 6) {
+            robot.swerve.setCoast(true);
+        }
     }
 
     @Override
@@ -56,6 +63,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         robot.arm.setCoast(false);
+        robot.swerve.setCoast(false);
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
@@ -79,6 +87,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         robot.arm.setCoast(false);
+        robot.swerve.setCoast(false);
 
         new TeleopInit().schedule();
 
