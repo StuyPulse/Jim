@@ -196,16 +196,16 @@ public class SacrodModule extends SwerveModule {
         driveMotor.setVoltage(driveController.update(targetState.speedMetersPerSecond, getSpeed()));
 
         if (Settings.isDebug()) {
-            Settings.putNumber(id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber(id + "/Angle", getRotation2d().getDegrees());
-            Settings.putNumber(id + "/Angle Error", turnController.getError().toDegrees());
-            Settings.putNumber(id + "/Angle Voltage", turnController.getOutput());
-            Settings.putNumber(id + "/Absolute Angle", getAbsolutePosition().getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle", getRotation2d().getDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
+            Settings.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+            Settings.putNumber("Swerve/" + id + "/Absolute Angle", getAbsolutePosition().getDegrees());
 
-            Settings.putNumber(id + "/Target Speed", targetState.speedMetersPerSecond);
-            Settings.putNumber(id + "/Speed", getSpeed());
-            Settings.putNumber(id + "/Speed Error", driveController.getError());
-            Settings.putNumber(id + "/Speed Voltage", driveController.getOutput());
+            Settings.putNumber("Swerve/" + id + "/Target Speed", targetState.speedMetersPerSecond);
+            Settings.putNumber("Swerve/" + id + "/Speed", getSpeed());
+            Settings.putNumber("Swerve/" + id + "/Speed Error", driveController.getError());
+            Settings.putNumber("Swerve/" + id + "/Speed Voltage", driveController.getOutput());
         }
 
     }

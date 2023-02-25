@@ -56,8 +56,10 @@ public class ArmNeutral extends ArmRoutine {
     public void initialize() {
         super.initialize();
 
+        var state = Arm.getInstance().getState();
+
         trajectory = generateTrajectory(
-            Arm.getInstance().getState(),
-            Manager.getInstance().getNeutralTrajectory());
+            state,
+            Manager.getInstance().getNeutralTrajectory()).wristMovesUpFirst(state, Manager.getInstance().getGamePiece());
     }
 }

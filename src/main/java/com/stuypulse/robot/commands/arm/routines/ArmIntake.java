@@ -22,7 +22,7 @@ public class ArmIntake extends ArmRoutine {
 
         // no safe points necessary
         if (srcState == destState) {
-            return out.addState(dest);
+            return out/*.addState(Acquire.kIntermediate)*/.addState(dest);
         }
 
         // if trying to cross, add both safety poitns
@@ -45,7 +45,7 @@ public class ArmIntake extends ArmRoutine {
             }
         }
 
-        return out.addState(dest);
+        return out/*.addState(Acquire.kIntermediate)*/.addState(dest);
     }
     
     public ArmIntake() {
@@ -56,8 +56,16 @@ public class ArmIntake extends ArmRoutine {
     public void initialize() {
         super.initialize();
 
-        trajectory = generateTrajectory(
-            Arm.getInstance().getState(),
-            Manager.getInstance().getIntakeTrajectory());
+        trajectory = new ArmTrajectory()
+            .addState(new ArmState(
+                Neutral.kTrajectory.getShoulderState(),
+                Acquire.kCube.getWristState()))
+            .addState(Acquire.kCube);
+
+        // var state = Arm.getInstance().getState();
+
+        // trajectory = generateTrajectory(
+        //     state,
+        //     Manager.getInstance().getIntakeTrajectory()).wristMovesUpFirst(state, Manager.getInstance().getGamePiece());
     }
 }

@@ -76,6 +76,13 @@ public class ArmImpl extends Arm {
     }
 
     @Override
+    public void setCoast(boolean coast) {
+        shoulderLeft.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+        shoulderRight.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+        wrist.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+    }
+
+    @Override
     public void periodicallyCalled() {
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
