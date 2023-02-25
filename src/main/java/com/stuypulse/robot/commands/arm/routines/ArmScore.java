@@ -1,8 +1,8 @@
 package com.stuypulse.robot.commands.arm.routines;
 
-import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmTrajectory;
 
 public class ArmScore extends ArmRoutine {
     
@@ -10,14 +10,10 @@ public class ArmScore extends ArmRoutine {
         super(Manager.getInstance()::getScoreTrajectory);
     }
 
-    public void initialize() {
-        super.initialize();
-
-        var state = Arm.getInstance().getState();
-
-        trajectory =
-            ArmTrajectories.generateTrajectory(
-                state,
-                Manager.getInstance().getScoreTrajectory());
+    @Override
+    public ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+        // assumes that ready was called before score
+        return new ArmTrajectory().addState(dest);
     }
+
 }
