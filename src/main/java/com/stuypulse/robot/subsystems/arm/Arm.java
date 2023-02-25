@@ -106,6 +106,10 @@ public abstract class Arm extends SubsystemBase {
         return Rotation2d.fromDegrees(wristTargetDegrees.get());
     }
 
+    public ArmState getTargetState() {
+        return new ArmState(getShoulderTargetAngle(), getWristTargetAngle());
+    }
+
     public final void setShoulderTargetAngle(Rotation2d angle) {
         shoulderTargetDegrees.set(angle.getDegrees());
     }

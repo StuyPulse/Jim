@@ -2,12 +2,6 @@ package com.stuypulse.robot.util;
 
 import java.util.List;
 
-import static com.stuypulse.robot.constants.ArmTrajectories.*;
-
-import com.stuypulse.robot.subsystems.Manager.GamePiece;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-
 import java.util.ArrayList;
 
 public class ArmTrajectory {
@@ -25,45 +19,6 @@ public class ArmTrajectory {
     public ArmTrajectory addState(ArmState armState) {
         states.add(armState);
         return this;
-    }
-
-    public ArmTrajectory wristMovesUpFirst(ArmState initialState, GamePiece gamePiece) {
-        ArmTrajectory trajectory = new ArmTrajectory();
-
-        Rotation2d up;
-        if (gamePiece == GamePiece.CONE_TIP_UP) {
-            up = kTipUpSafePointBack.getWristState();
-        } else {
-            up = Rotation2d.fromDegrees(+90);
-        }
-
-        trajectory.addState(new ArmState(
-            initialState.getShoulderState(),
-            up
-        ));
-
-        trajectory.addState(new ArmState(
-            states.get(0).getShoulderState(),
-            up
-        ));
-
-        for (int i = 0; i < states.size() - 1; i++) {
-            trajectory.addState(states.get(i));
-
-            trajectory.addState(new ArmState(
-                states.get(i).getShoulderState(),
-                up
-            ));
-
-            trajectory.addState(new ArmState(
-                states.get(i+1).getShoulderState(),
-                up
-            ));
-        }
-
-        trajectory.addState(states.get(states.size() - 1));
-
-        return trajectory;
     }
 
     public List<ArmState> getStates() {
