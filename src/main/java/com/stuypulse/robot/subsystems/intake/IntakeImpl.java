@@ -12,6 +12,8 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class IntakeImpl extends Intake {
 
     private CANSparkMax frontMotor; 
@@ -74,8 +76,9 @@ public class IntakeImpl extends Intake {
                 break;
             case CONE_TIP_UP:
                 // maybe check if in autonomous 
-                frontMotor.set(Deacquire.CONE_UP_FRONT.doubleValue());
+                frontMotor.set(+Deacquire.CONE_UP_FRONT.doubleValue());
                 backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
+                break;
             case CONE_TIP_IN:
                 frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
                 backMotor.set(Deacquire.CONE_BACK.doubleValue());    
@@ -94,7 +97,7 @@ public class IntakeImpl extends Intake {
     @Override
     public void periodic() {
         // forward and stalling
-        if (frontMotor.get() > 0 && hasCone()) {
+        if (DriverStation.isTeleop() && frontMotor.get() > 0 && hasCone()) {
             stop();
         }
 
