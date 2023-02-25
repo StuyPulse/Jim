@@ -31,8 +31,8 @@ public class OdometryImpl extends Odometry {
         public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
         public static final Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
 
-        public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
-        public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
+        public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(20));
+        public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(25));
 
         public static final Vector<N3> OVERRIDE = VecBuilder.fill(1,1,Math.toRadians(10));
 
@@ -71,7 +71,9 @@ public class OdometryImpl extends Odometry {
     public OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
+        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose, 
+                        VecBuilder.fill(5, 5, 0),
+                        StandardDeviations.TELE_MID);
         odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
         // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
