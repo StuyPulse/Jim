@@ -204,6 +204,9 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270.0);
 
+            SmartNumber AUTO_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Auto Max Velocity (deg)", 540.0);
+            SmartNumber AUTO_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Auto Max Acceleration (deg)", 540.0);
+
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
             // public interface PID {
@@ -257,6 +260,9 @@ public interface Settings {
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
+
+            SmartNumber AUTO_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Auto Max Velocity (deg)", 720.0);
+            SmartNumber AUTO_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Auto Max Acceleration (deg)", 720.0);
 
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
 
