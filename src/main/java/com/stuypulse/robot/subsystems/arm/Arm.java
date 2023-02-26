@@ -58,6 +58,12 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
 
+    private final SmartNumber shoulderMaxVelocity;
+    private final SmartNumber shoulderMaxAcceleration;
+
+    private final SmartNumber wristMaxVelocity;
+    private final SmartNumber wristMaxAcceleration;
+
     private final AngleController shoulderController;
     private final AngleController wristController;
 
@@ -77,6 +83,12 @@ public abstract class Arm extends SubsystemBase {
 
         shoulderVelocity = new AngleVelocity();
 
+        shoulderMaxVelocity = new SmartNumber("Arm/Shoulder/Max Velocity (deg per s)", 270);
+        shoulderMaxAcceleration = new SmartNumber("Arm/Shoulder/Max Acceleration (deg per s^2)", 270);
+        
+        wristMaxVelocity = new SmartNumber("Arm/Wrist/Max Velocity (deg per s)", 360);
+        wristMaxAcceleration = new SmartNumber("Arm/Wrist/Max Acceleration (deg per s^2)", 360);
+
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
@@ -87,8 +99,9 @@ public abstract class Arm extends SubsystemBase {
             })
             .setSetpointFilter(
                 new AMotionProfile(
-                    Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Shoulder.MAX_ACCELERATION.filtered(Math::toRadians).number()));
+                    shoulderMaxVelocity.filtered(Math::toRadians).number(), 
+                    shoulderMaxAcceleration.filtered(Math::toRadians).number())
+            );
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
@@ -101,8 +114,9 @@ public abstract class Arm extends SubsystemBase {
             }))
             .setSetpointFilter(
                 new AMotionProfile(
-                    Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()));
+                    wristMaxVelocity.filtered(Math::toRadians).number(), 
+                    wristMaxAcceleration.filtered(Math::toRadians).number())
+            );
 
         wristLimp = false;
         shoulderLimp = false;
@@ -211,6 +225,17 @@ public abstract class Arm extends SubsystemBase {
     // Arm Visualizer
     public final ArmVisualizer getVisualizer() {
         return armVisualizer;
+    }
+
+    // Set kinematic constraints
+    public void setWristConstraints(double maxVelocity, double maxAcceleration) {
+        wristMaxVelocity.set(maxVelocity);
+        wristMaxAcceleration.set(maxAcceleration);
+    }
+
+    public void setShoulderConstraints(double maxVelocity, double maxAcceleration) {
+        shoulderMaxVelocity.set(maxVelocity);
+        shoulderMaxAcceleration.set(maxAcceleration);
     }
 
     @Override
