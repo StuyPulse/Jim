@@ -201,8 +201,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.355135).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
     
@@ -258,9 +258,9 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
 
-            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 40.0);
 
-            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 10.0);
+            SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 5.0);
     
             // public interface PID {
             //     SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
@@ -277,14 +277,14 @@ public interface Settings {
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.7);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
             }
     
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.06);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.6);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 0.24);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.00);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 1.0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.2);
             }
         }
     }
@@ -333,8 +333,11 @@ public interface Settings {
         SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.2);
 
         SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 360); // deg per second
-        
         SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 120); // deg per second
+        
+        SmartNumber VOLTAGE_DEADBAND = new SmartNumber("Operator Settings/Voltage Deadband", 0.05);
+        SmartNumber SHOULDER_DRIVE_VOLTAGE = new SmartNumber("Operator Settings/Shoulder Drive Voltage", 3.0);
+        SmartNumber WRIST_DRIVE_VOLTAGE = new SmartNumber("Operator Settings/Wrist Drive Voltage", 3.0);
     }
 
     public interface Driver {

@@ -15,9 +15,9 @@ public class PerfectArm extends Arm {
     }
 
 	@Override
-	protected void setShoulderVoltage(double voltage) {}
+	protected void setShoulderVoltageImpl(double voltage) {}
 
 	@Override
-	protected void setWristVoltage(double voltage) {}
+	protected void setWristVoltageImpl(double voltage) {}
 
 }

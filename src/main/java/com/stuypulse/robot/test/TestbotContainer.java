@@ -29,8 +29,8 @@ public class TestbotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     
     // // Subsystem
-    public final Intake intake = Intake.getInstance();
-    public final SwerveDrive swerve = SwerveDrive.getInstance();
+    public final TestIntake intake = new TestIntake();
+    public final TestSwerveDrive swerve = new TestSwerveDrive();
     public final TestArm arm = new TestArm();
     public final TestPlant plant = new TestPlant();
     public final TestWing wings = new TestWing();
@@ -103,19 +103,6 @@ public class TestbotContainer {
         // driver.getRightTriggerButton()
         //     .onTrue(intake.runOnce(intake::runBack))
         //     .onFalse(intake.runOnce(intake::stop));
-
-        operator.getDPadUp()
-            .onTrue(intake.runOnce(intake::acquireCone))
-            .onFalse(intake.runOnce(intake::stop));
-        operator.getDPadDown()
-            .onTrue(intake.runOnce(intake::deacquireCone))
-            .onFalse(intake.runOnce(intake::stop));
-        operator.getDPadLeft()
-            .onTrue(intake.runOnce(intake::acquireCube))
-            .onFalse(intake.runOnce(intake::stop));
-        operator.getDPadRight()
-            .onTrue(intake.runOnce(intake::deacquireCube))
-            .onFalse(intake.runOnce(intake::stop));
     }
 
     private final SmartNumber SHOULDER_VOLTS = new SmartNumber("Arm/Shoulder Input Volts", 0);
