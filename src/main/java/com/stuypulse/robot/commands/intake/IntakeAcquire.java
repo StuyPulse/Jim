@@ -16,10 +16,6 @@ public class IntakeAcquire extends InstantCommand {
 
     @Override
     public void initialize(){
-        if (manager.getGamePiece().isCone()) {
-            intake.acquireCone();
-        } else {
-            intake.acquireCube();
-        }
+        intake.acquire();
     }
 }
