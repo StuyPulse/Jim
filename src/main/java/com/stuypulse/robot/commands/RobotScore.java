@@ -65,9 +65,9 @@ public class RobotScore extends CommandBase {
         // holds arm in place
         arm.setTargetState(arm.getState());
 
-        if (manager.getGamePiece().isCone()) {
-            intake.deacquire();
-        }
+        // if (manager.getGamePiece().isCone()) {
+        //     intake.deacquire();
+        // }
 
         swerve.stop();
     }
