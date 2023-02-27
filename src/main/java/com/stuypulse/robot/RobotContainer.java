@@ -83,6 +83,10 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
+
+        SmartDashboard.putData("Driver", driver);
+        SmartDashboard.putData("Operator", operator);
+        SmartDashboard.putData("Chooser", chooser);
     }
 
     /****************/
