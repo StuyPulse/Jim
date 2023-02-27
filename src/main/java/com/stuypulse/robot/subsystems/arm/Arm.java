@@ -224,7 +224,7 @@ public abstract class Arm extends SubsystemBase {
     // set coast / brake mode
     public void setCoast(boolean wristCoast, boolean shoulderCoast) {}
 
-    // 
+    // set if the ligaments are "limp" (zero voltage)
     public final void setLimp(boolean wristLimp, boolean shoulderLimp) {
         this.wristLimp.set(wristLimp);
         this.shoulderLimp.set(shoulderLimp);
