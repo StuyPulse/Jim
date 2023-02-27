@@ -8,6 +8,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -65,7 +66,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
                     
-            new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     

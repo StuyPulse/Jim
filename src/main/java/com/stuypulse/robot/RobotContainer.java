@@ -83,6 +83,10 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
+
+        SmartDashboard.putData("Gamepads/Driver", driver);
+        SmartDashboard.putData("Gamepads/Operator", operator);
+        SmartDashboard.putData("Gamepads/Chooser", chooser);
     }
 
     /****************/
@@ -149,7 +153,7 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // manual control
         new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
-            .onTrue(new ArmDrive(operator));
+            .onTrue(new ArmVoltageDrive(operator));
         
         // intaking
         operator.getRightTriggerButton()

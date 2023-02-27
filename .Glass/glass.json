@@ -156,7 +156,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 1532,
           "series": [
             {
               "color": [
@@ -178,7 +178,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <11>": {
       "plots": [
@@ -188,7 +191,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -210,7 +213,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <12>": {
       "plots": [
@@ -220,7 +226,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -242,7 +248,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <13>": {
       "plots": [
@@ -252,7 +261,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -274,7 +283,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <14>": {
       "plots": [
@@ -284,7 +296,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -306,7 +318,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <15>": {
       "plots": [
@@ -316,7 +331,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -338,7 +353,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
@@ -410,7 +428,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 607,
           "series": [
             {
               "color": [
@@ -432,7 +450,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <4>": {
       "plots": [
@@ -586,7 +607,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 718,
           "series": [
             {
               "color": [
@@ -608,7 +629,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <9>": {
       "plots": [

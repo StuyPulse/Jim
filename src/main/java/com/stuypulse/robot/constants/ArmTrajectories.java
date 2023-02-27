@@ -87,6 +87,7 @@ public interface ArmTrajectories {
     /* Intaking */
 
     public interface Acquire {
+        ArmState kAuton = new ArmState(-70, 0);
         ArmState kCone = new ArmState(
 			new SmartNumber("Arm Trajectories/Acquire Cone Front Shoulder", -85),
 			new SmartNumber("Arm Trajectories/Acquire Cone Front Wrist", -15));
@@ -106,7 +107,7 @@ public interface ArmTrajectories {
 
     public interface Neutral {
         ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Stowed Front Shoulder", -72),
+			new SmartNumber("Arm Trajectories/Stowed Front Shoulder", -75),
 			new SmartNumber("Arm Trajectories/Stowed Front Wrist", 165));
     }
 
