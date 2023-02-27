@@ -20,8 +20,8 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
     private static final double INTAKE_ACQUIRE_TIME = 3.5;
     private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_PIECE = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK = new PathConstraints(2, 2);
+    private static final PathConstraints INTAKE_PIECE = new PathConstraints(1.5, 2);
+    private static final PathConstraints DOCK = new PathConstraints(3, 2);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -40,8 +40,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
         addCommands(
             new ArmReady(),
             // new ArmScore(),
-            new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
+            new IntakeScore().withTimeout(INTAKE_DEACQUIRE_TIME)
         );
 
         // intake second piece
@@ -54,7 +53,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                 new IntakeAcquire().andThen(new ArmIntake())
             ),
 
-            new IntakeAcquire().withTimeout(0.5),
+            new IntakeAcquire().withTimeout(2),
             new IntakeStop()
         );
         
