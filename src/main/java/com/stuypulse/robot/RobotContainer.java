@@ -84,9 +84,9 @@ public class RobotContainer {
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
 
-        SmartDashboard.putData("Driver", driver);
-        SmartDashboard.putData("Operator", operator);
-        SmartDashboard.putData("Chooser", chooser);
+        SmartDashboard.putData("Gamepads/Driver", driver);
+        SmartDashboard.putData("Gamepads/Operator", operator);
+        SmartDashboard.putData("Gamepads/Chooser", chooser);
     }
 
     /****************/
