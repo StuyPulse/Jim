@@ -139,16 +139,14 @@ public class OdometryImpl extends Odometry {
         List<Result> results = vision.getResults();
         processResults(results, drive, vision);
 
-        if (Settings.isDebug()) {
-            odometryPose2d.setPose(odometry.getPoseMeters());
-        
-            Settings.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
-            Settings.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
-            Settings.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
+        odometryPose2d.setPose(odometry.getPoseMeters());
+    
+        SmartDashboard.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());
+        SmartDashboard.putNumber("Odometry/Odometry Rotation", odometry.getPoseMeters().getRotation().getDegrees());
 
-            Settings.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
-            Settings.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
-            Settings.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-        }
+        SmartDashboard.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
     }
 }

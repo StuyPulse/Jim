@@ -135,6 +135,8 @@ public class ArmImpl extends Arm {
             setTargetState(new ArmState(getShoulderTargetAngle(), getWristAngle()));
         }
 
+        SmartDashboard.putNumber("Arm/Shoulder/Let Bus Voltage (V)", shoulderLeft.getBusVoltage());
+        SmartDashboard.putNumber("Arm/Shoulder/Right Bus Voltage (V)", shoulderRight.getBusVoltage());
 
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());

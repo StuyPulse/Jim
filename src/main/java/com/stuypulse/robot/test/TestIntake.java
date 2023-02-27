@@ -50,14 +50,14 @@ public class TestIntake extends SubsystemBase{
 
     @Override
     public void periodic(){
-        Settings.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
-        Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
 
-        Settings.putNumber("Intake/Front Motor", frontMotor.get());
-        Settings.putNumber("Intake/Back Motor", backMotor.get());
+        SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
+        SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
 
-        Settings.putBoolean("Intake/Front Sensor", frontSensor.get());
-        Settings.putBoolean("Intake/Back Sensor", backSensor.get());
+        SmartDashboard.putBoolean("Intake/Front Sensor", frontSensor.get());
+        SmartDashboard.putBoolean("Intake/Back Sensor", backSensor.get());
     }
 
 }

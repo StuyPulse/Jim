@@ -36,7 +36,7 @@ public class TestPlant extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Settings.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
+        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
     }
 }
 

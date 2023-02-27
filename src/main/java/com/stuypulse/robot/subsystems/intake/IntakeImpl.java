@@ -13,6 +13,7 @@ import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake {
 
@@ -101,18 +102,16 @@ public class IntakeImpl extends Intake {
             stop();
         }
 
-        if (Settings.isDebug()) {
-            Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
-       
-            Settings.putNumber("Intake/Front Roller Speed", frontMotor.get());
-            Settings.putNumber("Intake/Back Roller Speed", backMotor.get());
-            Settings.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
-            Settings.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
-            Settings.putBoolean("Intake/Is Stalling", isStalling());
+        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     
-            Settings.putNumber("Intake/Front Motor", frontMotor.get());
-            Settings.putNumber("Intake/Back Motor", backMotor.get());
-        }
+        SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
+        SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
+        SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Intake/Back Roller Current", backMotor.getOutputCurrent());
+        SmartDashboard.putBoolean("Intake/Is Stalling", isStalling());
+
+        SmartDashboard.putNumber("Intake/Front Motor", frontMotor.get());
+        SmartDashboard.putNumber("Intake/Back Motor", backMotor.get());
     }
 
 }

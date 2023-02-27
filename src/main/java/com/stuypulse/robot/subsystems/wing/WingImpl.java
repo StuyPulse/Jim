@@ -9,6 +9,7 @@ import com.stuypulse.stuylib.util.StopWatch;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WingImpl extends Wing {
 
@@ -65,22 +66,20 @@ public class WingImpl extends Wing {
 
     @Override
     public void periodic() {
-        if(deployTime > 0 && timer.getTime() - deployTime >= LATCH_DELAY.get()){
+        if (deployTime > 0 && timer.getTime() - deployTime >= LATCH_DELAY.get()){
             deploy.set(DoubleSolenoid.Value.kReverse); // dont set off
             deployTime = -1.0;
         }
-        if(retractTime > 0 && timer.getTime() - retractTime >= RETRACT_DELAY.get()){
+        if (retractTime > 0 && timer.getTime() - retractTime >= RETRACT_DELAY.get()){
             setLatched(true);
             retractTime = -1.0;
         }
 
-        if (Settings.isDebug()) {
-            Settings.putBoolean("Wings/Latch Engaged", isLatched());
-            Settings.putBoolean("Wings/Deploy Extended", isExtended());
+        SmartDashboard.putBoolean("Wings/Latch Engaged", isLatched());
+        SmartDashboard.putBoolean("Wings/Deploy Extended", isExtended());
 
-            Settings.putNumber("Wings/Current Time", timer.getTime());
-            Settings.putNumber("Wings/Deploy Time", deployTime);
-            Settings.putNumber("Wings/Retract Time", retractTime);
-        }
+        SmartDashboard.putNumber("Wings/Current Time", timer.getTime());
+        SmartDashboard.putNumber("Wings/Deploy Time", deployTime);
+        SmartDashboard.putNumber("Wings/Retract Time", retractTime);
     }
 }
