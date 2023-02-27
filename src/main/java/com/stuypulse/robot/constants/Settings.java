@@ -70,8 +70,8 @@ public interface Settings {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1);
         
-            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1);
-            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1);
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 0.8);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 0.8);
         }
 
         public interface Deacquire {
@@ -306,7 +306,7 @@ public interface Settings {
     public interface Operator {
         SmartNumber DEADBAND = new SmartNumber("Operator Settings/Deadband", 0.2);
 
-        SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 360); // deg per second
+        SmartNumber WRIST_TELEOP_SPEED = new SmartNumber("Operator Settings/Wrist Adjust Speed", 120); // deg per second
         SmartNumber SHOULDER_TELEOP_SPEED = new SmartNumber("Operator Settings/Shoulder Adjust Speed", 120); // deg per second
         
         SmartNumber VOLTAGE_DEADBAND = new SmartNumber("Operator Settings/Voltage Deadband", 0.05);
