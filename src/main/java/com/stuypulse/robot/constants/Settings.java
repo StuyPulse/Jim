@@ -205,21 +205,7 @@ public interface Settings {
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
-    
-            // public interface PID {
-            //     SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 6.0);
-            //     SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-            //     SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 1.2);
-            // }
-            
-            // public interface Feedforward {
-            //     SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
-            //     SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.08);
-            //     // empty kG - 0.275
-            //     // cone  kG - 0.35
-            //     SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.0);
-            //     SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.3);
-            // }
+
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);

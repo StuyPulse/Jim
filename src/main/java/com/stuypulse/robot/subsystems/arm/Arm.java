@@ -133,8 +133,8 @@ public abstract class Arm extends SubsystemBase {
     }
 
     private final boolean isWristFeedbackEnabled() {
-        final double absoluteVelocity = 
-        return Math.abs(Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond())) < Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get();
+        final double velocity = Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond());
+        return Math.abs(velocity) < Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get();
     }
 
     // Read target State
@@ -280,13 +280,14 @@ public abstract class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", shoulderController.getSetpoint().toDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderController.getOutput());
-        SmartDashboard.putNumber("Arm/Shoulder/Velocity (deg per s)", Units.radiansToDegrees(shoulderVelocity.getOutput()));
+        SmartDashboard.putNumber("Arm/Shoulder/Velocity (deg per s)", Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond()));
 
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Relative Angle (deg)", getRelativeWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Setpoint (deg)", wristController.getSetpoint().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristController.getOutput());
+        SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", isWristFeedbackEnabled());
 
         periodicallyCalled();
