@@ -38,28 +38,6 @@ public interface Settings {
 
     double DT = 0.02;
 
-    // SmartBoolean DEBUG_MODE = new SmartBoolean("Debug Mode", false);
-    boolean DEBUG_MODE = true;
-
-    public static boolean isDebug() {
-        return DEBUG_MODE; // DEBUG_MODE.get();// || RobotBase.isSimulation();
-    }
-
-    public static void putNumber(String key, double value) {
-        if (isDebug())
-            SmartDashboard.putNumber(key, value);
-    }
-
-    public static void putBoolean(String key, boolean value) {
-        if (isDebug())
-            SmartDashboard.putBoolean(key, value);
-    }
-
-    public static void putString(String key, String value) {
-        if (isDebug())
-            SmartDashboard.putString(key, value);
-    }
-
     public interface Intake{
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);

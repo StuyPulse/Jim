@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Manager extends SubsystemBase {
@@ -250,12 +251,10 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Settings.isDebug()) {
-            Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
-            Settings.putString("Manager/Game Piece", gamePiece.name());
-            Settings.putString("Manager/Node Level", nodeLevel.name());
-            Settings.putString("Manager/Score Side", scoreSide.name());
-        }
+        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
+        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
+        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
     }
 }
