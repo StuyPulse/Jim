@@ -16,9 +16,6 @@
           },
           "open": true
         },
-        "Arm Trajectories": {
-          "open": true
-        },
         "Auto Balance": {
           "Translation": {
             "open": true
@@ -45,9 +42,6 @@
         "Manager": {
           "open": true
         },
-        "Odometry": {
-          "open": true
-        },
         "Pump": {
           "open": true
         },
@@ -58,9 +52,6 @@
         },
         "Swerve": {
           "Drive": {
-            "open": true
-          },
-          "Turn": {
             "open": true
           },
           "open": true
@@ -124,7 +115,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 1504,
+          "height": 936,
           "series": [
             {
               "color": [
@@ -370,7 +361,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 1659,
+          "height": 949,
           "series": [
             {
               "color": [
@@ -678,5 +669,6 @@
         "visible": false
       }
     }
-  }
+  },
+  "enterKey": 92
 }
