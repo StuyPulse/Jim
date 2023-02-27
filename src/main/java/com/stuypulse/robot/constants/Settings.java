@@ -220,19 +220,20 @@ public interface Settings {
             //     SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.0);
             //     SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.3);
             // }
+
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.6);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 1.0);
             }
             
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.07);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
                 // empty kG - 0.275
                 // cone  kG - 0.35
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.7);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 0.28);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 1.0);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
             }
         }
     
@@ -262,29 +263,17 @@ public interface Settings {
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 5.0);
     
-            // public interface PID {
-            //     SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
-            //     SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-            //     SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
-            // }
-    
-            // public interface Feedforward {
-            //     SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
-            //     SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
-            //     SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-            //     SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.5);
-            // }
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
             }
     
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.00);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 1.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.2);
+                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
+                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.5);
             }
         }
     }
