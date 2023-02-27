@@ -78,8 +78,8 @@ public interface Settings {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Deacquire Front", 0.5);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Deacquire Back", 0.5);
 
-            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 1.0);
-            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 1.0);
+            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 0.5);
+            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 0.5);
 
             SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
             SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);

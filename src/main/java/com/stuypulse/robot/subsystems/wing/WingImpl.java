@@ -65,11 +65,11 @@ public class WingImpl extends Wing {
 
     @Override
     public void periodic() {
-        if(deployTime > 0 && timer.getTime() - deployTime >= LATCH_DELAY.get()){
+        if (deployTime > 0 && timer.getTime() - deployTime >= LATCH_DELAY.get()){
             deploy.set(DoubleSolenoid.Value.kReverse); // dont set off
             deployTime = -1.0;
         }
-        if(retractTime > 0 && timer.getTime() - retractTime >= RETRACT_DELAY.get()){
+        if (retractTime > 0 && timer.getTime() - retractTime >= RETRACT_DELAY.get()){
             setLatched(true);
             retractTime = -1.0;
         }

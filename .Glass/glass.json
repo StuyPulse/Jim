@@ -8,9 +8,13 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
+          "Shoulder": {
+            "open": true
+          },
           "Wrist": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Auto Balance": {
           "Translation": {
@@ -35,6 +39,9 @@
         "Driver Setings": {
           "open": true
         },
+        "Manager": {
+          "open": true
+        },
         "Pump": {
           "open": true
         },
@@ -45,9 +52,6 @@
         },
         "Swerve": {
           "Drive": {
-            "open": true
-          },
-          "Turn": {
             "open": true
           },
           "open": true
@@ -72,6 +76,18 @@
       "/SmartDashboard/Autonomous": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/LED Mech2d": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Arm Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Info": {
@@ -99,7 +115,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 924,
+          "height": 936,
           "series": [
             {
               "color": [
@@ -130,10 +146,7 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <10>": {
       "plots": [
@@ -330,7 +343,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 937,
+          "height": 949,
           "series": [
             {
               "color": [
@@ -361,10 +374,7 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <2>": {
       "plots": [
@@ -635,5 +645,6 @@
         "visible": false
       }
     }
-  }
+  },
+  "enterKey": 92
 }

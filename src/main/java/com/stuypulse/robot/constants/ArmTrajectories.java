@@ -94,7 +94,7 @@ public interface ArmTrajectories {
             new SmartNumber("Arm Trajectories/Acquire Cube Front Shoulder", -77),
             new SmartNumber("Arm Trajectories/Acquire Cube Front Wrist", -10));
         ArmState kIntermediate = new ArmState(
-            new SmartNumber("Arm Trajectories/Acquire Intermediate Front Shoulder", -60),
+            new SmartNumber("Arm Trajectories/Acquire Intermediate Front Shoulder", -65),
             new SmartNumber("Arm Trajectories/Acquire Intermediate Front Wrist", 0));
     }
 
