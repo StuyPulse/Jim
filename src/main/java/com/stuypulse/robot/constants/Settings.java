@@ -268,8 +268,8 @@ public interface Settings {
         double BLINK_TIME = 0.5;
     }
     public interface Wings {
-        SmartNumber LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.5);
-        SmartNumber RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.5);
+        SmartNumber LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.25);
+        SmartNumber RETRACT_DELAY = new SmartNumber("Wings/Red Retract Delay", 0.25);
     }
 
     public interface AutoBalance {
