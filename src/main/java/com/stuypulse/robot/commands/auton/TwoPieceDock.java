@@ -24,7 +24,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
 
     public TwoPieceDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -39,6 +39,8 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new ManagerSetIntakeSide(IntakeSide.FRONT),
             new ManagerSetScoreSide(ScoreSide.OPPOSITE),
             new LEDSet(LEDColor.RAINBOW)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -56,16 +58,17 @@ public class TwoPieceDock extends SequentialCommandGroup {
         // drive to and intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
+                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME)))
                     .withEvents(),
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()

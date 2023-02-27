@@ -15,19 +15,14 @@ public abstract class Intake extends SubsystemBase {
             instance = new IntakeImpl();
         else
             instance = new SimIntake();
+        // instance = new SimIntake();
     }
     
     public static Intake getInstance() {
         return instance;
     }
 
-    public abstract void acquireCube();
-    public abstract void acquireCone();
-
-    public abstract void deacquireCube();
-    public abstract void deacquireCone();
-
+    public abstract void acquire();
+    public abstract void deacquire();
     public abstract void stop();
-
-    public abstract boolean hasNewGamePiece();
 }

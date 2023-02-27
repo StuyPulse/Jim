@@ -8,13 +8,9 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
-          "Shoulder": {
-            "open": true
-          },
           "Wrist": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Auto Balance": {
           "Translation": {
@@ -25,7 +21,12 @@
           },
           "With Plant": {
             "open": true
-          },
+          }
+        },
+        "BOOM": {
+          "open": true
+        },
+        "Back Left": {
           "open": true
         },
         "DriPver Settings": {
@@ -34,7 +35,7 @@
         "Driver Setings": {
           "open": true
         },
-        "Manager": {
+        "Pump": {
           "open": true
         },
         "Settings": {
@@ -48,7 +49,8 @@
           },
           "Turn": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -70,23 +72,6 @@
       "/SmartDashboard/Autonomous": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/LED Mech2d": "Mechanism2d"
-    },
-    "windows": {
-      "/SmartDashboard/Arm Mech2d": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Autonomous": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Field": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables Info": {
@@ -103,24 +88,18 @@
       "Subscribers": {
         "open": true
       }
-    },
-    "visible": true
+    }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT3)",
-    "serverTeam": "10.6.94.2"
+    "mode": "Client (NT4)",
+    "serverTeam": "10.6.94.2",
+    "visible": false
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "axis": [
-            {
-              "lockMax": true,
-              "lockMin": true
-            }
-          ],
-          "height": 0,
+          "height": 924,
           "series": [
             {
               "color": [
@@ -138,7 +117,211 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Shoulder/Target (deg)"
+              "id": "NT:SmartDashboard/Arm/Shoulder/Target Angle (deg)"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Setpoint (deg)"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <10>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 428,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Target Velocity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <11>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 443,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Velocity"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Target Velocity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <12>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 428,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Target Angle"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <13>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 428,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Target Angle"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <14>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 443,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Target Angle"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <15>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 443,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Angle"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Target Angle"
             }
           ]
         }
@@ -147,13 +330,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "axis": [
-            {
-              "lockMax": true,
-              "lockMin": true
-            }
-          ],
-          "height": 0,
+          "height": 937,
           "series": [
             {
               "color": [
@@ -171,11 +348,23 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Wrist/Target (deg)"
+              "id": "NT:SmartDashboard/Arm/Wrist/Target Angle (deg)"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Setpoint (deg)"
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <2>": {
       "plots": [
@@ -185,7 +374,7 @@
               "autoFit": true
             }
           ],
-          "height": 464,
+          "height": 424,
           "series": [
             {
               "color": [
@@ -198,7 +387,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <3>": {
       "plots": [
@@ -208,7 +400,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 428,
           "series": [
             {
               "color": [
@@ -217,7 +409,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Left/Angle"
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Velocity"
             },
             {
               "color": [
@@ -226,7 +418,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Left/Target Angle"
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Target Velocity"
             }
           ]
         }
@@ -384,7 +576,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 443,
           "series": [
             {
               "color": [
@@ -393,7 +585,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Right/Velocity"
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Velocity"
             },
             {
               "color": [
@@ -402,14 +594,11 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Right/Target Velocity"
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Target Velocity"
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <9>": {
       "plots": [

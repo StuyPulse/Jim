@@ -26,7 +26,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_TWO = new PathConstraints(3, 2);
     private static final PathConstraints INTAKE_PIECE_THREE = new PathConstraints(4, 3);
     private static final PathConstraints SCORE_PIECE_THREE = new PathConstraints(3, 2);
-    private static final PathConstraints DOCK = new PathConstraints(4, 3);
+    private static final PathConstraints DOCK = new PathConstraints(1, 0.5);
 
     public ThreePieceDock() {
         // load paths into hashmap
@@ -40,9 +40,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -60,7 +59,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
@@ -70,6 +69,8 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .withEvents(),
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
@@ -106,6 +107,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .withEvents(),
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()

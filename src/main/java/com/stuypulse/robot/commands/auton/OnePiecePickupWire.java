@@ -25,9 +25,8 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -54,6 +53,8 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
 
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()

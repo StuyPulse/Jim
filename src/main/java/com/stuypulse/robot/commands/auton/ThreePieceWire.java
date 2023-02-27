@@ -36,9 +36,8 @@ public class ThreePieceWire extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
@@ -56,7 +55,7 @@ public class ThreePieceWire extends SequentialCommandGroup {
         // drive to second game piece and intake
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
             new LEDSet(LEDColor.GREEN),
             new SwerveDriveFollowTrajectory(
@@ -66,6 +65,7 @@ public class ThreePieceWire extends SequentialCommandGroup {
                     .withEvents(),
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()
@@ -101,6 +101,7 @@ public class ThreePieceWire extends SequentialCommandGroup {
                     .withEvents(),
             new LEDSet(LEDColor.YELLOW),
             new IntakeWaitForPiece().withTimeout(INTAKE_ACQUIRE_TIME),
+            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
             new LEDSet(LEDColor.RAINBOW),
             new ArmNeutral()

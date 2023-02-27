@@ -42,7 +42,9 @@ public class Robot extends TimedRobot {
     /*********************/
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        robot.arm.setCoast(true, true);
+    }
 
     @Override
     public void disabledPeriodic() {}
@@ -53,6 +55,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        robot.arm.setCoast(false, false);
+
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
         auto = robot.getAutonomousCommand();
@@ -74,6 +78,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        robot.arm.setCoast(false, false);
+
         new TeleopInit().schedule();
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
@@ -95,6 +101,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        robot.arm.setCoast(false, false);
+        
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
         scheduler.cancelAll();

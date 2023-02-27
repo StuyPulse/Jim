@@ -16,6 +16,7 @@ public class SwerveDriveAlignThenBalance extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED.pulse()),
             new SwerveDriveBalanceAlign(),
+            // new SwerveDriveBalanceAlign(),
             new SwerveDriveBalanceBlay(),
             new SwerveDrivePointWheels(Rotation2d.fromDegrees(90)),
             new LEDSet(LEDColor.BLUE)

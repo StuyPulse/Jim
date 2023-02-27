@@ -24,9 +24,7 @@ public class OnePiece extends SequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
-            new ManagerSetIntakeSide(IntakeSide.FRONT),
-            new ManagerSetScoreSide(ScoreSide.OPPOSITE)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP)
         );
 
         // score first piece

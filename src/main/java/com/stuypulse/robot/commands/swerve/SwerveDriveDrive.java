@@ -2,7 +2,7 @@ package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.Manager.IntakeSide;
+import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
@@ -58,7 +58,7 @@ public class SwerveDriveDrive extends CommandBase {
             Vector2D s = speed.get();
             Vector2D translation = new Vector2D(s.y, -s.x);
 
-            // if (Manager.getInstance().getIntakeSide() == IntakeSide.BACK) {
+            // if (getCurrentScoreSide() == ScoreSide.BACK) {
             //     translation = translation.negative();
             // }
 
