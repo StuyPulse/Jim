@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePiecePickupDock extends SequentialCommandGroup{
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.3;
-    private static final double INTAKE_ACQUIRE_TIME = 3.5;
+    private static final double INTAKE_ACQUIRE_TIME = 1.5;
     private static final double ENGAGE_TIME = 10.0;
 
     private static final PathConstraints INTAKE_PIECE = new PathConstraints(1.5, 2);
@@ -52,10 +52,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
                 paths.get("Intake Piece"))
                     .robotRelative(),
                 new IntakeAcquire().andThen(new ArmIntake())
-            ),
-
-            new IntakeAcquire().withTimeout(2),
-            new IntakeStop()
+            )
         );
         
         // dock and engage
@@ -63,7 +60,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .addEvent("ArmNeutral", new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmNeutral()))
                     .withEvents(),
                     
             new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),

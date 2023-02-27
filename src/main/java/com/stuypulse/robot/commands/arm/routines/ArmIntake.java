@@ -15,6 +15,10 @@ public class ArmIntake extends ArmRoutine {
 
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+        // if (DriverStation.isAutonomous()) {
+        //     return super.getTrajectory(src, Acquire.kAuton);
+        // }
+
         double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
 
         return new ArmTrajectory()
