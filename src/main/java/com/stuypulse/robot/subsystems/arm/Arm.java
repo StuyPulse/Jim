@@ -27,12 +27,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
     
 /**
-  * Manual control
-  * 1. schedule setpoints
-  * 2. joystick
-  * 3. cancel commands, set target state to current state
-  * 4. move around
-  * 5. schedule setpoints again
+  * Double jointed arm controlled by two motion profiled PID controllers. 
+  * 
+  * Available control "modes":
+  * - setpoint control (PID+FF controllers are used) (shoulder is not allowed above maximum shoulder angle)
+  * - limp mode (controller output is overriden to be zero)
+  * - voltage override ("force" feeds a voltage to the motor)
   */ 
 public abstract class Arm extends SubsystemBase {
 
@@ -224,7 +224,7 @@ public abstract class Arm extends SubsystemBase {
     // set coast / brake mode
     public void setCoast(boolean wristCoast, boolean shoulderCoast) {}
 
-    // 
+    // set if the ligaments are "limp" (zero voltage)
     public final void setLimp(boolean wristLimp, boolean shoulderLimp) {
         this.wristLimp.set(wristLimp);
         this.shoulderLimp.set(shoulderLimp);
