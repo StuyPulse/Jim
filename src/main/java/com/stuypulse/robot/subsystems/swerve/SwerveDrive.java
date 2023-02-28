@@ -198,6 +198,13 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
 
+    public double getForwardAccelerationGs() {
+        if (Settings.ROBOT == Settings.Robot.SACROD) {
+            return gyro.getWorldLinearAccelX();
+        }
+        return gyro.getWorldLinearAccelY();
+    }
+
     /** KINEMATICS **/
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
@@ -236,6 +243,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
         SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
 
+        SmartDashboard.putNumber("Swerve/Forward Acceleration (Gs)", getForwardAccelerationGs());
         SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getWorldLinearAccelX());
         SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getWorldLinearAccelY());
         SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getWorldLinearAccelZ());
