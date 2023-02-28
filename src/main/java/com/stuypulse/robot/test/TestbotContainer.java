@@ -134,8 +134,8 @@ public class TestbotContainer {
                         shoulderVolts = 0;
                     }
         
-                    Settings.putNumber("Arm/Shoulder Voltage", shoulderVolts);
-                    Settings.putNumber("Arm/Wrist Voltage", wristVolts);
+                    SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
+                    SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
         
                     arm.runShoulder(shoulderVolts);
                     arm.runWrist(wristVolts);

@@ -61,8 +61,6 @@ public class SimIntake extends Intake {
 
     @Override
     public void periodic() {
-        if (Settings.isDebug()) {
-            Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
-        }
+        Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
     }   
 }

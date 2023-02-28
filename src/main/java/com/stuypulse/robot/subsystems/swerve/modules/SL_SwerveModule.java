@@ -135,15 +135,14 @@ public class SL_SwerveModule extends SwerveModule {
             targetState.speedMetersPerSecond, 
             getVelocity()));
         
-        if (Settings.isDebug()) {
-            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
-            Settings.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
-            Settings.putNumber("Swerve/" + id + "/Velocity", getVelocity());
-            Settings.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
-            Settings.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
-        }
+
+        SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getVelocity());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
     }
 }
