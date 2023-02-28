@@ -16,8 +16,10 @@ import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveToPose extends CommandBase{
@@ -30,6 +32,8 @@ public class SwerveDriveToPose extends CommandBase{
     private final AngleController angleController;
 
     private final BStream aligned;
+
+    private final FieldObject2d targetPose2d;
     
     public SwerveDriveToPose(Supplier<Pose2d> targetPoses){
         this.swerve = SwerveDrive.getInstance();
@@ -40,7 +44,8 @@ public class SwerveDriveToPose extends CommandBase{
         angleController = new AnglePIDController(Rotation.P, Rotation.I, Rotation.D);
         
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
-        
+
+        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
         addRequirements(swerve);
     }
 
@@ -55,6 +60,8 @@ public class SwerveDriveToPose extends CommandBase{
 
         Pose2d currentState = Odometry.getInstance().getPose();
         Pose2d targetPose = targetPoses.get();
+
+        targetPose2d.setPose(targetPose);
 
         boolean alignY = xController.isDone(Units.inchesToMeters(6));
 
@@ -78,6 +85,7 @@ public class SwerveDriveToPose extends CommandBase{
 
     public void end(boolean interupted) {
         swerve.stop();
+        targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }
     
 }
