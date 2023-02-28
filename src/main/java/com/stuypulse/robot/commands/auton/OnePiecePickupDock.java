@@ -39,7 +39,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady(),
+            new ArmReady().withTolerance(5, 10),
             // new ArmScore(),
             new IntakeScore().withTimeout(INTAKE_DEACQUIRE_TIME)
         );

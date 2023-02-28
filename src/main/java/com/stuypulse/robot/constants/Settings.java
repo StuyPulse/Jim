@@ -56,8 +56,8 @@ public interface Settings {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Deacquire Front", 0.5);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Deacquire Back", 0.5);
 
-            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 0.5);
-            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 0.5);
+            SmartNumber CONE_UP_FRONT = new SmartNumber("Intake/Cone Up Deacquire Front", 0.75);
+            SmartNumber CONE_UP_BACK = new SmartNumber("Intake/Cone Up Deacquire Back", 0.75);
 
             SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
             SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);
@@ -184,6 +184,8 @@ public interface Settings {
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
+            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
+
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
@@ -225,11 +227,13 @@ public interface Settings {
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
-    
+
+            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
+
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1.0);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 2.0);
             }
     
             public interface Feedforward {
