@@ -78,6 +78,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+        configureChooserBindings();
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
