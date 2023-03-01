@@ -14,7 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 * @author Carmin Vuong
 * @author Jiayu Yan
 * @author Tracey Lin
-*
+* @author Jady Lei
+*/
+
+/*
+* Plant subsystem that grips the charging station
+* 
+* Contains:
+*   - Double Solenoid 
+*   - Plant grippers
+*   - Retract grippers 
+* 
 */
 public class PlantImpl extends Plant {
     private final DoubleSolenoid solenoid;
@@ -24,13 +34,16 @@ public class PlantImpl extends Plant {
         disengage();
     }
 
+    // extends the grippers to engage with the charging station
     public void engage() {
         solenoid.set(Value.kReverse);
     }
 
+    // retacts the grippers to disengage with the charging station
     public void disengage() {
         solenoid.set(Value.kForward);
     }
+
 
     @Override
     public void periodic() {
