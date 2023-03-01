@@ -189,6 +189,10 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
+        operator.getBottomButton()
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+
+
         operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
             .onFalse(arm.runOnce(arm::disableLimp));

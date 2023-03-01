@@ -3,9 +3,6 @@
     "retained": {
       "limelight": {
         "open": true
-      },
-      "limelight-back": {
-        "open": true
       }
     },
     "transitory": {
@@ -13,7 +10,8 @@
         "Arm": {
           "Wrist": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Auto Balance": {
           "Translation": {
@@ -67,6 +65,11 @@
       "/SmartDashboard/LED Mech2d": "Mechanism2d"
     },
     "windows": {
+      "/SmartDashboard/Arm Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Autonomous": {
         "window": {
           "visible": true
@@ -92,14 +95,13 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "10.6.94.2",
-    "visible": false
+    "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 936,
+          "height": 1504,
           "series": [
             {
               "color": [

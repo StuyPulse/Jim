@@ -30,8 +30,8 @@ public interface Motors {
     }
 
     public interface Intake {
-        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake, 20);
-        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake, 20);
+        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
+        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
     }
 
     public interface Swerve {

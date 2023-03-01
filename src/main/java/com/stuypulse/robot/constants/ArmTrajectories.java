@@ -101,8 +101,8 @@ public interface ArmTrajectories {
 
     public interface Deacquire {
         ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Deacquire Front Shoulder", -80),
-			new SmartNumber("Arm Trajectories/Deacquire Front Wrist", 10));
+			new SmartNumber("Arm Trajectories/Deacquire Front Shoulder", -65),
+			new SmartNumber("Arm Trajectories/Deacquire Front Wrist", 45));
     }
 
     public interface Neutral {

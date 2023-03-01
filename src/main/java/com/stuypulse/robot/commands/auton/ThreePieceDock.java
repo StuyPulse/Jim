@@ -71,7 +71,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
-                    .addEvent("ReadyArmOne", new ArmReady().andThen(new ArmScore()))
+                    .addEvent("ReadyArmOne", new ArmReady())
                     .withEvents(),
 
 
