@@ -37,7 +37,6 @@ public class TwoPiece extends SequentialCommandGroup{
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -70,7 +69,6 @@ public class TwoPiece extends SequentialCommandGroup{
             new ManagerSetScoreIndex(1),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),

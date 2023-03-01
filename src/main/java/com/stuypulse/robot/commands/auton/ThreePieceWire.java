@@ -40,7 +40,6 @@ public class ThreePieceWire extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -73,7 +72,6 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -103,7 +101,6 @@ public class ThreePieceWire extends SequentialCommandGroup {
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),

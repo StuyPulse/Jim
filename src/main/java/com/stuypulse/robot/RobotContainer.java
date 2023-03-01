@@ -176,7 +176,7 @@ public class RobotContainer {
                     .andThen(new ArmReady()));
 
         operator.getRightButton()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+            .onTrue(new IntakeScore())
             .onFalse(new IntakeStop());
 
         // set level to score at

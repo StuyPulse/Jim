@@ -20,7 +20,7 @@ public class TwoPieceWire extends SequentialCommandGroup{
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
 
-
+    
     public TwoPieceWire() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
@@ -37,7 +37,6 @@ public class TwoPieceWire extends SequentialCommandGroup{
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -70,7 +69,6 @@ public class TwoPieceWire extends SequentialCommandGroup{
             new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),

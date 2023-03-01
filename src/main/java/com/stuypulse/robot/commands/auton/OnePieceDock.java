@@ -30,7 +30,6 @@ public class OnePieceDock extends SequentialCommandGroup {
             "Back Away", "Dock"
         );
 
-
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
@@ -41,7 +40,6 @@ public class OnePieceDock extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()

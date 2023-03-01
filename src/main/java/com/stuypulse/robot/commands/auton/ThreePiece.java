@@ -40,7 +40,6 @@ public class ThreePiece extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
@@ -68,11 +67,10 @@ public class ThreePiece extends SequentialCommandGroup {
                     .addEvent("ReadyArmOne", new ArmReady())
                     .withEvents(),
 
-
+                    
             new ManagerSetScoreIndex(1),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -104,7 +102,6 @@ public class ThreePiece extends SequentialCommandGroup {
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
