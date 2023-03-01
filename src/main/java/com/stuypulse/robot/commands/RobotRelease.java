@@ -33,9 +33,7 @@ public class RobotRelease extends CommandBase {
 
     @Override
     public void initialize() {
-        if (manager.getGamePiece().isCone()) {
-            intake.deacquire();
-        }
+        intake.deacquire();
     }
 
     @Override
