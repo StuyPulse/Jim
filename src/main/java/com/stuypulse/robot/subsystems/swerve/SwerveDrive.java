@@ -83,7 +83,7 @@ public class SwerveDrive extends SubsystemBase {
 
     private final FieldObject2d[] module2ds;
 
-    public SwerveDrive(SwerveModule... modules) {
+    protected SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
         gyro = new AHRS(SPI.Port.kMXP);

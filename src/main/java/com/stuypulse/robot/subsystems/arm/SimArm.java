@@ -17,7 +17,7 @@ public class SimArm extends Arm {
     private double shoulderVolts;
     private double wristVolts;
 
-    public SimArm() { 
+    protected SimArm() { 
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
         simulation = new TwoJointArmSimulation(-Math.PI/2, Math.PI/2, dynamics);
         

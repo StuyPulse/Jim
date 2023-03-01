@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Wing extends SubsystemBase {
 
+    // Singleton
     private static final Wing instance;
 
     static {
@@ -15,6 +16,10 @@ public abstract class Wing extends SubsystemBase {
 
     public static Wing getInstance() {
         return instance;
+    }
+
+    // Wing methods
+    protected Wing() {
     }
 
     public abstract boolean isExtended();

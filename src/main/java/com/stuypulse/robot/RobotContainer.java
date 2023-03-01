@@ -55,7 +55,7 @@ public class RobotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
-    // // Subsystem
+    // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
     public final Intake intake = Intake.getInstance();
     public final Vision vision = Vision.getInstance();
@@ -66,7 +66,7 @@ public class RobotContainer {
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
-    public final Pump pump = new Pump();
+    public final Pump pump = Pump.getInstance();
   
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();

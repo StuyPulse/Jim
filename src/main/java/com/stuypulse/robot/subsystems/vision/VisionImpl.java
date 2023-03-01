@@ -33,7 +33,7 @@ public class VisionImpl extends Vision {
 
     private final FieldObject2d[] limelightPoses;
 
-    public VisionImpl() {
+    protected VisionImpl() {
         // setup limelight objects
         String[] hostNames = LIMELIGHTS;
         limelights = new Limelight[hostNames.length];

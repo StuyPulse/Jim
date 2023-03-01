@@ -79,7 +79,7 @@ public abstract class Arm extends SubsystemBase {
     private final AngleVelocity wristVelocity;
     
 
-    public Arm() {
+    protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 

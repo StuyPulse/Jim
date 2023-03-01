@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.intake;
 
 import static com.stuypulse.robot.constants.Settings.Intake.*;
 
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.network.SmartNumber;
@@ -12,7 +11,7 @@ public class SimIntake extends Intake {
     SmartNumber frontMotor = new SmartNumber("Intake/Front Motor", 0);
     SmartNumber backMotor = new SmartNumber("Intake/Back Motor", 0);
 
-    public SimIntake() {}
+    protected SimIntake() {}
 
     // INTAKING MODES
 
