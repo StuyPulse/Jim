@@ -6,7 +6,6 @@ import static com.stuypulse.robot.constants.Ports.Intake.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -22,7 +21,7 @@ public class IntakeImpl extends Intake {
 
     private BStream stalling;
 
-    public IntakeImpl() {
+    protected IntakeImpl() {
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
 

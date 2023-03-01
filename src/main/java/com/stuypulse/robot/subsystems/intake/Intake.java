@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Intake extends SubsystemBase {
+
+    // Singleton
     private static final Intake instance;
 
     static {
@@ -15,11 +17,14 @@ public abstract class Intake extends SubsystemBase {
             instance = new IntakeImpl();
         else
             instance = new SimIntake();
-        // instance = new SimIntake();
     }
     
     public static Intake getInstance() {
         return instance;
+    }
+
+    // Intake methods
+    protected Intake() {
     }
 
     public abstract void acquire();

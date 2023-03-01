@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.odometry;
 
 import java.util.List;
 
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.subsystems.vision.Vision.Noise;
@@ -68,7 +67,7 @@ public class OdometryImpl extends Odometry {
     private final FieldObject2d odometryPose2d;
     private final FieldObject2d poseEstimatorPose2d;
 
-    public OdometryImpl() {   
+    protected OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
@@ -128,7 +127,6 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public void periodic() {
-
         SwerveDrive drive = SwerveDrive.getInstance();
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
         odometry.update(drive.getGyroAngle(), drive.getModulePositions());

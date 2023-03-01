@@ -7,7 +7,6 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.util.StopWatch;
 
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.LEDColor;
@@ -33,10 +32,11 @@ public class LEDController extends SubsystemBase {
 
     private static LEDController instance;
 
+    static {
+        instance = new LEDController();
+    }
+
     public static LEDController getInstance() {
-        if (instance == null) {
-            instance = new LEDController();
-        }
         return instance;
     }
 
@@ -53,7 +53,7 @@ public class LEDController extends SubsystemBase {
     private final Mechanism2d ledMech;
     private final MechanismLigament2d ledLigament;
 
-    public LEDController() {
+    protected LEDController() {
         this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
 

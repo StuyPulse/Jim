@@ -20,6 +20,9 @@ public abstract class Vision extends SubsystemBase {
         return instance; 
     }
 
+    protected Vision() {
+    }
+
     /** VISION TYPES **/
     public enum Noise {
         LOW,

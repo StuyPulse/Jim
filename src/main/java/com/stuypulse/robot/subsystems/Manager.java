@@ -3,7 +3,6 @@ package com.stuypulse.robot.subsystems;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
@@ -19,10 +18,11 @@ public class Manager extends SubsystemBase {
     // singleton
     private static Manager instance;
 
+    static {
+        instance = new Manager();
+    }
+
     public static Manager getInstance() {
-        if (instance == null) {
-            instance = new Manager();
-        }
         return instance;
     }
 
@@ -73,7 +73,7 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
-    public Manager() {
+    protected Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         scoreSide = ScoreSide.FRONT;
