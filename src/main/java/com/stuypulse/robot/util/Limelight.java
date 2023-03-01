@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight {
     
@@ -32,7 +33,6 @@ public class Limelight {
         this.tableName = tableName;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
-
         latencyEntry = limelight.getDoubleTopic("tl").getEntry(0);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
 
@@ -58,14 +58,21 @@ public class Limelight {
             botposeData = redBotposeEntry.get();
         }
 
-        if (botposeData.length != 6) {
+        if (botposeData.length != 7) {
             data = Optional.empty();
             return;
         }
 
         Pose2d botpose = new Pose2d(botposeData[0], botposeData[1], Rotation2d.fromDegrees(botposeData[5]));
-        double latency = Units.millisecondsToSeconds(latencyEntry.get() + kCaptureDelayMs);
+        double latency = botposeData[6];
         int id = (int) idEntry.get();
+
+        SmartDashboard.putNumber("Limelight/" + getTableName() + "/Pose X", botpose.getX());
+        SmartDashboard.putNumber("Limelight/" + getTableName() + "/Pose Y", botpose.getY());
+        SmartDashboard.putNumber("Limelight/" + getTableName() + "/Pose Rotation (Deg)", botpose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Limelight/" + getTableName() + "/Tag ID", id);
+        SmartDashboard.putNumber("Limelight/" + getTableName() + "/Latency", latency);
+
         
         data = Optional.of(new AprilTagData(botpose, latency, id));
     }

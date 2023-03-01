@@ -25,7 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OdometryImpl extends Odometry {
 
-    SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
+    public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
+    public static final SmartBoolean OVERRIDE = new SmartBoolean("Odometry/April Tag Override", false);
 
     static class StandardDeviations {
         public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
@@ -34,11 +35,15 @@ public class OdometryImpl extends Odometry {
         public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
         public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
 
-        public static final Vector<N3> OVERRIDE = VecBuilder.fill(1,1,Math.toRadians(10));
+        public static final Vector<N3> OVERRIDE_STDS = VecBuilder.fill(1,1,Math.toRadians(10));
 
         private StandardDeviations() {}
 
         public static Vector<N3> get(Noise noise) {
+            if (OVERRIDE.get()) {
+                return OVERRIDE_STDS;
+            }
+
             if (DriverStation.isAutonomous()) {
                 switch (noise) {
                     case LOW:
@@ -112,7 +117,7 @@ public class OdometryImpl extends Odometry {
             if (!DISABLE_APRIL_TAGS.get()) {
                 switch (result.getNoise()) {
                     case HIGH:
-                        break;
+                        continue;
                     default:
                         poseEstimator.addVisionMeasurement(
                             result.getPose(),
@@ -120,7 +125,7 @@ public class OdometryImpl extends Odometry {
                             StandardDeviations.get(result.getNoise()));
 
                         field.getObject("Vision Pose2d").setPose(result.getPose());
-                        break;
+                        continue;
                 }
             }
         }  

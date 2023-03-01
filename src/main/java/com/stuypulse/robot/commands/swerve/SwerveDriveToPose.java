@@ -63,14 +63,15 @@ public class SwerveDriveToPose extends CommandBase{
 
         targetPose2d.setPose(targetPose);
 
-        boolean alignY = xController.isDone(Units.inchesToMeters(6));
+        // boolean alignY = xController.isDone(Units.inchesToMeters(6));
 
         xController.update(targetPose.getX(), currentState.getX());
         yController.update(targetPose.getY(), currentState.getY());
         
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            alignY ? 0 : xController.getOutput(),
-            alignY ? yController.getOutput() : 0,
+            // alignY ? 0 : xController.getOutput(),
+            // alignY ? yController.getOutput() : 0,
+            xController.getOutput(), yController.getOutput(),
             angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation())),
             currentState.getRotation()
         );
