@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Odometry extends SubsystemBase {
     
+    // Singleton data
     private static final Odometry instance;
 
     static {
@@ -18,9 +19,13 @@ public abstract class Odometry extends SubsystemBase {
         return instance;
     }
 
+    // Odometry methods
+    protected Odometry() {
+    }
+
     public abstract Field2d getField();
 
-    public abstract void reset( Pose2d pose2d);
+    public abstract void reset(Pose2d pose2d);
     
     public abstract Pose2d getPose();
 

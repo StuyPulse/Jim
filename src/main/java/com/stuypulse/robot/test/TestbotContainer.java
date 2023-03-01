@@ -35,7 +35,7 @@ public class TestbotContainer {
     public final TestPlant plant = new TestPlant();
     public final TestWing wings = new TestWing();
     
-    public final Pump pump = new Pump();
+    public final TestPump pump = new TestPump();
 
     public TestbotContainer() {
         configureDefaultCommands();
