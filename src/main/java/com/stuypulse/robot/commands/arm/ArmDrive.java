@@ -18,20 +18,22 @@ public class ArmDrive extends CommandBase {
     private final IStream wrist;
 
     private final StopWatch timer;
-   
-    public ArmDrive(Gamepad gamepad){
-        this.arm = Arm.getInstance();
+
+    private final Gamepad gamepad;
+
+    public ArmDrive(Gamepad gamepad) {
+        arm = Arm.getInstance();
+
+        this.gamepad = gamepad;
 
         // these give values in deg / s
         this.shoulder = IStream.create(gamepad::getLeftY).filtered(
             x -> SLMath.deadband(x, DEADBAND.get()),
-            x -> SLMath.spow(x, 2),
-            x -> x * SHOULDER_TELEOP_SPEED.get());
+            x -> SLMath.spow(x, 2));
 
         this.wrist = IStream.create(gamepad::getRightY).filtered(
             x -> SLMath.deadband(x, DEADBAND.get()),
-            x -> SLMath.spow(x, 2),
-            x -> x * WRIST_TELEOP_SPEED.get());
+            x -> SLMath.spow(x, 2));
 
         // timer is used to get deg from deg / s (by multiplying by time)
         timer = new StopWatch();
@@ -50,7 +52,13 @@ public class ArmDrive extends CommandBase {
 
         double sign = Odometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
 
-        arm.moveShoulderTargetAngle(sign * shoulder.get() * dt);
-        arm.moveWristTargetAngle(sign * wrist.get() * dt);
+        if (gamepad.getRawRightBumper()) {
+            arm.setShoulderVoltage(sign * shoulder.get() * dt * SHOULDER_DRIVE_VOLTAGE.get());
+            arm.setWristVoltage(sign * wrist.get() * dt * WRIST_DRIVE_VOLTAGE.get());
+        } else {
+            arm.moveShoulderTargetAngle(sign * shoulder.get() * dt * SHOULDER_TELEOP_SPEED.get());
+            arm.moveWristTargetAngle(sign * wrist.get() * dt * WRIST_TELEOP_SPEED.get());
+        }
+
     }
 }

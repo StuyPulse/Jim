@@ -154,7 +154,7 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // manual control
         new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
-            .onTrue(new ArmVoltageDrive(operator));
+            .onTrue(new ArmDrive(operator));
         
         // intaking
         operator.getRightTriggerButton()
@@ -164,7 +164,7 @@ public class RobotContainer {
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
+            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
@@ -175,7 +175,7 @@ public class RobotContainer {
                     .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady()));
 
-        operator.getRightBumper()
+        operator.getRightButton()
             .whileTrue(new ArmScore().alongWith(new IntakeScore()))
             .onFalse(new IntakeStop());
 
@@ -191,12 +191,7 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
-        // ONLY FOR TESTING PURPOSES
-        operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
-
-        operator.getRightButton()
-            // .onTrue(new ArmHold());
+        operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
             .onFalse(arm.runOnce(arm::disableLimp));
 
