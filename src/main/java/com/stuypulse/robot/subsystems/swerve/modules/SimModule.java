@@ -83,38 +83,62 @@ public class SimModule extends SwerveModule {
         targetState = new SwerveModuleState();
     }   
     
+    /**
+     * @return Gets the ID of the module
+     */
     @Override
     public String getID() {
         return id;
     }
-    
+
+    /**
+     * @return Gets the offset of the module relative to the robot.
+     */
     @Override
     public Translation2d getOffset() {
         return location;
     }
     
+    /**
+     * @return Gets the state of the module.
+     */
     @Override
     public SwerveModuleState getState() {
         return new SwerveModuleState(getVelocity(), getAngle());
     }
     
+    /**
+     * @return Gets the velocity of the module.
+     */
     private double getVelocity() {
         return driveSim.getOutput(1);
     }
 
+    /**
+     * @return Gets the distance traveled of the module.
+     */
     private double getDistance() {
         return driveSim.getOutput(0);
     }
     
+    /**
+     * @return Gets the angle of the module.
+     */
     private Rotation2d getAngle() {
         return Rotation2d.fromRadians(turnSim.getOutput(0));
     } 
 
+    /**
+     * @return Sets the target state of the module.
+     */
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
     }
     
+    /**
+     * @return Gets the position of the module.
+     */
     @Override
     public SwerveModulePosition getModulePosition() {
         return new SwerveModulePosition(getDistance(), getAngle());

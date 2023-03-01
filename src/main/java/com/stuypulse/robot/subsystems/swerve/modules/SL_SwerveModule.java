@@ -90,21 +90,33 @@ public class SL_SwerveModule extends SwerveModule {
         Motors.Swerve.DRIVE.configure(turnMotor);
     }   
     
+    /**
+     * @return Gets the id of the module.
+     */
     @Override
     public String getID() {
         return id;
     }
     
+    /**
+     * @return Gets the offset of the module.
+     */
     @Override
     public Translation2d getOffset() {
         return location;
     }
     
+    /**
+     * @return Gets the current state of the module.
+     */
     @Override
     public SwerveModuleState getState() {
         return new SwerveModuleState(getVelocity(), getAngle());
     }
     
+    /**
+     * @return Gets the current position of the module.
+     */
     private double getVelocity() {
         return driveEncoder.getVelocity();
     }

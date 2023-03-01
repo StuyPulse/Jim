@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
-import com.stuypulse.robot.subsystems.swerve.modules.MAX_SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SL_SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SacrodModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
@@ -29,7 +28,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
@@ -99,6 +97,9 @@ public class SwerveDrive extends SubsystemBase {
         }
     }
     
+    /**
+     * @return Gets the location of the module relative to the robot
+     */
     private Translation2d[] getModuleOffsets() {
         Translation2d[] locations = new Translation2d[modules.length];    
         
@@ -108,7 +109,9 @@ public class SwerveDrive extends SubsystemBase {
         
         return locations;
     }
-    
+    /**
+     * @return Gets the position of the module
+     */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for(int i = 0; i < modules.length; i++) {
@@ -116,7 +119,9 @@ public class SwerveDrive extends SubsystemBase {
         }
         return positions;
     }
-
+    /**
+     * @return Gets the state of the module
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
         for(int i = 0; i < modules.length; i++) {
@@ -124,7 +129,9 @@ public class SwerveDrive extends SubsystemBase {
         }
         return states;
     }
-
+    /**
+     * @return Gets the id of the module
+     */
     private SwerveModule getModule(String id) {
         for (SwerveModule module : modules) 
             if (module.getID().equals(id)) {
@@ -133,6 +140,9 @@ public class SwerveDrive extends SubsystemBase {
         throw new IllegalArgumentException("Couldn't find the module with id \"" + id + "\"");
     }
 
+    /**
+     * @return Gets the current velocity of the module.
+     */
     public ChassisSpeeds getChassisSpeeds() {
         return getKinematics().toChassisSpeeds(getModuleStates());
     }
@@ -180,19 +190,32 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     /** GYRO API **/
+    /**
+     * @return Gets the gyro angle of the module.
+     */
     public Rotation2d getGyroAngle() {
         return gyro.getRotation2d();
     }
     
+    /**
+     * @return Gets the gyro pitch of the module.
+     */
     public Rotation2d getGyroPitch() {
         return Rotation2d.fromDegrees(gyro.getPitch());
     }
 
+    /**
+     * @return Gets the gyro roll of the module.
+     */
     public Rotation2d getGyroRoll() {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
 
     /** KINEMATICS **/
+
+    /**
+     * @return Gets the kinematics.
+     */
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }

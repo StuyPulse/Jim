@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.swerve.modules;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -21,14 +22,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 
 public class MAX_SwerveModule extends SwerveModule {
 
     // module data
-    private String id;
+    private String id; 
     private Translation2d location;
     private SwerveModuleState targetState;
 
@@ -73,6 +72,7 @@ public class MAX_SwerveModule extends SwerveModule {
         prevVelocity = 0;
     }   
 
+    //Configure Turn Motor
     private void configureTurnMotor(Rotation2d angleOffset) {
 
         turnMotor.restoreFactoryDefaults();
@@ -100,7 +100,7 @@ public class MAX_SwerveModule extends SwerveModule {
 
         Motors.Swerve.TURN.configure(turnMotor);
     }
-
+    // Configure Drive Motor
     private void configureDriveMotor() {
 
         driveMotor.restoreFactoryDefaults();
@@ -122,42 +122,58 @@ public class MAX_SwerveModule extends SwerveModule {
         driveEncoder.setPosition(0);
     }
 
-
-    
+    /** 
+     * @return Get the id of the module.
+     */
     @Override
     public String getID() {
         return id;
     }
     
+    /**
+     * @return Gets the offset of the module relative to robot.
+     */
     @Override
     public Translation2d getOffset() {
         return location;
     }
     
+    
+    /**
+     * @return Gets the current state of the module.
+     */
     @Override
     public SwerveModuleState getState() {
         return new SwerveModuleState(getVelocity(), getAngle());
     }
     
+    /**
+     * @return Gets the velocity of the module. 
+     */
     private double getVelocity() {
         return driveEncoder.getVelocity();
     }
     
+    /**
+     * @return Gets the angle of the module.
+     */
     private Rotation2d getAngle() {
         return Rotation2d.fromRotations(absoluteEncoder.getPosition());
     } 
 
+    // Set target state of module
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
     }
     
+    /**
+     * @return Gets the current position of the module.
+     */
     @Override
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle()); 
     }
-
-
 
     @Override
     public void periodic() {
