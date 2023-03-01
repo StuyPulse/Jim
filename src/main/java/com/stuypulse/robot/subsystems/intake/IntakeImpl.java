@@ -16,6 +16,16 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/* Acquires and Deacquires cubes and cones
+* 
+* Contains: 
+*   - Two motors and Two sensors
+*   - Check for cube through sensors
+*   - Check for cone through stalling motors
+*   - Set motor speeds to correct values if intake is flipped, or if intaking cube/cone
+* 
+*/
+
 public class IntakeImpl extends Intake{
 
     private CANSparkMax frontMotor; 
