@@ -16,7 +16,7 @@ public interface ArmTrajectories {
 
         public static ShoulderState getState(Rotation2d shoulderAngle) {
             double normalizedDeg = shoulderAngle.minus(Rotation2d.fromDegrees(-90)).getDegrees();
-            if (Math.abs(normalizedDeg) < Settings.Arm.Shoulder.INTAKE_OVER_BUMPER_ANGLE.get())
+            if (Math.abs(normalizedDeg) < Settings.Arm.Shoulder.OVER_BUMPER_ANGLE.get())
                 return INSIDE;
 
             return (normalizedDeg > 0) ? FRONT : BACK;
@@ -95,7 +95,7 @@ public interface ArmTrajectories {
             new SmartNumber("Arm Trajectories/Acquire Cube Front Shoulder", -71),
             new SmartNumber("Arm Trajectories/Acquire Cube Front Wrist", -5.0));
         ArmState kIntermediate = new ArmState(
-            new SmartNumber("Arm Trajectories/Acquire Intermediate Front Shoulder", -69.4),
+            new SmartNumber("Arm Trajectories/Acquire Intermediate Front Shoulder", -45),
             new SmartNumber("Arm Trajectories/Acquire Intermediate Front Wrist", 0));
     }
 
