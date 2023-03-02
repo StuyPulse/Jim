@@ -82,36 +82,19 @@ public class LEDController extends SubsystemBase {
     }
 
     private void setLEDConditions() {
-        Manager manager = Manager.getInstance();
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.INTAKE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CONE_TIP_IN))
-            .whileTrue(new LEDSet(LEDColor.YELLOW));
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.INTAKE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CONE_TIP_OUT))
-            .whileTrue(new LEDSet(LEDColor.GREEN));
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.INTAKE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CUBE))
-            .whileTrue(new LEDSet(LEDColor.PURPLE));
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.SCORE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CONE_TIP_IN))
-            .whileTrue(new LEDSet(LEDColor.YELLOW.pulse()));
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.SCORE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CONE_TIP_OUT))
-            .whileTrue(new LEDSet(LEDColor.GREEN.pulse()));
-
-        new TeleopButton(() -> manager.getRoutine().equals(Manager.Routine.SCORE) 
-                            && manager.getGamePiece().equals(Manager.GamePiece.CUBE))
-            .whileTrue(new LEDSet(LEDColor.PURPLE.pulse()));
-
     }
 
     public LEDColor getDefaultColor() {
-        return LEDColor.BLUE;
+        switch(Manager.getInstance().getGamePiece()) {
+            case CONE_TIP_IN:
+                return LEDColor.YELLOW;
+            case CONE_TIP_UP:
+                return LEDColor.GREEN;
+            case CUBE:
+                return LEDColor.PURPLE;
+            default:
+                return LEDColor.DARK_GRAY;
+        }
     }
 
     @Override

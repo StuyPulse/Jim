@@ -290,7 +290,7 @@ public interface Settings {
     }
     
     public interface LED {
-        double MANUAL_UPDATE_TIME = 0.75;
+        double MANUAL_UPDATE_TIME = 1.0;
         double BLINK_TIME = 0.5;
     }
     public interface Wings {
