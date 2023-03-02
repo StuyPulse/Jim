@@ -13,32 +13,25 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class OnePiece extends SequentialCommandGroup {
 
-    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-
-    private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
+    private static final double ARM_SCORE_TIME = 4.0;
+    private static final double INTAKE_DEACQUIRE_TIME = 2.0;
 
     public OnePiece() {
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP)
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
+            new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
         addCommands(
-            new ArmReady(),
+            new ArmReady()
+                .withTolerance(7, 9)
+                .withTimeout(ARM_SCORE_TIME),
+
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
-        );
-        
-        // mobility
-        addCommands(
-            new SwerveDriveFollowTrajectory(
-                PathPlanner.loadPath("1 Piece + Mobility", CONSTRAINTS))
-                    .robotRelative()
-                    .addEvent("ArmNeutral", new ArmStow())
-                    .withEvents()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
     }
     
