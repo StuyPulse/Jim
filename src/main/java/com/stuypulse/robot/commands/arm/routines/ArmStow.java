@@ -5,10 +5,10 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
-public class ArmNeutral extends ArmRoutine {
+public class ArmStow extends ArmRoutine {
     
-    public ArmNeutral() {
-        super(Manager.getInstance()::getNeutralTrajectory);
+    public ArmStow() {
+        super(Manager.getInstance()::getStowTrajectory);
     }
 
 	@Override

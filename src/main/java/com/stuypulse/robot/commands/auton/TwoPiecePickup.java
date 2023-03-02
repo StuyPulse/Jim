@@ -41,7 +41,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to and intake second piece
@@ -56,7 +56,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
                     .withEvents(),
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
         
         // drive to grid and score second piece
@@ -73,7 +73,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // intake third piece
@@ -86,7 +86,7 @@ public class TwoPiecePickup extends SequentialCommandGroup {
 
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
     }
 }

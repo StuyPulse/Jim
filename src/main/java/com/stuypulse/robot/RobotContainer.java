@@ -158,13 +158,13 @@ public class RobotContainer {
         operator.getRightTriggerButton()
             .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            .onFalse(new ArmStow());
 
         // outtake
         operator.getLeftTriggerButton()
             .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            .onFalse(new ArmStow());
 
         // ready & score
         operator.getLeftBumper()

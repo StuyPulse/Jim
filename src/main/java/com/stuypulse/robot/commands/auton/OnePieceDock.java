@@ -48,7 +48,7 @@ public class OnePieceDock extends SequentialCommandGroup {
         // dock and engage
         addCommands(
             new SwerveDriveFollowTrajectory(paths.get("Back Away")),
-            new ArmNeutral(),
+            new ArmStow(),
             new SwerveDriveFollowTrajectory(paths.get("Dock")),
             new SwerveDriveBalanceBlay().withMaxSpeed(BALANCE_CONSTRAINTS.maxVelocity).withTimeout(ENGAGE_TIME),
             new PlantEngage()

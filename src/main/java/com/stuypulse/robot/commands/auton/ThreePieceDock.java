@@ -47,7 +47,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to second game piece and intake
@@ -63,7 +63,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
 
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
         
         // drive to grid and score second piece
@@ -81,7 +81,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to and intake third piece
@@ -93,7 +93,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
                     .withEvents(),
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to grid and score third piece
@@ -110,7 +110,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // dock and engage
@@ -118,7 +118,7 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral()),
+                    .addEvent("ArmNeutral", new ArmStow()),
 
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
