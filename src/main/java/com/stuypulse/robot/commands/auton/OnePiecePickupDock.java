@@ -18,11 +18,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class OnePiecePickupDock extends SequentialCommandGroup{
 
-    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
+    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_PIECE = new PathConstraints(1.5, 2);
+    private static final PathConstraints INTAKE_PIECE = new PathConstraints(2, 2);
     private static final PathConstraints DOCK = new PathConstraints(3, 2);
 
     public OnePiecePickupDock() {
@@ -40,8 +42,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady().withTolerance(7, 7).withTimeout(5),
-            // new ArmScore(),
+            new ArmReady().withTolerance(7, 9).withTimeout(4),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -53,19 +54,22 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative(),
-                new IntakeAcquire(),
-                new ArmIntake()
+                new ArmIntake().withTolerance(7, 10).withTimeout(4),
+                new WaitCommand(INTAKE_STOP_WAIT_TIME).andThen(new IntakeStop()).andThen(
+                    new WaitCommand(INTAKE_WAIT_TIME).andThen(new IntakeAcquire())
+                )
             )
         );
         
         // dock and engage
         addCommands(
-            new SwerveDriveFollowTrajectory(
-                paths.get("Dock"))
-                    .fieldRelative()
-                    .addEvent("ArmNeutral", new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow()))
-                    .withEvents(),
-                    
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(
+                    paths.get("Dock"))
+                        .fieldRelative(),
+                new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
+            ),
+
             new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
