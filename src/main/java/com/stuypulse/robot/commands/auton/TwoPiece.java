@@ -8,6 +8,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -36,26 +37,22 @@ public class TwoPiece extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady(),
+            new ArmReady().withTolerance(7, 7).withTimeout(5),
+            // new ArmScore(),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmStow()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
-        // drive to second game piece and intake
+        // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
-            new SwerveDriveFollowTrajectory(
+            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
-                    .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME)))
-                    .withEvents(),
-
-            new IntakeStop(),
-            new ArmStow()
+                    .robotRelative(),
+                new IntakeAcquire(),
+                new ArmIntake()
+            )
         );
         
         // drive to grid and score game piece

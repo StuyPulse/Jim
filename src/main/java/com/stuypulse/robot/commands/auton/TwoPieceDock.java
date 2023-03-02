@@ -10,19 +10,19 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class TwoPieceDock extends SequentialCommandGroup {
 
-    private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double ALIGNMENT_TIME = 1.0;
-    private static final double ENGAGE_TIME = 3.0;
+    private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
+    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(3,2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
 
     public TwoPieceDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -39,51 +39,49 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new ArmReady(),
+            new ArmReady().withTolerance(7, 7).withTimeout(5),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmStow()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
-        // drive to and intake second piece
+        // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
 
-            new SwerveDriveFollowTrajectory(
+            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
-                    .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME)))
-                    .withEvents(),
-
-            new IntakeStop(),
-            new ArmStow()
+                    .robotRelative(),
+                new IntakeAcquire(),
+                new ArmIntake()
+            )
         );
         
         // drive to grid and score second piece
         addCommands(
+            new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetScoreSide(ScoreSide.BACK),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                    .addEvent("ReadyArmOne", new ArmReady())
-                    .withEvents(),
+                .alongWith(new ArmReady()),
 
             new ManagerSetScoreIndex(1),
-            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
+            // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmStow()
+            new IntakeStop()
         );
 
         // dock and engage
         addCommands(
+            new ManagerSetScoreSide(ScoreSide.FRONT),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmStow())
-                    .withEvents(),
+                // .alongWith(new ArmStow()),
+                .alongWith(new ArmReady()),
 
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
             new PlantEngage()
