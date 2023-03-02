@@ -53,8 +53,8 @@ public class ArmDrive extends CommandBase {
         double sign = Odometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
 
         if (gamepad.getRawRightBumper()) {
-            arm.setShoulderVoltage(sign * shoulder.get() * dt * SHOULDER_DRIVE_VOLTAGE.get());
-            arm.setWristVoltage(sign * wrist.get() * dt * WRIST_DRIVE_VOLTAGE.get());
+            arm.setShoulderVoltage(shoulder.get() * SHOULDER_DRIVE_VOLTAGE.get());
+            arm.setWristVoltage(wrist.get() * WRIST_DRIVE_VOLTAGE.get());
         } else {
             arm.moveShoulderTargetAngle(sign * shoulder.get() * dt * SHOULDER_TELEOP_SPEED.get());
             arm.moveWristTargetAngle(sign * wrist.get() * dt * WRIST_TELEOP_SPEED.get());
