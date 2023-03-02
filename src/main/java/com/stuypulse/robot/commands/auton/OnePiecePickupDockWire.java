@@ -43,7 +43,6 @@ public class OnePiecePickupDockWire extends SequentialCommandGroup{
         // score first piece
         addCommands(
             new ArmReady().withTolerance(7, 9).withTimeout(4),
-            // new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
