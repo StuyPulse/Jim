@@ -8,9 +8,6 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
-          "Shoulder": {
-            "open": true
-          },
           "Wrist": {
             "open": true
           },
@@ -27,9 +24,6 @@
             "open": true
           }
         },
-        "BOOM": {
-          "open": true
-        },
         "Back Left": {
           "open": true
         },
@@ -37,12 +31,6 @@
           "open": true
         },
         "Driver Setings": {
-          "open": true
-        },
-        "Manager": {
-          "open": true
-        },
-        "Pump": {
           "open": true
         },
         "Settings": {
@@ -53,8 +41,7 @@
         "Swerve": {
           "Drive": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -108,14 +95,13 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "10.6.94.2",
-    "visible": false
+    "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 936,
+          "height": 1504,
           "series": [
             {
               "color": [
@@ -392,7 +378,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <2>": {
       "plots": [

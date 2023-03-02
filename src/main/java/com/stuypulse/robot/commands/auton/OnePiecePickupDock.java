@@ -12,12 +12,13 @@ import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class OnePiecePickupDock extends SequentialCommandGroup{
 
-    private static final double INTAKE_DEACQUIRE_TIME = 0.3;
+    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
     private static final double ENGAGE_TIME = 10.0;
 
@@ -39,9 +40,10 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady().withTolerance(5, 10),
+            new ArmReady().withTolerance(7, 7).withTimeout(5),
             // new ArmScore(),
-            new IntakeScore().withTimeout(INTAKE_DEACQUIRE_TIME)
+            new IntakeScore(),
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
         // intake second piece
@@ -51,7 +53,8 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
                 paths.get("Intake Piece"))
                     .robotRelative(),
-                new IntakeAcquire().andThen(new ArmIntake())
+                new IntakeAcquire(),
+                new ArmIntake()
             )
         );
         

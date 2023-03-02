@@ -40,7 +40,6 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -72,7 +71,6 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
 
             new ManagerSetScoreIndex(1),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -98,7 +96,6 @@ public class TwoPiecePickupDock extends SequentialCommandGroup {
                     .fieldRelative()
                     .addEvent("ArmNeutral", new ArmNeutral())
                     .withEvents(),
-
 
             new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
             new PlantEngage()

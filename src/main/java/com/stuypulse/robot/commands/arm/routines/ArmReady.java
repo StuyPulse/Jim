@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands.arm.routines;
 
 import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -15,15 +16,16 @@ public class ArmReady extends ArmRoutine {
 
     @Override
     protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-        if (!DriverStation.isAutonomous()) {
-            return super.getTrajectory(src, dest);
+        if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_UP) {
+            return new ArmTrajectory()
+                .addState(dest.getShoulderDegrees(), src.getWristDegrees())
+                .addState(
+                    dest.getShoulderDegrees(), 
+                    (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+                .addState(dest);
         }
-        // TODO: check if src and dest are on the same side
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
 
-        return new ArmTrajectory()
-            .addState(dest.getShoulderDegrees(), src.getWristDegrees())
-            .addState(dest);
+        return super.getTrajectory(src, dest);
     }
 
     @Override

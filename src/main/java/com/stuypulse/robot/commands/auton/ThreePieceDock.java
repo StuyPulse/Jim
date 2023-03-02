@@ -44,7 +44,6 @@ public class ThreePieceDock extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -72,14 +71,13 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece Two"))
                     .fieldRelative()
-                    .addEvent("ReadyArmOne", new ArmReady().andThen(new ArmScore()))
+                    .addEvent("ReadyArmOne", new ArmReady())
                     .withEvents(),
 
 
             new ManagerSetScoreIndex(1),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
@@ -109,7 +107,6 @@ public class ThreePieceDock extends SequentialCommandGroup {
             new ManagerSetScoreIndex(4),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),

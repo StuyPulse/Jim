@@ -150,35 +150,6 @@ public class Manager extends SubsystemBase {
         }
     }
 
-    /** Generate Score Trajectories **/
-
-    public ArmState getScoreTrajectory() {
-        switch (nodeLevel) {
-            case LOW:
-                return getLowReadyTrajectory();
-            case MID:
-                if (gamePiece == GamePiece.CUBE)
-                    return scoreSide == ScoreSide.FRONT ? Score.Mid.kCubeFront : Score.Mid.kCubeBack;
-                
-                // if (gamePiece == GamePiece.CONE_TIP_OUT)
-                //     return Score.Mid.kConeTipOutFront;
-
-                return Score.Mid.kConeTipInBack;
-
-            case HIGH:
-                if (gamePiece == GamePiece.CUBE)
-                    return scoreSide == ScoreSide.FRONT ? Score.High.kCubeFront : Score.High.kCubeBack;
-
-                else if (gamePiece == GamePiece.CONE_TIP_UP)
-                    return Score.High.kConeTipUpBack;
-
-                return Score.High.kConeTipInBack;
-
-            default:
-                return getNeutralTrajectory();
-        }
-    }
-
     /** Generate Neutral Trajectories **/
 
     // wrist faces away from scoring direction for cube
