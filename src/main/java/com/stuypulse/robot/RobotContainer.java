@@ -9,6 +9,7 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.auton.future.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;

@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.future;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -11,8 +11,8 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class ThreePiece extends SequentialCommandGroup {
-
+public class ThreePieceWire extends SequentialCommandGroup {
+    
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double ALIGNMENT_TIME = 1.0;
@@ -22,10 +22,10 @@ public class ThreePiece extends SequentialCommandGroup {
     private static final PathConstraints INTAKE_PIECE_THREE = new PathConstraints(4, 3);
     private static final PathConstraints SCORE_PIECE_THREE = new PathConstraints(3, 2);
 
-    public ThreePiece() {
+    public ThreePieceWire() {
         // load paths into hashmap
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", INTAKE_PIECE_TWO, SCORE_PIECE_TWO, INTAKE_PIECE_THREE, SCORE_PIECE_THREE),
+            PathPlanner.loadPathGroup("3 Piece Wire", INTAKE_PIECE_TWO, SCORE_PIECE_TWO, INTAKE_PIECE_THREE, SCORE_PIECE_THREE),
 
             "Intake Piece Two", "Score Piece Two", "Intake Piece Three", "Score Piece Three"
         );
@@ -42,7 +42,8 @@ public class ThreePiece extends SequentialCommandGroup {
             new ArmReady(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmStow()
         );
 
         // drive to second game piece and intake
@@ -56,7 +57,8 @@ public class ThreePiece extends SequentialCommandGroup {
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new IntakeStop(),
+            new ArmStow()
         );
         
         // drive to grid and score second piece
@@ -67,14 +69,12 @@ public class ThreePiece extends SequentialCommandGroup {
                     .addEvent("ReadyArmOne", new ArmReady())
                     .withEvents(),
 
-                    
-            new ManagerSetScoreIndex(1),
+            new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-
             new ArmStow()
         );
 
@@ -87,7 +87,6 @@ public class ThreePiece extends SequentialCommandGroup {
                     .withEvents(),
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-
             new ArmStow()
         );
 
