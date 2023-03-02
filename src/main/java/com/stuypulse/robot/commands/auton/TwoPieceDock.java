@@ -43,7 +43,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to and intake second piece
@@ -58,7 +58,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
                     .withEvents(),
 
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
         
         // drive to grid and score second piece
@@ -74,7 +74,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // dock and engage
@@ -82,7 +82,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .addEvent("ArmNeutral", new ArmStow())
                     .withEvents(),
 
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),

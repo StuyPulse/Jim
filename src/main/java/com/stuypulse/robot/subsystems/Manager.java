@@ -110,7 +110,7 @@ public class Manager extends SubsystemBase {
                 return getHighReadyTrajectory();
 
             default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
@@ -130,7 +130,7 @@ public class Manager extends SubsystemBase {
                 return scoreSide == ScoreSide.FRONT ? Ready.Mid.kCubeFront : Ready.Mid.kCubeBack;
 
             default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
@@ -146,15 +146,15 @@ public class Manager extends SubsystemBase {
                 return scoreSide == ScoreSide.FRONT ? Ready.High.kCubeFront : Ready.High.kCubeBack;
 
             default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
     /** Generate Neutral Trajectories **/
 
     // wrist faces away from scoring direction for cube
-    public ArmState getNeutralTrajectory() {
-        return Neutral.kTrajectory;
+    public ArmState getStowTrajectory() {
+        return Stow.kTrajectory;
     }
 
     /** Generate Score Pose **/

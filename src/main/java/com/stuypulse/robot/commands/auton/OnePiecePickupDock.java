@@ -63,7 +63,7 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmNeutral()))
+                    .addEvent("ArmNeutral", new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow()))
                     .withEvents(),
                     
             new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),

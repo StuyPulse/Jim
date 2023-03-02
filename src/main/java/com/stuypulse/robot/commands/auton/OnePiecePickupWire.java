@@ -46,7 +46,7 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
 
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
     }

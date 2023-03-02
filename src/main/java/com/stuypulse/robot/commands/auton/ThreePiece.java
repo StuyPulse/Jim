@@ -75,7 +75,7 @@ public class ThreePiece extends SequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
 
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to and intake third piece
@@ -88,7 +88,7 @@ public class ThreePiece extends SequentialCommandGroup {
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
 
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to grid and score third piece
@@ -105,7 +105,7 @@ public class ThreePiece extends SequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
     }
 }
