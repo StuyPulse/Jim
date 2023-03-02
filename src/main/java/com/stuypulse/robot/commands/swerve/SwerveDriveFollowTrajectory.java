@@ -14,7 +14,9 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
@@ -36,6 +38,8 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 	private PathPlannerTrajectory path;
 	private HashMap<String, Command> events;
 
+	private FieldObject2d trajectory;
+
 	public SwerveDriveFollowTrajectory(PathPlannerTrajectory path) {
 
 		super(
@@ -51,6 +55,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		);
 		
 		robotRelative = false;
+		trajectory = Odometry.getInstance().getField().getObject("Trajectory");
 		this.path = path;
 		events = new HashMap<String, Command>();
 	}
@@ -91,7 +96,16 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			));
 		}
 
+		trajectory.setTrajectory(path);
+
 		super.initialize();
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		trajectory.setPose(
+			new Pose2d(Double.NaN, Double.NaN, new Rotation2d(Double.NaN))
+		);
 	}
 
 }

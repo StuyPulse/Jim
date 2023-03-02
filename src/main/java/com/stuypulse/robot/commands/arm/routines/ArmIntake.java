@@ -25,12 +25,18 @@ public class ArmIntake extends ArmRoutine {
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         // if (DriverStation.isAutonomous()) {
-        //     return super.getTrajectory(src, Acquire.kAuton);
+        //     double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
+        //     return new ArmTrajectory()
+        //         .addState(src.getShoulderDegrees(), wristSafeAngle)
+        //         .addState(dest.getShoulderDegrees(), wristSafeAngle)
+        //         .addState(dest);
         // }
 
         double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
+        double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
 
+        // TODO: make tolerance on second to last lower
+        // TODO: make second only check shoulder tolerance
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
             .addState(intermediateShoulderDegrees, wristSafeAngle)

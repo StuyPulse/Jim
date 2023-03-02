@@ -141,11 +141,6 @@ public class VisionImpl extends Vision {
                 pose2d.setPose(aprilTagData.get().pose);
 
                 results.add(process(aprilTagData.get()));
-            } else {
-                SmartDashboard.putNumber("Vision/" + name + "/X" , Double.NaN);
-                SmartDashboard.putNumber("Vision/" + name + "/Y" , Double.NaN);
-                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
-                pose2d.setPose(kNoPose);
             }
         }
     }

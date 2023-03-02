@@ -78,6 +78,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+        configureChooserBindings();
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
@@ -130,8 +131,6 @@ public class RobotContainer {
 
         driver.getTopButton().onTrue(new ArmReady());
 
-        driver.getDPadRight().onTrue(new ManagerFlipScoreSide());
-
         // swerve
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
@@ -142,7 +141,7 @@ public class RobotContainer {
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
         driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
-        
+        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
@@ -163,7 +162,7 @@ public class RobotContainer {
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
+            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
             .onFalse(new IntakeStop())
             .onFalse(new ArmNeutral());
 
@@ -174,8 +173,8 @@ public class RobotContainer {
                     .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady()));
 
-        operator.getRightBumper()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+        operator.getRightButton()
+            .onTrue(new IntakeScore())
             .onFalse(new IntakeStop());
 
         // set level to score at
@@ -190,12 +189,11 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
-        // ONLY FOR TESTING PURPOSES
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
 
-        operator.getRightButton()
-            // .onTrue(new ArmHold());
+
+        operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
             .onFalse(arm.runOnce(arm::disableLimp));
 
