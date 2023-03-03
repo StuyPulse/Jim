@@ -16,9 +16,12 @@ import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
+
+    private static int kDisableStatusFrame = 65535;
 
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -44,10 +47,18 @@ public class ArmImpl extends Arm {
         wristEncoder.setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
+        shoulderEncoder.setVelocityConversionFactor(Units.rotationsToDegrees(1));
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         wristEncoder.setInverted(true);
+        wristEncoder.setVelocityConversionFactor(Units.rotationsToDegrees(1));
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
@@ -97,5 +108,8 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Left Duty Cycle", shoulderLeft.get());
         SmartDashboard.putNumber("Arm/Shoulder/Right Duty Cycle", shoulderRight.get());
         SmartDashboard.putNumber("Arm/Wrist/Duty Cycle", wrist.get());
+
+        SmartDashboard.putNumber("Arm/Shoulder/Encoder Velocity (deg per s)", shoulderEncoder.getVelocity());
+        SmartDashboard.putNumber("Arm/Wrist/Encoder Velocity (deg per s)", wristEncoder.getVelocity());
     }
 }
