@@ -4,14 +4,17 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -42,7 +45,10 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
+            new LEDSet(LEDColor.RED),
             new ArmReady().withTolerance(7, 9).withTimeout(4),
+
+            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -51,23 +57,28 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
 
-            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece"))
+            new LEDSet(LEDColor.GREEN),
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative(),
-                new ArmIntake().withTolerance(7, 10).withTimeout(4),
                 new WaitCommand(INTAKE_STOP_WAIT_TIME).andThen(new IntakeStop()).andThen(
                     new WaitCommand(INTAKE_WAIT_TIME).andThen(new IntakeAcquire())
-                )
+                ),
+                new ArmIntake().withTolerance(7, 10).withTimeout(6.5)
             )
         );
         
         // dock and engage
         addCommands(
-            new ParallelCommandGroup(
-                new SwerveDriveFollowTrajectory(
-                    paths.get("Dock"))
-                        .fieldRelative(),
-                new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
+            new LEDSet(LEDColor.PURPLE),
+            new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
+                    new SwerveDriveFollowTrajectory(
+                        paths.get("Dock"))
+                            .fieldRelative(),
+                    new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
+                ),
+                new ArmStow()
             ),
 
             new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
