@@ -35,13 +35,19 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void initialize() {
-
-        arm.setWristVoltage(kWristVoltage.get());
-
-        if (manager.getGamePiece().isCube()) {
-            intake.deacquire();
+        switch (manager.getGamePiece()) {
+            case CUBE: 
+                intake.deacquire();
+                break;
+            case CONE_TIP_IN:
+                arm.setWristVoltage(kWristVoltage.get());
+                break;
+            case CONE_TIP_OUT:
+                arm.setShoulderVoltage(-kShoulderDownVolts.get());
+                break;
+            default:
+                break;
         }
-        
     }
 
     @Override
@@ -53,8 +59,6 @@ public class RobotScore extends CommandBase {
             slowSpeeds.vxMetersPerSecond *= -1;
             
             swerve.setChassisSpeeds(slowSpeeds);
-        } else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT && manager.getNodeLevel() != NodeLevel.LOW) {
-            arm.setShoulderVoltage(-kShoulderDownVolts.get());
         }
     }
 
