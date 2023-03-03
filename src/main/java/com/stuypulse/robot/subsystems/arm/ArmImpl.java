@@ -14,6 +14,8 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -30,6 +32,9 @@ public class ArmImpl extends Arm {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
+    private final IFilter wristVelocityFilter;
+    private final IFilter shoulderVelocityFilter;
+
     protected ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
@@ -39,6 +44,10 @@ public class ArmImpl extends Arm {
 
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
 
+        // Probably helps?
+        wristVelocityFilter = new TimedMovingAverage(0.1);
+        shoulderVelocityFilter = new TimedMovingAverage(0.1);
+
         configureMotors();
     }
 
@@ -47,14 +56,14 @@ public class ArmImpl extends Arm {
         wristEncoder.setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
-        shoulderEncoder.setVelocityConversionFactor(Units.rotationsToDegrees(1));
+        shoulderEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         wristEncoder.setInverted(true);
-        wristEncoder.setVelocityConversionFactor(Units.rotationsToDegrees(1));
+        wristEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
@@ -91,6 +100,16 @@ public class ArmImpl extends Arm {
         shoulderLeft.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
         shoulderRight.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
         wrist.setIdleMode(wristCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+    }
+
+    @Override
+    public double getShoulderVelocityRadiansPerSecond() {
+        return shoulderVelocityFilter.get(shoulderEncoder.getVelocity());
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        return wristVelocityFilter.get(wristEncoder.getVelocity());
     }
 
     // private boolean isShoulderStalling() {
@@ -136,8 +155,5 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Left Duty Cycle", shoulderLeft.get());
         SmartDashboard.putNumber("Arm/Shoulder/Right Duty Cycle", shoulderRight.get());
         SmartDashboard.putNumber("Arm/Wrist/Duty Cycle", wrist.get());
-
-        SmartDashboard.putNumber("Arm/Shoulder/Encoder Velocity (deg per s)", shoulderEncoder.getVelocity());
-        SmartDashboard.putNumber("Arm/Wrist/Encoder Velocity (deg per s)", wristEncoder.getVelocity());
     }
 }
