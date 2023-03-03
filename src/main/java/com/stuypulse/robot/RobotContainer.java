@@ -173,8 +173,7 @@ public class RobotContainer {
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
-                    .andThen(new ArmReady())
-                    .andThen(new LEDSet(LEDColor.GREEN)));
+                    .andThen(new ArmReady()));
 
         operator.getRightButton()
             .onTrue(new IntakeScore())
@@ -193,7 +192,7 @@ public class RobotContainer {
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
         operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
 
         operator.getRightBumper()
