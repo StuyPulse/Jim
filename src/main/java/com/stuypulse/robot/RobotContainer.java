@@ -172,8 +172,7 @@ public class RobotContainer {
                 new LEDSet(LEDColor.RED.pulse())
                     .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
-                    .andThen(new ArmReady())
-                    .andThen(new LEDSet(LEDColor.GREEN)));
+                    .andThen(new ArmReady()));
 
         operator.getRightButton()
             .onTrue(new IntakeScore())
