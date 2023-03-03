@@ -7,6 +7,7 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
 
@@ -20,7 +21,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
     private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(3,2);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
 
@@ -39,7 +40,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new ArmReady().withTolerance(7, 7).withTimeout(5),
+            new ArmReady().withTolerance(7, 7).withTimeout(4),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -64,7 +65,7 @@ public class TwoPieceDock extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                .alongWith(new ArmReady()),
+                .alongWith(new IntakeStop().andThen(new ArmReady())),
 
             new ManagerSetScoreIndex(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -75,15 +76,15 @@ public class TwoPieceDock extends SequentialCommandGroup {
 
         // dock and engage
         addCommands(
-            new ManagerSetScoreSide(ScoreSide.FRONT),
+            // new ManagerSetScoreSide(ScoreSide.FRONT),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
                 // .alongWith(new ArmStow()),
-                .alongWith(new ArmReady()),
+                .alongWith(new ArmStow()),
 
-            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     }
