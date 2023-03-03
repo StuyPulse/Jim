@@ -57,7 +57,8 @@ public class IntakeImpl extends Intake {
                 frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
                 backMotor.set(Acquire.CUBE_BACK.doubleValue());
                 break;
-            case CONE_TIP_UP: // not really necessary, we can't pick up cones
+            case CONE_TIP_UP: 
+                break;
             case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(Acquire.CONE_FRONT.doubleValue());
@@ -76,10 +77,10 @@ public class IntakeImpl extends Intake {
                 backMotor.set(-Deacquire.CUBE_BACK.doubleValue());
                 break;
             case CONE_TIP_UP:
-                // maybe check if in autonomous 
                 frontMotor.set(+Deacquire.CONE_UP_FRONT.doubleValue());
                 backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
                 break;
+            case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
                 backMotor.set(Deacquire.CONE_BACK.doubleValue());    
