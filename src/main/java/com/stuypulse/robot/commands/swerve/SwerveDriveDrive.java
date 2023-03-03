@@ -1,8 +1,10 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
@@ -20,14 +22,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveDrive extends CommandBase {
     
-    private SwerveDrive swerve;
+    private final SwerveDrive swerve;
+    private final Arm arm;
 
     private VStream speed;
     private IStream turn;
     private BStream robotRelative;
 
     public SwerveDriveDrive(Gamepad driver) {
-        this.swerve = SwerveDrive.getInstance();
+        swerve = SwerveDrive.getInstance();
+        arm = Arm.getInstance();
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
@@ -58,9 +62,10 @@ public class SwerveDriveDrive extends CommandBase {
             Vector2D s = speed.get();
             Vector2D translation = new Vector2D(s.y, -s.x);
 
-            // if (getCurrentScoreSide() == ScoreSide.BACK) {
-            //     translation = translation.negative();
-            // }
+            double shoulderDegNormalized = arm.getShoulderAngle().getDegrees() + 90;
+            if (Math.abs(shoulderDegNormalized) > Shoulder.OVER_BUMPER_ANGLE.get() && arm.getShoulderAngle().getCos() < 0) {
+                translation = translation.negative();
+            }
 
             swerve.setChassisSpeeds(
                 new ChassisSpeeds(translation.x, translation.y, -turn.get()));

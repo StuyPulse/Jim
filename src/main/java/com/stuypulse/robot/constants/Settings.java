@@ -159,7 +159,7 @@ public interface Settings {
 
         public interface Shoulder {
             SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 10.0);
-            SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 20.0);
+            SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
 
             int MOTORS = 2;
             double REDUCTION = 63.0;
