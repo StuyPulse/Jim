@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.99,
-        "y": 4.84
+        "x": 1.9941842018915368,
+        "y": 4.84018306114904
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.990000000000001,
-        "y": 4.84
+        "x": 2.994184201891537,
+        "y": 4.84018306114904
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,16 +24,41 @@
     },
     {
       "anchorPoint": {
-        "x": 6.672710854318507,
-        "y": 4.5834346472963405
+        "x": 6.3999999999999995,
+        "y": 4.45
       },
       "prevControl": {
-        "x": 5.988048417377976,
-        "y": 4.859201462175167
+        "x": 4.803144845796269,
+        "y": 4.496966328064817
       },
       "nextControl": {
-        "x": 5.988048417377976,
-        "y": 4.859201462175167
+        "x": 4.803144845796269,
+        "y": 4.496966328064817
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "before",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.19,
+        "y": 4.35
+      },
+      "prevControl": {
+        "x": 2.3659629051172995,
+        "y": 4.924194743014345
+      },
+      "nextControl": {
+        "x": 2.3659629051172995,
+        "y": 4.924194743014345
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,12 +74,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.0420386519785385,
-        "y": 4.425817740524371
+        "x": 5.991999979520676,
+        "y": 4.448035279049282
       },
       "prevControl": {
-        "x": 2.0420386519785385,
-        "y": 5.386246992343729
+        "x": 4.815826876894515,
+        "y": 4.531386128841687
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -70,18 +95,5 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.40859375,
-      "names": [
-        "ReadyIntakeOne"
-      ]
-    },
-    {
-      "position": 1.4349431818181824,
-      "names": [
-        "ReadyArmOne"
-      ]
-    }
-  ]
+  "markers": []
 }
