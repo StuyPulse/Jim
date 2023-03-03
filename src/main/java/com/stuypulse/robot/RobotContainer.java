@@ -156,7 +156,8 @@ public class RobotContainer {
         
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
+            .whileTrue(new ArmIntake())
+            .onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
@@ -169,7 +170,7 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper()
             .whileTrue(
-                new LEDSet(LEDColor.RED.pulse())
+                new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady())
