@@ -38,8 +38,8 @@ public interface Settings {
     double DT = 0.02;
 
     public interface Intake{
-        SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
-        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 60);
+        SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.2);
+        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 37);
 
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
@@ -226,7 +226,7 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
 
-            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 15.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 
