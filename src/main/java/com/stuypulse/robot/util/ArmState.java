@@ -41,6 +41,7 @@ public class ArmState {
         return Rotation2d.fromDegrees(getWristDegrees());
     }
 
+    // Will mutate arm state
     public ArmState setWristTolerance(Number toleranceDegrees) {
         wristToleranceDegrees = Optional.of(toleranceDegrees);
         return this;
