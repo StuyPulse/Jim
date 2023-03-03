@@ -16,7 +16,7 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
-
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
@@ -169,9 +169,11 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper()
             .whileTrue(
-                new ManagerValidateState()
+                new LEDSet(LEDColor.RED.pulse())
+                    .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
-                    .andThen(new ArmReady()));
+                    .andThen(new ArmReady())
+                    .andThen(new LEDSet(LEDColor.GREEN)));
 
         operator.getRightButton()
             .onTrue(new IntakeScore())

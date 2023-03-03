@@ -46,10 +46,6 @@ public class LEDColor {
         }
     }
 
-    public Color8Bit getColor8Bit() {
-        return new Color8Bit(0, 0, 0);
-    }
-
     /***********************/
     /*** COLOR CONSTANTS ***/
     /***********************/
