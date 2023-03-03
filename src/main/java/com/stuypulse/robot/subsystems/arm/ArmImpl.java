@@ -93,6 +93,23 @@ public class ArmImpl extends Arm {
         wrist.setIdleMode(wristCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
     }
 
+    // private boolean isShoulderStalling() {
+    //     double appliedShoulderVoltage = 
+    //         Math.max(
+    //             shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
+    //             shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
+    //         );
+
+    //     return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts > Shoulder.STALLING_VOLTAGE.doubleValue() ||
+    //             wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
+    // }
+
+    // private boolean isWristStalling() {
+    //     return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
+    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
+    //             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
+    // }
+
     @Override
     public void periodicallyCalled() {
         SmartDashboard.putNumber("Arm/Shoulder/Let Bus Voltage (V)", shoulderLeft.getBusVoltage());
@@ -101,6 +118,17 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Left Current (amps)", shoulderLeft.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
+        
+        // if (wristIsStalling()) {
+        //     setWristVoltageImpl(WRIST);
+        // }
+
+        // if (armIsStalling()) {
+        //     shoulderVolts = 0;
+        // }
+
+        // runShoulder(shoulderVolts);
+        // runWrist(wristVolts);
 
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
