@@ -14,6 +14,8 @@ public class TeleopInit extends InstantCommand {
     public TeleopInit() {
         plant = Plant.getInstance();
         arm = Arm.getInstance();
+
+        addRequirements(plant, arm, Intake.getInstance());
     }
 
     @Override
