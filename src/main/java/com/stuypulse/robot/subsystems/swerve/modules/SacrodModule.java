@@ -19,6 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SacrodModule extends SwerveModule {
 
@@ -195,18 +196,16 @@ public class SacrodModule extends SwerveModule {
                 Angle.fromRotation2d(getRotation2d())));
         driveMotor.setVoltage(driveController.update(targetState.speedMetersPerSecond, getSpeed()));
 
-        if (Settings.isDebug()) {
-            Settings.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle", getRotation2d().getDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
-            Settings.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
-            Settings.putNumber("Swerve/" + id + "/Absolute Angle", getAbsolutePosition().getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle", getRotation2d().getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Absolute Angle", getAbsolutePosition().getDegrees());
 
-            Settings.putNumber("Swerve/" + id + "/Target Speed", targetState.speedMetersPerSecond);
-            Settings.putNumber("Swerve/" + id + "/Speed", getSpeed());
-            Settings.putNumber("Swerve/" + id + "/Speed Error", driveController.getError());
-            Settings.putNumber("Swerve/" + id + "/Speed Voltage", driveController.getOutput());
-        }
+        SmartDashboard.putNumber("Swerve/" + id + "/Target Speed", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/" + id + "/Speed", getSpeed());
+        SmartDashboard.putNumber("Swerve/" + id + "/Speed Error", driveController.getError());
+        SmartDashboard.putNumber("Swerve/" + id + "/Speed Voltage", driveController.getOutput());
 
     }
 }

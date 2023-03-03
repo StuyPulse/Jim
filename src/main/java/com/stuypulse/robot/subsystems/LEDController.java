@@ -6,19 +6,12 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.util.StopWatch;
-
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*-
@@ -33,10 +26,11 @@ public class LEDController extends SubsystemBase {
 
     private static LEDController instance;
 
+    static {
+        instance = new LEDController();
+    }
+
     public static LEDController getInstance() {
-        if (instance == null) {
-            instance = new LEDController();
-        }
         return instance;
     }
 
@@ -50,19 +44,9 @@ public class LEDController extends SubsystemBase {
     // The current color to set the LEDs to
     private LEDColor manualColor;
 
-    private final Mechanism2d ledMech;
-    private final MechanismLigament2d ledLigament;
-
-    public LEDController() {
+    protected LEDController() {
         this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
-
-        ledMech = new Mechanism2d(2, 2);
-        MechanismRoot2d root = ledMech.getRoot("LED", 0, 0);
-        ledLigament = new MechanismLigament2d("LED Ligament", 2, 2);
-        root.append(ledLigament);
-
-        SmartDashboard.putData("LED Mech2d", ledMech);
 
         setLEDConditions();
         setColor(LEDColor.OFF);
@@ -72,8 +56,6 @@ public class LEDController extends SubsystemBase {
         manualColor = color;
         manualTime = time;
         lastUpdate.reset();
-
-        ledLigament.setColor(new Color8Bit(0, 0, 0));
     }
 
     public void setColor(LEDColor color) {
@@ -84,7 +66,12 @@ public class LEDController extends SubsystemBase {
     }
 
     public LEDColor getDefaultColor() {
-        return LEDColor.BLUE;
+        switch (Manager.getInstance().getGamePiece()) {
+            case CUBE: return LEDColor.PURPLE;
+            case CONE_TIP_IN: return LEDColor.YELLOW;
+            case CONE_TIP_UP: return LEDColor.YELLOW.pulse();
+            default: return LEDColor.OFF;
+        }
     }
 
     @Override

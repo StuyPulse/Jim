@@ -35,7 +35,7 @@ public class TestbotContainer {
     public final TestPlant plant = new TestPlant();
     public final TestWing wings = new TestWing();
     
-    public final Pump pump = new Pump();
+    public final TestPump pump = new TestPump();
 
     public TestbotContainer() {
         configureDefaultCommands();
@@ -134,8 +134,8 @@ public class TestbotContainer {
                         shoulderVolts = 0;
                     }
         
-                    Settings.putNumber("Arm/Shoulder Voltage", shoulderVolts);
-                    Settings.putNumber("Arm/Wrist Voltage", wristVolts);
+                    SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
+                    SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
         
                     arm.runShoulder(shoulderVolts);
                     arm.runWrist(wristVolts);

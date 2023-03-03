@@ -21,7 +21,7 @@ public class AngleVelocity {
         return this.velocity = velocity;
     }
 
-    public double getOutput() {
+    public double getVelocityRadiansPerSecond() {
         return velocity;
     }
 }

@@ -49,7 +49,7 @@ public interface Ports {
 }
 
     public interface LEDController {
-        int PORT = 8; // PWM
+        int PORT = 0; // PWM
     }
     
     public interface Plant {

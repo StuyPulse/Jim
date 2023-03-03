@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmVoltageDrive extends CommandBase {
     
-    private Arm arm;
+    private final Arm arm;
 
-    private IStream shoulderVoltage;
-    private IStream wristVoltage;
+    private final IStream shoulderVoltage;
+    private final IStream wristVoltage;
 
     public ArmVoltageDrive(Gamepad gamepad) {
         arm = Arm.getInstance();

@@ -14,11 +14,16 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
+
+    private static int kDisableStatusFrame = 65535;
 
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -27,7 +32,10 @@ public class ArmImpl extends Arm {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
-    public ArmImpl() {
+    private final IFilter wristVelocityFilter;
+    private final IFilter shoulderVelocityFilter;
+
+    protected ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -35,6 +43,10 @@ public class ArmImpl extends Arm {
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
 
         wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+
+        // Probably helps?
+        wristVelocityFilter = new TimedMovingAverage(0.1);
+        shoulderVelocityFilter = new TimedMovingAverage(0.1);
 
         configureMotors();
     }
@@ -44,10 +56,18 @@ public class ArmImpl extends Arm {
         wristEncoder.setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
+        shoulderEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         wristEncoder.setInverted(true);
+        wristEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
@@ -83,7 +103,52 @@ public class ArmImpl extends Arm {
     }
 
     @Override
+    public double getShoulderVelocityRadiansPerSecond() {
+        return shoulderVelocityFilter.get(shoulderEncoder.getVelocity());
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        return wristVelocityFilter.get(wristEncoder.getVelocity());
+    }
+
+    // private boolean isShoulderStalling() {
+    //     double appliedShoulderVoltage = 
+    //         Math.max(
+    //             shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
+    //             shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
+    //         );
+
+    //     return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts > Shoulder.STALLING_VOLTAGE.doubleValue() ||
+    //             wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
+    // }
+
+    // private boolean isWristStalling() {
+    //     return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
+    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
+    //             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
+    // }
+
+    @Override
     public void periodicallyCalled() {
+        SmartDashboard.putNumber("Arm/Shoulder/Let Bus Voltage (V)", shoulderLeft.getBusVoltage());
+        SmartDashboard.putNumber("Arm/Shoulder/Right Bus Voltage (V)", shoulderRight.getBusVoltage());
+
+        SmartDashboard.putNumber("Arm/Shoulder/Left Current (amps)", shoulderLeft.getOutputCurrent());
+        SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());
+        SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
+        
+        // if (wristIsStalling()) {
+        //     setWristVoltageImpl(WRIST);
+        // }
+
+        // if (armIsStalling()) {
+        //     shoulderVolts = 0;
+        // }
+
+        // runShoulder(shoulderVolts);
+        // runWrist(wristVolts);
+
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
 

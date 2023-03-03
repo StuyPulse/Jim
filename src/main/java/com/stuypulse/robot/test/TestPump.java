@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.    */
 /****************************************************************/
 
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.test;
 
 import com.stuypulse.stuylib.network.SmartBoolean;
 
@@ -21,24 +21,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * @author Myles Pasetsky
  * @author SE
  */
-public class Pump extends SubsystemBase {
-
-    // Singleton
-    private static final Pump instance;
-
-    static {
-        instance = new Pump();
-    }
-
-    public static final Pump getInstance() {
-        return instance;
-    }
+public class TestPump extends SubsystemBase {
 
     // Pump control & hardware
     private final SmartBoolean enabled;
     private final Compressor compressor;
 
-    protected Pump() {
+    public TestPump() {
         enabled = new SmartBoolean("Pump/Compressor Enabled", true);
         compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 

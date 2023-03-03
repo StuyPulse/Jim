@@ -17,7 +17,7 @@ public class SimArm extends Arm {
     private double shoulderVolts;
     private double wristVolts;
 
-    public SimArm() { 
+    protected SimArm() { 
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
         simulation = new TwoJointArmSimulation(-Math.PI/2, Math.PI/2, dynamics);
         
@@ -52,5 +52,17 @@ protected void setWristVoltageImpl(double voltage) {
         // } else {
             simulation.update(shoulderVolts, wristVolts, Settings.DT);
         // // }
+    }
+
+    @Override
+    public double getShoulderVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

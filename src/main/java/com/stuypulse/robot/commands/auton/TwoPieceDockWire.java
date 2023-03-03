@@ -40,11 +40,10 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // drive to second game piece and intake
@@ -59,7 +58,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
                     .withEvents(),
 
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
         
         // drive to grid and score game piece
@@ -72,11 +71,10 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
 
             new ManagerSetScoreIndex(7),
             new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
-            new ArmScore(),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
         // dock and engage
@@ -84,7 +82,7 @@ public class TwoPieceDockWire extends SequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Dock"))
                     .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral())
+                    .addEvent("ArmNeutral", new ArmStow())
                     .withEvents(),
 
             new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),

@@ -29,7 +29,6 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
         // score first piece
         addCommands(
             new ArmReady(),
-            new ArmScore(),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
@@ -45,10 +44,9 @@ public class OnePiecePickupWire extends SequentialCommandGroup {
                     .addEvent("ReadyIntakeOne", new ArmIntake().andThen(new IntakeAcquire()))
                     .withEvents(),
 
-
             new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
             new IntakeStop(),
-            new ArmNeutral()
+            new ArmStow()
         );
 
     }

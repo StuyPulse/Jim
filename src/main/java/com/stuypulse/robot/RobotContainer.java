@@ -16,7 +16,7 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
-
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
@@ -55,7 +55,7 @@ public class RobotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
     public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
-    // // Subsystem
+    // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
     public final Intake intake = Intake.getInstance();
     public final Vision vision = Vision.getInstance();
@@ -66,7 +66,7 @@ public class RobotContainer {
     
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
-    public final Pump pump = new Pump();
+    public final Pump pump = Pump.getInstance();
   
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -78,11 +78,16 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
+        configureChooserBindings();
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
+
+        SmartDashboard.putData("Gamepads/Driver", driver);
+        SmartDashboard.putData("Gamepads/Operator", operator);
+        SmartDashboard.putData("Gamepads/Chooser", chooser);
     }
 
     /****************/
@@ -126,8 +131,6 @@ public class RobotContainer {
 
         driver.getTopButton().onTrue(new ArmReady());
 
-        driver.getDPadRight().onTrue(new ManagerFlipScoreSide());
-
         // swerve
         driver.getLeftButton()
             .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
@@ -138,7 +141,7 @@ public class RobotContainer {
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
         driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
-        
+        driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
         driver.getLeftBumper().onTrue(new PlantEngage());
@@ -149,29 +152,32 @@ public class RobotContainer {
     private void configureOperatorBindings() {
         // manual control
         new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
-            .onTrue(new ArmDrive(operator));
+            .onTrue(new ArmVoltageDrive(operator));
         
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
+            .whileTrue(new ArmIntake())
+            .onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            .onFalse(new ArmStow());
 
         // outtake
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().alongWith(new IntakeDeacquire()))
+            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
             .onFalse(new IntakeStop())
-            .onFalse(new ArmNeutral());
+            .onFalse(new ArmStow());
 
         // ready & score
         operator.getLeftBumper()
             .whileTrue(
-                new ManagerValidateState()
+                new LEDSet(LEDColor.RED)
+                    .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
-                    .andThen(new ArmReady()));
+                    .andThen(new ArmReady())
+                    .andThen(new LEDSet(LEDColor.GREEN)));
 
-        operator.getRightBumper()
-            .whileTrue(new ArmScore().alongWith(new IntakeScore()))
+        operator.getRightButton()
+            .onTrue(new IntakeScore())
             .onFalse(new IntakeStop());
 
         // set level to score at
@@ -186,12 +192,11 @@ public class RobotContainer {
         operator.getTopButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
-        // ONLY FOR TESTING PURPOSES
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
 
-        operator.getRightButton()
-            // .onTrue(new ArmHold());
+
+        operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
             .onFalse(arm.runOnce(arm::disableLimp));
 
@@ -214,22 +219,12 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
-        autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
-        autonChooser.addOption("One Piece", new OnePiece());
-        autonChooser.addOption("One Piece Wire", new OnePiecePickupWire());
-        autonChooser.addOption("One Piece + Dock", new OnePieceDock());
-        autonChooser.addOption("One Piece Mobility + Dock", new OnePieceMobilityDock());
-        autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
+        autonChooser.setDefaultOption("1.5 Piece Dock", new OnePiecePickupDock());
+        autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
-        autonChooser.addOption("2.5 Piece", new TwoPiecePickup());
-        autonChooser.addOption("2.5 Piece Dock", new TwoPiecePickupDock());
-        autonChooser.addOption("Three Piece", new ThreePiece());
-        autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
-        autonChooser.addOption("Three Piece Dock", new ThreePieceDock());
-
         
         SmartDashboard.putData("Autonomous", autonChooser);
     }

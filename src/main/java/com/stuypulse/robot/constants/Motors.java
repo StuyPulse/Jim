@@ -24,14 +24,14 @@ import com.stuypulse.stuylib.network.SmartNumber;
 public interface Motors {
 
     public interface Arm {
-        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
-        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
-        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
+        CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kCoast, 40);
+        CANSparkMaxConfig SHOULDER_RIGHT_CONFIG = new CANSparkMaxConfig(false, IdleMode.kCoast, 40);
+        CANSparkMaxConfig WRIST_CONFIG = new CANSparkMaxConfig(true, IdleMode.kCoast, 40);
     }
 
     public interface Intake {
-        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake);
-        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake);
+        CANSparkMaxConfig FRONT_MOTOR = new CANSparkMaxConfig(false, IdleMode.kBrake, 40);
+        CANSparkMaxConfig BACK_MOTOR = new CANSparkMaxConfig(true, IdleMode.kBrake, 40);
     }
 
     public interface Swerve {

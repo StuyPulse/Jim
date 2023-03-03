@@ -2,8 +2,6 @@ package com.stuypulse.robot.subsystems.plant;
 
 import static com.stuypulse.robot.constants.Ports.Plant.*;
 
-import com.stuypulse.robot.constants.Settings;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -19,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PlantImpl extends Plant {
     private final DoubleSolenoid solenoid;
 
-    public PlantImpl() {
+    protected PlantImpl() {
         this.solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FORWARD, REVERSE);
         disengage();
     }
@@ -34,6 +32,6 @@ public class PlantImpl extends Plant {
 
     @Override
     public void periodic() {
-        Settings.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
+        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
     }
 }

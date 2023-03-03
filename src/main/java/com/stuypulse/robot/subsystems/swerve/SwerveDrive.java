@@ -83,7 +83,7 @@ public class SwerveDrive extends SubsystemBase {
 
     private final FieldObject2d[] module2ds;
 
-    public SwerveDrive(SwerveModule... modules) {
+    protected SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
         gyro = new AHRS(SPI.Port.kMXP);
@@ -198,6 +198,13 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getRoll());
     }
 
+    public double getForwardAccelerationGs() {
+        if (Settings.ROBOT == Settings.Robot.SACROD) {
+            return gyro.getWorldLinearAccelX();
+        }
+        return gyro.getWorldLinearAccelY();
+    }
+
     /** KINEMATICS **/
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
@@ -220,23 +227,26 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Settings.isDebug()) {
-            Odometry odometry = Odometry.getInstance();
-            Pose2d pose = odometry.getPose();
-            Rotation2d angle = odometry.getRotation();
+        Odometry odometry = Odometry.getInstance();
+        Pose2d pose = odometry.getPose();
+        Rotation2d angle = odometry.getRotation();
 
-            for (int i = 0; i < modules.length; ++i) {
-                module2ds[i].setPose(new Pose2d(
-                    pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
-                    modules[i].getState().angle.plus(angle)
-                ));
-            }
-
-            Settings.putNumber("Swerve/Balance Angle (deg)", getBalanceAngle().getDegrees());
-            Settings.putNumber("Swerve/Gyro Angle (deg)", getGyroAngle().getDegrees());
-            Settings.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
-            Settings.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
+        for (int i = 0; i < modules.length; ++i) {
+            module2ds[i].setPose(new Pose2d(
+                pose.getTranslation().plus(modules[i].getOffset().rotateBy(angle)),
+                modules[i].getState().angle.plus(angle)
+            ));
         }
+
+        SmartDashboard.putNumber("Swerve/Balance Angle (deg)", getBalanceAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Gyro Angle (deg)", getGyroAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Gyro Pitch", getGyroPitch().getDegrees());
+        SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll().getDegrees());
+
+        SmartDashboard.putNumber("Swerve/Forward Acceleration (Gs)", getForwardAccelerationGs());
+        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getWorldLinearAccelX());
+        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getWorldLinearAccelY());
+        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getWorldLinearAccelZ());
     }
     
     @Override
