@@ -64,7 +64,7 @@ public class TwoPiece extends SequentialCommandGroup{
                     .withEvents(),
 
             new ManagerSetScoreIndex(1),
-            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
+            // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
 
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
