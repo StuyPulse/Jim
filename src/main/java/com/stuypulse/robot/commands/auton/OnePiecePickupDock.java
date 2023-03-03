@@ -46,8 +46,12 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady().withTolerance(7, 9).withTimeout(4),
+            new ArmReady()
+                .withTolerance(7, 9)
+                .withTimeout(4)
+        );
 
+        addCommands(
             new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
@@ -58,13 +62,19 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new ManagerSetGamePiece(GamePiece.CUBE),
 
             new LEDSet(LEDColor.GREEN),
+
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative(),
-                new WaitCommand(INTAKE_STOP_WAIT_TIME).andThen(new IntakeStop()).andThen(
-                    new WaitCommand(INTAKE_WAIT_TIME).andThen(new IntakeAcquire())
-                ),
-                new ArmIntake().withTolerance(7, 10).withTimeout(6.5)
+
+                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                    .andThen(new IntakeStop())
+                    .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new IntakeAcquire()),
+
+                new ArmIntake()
+                    .withTolerance(7, 10)
+                    .withTimeout(6.5)
             )
         );
         
@@ -73,15 +83,23 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
             new LEDSet(LEDColor.PURPLE),
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new SwerveDriveFollowTrajectory(
-                        paths.get("Dock"))
+                    new SwerveDriveFollowTrajectory(paths.get("Dock"))
                             .fieldRelative(),
+
                     new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
                 ),
-                new ArmStow()
-            ),
 
-            new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
+                new ArmStow()
+            )
+        );
+
+        addCommands(
+            new LEDSet(LEDColor.RAINBOW),
+
+            new SwerveDriveBalanceBlay()
+                .withMaxSpeed(1.0)
+                .withTimeout(ENGAGE_TIME),
+
             new PlantEngage()
         );
     
