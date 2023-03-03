@@ -33,7 +33,7 @@ public class VisionImpl extends Vision {
 
     private final FieldObject2d[] limelightPoses;
 
-    public VisionImpl() {
+    protected VisionImpl() {
         // setup limelight objects
         String[] hostNames = LIMELIGHTS;
         limelights = new Limelight[hostNames.length];
@@ -68,9 +68,9 @@ public class VisionImpl extends Vision {
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
-        Settings.putNumber("Vision/Angle to Tag", angleDegrees);
-        Settings.putNumber("Vision/Distance", distance);
-        Settings.putNumber("Vision/Tag ID", data.id);
+        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
+        SmartDashboard.putNumber("Vision/Distance", distance);
+        SmartDashboard.putNumber("Vision/Tag ID", data.id);
 
 
         if (Math.abs(angleDegrees) > TRUST_ANGLE)
@@ -135,21 +135,12 @@ public class VisionImpl extends Vision {
             Optional<AprilTagData> aprilTagData = ll.getAprilTagData();
             
             if (aprilTagData.isPresent()) {
-                if (Settings.isDebug()) {
-                    Settings.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
-                    Settings.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
-                    Settings.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
-                }
+                SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
+                SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
+                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
                 pose2d.setPose(aprilTagData.get().pose);
 
                 results.add(process(aprilTagData.get()));
-            } else {
-                if (Settings.isDebug()) {
-                    Settings.putNumber("Vision/" + name + "/X" , Double.NaN);
-                    Settings.putNumber("Vision/" + name + "/Y" , Double.NaN);
-                    Settings.putNumber("Vision/" + name + "/Rotation" , Double.NaN);
-                }
-                pose2d.setPose(kNoPose);
             }
         }
     }

@@ -3,7 +3,6 @@ package com.stuypulse.robot.subsystems;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 
@@ -11,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Manager extends SubsystemBase {
@@ -18,10 +18,11 @@ public class Manager extends SubsystemBase {
     // singleton
     private static Manager instance;
 
+    static {
+        instance = new Manager();
+    }
+
     public static Manager getInstance() {
-        if (instance == null) {
-            instance = new Manager();
-        }
         return instance;
     }
 
@@ -72,7 +73,7 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
-    public Manager() {
+    protected Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         scoreSide = ScoreSide.FRONT;
@@ -109,7 +110,7 @@ public class Manager extends SubsystemBase {
                 return getHighReadyTrajectory();
 
             default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
@@ -129,7 +130,7 @@ public class Manager extends SubsystemBase {
                 return scoreSide == ScoreSide.FRONT ? Ready.Mid.kCubeFront : Ready.Mid.kCubeBack;
 
             default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
@@ -145,44 +146,15 @@ public class Manager extends SubsystemBase {
                 return scoreSide == ScoreSide.FRONT ? Ready.High.kCubeFront : Ready.High.kCubeBack;
 
             default:
-                return getNeutralTrajectory();
-        }
-    }
-
-    /** Generate Score Trajectories **/
-
-    public ArmState getScoreTrajectory() {
-        switch (nodeLevel) {
-            case LOW:
-                return getLowReadyTrajectory();
-            case MID:
-                if (gamePiece == GamePiece.CUBE)
-                    return scoreSide == ScoreSide.FRONT ? Score.Mid.kCubeFront : Score.Mid.kCubeBack;
-                
-                // if (gamePiece == GamePiece.CONE_TIP_OUT)
-                //     return Score.Mid.kConeTipOutFront;
-
-                return Score.Mid.kConeTipInBack;
-
-            case HIGH:
-                if (gamePiece == GamePiece.CUBE)
-                    return scoreSide == ScoreSide.FRONT ? Score.High.kCubeFront : Score.High.kCubeBack;
-
-                else if (gamePiece == GamePiece.CONE_TIP_UP)
-                    return Score.High.kConeTipUpBack;
-
-                return Score.High.kConeTipInBack;
-
-            default:
-                return getNeutralTrajectory();
+                return getStowTrajectory();
         }
     }
 
     /** Generate Neutral Trajectories **/
 
     // wrist faces away from scoring direction for cube
-    public ArmState getNeutralTrajectory() {
-        return Neutral.kTrajectory;
+    public ArmState getStowTrajectory() {
+        return Stow.kTrajectory;
     }
 
     /** Generate Score Pose **/
@@ -250,12 +222,10 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Settings.isDebug()) {
-            Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
+        Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
-            Settings.putString("Manager/Game Piece", gamePiece.name());
-            Settings.putString("Manager/Node Level", nodeLevel.name());
-            Settings.putString("Manager/Score Side", scoreSide.name());
-        }
+        SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
+        SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
+        SmartDashboard.putString("Manager/Score Side", scoreSide.name());
     }
 }

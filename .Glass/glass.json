@@ -10,7 +10,8 @@
         "Arm": {
           "Wrist": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Auto Balance": {
           "Translation": {
@@ -23,9 +24,6 @@
             "open": true
           }
         },
-        "BOOM": {
-          "open": true
-        },
         "Back Left": {
           "open": true
         },
@@ -33,9 +31,6 @@
           "open": true
         },
         "Driver Setings": {
-          "open": true
-        },
-        "Pump": {
           "open": true
         },
         "Settings": {
@@ -46,11 +41,7 @@
         "Swerve": {
           "Drive": {
             "open": true
-          },
-          "Turn": {
-            "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -72,6 +63,18 @@
       "/SmartDashboard/Autonomous": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/LED Mech2d": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Arm Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autonomous": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Info": {
@@ -92,14 +95,13 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "10.6.94.2",
-    "visible": false
+    "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 924,
+          "height": 1504,
           "series": [
             {
               "color": [
@@ -130,10 +132,7 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <10>": {
       "plots": [
@@ -143,7 +142,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 1532,
           "series": [
             {
               "color": [
@@ -165,7 +164,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <11>": {
       "plots": [
@@ -175,7 +177,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -197,7 +199,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <12>": {
       "plots": [
@@ -207,7 +212,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -229,7 +234,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <13>": {
       "plots": [
@@ -239,7 +247,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -261,7 +269,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <14>": {
       "plots": [
@@ -271,7 +282,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -293,7 +304,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <15>": {
       "plots": [
@@ -303,7 +317,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -325,12 +339,15 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
         {
-          "height": 937,
+          "height": 949,
           "series": [
             {
               "color": [
@@ -400,7 +417,7 @@
               "autoFit": true
             }
           ],
-          "height": 428,
+          "height": 607,
           "series": [
             {
               "color": [
@@ -422,7 +439,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <4>": {
       "plots": [
@@ -576,7 +596,7 @@
               "autoFit": true
             }
           ],
-          "height": 443,
+          "height": 718,
           "series": [
             {
               "color": [
@@ -598,7 +618,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <9>": {
       "plots": [
@@ -635,5 +658,6 @@
         "visible": false
       }
     }
-  }
+  },
+  "enterKey": 92
 }

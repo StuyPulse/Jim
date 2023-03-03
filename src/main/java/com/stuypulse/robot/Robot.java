@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         disableStartTime = Timer.getFPGATimestamp();
-        robot.arm.setCoast(true);
+        robot.arm.setCoast(true, true);
         if (Timer.getFPGATimestamp() - disableStartTime >= 6) {
             robot.swerve.setCoast(true);
         }
@@ -63,8 +63,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        robot.arm.setCoast(false);
-        robot.swerve.setCoast(false);
+        robot.arm.setCoast(false, false);
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
@@ -87,8 +86,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        robot.arm.setCoast(false);
-        robot.swerve.setCoast(false);
+        robot.arm.setCoast(false, false);
 
         new TeleopInit().schedule();
 
@@ -111,7 +109,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        robot.arm.setCoast(false);
+        robot.arm.setCoast(false, false);
         
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 

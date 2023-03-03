@@ -4,23 +4,31 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class OnePiecePickupDock extends SequentialCommandGroup{
 
-    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double INTAKE_ACQUIRE_TIME = 2;
-    private static final double ENGAGE_TIME = 3.0;
+    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
+    private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_WAIT_TIME = 2.0;
+    private static final double ENGAGE_TIME = 10.0;
 
-    private static final PathConstraints INTAKE_PIECE = new PathConstraints(3, 2);
-    private static final PathConstraints DOCK = new PathConstraints(2, 2);
+    private static final PathConstraints INTAKE_PIECE = new PathConstraints(2, 2);
+    private static final PathConstraints DOCK = new PathConstraints(3, 2);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
@@ -37,34 +45,61 @@ public class OnePiecePickupDock extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady(),
-            new ArmScore(),
+            new LEDSet(LEDColor.RED),
+            new ArmReady()
+                .withTolerance(7, 9)
+                .withTimeout(4)
+        );
+
+        addCommands(
+            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
         // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
 
-            new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece"))
-                    .robotRelative().alongWith(new WaitCommand(0.08).andThen(new IntakeAcquire().andThen(new ArmIntake()))),
+            new LEDSet(LEDColor.GREEN),
 
-            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop()
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
+                    .robotRelative(),
+
+                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                    .andThen(new IntakeStop())
+                    .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new IntakeAcquire()),
+
+                new ArmIntake()
+                    .withTolerance(7, 10)
+                    .withTimeout(6.5)
+            )
         );
         
         // dock and engage
         addCommands(
-            new SwerveDriveFollowTrajectory(
-                paths.get("Dock"))
-                    .fieldRelative()
-                    .addEvent("ArmNeutral", new ArmNeutral())
-                    .withEvents(),
-                    
-            new SwerveDriveAlignThenBalance().withTimeout(ENGAGE_TIME),
+            new LEDSet(LEDColor.PURPLE),
+            new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
+                    new SwerveDriveFollowTrajectory(paths.get("Dock"))
+                            .fieldRelative(),
+
+                    new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
+                ),
+
+                new ArmStow()
+            )
+        );
+
+        addCommands(
+            new LEDSet(LEDColor.RAINBOW),
+
+            new SwerveDriveBalanceBlay()
+                .withMaxSpeed(1.0)
+                .withTimeout(ENGAGE_TIME),
+
             new PlantEngage()
         );
     

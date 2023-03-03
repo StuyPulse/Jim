@@ -8,6 +8,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -20,11 +21,11 @@ public class TwoPieceWire extends SequentialCommandGroup{
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
 
-
+    
     public TwoPieceWire() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
-            "Intake Piece", "Score Piece"
+            "Intake Piece", "Score Piece", "Back Away"
         );
 
         // initial setup
@@ -36,45 +37,44 @@ public class TwoPieceWire extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady(),
-            new ArmScore(),
+            new ArmReady().withTolerance(7, 7).withTimeout(4),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmNeutral()
-        );
-
-        // drive to second game piece and intake
-        addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
-
-            new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece"))
-                    .robotRelative()
-                    .addEvent("ReadyIntakeOne", new ArmReady())
-                    .withEvents(),
-            new IntakeAcquire().withTimeout(INTAKE_ACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmNeutral()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
         
-        // drive to grid and score game piece
+        // intake second piece
         addCommands(
+            new ManagerSetGamePiece(GamePiece.CUBE),
+
+            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
+                paths.get("Intake Piece"))
+                    .robotRelative(),
+                new IntakeAcquire(),
+                new ArmIntake()
+            )
+        );
+        
+        // drive to grid and score second piece
+        addCommands(
+            new ManagerSetGamePiece(GamePiece.CUBE),
+            new ManagerSetScoreSide(ScoreSide.BACK),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                    .addEvent("ReadyArmOne", new ArmReady())
-                    .withEvents(),
+                .alongWith(new ArmReady().alongWith(new WaitCommand(1.0).andThen(new IntakeStop()))),
 
             new ManagerSetScoreIndex(7),
-            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
-
-            new ArmScore(),
-            new IntakeScore(),
+            // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
+            new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop(),
-            new ArmNeutral()
+            new IntakeStop()
+        );
+
+        addCommands(
+            new SwerveDriveFollowTrajectory(
+                paths.get("Back Away"))
+                    .fieldRelative()
         );
     }
 }

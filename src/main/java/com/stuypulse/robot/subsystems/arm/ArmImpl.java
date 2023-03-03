@@ -27,7 +27,7 @@ public class ArmImpl extends Arm {
     private final AbsoluteEncoder shoulderEncoder;
     private final AbsoluteEncoder wristEncoder;
 
-    public ArmImpl() {
+    protected ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -65,25 +65,32 @@ public class ArmImpl extends Arm {
     }
 
     @Override
-    protected void setShoulderVoltage(double voltage) {
+    protected void setShoulderVoltageImpl(double voltage) {
         shoulderLeft.setVoltage(voltage);
         shoulderRight.setVoltage(voltage);
     }
 
     @Override
-    protected void setWristVoltage(double voltage) {
+    protected void setWristVoltageImpl(double voltage) {
         wrist.setVoltage(voltage);
     }
 
     @Override
-    public void setCoast(boolean coast) {
-        shoulderLeft.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
-        shoulderRight.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
-        wrist.setIdleMode(coast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+    public void setCoast(boolean wristCoast, boolean shoulderCoast) {
+        shoulderLeft.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+        shoulderRight.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+        wrist.setIdleMode(wristCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
     }
 
     @Override
     public void periodicallyCalled() {
+        SmartDashboard.putNumber("Arm/Shoulder/Let Bus Voltage (V)", shoulderLeft.getBusVoltage());
+        SmartDashboard.putNumber("Arm/Shoulder/Right Bus Voltage (V)", shoulderRight.getBusVoltage());
+
+        SmartDashboard.putNumber("Arm/Shoulder/Left Current (amps)", shoulderLeft.getOutputCurrent());
+        SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());
+        SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
+
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
 

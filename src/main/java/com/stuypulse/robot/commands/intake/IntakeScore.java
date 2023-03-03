@@ -18,17 +18,7 @@ public class IntakeScore extends InstantCommand {
 
     @Override
     public void initialize() {
-        var manager = Manager.getInstance();
-
-        // if (manager.getNodeLevel() != NodeLevel.LOW && manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
-        //     return;
-        // }
-
-        if (manager.getGamePiece().isCone()) {
-            intake.deacquireCone();
-        } else {
-            intake.deacquireCube();
-        }
+        intake.deacquire(); 
     }
 
 }
