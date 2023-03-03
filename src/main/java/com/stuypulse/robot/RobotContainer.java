@@ -192,7 +192,7 @@ public class RobotContainer {
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
         operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
 
         operator.getRightBumper()
