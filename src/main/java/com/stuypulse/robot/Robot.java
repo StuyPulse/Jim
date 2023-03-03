@@ -46,15 +46,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+    }
+
+    @Override
+    public void disabledPeriodic() {
         disableStartTime = Timer.getFPGATimestamp();
         robot.arm.setCoast(true);
         if (Timer.getFPGATimestamp() - disableStartTime >= 6) {
             robot.swerve.setCoast(true);
         }
     }
-
-    @Override
-    public void disabledPeriodic() {}
 
     /***********************/
     /*** AUTONOMOUS MODE ***/
