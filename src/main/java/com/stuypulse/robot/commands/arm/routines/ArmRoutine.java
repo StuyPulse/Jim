@@ -8,6 +8,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -59,9 +60,16 @@ public abstract class ArmRoutine extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setTargetState(trajectory.getStates().get(currentIndex));
+        var targetState = trajectory.getStates().get(currentIndex);
+        arm.setTargetState(targetState);
 
-        if (arm.isAtTargetState(shoulderTolerance.doubleValue(), wristTolerance.doubleValue())) {
+        double currentShoulderTolerance = (targetState.getShoulderTolerance().orElse(shoulderTolerance)).doubleValue();
+        double currentWristTolerance = (targetState.getWristTolerance().orElse(wristTolerance)).doubleValue();
+
+        SmartDashboard.putNumber("Arm/Shoulder/Current Tolerance (deg)", currentShoulderTolerance);
+        SmartDashboard.putNumber("Arm/Wrist/Current Tolerance (deg)", currentWristTolerance);
+
+        if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance)) {
             // var targetState = trajectory.getStates().get(currentIndex);
             // System.out.println("COMPLETED: " + "Shoulder: " + targetState.getShoulderDegrees() + ", Wrist: " + targetState.getWristDegrees());
             currentIndex++;

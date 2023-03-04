@@ -20,7 +20,7 @@ public class ArmStow extends ArmRoutine {
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
             .addState(dest.getShoulderDegrees(), wristSafeAngle)
-            .addState(dest);
+            .addState(dest.setShoulderTolerance(4).setWristTolerance(5));
 	}
 
 }

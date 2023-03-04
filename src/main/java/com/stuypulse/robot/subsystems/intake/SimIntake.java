@@ -23,6 +23,7 @@ public class SimIntake extends Intake {
                 backMotor.set(Acquire.CUBE_BACK.doubleValue());
                 break;
             case CONE_TIP_UP: // not really necessary, we can't pick up cones
+            case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(Acquire.CONE_FRONT.doubleValue());
                 backMotor.set(-Acquire.CONE_BACK.doubleValue());    

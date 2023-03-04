@@ -27,4 +27,16 @@ public class PerfectArm extends Arm {
 	@Override
 	protected void setWristVoltageImpl(double voltage) {}
 
+    @Override
+    public double getShoulderVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }
