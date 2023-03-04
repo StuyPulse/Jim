@@ -10,12 +10,13 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TwoPieceDock extends SequentialCommandGroup {
+public class TwoPieceDock extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
