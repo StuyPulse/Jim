@@ -9,8 +9,8 @@ public interface ArmTrajectories {
 
     public interface Acquire {
         ArmState kCone = new ArmState(
-			new SmartNumber("Arm Trajectories/Acquire Cone/Shoulder", -85),
-			new SmartNumber("Arm Trajectories/Acquire Cone/Wrist", -15));
+			    new SmartNumber("Arm Trajectories/Acquire Cone/Shoulder", -85),
+			    new SmartNumber("Arm Trajectories/Acquire Cone/Wrist", -15));
         ArmState kCube = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cube/Shoulder", -71),
             new SmartNumber("Arm Trajectories/Acquire Cube/Wrist", -5.0));
@@ -21,14 +21,14 @@ public interface ArmTrajectories {
 
     public interface Deacquire {
         ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Deacquire/Shoulder", -65),
-			new SmartNumber("Arm Trajectories/Deacquire/Wrist", 45));
+			    new SmartNumber("Arm Trajectories/Deacquire/Shoulder", -65),
+			    new SmartNumber("Arm Trajectories/Deacquire/Wrist", 45));
     }
 
     public interface Stow {
         ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Stowed/Shoulder", -75),
-			new SmartNumber("Arm Trajectories/Stowed/Wrist", 165));
+			    new SmartNumber("Arm Trajectories/Stowed/Shoulder", -77),
+			    new SmartNumber("Arm Trajectories/Stowed/Wrist", 165));
     }
 
 
