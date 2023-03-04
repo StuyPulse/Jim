@@ -53,4 +53,16 @@ protected void setWristVoltageImpl(double voltage) {
             simulation.update(shoulderVolts, wristVolts, Settings.DT);
         // // }
     }
+
+    @Override
+    public double getShoulderVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

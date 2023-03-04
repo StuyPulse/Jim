@@ -30,6 +30,7 @@ public class Manager extends SubsystemBase {
     public enum GamePiece {
         CONE_TIP_IN(false),
         CONE_TIP_UP(false),
+        CONE_TIP_OUT(false),
         CUBE(true);
 
         private final boolean cube;
@@ -120,8 +121,8 @@ public class Manager extends SubsystemBase {
 
     private ArmState getMidReadyTrajectory() {
         switch (gamePiece) {
-            // case CONE_TIP_OUT:
-            //     return Ready.Mid.kConeTipOutFront;
+            case CONE_TIP_OUT:
+                return Ready.Mid.kConeTipOutFront;
 
             case CONE_TIP_IN:
                 return Ready.Mid.kConeTipInBack;

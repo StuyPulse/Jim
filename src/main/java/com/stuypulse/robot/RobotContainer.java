@@ -156,7 +156,8 @@ public class RobotContainer {
         
         // intaking
         operator.getRightTriggerButton()
-            .whileTrue(new ArmIntake().alongWith(new IntakeAcquire()))
+            .whileTrue(new ArmIntake())
+            .onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
@@ -169,11 +170,10 @@ public class RobotContainer {
         // ready & score
         operator.getLeftBumper()
             .whileTrue(
-                new LEDSet(LEDColor.RED.pulse())
+                new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ManagerChooseScoreSide())
-                    .andThen(new ArmReady())
-                    .andThen(new LEDSet(LEDColor.GREEN)));
+                    .andThen(new ArmReady()));
 
         operator.getRightButton()
             .onTrue(new IntakeScore())
@@ -192,7 +192,7 @@ public class RobotContainer {
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_IN));
 
         operator.getBottomButton()
-            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+            .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
 
         operator.getRightBumper()

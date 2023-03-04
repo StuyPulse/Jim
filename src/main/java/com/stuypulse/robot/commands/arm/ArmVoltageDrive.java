@@ -22,11 +22,13 @@ public class ArmVoltageDrive extends CommandBase {
         shoulderVoltage = IStream.create(gamepad::getLeftY)
             .filtered(
                 x -> MathUtil.applyDeadband(x, 0.08), 
+                x -> Math.pow(x, 3),
                 x -> SHOULDER_DRIVE_VOLTAGE.get()*x);
 
         wristVoltage = IStream.create(gamepad::getRightY)
             .filtered(
                 x -> MathUtil.applyDeadband(x, 0.08), 
+                x -> Math.pow(x, 3),
                 x -> WRIST_DRIVE_VOLTAGE.get()*x);
 
         addRequirements(arm);

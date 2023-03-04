@@ -76,11 +76,6 @@ public abstract class Arm extends SubsystemBase {
     private Optional<Double> wristVoltageOverride;
     private Optional<Double> shoulderVoltageOverride;
 
-    // Track angular velocity
-    private final AngleVelocity shoulderVelocity;
-    private final AngleVelocity wristVelocity;
-    
-
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
@@ -120,9 +115,6 @@ public abstract class Arm extends SubsystemBase {
         shoulderVoltageOverride = Optional.empty();
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
-
-        shoulderVelocity = new AngleVelocity();
-        wristVelocity = new AngleVelocity();
     }
 
     // Arm Control Overrides
@@ -203,13 +195,8 @@ public abstract class Arm extends SubsystemBase {
         return new ArmState(getShoulderAngle(), getWristAngle());
     }
 
-    public final double getShoulderVelocityRadiansPerSecond() {
-        return shoulderVelocity.getVelocityRadiansPerSecond();
-    }
-
-    public final double getWristVelocityRadiansPerSecond() {
-        return wristVelocity.getVelocityRadiansPerSecond();
-    }
+    public abstract double getShoulderVelocityRadiansPerSecond();
+    public abstract double getWristVelocityRadiansPerSecond();
 
     // Set a voltage override
     public void setShoulderVoltage(double voltage) {
@@ -247,9 +234,6 @@ public abstract class Arm extends SubsystemBase {
 
     @Override
     public final void periodic() {
-        shoulderVelocity.update(Angle.fromRotation2d(getShoulderAngle()));
-        wristVelocity.update(Angle.fromRotation2d(getWristAngle()));
-
         // Validate shoulder and wrist target states
         Rotation2d shoulderTarget = getShoulderTargetAngle();
         Rotation2d wristTarget = getWristTargetAngle();

@@ -39,9 +39,20 @@ public class ArmIntake extends ArmRoutine {
         // TODO: make second only check shoulder tolerance
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
-            .addState(intermediateShoulderDegrees, wristSafeAngle)
-            .addState(intermediateShoulderDegrees, dest.getWristDegrees())
-            .addState(dest);
+
+            .addState(
+                new ArmState(intermediateShoulderDegrees, wristSafeAngle)
+                    .setShoulderTolerance(15)
+                    .setWristTolerance(360))
+
+            .addState(
+                new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
+                    .setWristTolerance(360))
+
+            .addState(
+                new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
+                    .setShoulderTolerance(3)
+                    .setWristTolerance(4));
 	}
 
     @Override
