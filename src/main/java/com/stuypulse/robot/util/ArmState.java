@@ -5,7 +5,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ArmState {
-
+ 
     private final Number shoulder; 
     private final Number wrist;
 
