@@ -27,7 +27,7 @@ public interface ArmTrajectories {
 
     public interface Stow {
         ArmState kTrajectory = new ArmState(
-			new SmartNumber("Arm Trajectories/Stowed Front Shoulder", -75),
+			new SmartNumber("Arm Trajectories/Stowed Front Shoulder", -77),
 			new SmartNumber("Arm Trajectories/Stowed Front Wrist", 165));
     }
 
