@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // The best
-public class OnePiecePickupDockWire extends SequentialCommandGroup{
+public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
