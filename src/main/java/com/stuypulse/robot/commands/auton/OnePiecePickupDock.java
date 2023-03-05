@@ -11,6 +11,7 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -26,16 +27,19 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
     private static final double INTAKE_ACQUIRE_TIME = 1.5;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
+    private static final double ACQUIRE_WAIT_TIME = 0.4;
     private static final double ENGAGE_TIME = 10.0;
 
     private static final PathConstraints INTAKE_PIECE = new PathConstraints(2, 2);
-    private static final PathConstraints DOCK = new PathConstraints(3, 2);
+    private static final PathConstraints DOCK = new PathConstraints(1, 2);
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1.5 Piece + Dock", INTAKE_PIECE, DOCK),
             "Intake Piece", "Dock" 
         );
+
+        var arm = Arm.getInstance();
 
         // initial setup
         addCommands(
@@ -76,22 +80,23 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
                 new ArmIntake()
                     .withTolerance(7, 10)
                     .withTimeout(6.5)
-            )
+            ),
+
+            new WaitCommand(ACQUIRE_WAIT_TIME)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
+
+            arm.runOnce(() -> arm.setWristVoltage(0))
         );
         
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),
-            new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new SwerveDriveFollowTrajectory(paths.get("Dock"))
                             .fieldRelative(),
 
-                    new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())
-                ),
-
-                new ArmStow()
-            )
+                    new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
+                )
         );
 
         addCommands(

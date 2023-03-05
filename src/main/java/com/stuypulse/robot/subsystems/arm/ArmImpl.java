@@ -133,6 +133,7 @@ public class ArmImpl extends Arm {
     public void periodicallyCalled() {
         SmartDashboard.putNumber("Arm/Shoulder/Let Bus Voltage (V)", shoulderLeft.getBusVoltage());
         SmartDashboard.putNumber("Arm/Shoulder/Right Bus Voltage (V)", shoulderRight.getBusVoltage());
+        SmartDashboard.putNumber("Arm/Wrist/Bus Voltage (V)", wrist.getBusVoltage());
 
         SmartDashboard.putNumber("Arm/Shoulder/Left Current (amps)", shoulderLeft.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());

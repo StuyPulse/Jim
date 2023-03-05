@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OdometryImpl extends Odometry {
 
-    public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
+    public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", true);
     public static final SmartBoolean OVERRIDE = new SmartBoolean("Odometry/April Tag Override", false);
 
     static class StandardDeviations {

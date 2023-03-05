@@ -18,10 +18,15 @@ public class ArmReady extends ArmRoutine {
     protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_UP) {
             return new ArmTrajectory()
-                .addState(dest.getShoulderDegrees(), src.getWristDegrees())
+
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+                
                 .addState(
                     dest.getShoulderDegrees(), 
                     (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+            
                 .addState(dest);
         }
 

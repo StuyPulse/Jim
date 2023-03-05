@@ -32,6 +32,6 @@ public class PlantImpl extends Plant {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Is Engaged", solenoid.get()==Value.kReverse);
+        SmartDashboard.putBoolean("Plant/Is Engaged", solenoid.get()==Value.kReverse);
     }
 }
