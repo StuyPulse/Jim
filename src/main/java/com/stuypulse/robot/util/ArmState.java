@@ -12,12 +12,25 @@ public class ArmState {
     private Optional<Number> shoulderToleranceDegrees;
     private Optional<Number> wristToleranceDegrees;
 
+    private boolean wristLimp;
+
     public ArmState(Number shoulderDegrees, Number wristDegrees) {
         this.shoulder = shoulderDegrees;
         this.wrist = wristDegrees;
 
         shoulderToleranceDegrees = Optional.empty();
         wristToleranceDegrees = Optional.empty();
+
+        wristLimp = false;
+    }
+
+    public ArmState setWristLimp(boolean wristLimp) {
+        this.wristLimp = wristLimp;
+        return this;
+    }
+
+    public boolean isWristLimp() {
+        return wristLimp;
     }
 
     public ArmState(Rotation2d shoulder, Rotation2d wrist) {

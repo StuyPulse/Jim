@@ -63,11 +63,17 @@ public abstract class ArmRoutine extends CommandBase {
         var targetState = trajectory.getStates().get(currentIndex);
         arm.setTargetState(targetState);
 
+        arm.setLimp(targetState.isWristLimp(), false);
+
         double currentShoulderTolerance = (targetState.getShoulderTolerance().orElse(shoulderTolerance)).doubleValue();
         double currentWristTolerance = (targetState.getWristTolerance().orElse(wristTolerance)).doubleValue();
 
         SmartDashboard.putNumber("Arm/Shoulder/Current Tolerance (deg)", currentShoulderTolerance);
         SmartDashboard.putNumber("Arm/Wrist/Current Tolerance (deg)", currentWristTolerance);
+
+        if (targetState.isWristLimp()) {
+            currentWristTolerance = 360;
+        }
 
         if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance)) {
             // var targetState = trajectory.getStates().get(currentIndex);

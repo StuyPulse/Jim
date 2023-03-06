@@ -40,6 +40,7 @@ public class RobotScore extends CommandBase {
                 intake.deacquire();
                 break;
             case CONE_TIP_IN:
+                arm.setShoulderTargetAngle(Manager.getInstance().getReadyTrajectory().getShoulderState());
                 arm.setWristVoltage(kWristVoltage.get());
                 break;
             case CONE_TIP_OUT:
@@ -70,7 +71,11 @@ public class RobotScore extends CommandBase {
     @Override
     public void end(boolean i) {
         // holds arm in place
-        arm.setTargetState(arm.getState());
+        // arm.setTargetState(arm.getState());
+        
+        if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_IN) { 
+            arm.setWristVoltage(0);
+        }
 
         swerve.stop();
     }
