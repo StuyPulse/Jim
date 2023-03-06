@@ -135,10 +135,10 @@ public class RobotContainer {
         driver.getTopButton().onTrue(new ArmReady());
 
         // swerve
-        driver.getLeftButton()
+        driver.getLeftTriggerButton()
             .whileTrue(new SwerveDriveSlowDrive(driver));
             // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
-        driver.getLeftTriggerButton().whileTrue(new SwerveDriveAlignThenBalance());
+        driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
         // right trigger -> robotrelative override
 
         // odometry
