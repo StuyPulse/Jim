@@ -184,10 +184,6 @@ public interface Settings {
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
             SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
 
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
-            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
-            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
-
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
