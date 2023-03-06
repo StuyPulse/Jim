@@ -40,6 +40,7 @@ public class RobotScore extends CommandBase {
                 intake.deacquire();
                 break;
             case CONE_TIP_IN:
+                arm.setShoulderTargetAngle(Manager.getInstance().getReadyTrajectory().getShoulderState());
                 arm.setWristVoltage(kWristVoltage.get());
                 break;
             case CONE_TIP_OUT:
