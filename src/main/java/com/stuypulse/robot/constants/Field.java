@@ -43,20 +43,28 @@ public interface Field {
 
     // blue left to right
     public interface ScorePoses {
-        double DEFAULT_X_DIST = GRID_DEPTH + Units.inchesToMeters(37) / 2.0;
+        double CUBE_LOW_X = 694;
+        double CUBE_MID_X = 694;
+        double CUBE_HIGH_X = 2.1;
 
-        Translation2d ONE =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(196));
-        Translation2d TWO =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(174.125));
-        Translation2d THREE = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(152));
-        Translation2d FOUR =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(130));
-        Translation2d FIVE =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(108.125));
-        Translation2d SIX =   new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(86));
-        Translation2d SEVEN = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(64));
-        Translation2d EIGHT = new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(42.125));
-        Translation2d NINE =  new Translation2d(DEFAULT_X_DIST, Units.inchesToMeters(20));
+        double CONE_LOW_X = 694;
+        double CONE_MID_X = 694;
+        double CONE_HIGH_X = 2.052;
+
+
+
+        Translation2d ONE =   new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(2.699));
+        Translation2d TWO =   new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(4.8087));
+        Translation2d THREE = new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(3.724));
+        Translation2d FOUR =  new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(4.258));
+        Translation2d FIVE =  new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(5.044971));
+        Translation2d SIX =   new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(5.308));
+        Translation2d SEVEN = new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(5.8913));
+        Translation2d EIGHT = new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(6.674766));
+        Translation2d NINE =  new Translation2d(CUBE_HIGH_X, Units.inchesToMeters(7)); // definitely wrong
     }
 
-    Translation2d BLUE_ALIGN_POSES[] = {
+    Translation2d RED_ALIGN_POSES[] = {
         ScorePoses.ONE,
         ScorePoses.TWO,
         ScorePoses.THREE,
@@ -68,7 +76,7 @@ public interface Field {
         ScorePoses.NINE
     };
 
-    Translation2d RED_ALIGN_POSES[] = {
+    Translation2d BLUE_ALIGN_POSES[] = {
         AllianceUtil.getMirroredTranslation(ScorePoses.NINE),
         AllianceUtil.getMirroredTranslation(ScorePoses.EIGHT),
         AllianceUtil.getMirroredTranslation(ScorePoses.SEVEN),
