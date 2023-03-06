@@ -56,6 +56,8 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         robot.arm.setCoast(false, false);
+        robot.arm.setLimp(true, true);
+        robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
@@ -79,7 +81,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         robot.arm.setCoast(false, false);
-
+        robot.arm.setLimp(false, false);
         new TeleopInit().schedule();
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());

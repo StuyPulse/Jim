@@ -4,19 +4,23 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.util.DebugSequentialCommandGroup;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TwoPiece extends SequentialCommandGroup{
+public class TwoPiece extends DebugSequentialCommandGroup {
 
-    private static final double INTAKE_ACQUIRE_TIME = 0.2;
-    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double ALIGNMENT_TIME = 1.0;
+    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_WAIT_TIME = 2.0;
+    private static final double ACQUIRE_WAIT_TIME = 0.4;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
@@ -28,6 +32,8 @@ public class TwoPiece extends SequentialCommandGroup{
             "Intake Piece", "Score Piece", "Back Away"
         );
 
+        var arm = Arm.getInstance();
+
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
@@ -37,7 +43,14 @@ public class TwoPiece extends SequentialCommandGroup{
 
         // score first piece
         addCommands(
-            new ArmReady().withTolerance(7, 7).withTimeout(4),
+            new LEDSet(LEDColor.RED),
+            new ArmReady()
+                .withTolerance(7, 9)
+                .withTimeout(4)
+        );
+
+        addCommands(
+            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -46,12 +59,26 @@ public class TwoPiece extends SequentialCommandGroup{
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
 
-            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece"))
+            new LEDSet(LEDColor.GREEN),
+
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative(),
-                new IntakeAcquire(),
+
+                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                    .andThen(new IntakeStop())
+                    .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new IntakeAcquire()),
+
                 new ArmIntake()
-            )
+                    .withTolerance(7, 10)
+                    .withTimeout(6.5)
+            ),
+
+            new WaitCommand(ACQUIRE_WAIT_TIME)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
+
+            arm.runOnce(() -> arm.setWristVoltage(0))
         );
         
         // drive to grid and score second piece
@@ -59,10 +86,12 @@ public class TwoPiece extends SequentialCommandGroup{
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetScoreSide(ScoreSide.BACK),
 
+            new LEDSet(LEDColor.RED),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                .alongWith(new ArmReady().alongWith(new WaitCommand(1.0).andThen(new IntakeStop()))),
+                .alongWith(new WaitCommand(1.0).andThen(new ArmReady().alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
 
             new ManagerSetScoreIndex(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -72,6 +101,7 @@ public class TwoPiece extends SequentialCommandGroup{
         );
 
         addCommands(
+            new LEDSet(LEDColor.RAINBOW),
             new SwerveDriveFollowTrajectory(
                 paths.get("Back Away"))
                     .fieldRelative()

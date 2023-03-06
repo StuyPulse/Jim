@@ -39,6 +39,8 @@ import com.stuypulse.stuylib.input.gamepads.*;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.VideoCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -83,7 +85,8 @@ public class RobotContainer {
 
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
-        CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
+        // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
 
         SmartDashboard.putData("Gamepads/Driver", driver);
         SmartDashboard.putData("Gamepads/Operator", operator);
@@ -133,7 +136,8 @@ public class RobotContainer {
 
         // swerve
         driver.getLeftButton()
-            .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
+            .whileTrue(new SwerveDriveSlowDrive(driver));
+            // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftTriggerButton().whileTrue(new SwerveDriveAlignThenBalance());
         // right trigger -> robotrelative override
 

@@ -24,19 +24,32 @@ public class ArmIntake extends ArmRoutine {
 
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-        // if (DriverStation.isAutonomous()) {
-        //     double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
-        //     return new ArmTrajectory()
-        //         .addState(src.getShoulderDegrees(), wristSafeAngle)
-        //         .addState(dest.getShoulderDegrees(), wristSafeAngle)
-        //         .addState(dest);
-        // }
+        if (DriverStation.isAutonomous()) {
+            dest = Acquire.kCubeAuton;
+            double intermediateShoulderDegrees = Acquire.kIntermediateAuton.getShoulderDegrees();
+            double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
+    
+            return new ArmTrajectory()
+                .addState(src.getShoulderDegrees(), wristSafeAngle)
+    
+                .addState(
+                    new ArmState(intermediateShoulderDegrees, wristSafeAngle)
+                        .setShoulderTolerance(15)
+                        .setWristTolerance(360))
+    
+                .addState(
+                    new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
+                        .setWristTolerance(360))
+    
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
+                        .setShoulderTolerance(3)
+                        .setWristTolerance(4));
+        }
 
         double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
         double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
 
-        // TODO: make tolerance on second to last lower
-        // TODO: make second only check shoulder tolerance
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
 
@@ -60,8 +73,9 @@ public class ArmIntake extends ArmRoutine {
         // super.end(interrupted);
 
         if (!interrupted) {
-            arm.setShoulderVoltage(Shoulder.INTAKE_VOLTAGE.get());
-
+            if (manager.getGamePiece().isCube()) {
+                arm.setShoulderVoltage(Shoulder.INTAKE_VOLTAGE.get());
+            }
             // if (manager.getGamePiece().isCube()) {
             //     arm.setWristVoltage(Wrist.INTAKE_VOLTAGE.get());
             // }
