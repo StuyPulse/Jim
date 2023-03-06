@@ -94,7 +94,7 @@ public class Manager extends SubsystemBase {
     }
 
     public ArmState getOuttakeTrajectory() {
-        return Deacquire.kTrajectory;
+        return getLowReadyTrajectory();
     }
 
     /** Generate Ready Trajectories **/
@@ -116,7 +116,7 @@ public class Manager extends SubsystemBase {
     }
 
     private ArmState getLowReadyTrajectory() {
-        return Deacquire.kTrajectory;
+        return scoreSide == ScoreSide.FRONT ? Deacquire.kFrontTrajectory : Deacquire.kBackTrajectory;
     }
 
     private ArmState getMidReadyTrajectory() {
