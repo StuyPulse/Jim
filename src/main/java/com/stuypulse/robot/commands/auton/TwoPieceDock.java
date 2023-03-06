@@ -4,13 +4,16 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,19 +21,24 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class TwoPieceDock extends DebugSequentialCommandGroup {
 
-    private static final double INTAKE_DEACQUIRE_TIME = 1.0;
-    private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_WAIT_TIME = 2.0;
+    private static final double ACQUIRE_WAIT_TIME = 0.4;
     private static final double ENGAGE_TIME = 10.0;
+    private static final double STOW_WAIT_TIME = 1.0;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
-    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(3,2);
-    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
+    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2.5, 2);
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+    private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1.2, 3);
 
     public TwoPieceDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece + Dock", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
         );
+
+        var arm = Arm.getInstance();
 
         // initial setup
         addCommands(
@@ -41,7 +49,14 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new ArmReady().withTolerance(7, 7).withTimeout(4),
+            new LEDSet(LEDColor.RED),
+            new ArmReady()
+                .withTolerance(7, 9)
+                .withTimeout(4)
+        );
+
+        addCommands(
+            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -50,12 +65,26 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
 
-            new ParallelCommandGroup(new SwerveDriveFollowTrajectory(
-                paths.get("Intake Piece"))
+            new LEDSet(LEDColor.GREEN),
+
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative(),
-                new IntakeAcquire(),
+
+                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                    .andThen(new IntakeStop())
+                    .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new IntakeAcquire()),
+
                 new ArmIntake()
-            )
+                    .withTolerance(7, 10)
+                    .withTimeout(6.5)
+            ),
+
+            new WaitCommand(ACQUIRE_WAIT_TIME)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
+
+            arm.runOnce(() -> arm.setWristVoltage(0))
         );
         
         // drive to grid and score second piece
@@ -63,10 +92,12 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetScoreSide(ScoreSide.BACK),
 
+            new LEDSet(LEDColor.RED),
+
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                .alongWith(new IntakeStop().andThen(new ArmReady())),
+                .alongWith(new WaitCommand(1.0).andThen(new ArmReady().alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
 
             new ManagerSetScoreIndex(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -74,18 +105,25 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
         );
-
+        
         // dock and engage
         addCommands(
-            // new ManagerSetScoreSide(ScoreSide.FRONT),
+            new LEDSet(LEDColor.PURPLE),
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Dock"))
+                        .fieldRelative(),
 
-            new SwerveDriveFollowTrajectory(
-                paths.get("Dock"))
-                    .fieldRelative()
-                // .alongWith(new ArmStow()),
-                .alongWith(new ArmStow()),
+                new WaitCommand(STOW_WAIT_TIME).andThen(new ArmStow())
+            )
+        );
 
-            new SwerveDriveBalanceBlay().withMaxSpeed(1.0).withTimeout(ENGAGE_TIME),
+        addCommands(
+            new LEDSet(LEDColor.RAINBOW),
+
+            new SwerveDriveBalanceBlay()
+                .withMaxSpeed(1.2)
+                .withTimeout(ENGAGE_TIME),
+
             new PlantEngage()
         );
     }
