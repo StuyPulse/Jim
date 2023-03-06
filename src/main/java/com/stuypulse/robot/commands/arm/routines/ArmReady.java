@@ -30,7 +30,18 @@ public class ArmReady extends ArmRoutine {
                 .addState(dest);
         }
 
-        return super.getTrajectory(src, dest);
+        if (DriverStation.isAutonomous()) {
+            return super.getTrajectory(src, dest);
+        }
+
+        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
+
+        return new ArmTrajectory()
+            .addState(src.getShoulderDegrees(), wristSafeAngle)
+            .addState(dest.getShoulderDegrees(), wristSafeAngle)
+            .addState(dest
+                .setShoulderTolerance(3)
+                .setWristTolerance(3));
     }
 
     @Override
