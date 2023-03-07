@@ -2,23 +2,18 @@ package com.stuypulse.robot.subsystems.vision;
 import java.util.*;
 
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -65,6 +60,7 @@ public class VisionImpl extends Vision {
     private Result process(AprilTagData data) {
         if (!Field.isValidAprilTagId(data.id))
             return new Result(data, Noise.HIGH);
+
         double angleDegrees = absDegToTarget(data.pose, data.id);
         double distance = distanceToTarget(data.pose, data.id);
 
@@ -117,6 +113,13 @@ public class VisionImpl extends Vision {
         return deg;
     }
 
+    private static void putAprilTagData(String prefix, AprilTagData data) {
+        SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
+        SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
+        SmartDashboard.putNumber(prefix + "/Pose Rotation (Deg)" , data.pose.getRotation().getDegrees());
+        SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
+        SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
+    }
 
     @Override
     public void periodic(){
@@ -135,12 +138,14 @@ public class VisionImpl extends Vision {
             Optional<AprilTagData> aprilTagData = ll.getAprilTagData();
             
             if (aprilTagData.isPresent()) {
-                SmartDashboard.putNumber("Vision/" + name + "/X" , aprilTagData.get().pose.getX());
-                SmartDashboard.putNumber("Vision/" + name + "/Y" , aprilTagData.get().pose.getY());
-                SmartDashboard.putNumber("Vision/" + name + "/Rotation" , aprilTagData.get().pose.getRotation().getDegrees());
+                putAprilTagData("Vision/" + name, aprilTagData.get());
                 pose2d.setPose(aprilTagData.get().pose);
 
                 results.add(process(aprilTagData.get()));
+            } else {
+                putAprilTagData("Vision/" + name, new AprilTagData(kNoPose, Double.NaN, -1));
+                pose2d.setPose(kNoPose);
+
             }
         }
     }
