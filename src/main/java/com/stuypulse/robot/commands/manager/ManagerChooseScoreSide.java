@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands.manager;
 
 import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
@@ -23,7 +24,7 @@ public class ManagerChooseScoreSide extends InstantCommand {
             var manager = Manager.getInstance();
 
             // if game piece is cube, automatically choose scoring side
-            if (manager.getGamePiece().isCube()) {
+            if (manager.getGamePiece().isCube() || manager.getNodeLevel() == NodeLevel.LOW) {
                 manager.setScoreSide(getCurrentScoringSide(Odometry.getInstance().getRotation()));
             }
         });
