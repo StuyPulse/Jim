@@ -44,6 +44,10 @@ public class Limelight {
         return data;
     }
 
+    public boolean hasAprilTagData() {
+        return getAprilTagData().isPresent();
+    }
+
     private double[] getPoseData() {
         return RobotContainer.getCachedAlliance() == Alliance.Blue ?
             blueBotposeEntry.get() :

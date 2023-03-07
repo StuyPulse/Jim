@@ -28,25 +28,14 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", true);
 
     private interface VisionStdDevs {
-        Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
-        Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
-
-        Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
-        Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
+        Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
+        Vector<N3> TELE_LOW = VecBuilder.fill(0.9, 0.9, Units.degreesToRadians(30));
 
         public static Vector<N3> get(Noise noise) {
             if (DriverStation.isAutonomous()) {
-                switch (noise) {
-                    case LOW: return AUTO_LOW;
-                    case MID: return AUTO_MID;
-                    default: return AUTO_MID;
-                }
+                return AUTO_LOW;
             } else {
-                switch (noise) {
-                    case LOW: return TELE_LOW;
-                    case MID: return TELE_MID;
-                    default: return null;
-                }
+                return TELE_LOW;
             }
         }
     }
@@ -74,7 +63,7 @@ public class OdometryImpl extends Odometry {
                     Units.inchesToMeters(8), 
                     Math.toRadians(2)), 
 
-                    VisionStdDevs.TELE_MID);
+                    VisionStdDevs.TELE_LOW);
 
         odometry = 
             new SwerveDriveOdometry(
@@ -123,19 +112,10 @@ public class OdometryImpl extends Odometry {
         }
         
         for (Result result : results) {
-            switch (result.getNoise()) {
-                case HIGH:
-                    continue;
-                case MID:
-                    poseEstimator.addVisionMeasurement(
-                        result.getPose(),
-                        Timer.getFPGATimestamp() - result.getLatency(),
-                        VisionStdDevs.get(result.getNoise()));
-                    continue;
-                default:
-                    
-                    continue;
-            }
+            poseEstimator.addVisionMeasurement(
+                result.getPose(),
+                Timer.getFPGATimestamp() - result.getLatency(),
+                VisionStdDevs.get(result.getNoise()));
         }  
     }
 

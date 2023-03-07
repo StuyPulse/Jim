@@ -24,6 +24,8 @@ public abstract class Vision extends SubsystemBase {
     }
 
     /** VISION TYPES **/
+
+    // TODO: remove noise type
     public enum Noise {
         LOW,
         MID,
