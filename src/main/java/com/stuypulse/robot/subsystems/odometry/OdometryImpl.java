@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -25,41 +26,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class OdometryImpl extends Odometry {
 
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", true);
-    public static final SmartBoolean OVERRIDE = new SmartBoolean("Odometry/April Tag Override", false);
 
-    static class StandardDeviations {
-        public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
-        public static final Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
+    private interface VisionStdDevs {
+        Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
+        Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
 
-        public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
-        public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
-
-        public static final Vector<N3> OVERRIDE_STDS = VecBuilder.fill(1,1,Math.toRadians(10));
-
-        private StandardDeviations() {}
+        Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
+        Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
 
         public static Vector<N3> get(Noise noise) {
-            if (OVERRIDE.get()) {
-                return OVERRIDE_STDS;
-            }
-
             if (DriverStation.isAutonomous()) {
                 switch (noise) {
-                    case LOW:
-                        return AUTO_LOW;
-                    case MID:
-                        return AUTO_MID;
-                    default:
-                        return null;
+                    case LOW: return AUTO_LOW;
+                    case MID: return AUTO_MID;
+                    default: return AUTO_MID;
                 }
             } else {
                 switch (noise) {
-                    case LOW:
-                        return TELE_LOW;
-                    case MID:
-                        return TELE_MID;
-                    default:
-                        return null;
+                    case LOW: return TELE_LOW;
+                    case MID: return TELE_MID;
+                    default: return null;
                 }
             }
         }
@@ -82,8 +68,13 @@ public class OdometryImpl extends Odometry {
                 swerve.getGyroAngle(), 
                 swerve.getModulePositions(), 
                 startingPose, 
-                VecBuilder.fill(0.1, 0.1, Math.toRadians(2)), 
-                StandardDeviations.TELE_MID);
+
+                VecBuilder.fill(
+                    Units.inchesToMeters(8), 
+                    Units.inchesToMeters(8), 
+                    Math.toRadians(2)), 
+
+                    VisionStdDevs.TELE_MID);
 
         odometry = 
             new SwerveDriveOdometry(
@@ -92,7 +83,6 @@ public class OdometryImpl extends Odometry {
                 swerve.getModulePositions(), 
                 startingPose);
 
-        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
         odometryPose2d = field.getObject("Odometry Pose2d");
@@ -110,10 +100,11 @@ public class OdometryImpl extends Odometry {
     @Override
     public void reset(Pose2d pose) {
         SwerveDrive drive = SwerveDrive.getInstance();
+
         poseEstimator.resetPosition(
-                    drive.getGyroAngle(), 
-                    drive.getModulePositions(), 
-                    pose);
+            drive.getGyroAngle(), 
+            drive.getModulePositions(), 
+            pose);
 
         odometry.resetPosition(
             drive.getGyroAngle(), 
@@ -139,10 +130,10 @@ public class OdometryImpl extends Odometry {
                     poseEstimator.addVisionMeasurement(
                         result.getPose(),
                         Timer.getFPGATimestamp() - result.getLatency(),
-                        StandardDeviations.get(result.getNoise()));
+                        VisionStdDevs.get(result.getNoise()));
                     continue;
                 default:
-                    reset(result.getPose());
+                    
                     continue;
             }
         }  
