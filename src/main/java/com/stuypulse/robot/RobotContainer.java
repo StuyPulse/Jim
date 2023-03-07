@@ -148,8 +148,8 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        driver.getLeftBumper().onTrue(new PlantEngage());
-        driver.getRightBumper().onTrue(new PlantDisengage());
+        driver.getRightBumper().onTrue(new PlantEngage());
+        driver.getLeftBumper().onTrue(new PlantDisengage());
 
     }
 
