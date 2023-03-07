@@ -85,7 +85,7 @@ public class RobotContainer {
 
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
-        CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
+        CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
         // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
 
         SmartDashboard.putData("Gamepads/Driver", driver);
@@ -128,7 +128,7 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .whileTrue(new RobotScore());
+            .whileTrue(new RobotScore()); 
         driver.getRightButton()
             .whileTrue(new RobotRelease());
 
