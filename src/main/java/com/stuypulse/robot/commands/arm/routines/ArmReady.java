@@ -2,6 +2,8 @@ package com.stuypulse.robot.commands.arm.routines;
 
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
+import com.stuypulse.robot.subsystems.Manager.NodeLevel;
+import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -34,12 +36,30 @@ public class ArmReady extends ArmRoutine {
             return super.getTrajectory(src, dest);
         }
 
+        if (src.isOnSameSide(dest) && !src.isOverBumper()) {
+            return new ArmTrajectory()
+            .addState(
+                new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
+                    .setShoulderTolerance(3)
+                    .setWristTolerance(3));
+        }
+
+        // if (Manager.getInstance().getNodeLevel() == NodeLevel.LOW && 
+        //     Manager.getInstance().getScoreSide() == ScoreSide.BACK) {
+        // }
+
         double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
 
         return new ArmTrajectory()
-            .addState(src.getShoulderDegrees(), wristSafeAngle)
-            .addState(dest.getShoulderDegrees(), wristSafeAngle)
-            .addState(dest
+            .addState(
+                new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(12))
+
+            .addState(
+                new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(45))
+
+            .addState(new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
                 .setShoulderTolerance(3)
                 .setWristTolerance(3));
     }
