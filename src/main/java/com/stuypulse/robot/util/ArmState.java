@@ -2,6 +2,8 @@ package com.stuypulse.robot.util;
 
 import java.util.Optional;
 
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ArmState {
@@ -71,6 +73,14 @@ public class ArmState {
 
     public Optional<Number> getShoulderTolerance() {
         return shoulderToleranceDegrees;
+    }
+
+    public boolean isOverBumper() {
+        return Math.abs(getShoulderDegrees() + 90) < Settings.Arm.Shoulder.OVER_BUMPER_ANGLE.get();
+    }
+
+    public boolean isOnSameSide(ArmState lhs) {
+        return (getShoulderDegrees() < -90) == (lhs.getShoulderDegrees() < -90);
     }
 
 }
