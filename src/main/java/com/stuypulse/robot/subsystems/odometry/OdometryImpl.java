@@ -75,9 +75,23 @@ public class OdometryImpl extends Odometry {
     protected OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose, 
-            VecBuilder.fill(5, 5, Math.toRadians(10)), StandardDeviations.TELE_MID);
-        odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
+        
+        poseEstimator = 
+            new SwerveDrivePoseEstimator(
+                swerve.getKinematics(), 
+                swerve.getGyroAngle(), 
+                swerve.getModulePositions(), 
+                startingPose, 
+                VecBuilder.fill(0.1, 0.1, Math.toRadians(2)), 
+                StandardDeviations.TELE_MID);
+
+        odometry = 
+            new SwerveDriveOdometry(
+                swerve.getKinematics(), 
+                swerve.getGyroAngle(), 
+                swerve.getModulePositions(), 
+                startingPose);
+
         // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
         field = new Field2d();
 
@@ -113,23 +127,23 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
+        if (DISABLE_APRIL_TAGS.get()) {
+            return;
+        }
+        
         for (Result result : results) {
-            if (!DISABLE_APRIL_TAGS.get()) {
-                switch (result.getNoise()) {
-                    case HIGH:
-                        continue;
-                    case MID:
-                        poseEstimator.addVisionMeasurement(
-                            result.getPose(),
-                            Timer.getFPGATimestamp() - result.getLatency(),
-                            StandardDeviations.get(result.getNoise()));
-                        field.getObject("Vision Pose2d").setPose(result.getPose());
-                        continue;
-                    default:
-                        reset(result.getPose());
-                        field.getObject("Vision Pose2d").setPose(result.getPose());
-                        continue;
-                }
+            switch (result.getNoise()) {
+                case HIGH:
+                    continue;
+                case MID:
+                    poseEstimator.addVisionMeasurement(
+                        result.getPose(),
+                        Timer.getFPGATimestamp() - result.getLatency(),
+                        StandardDeviations.get(result.getNoise()));
+                    continue;
+                default:
+                    reset(result.getPose());
+                    continue;
             }
         }  
     }
@@ -143,7 +157,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
-        List<Result> results = vision.getResults();
+        List<Result> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
         odometryPose2d.setPose(odometry.getPoseMeters());
