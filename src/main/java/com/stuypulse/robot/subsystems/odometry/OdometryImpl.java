@@ -29,7 +29,7 @@ public class OdometryImpl extends Odometry {
 
     private interface VisionStdDevs {
         Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
-        Vector<N3> TELE_LOW = VecBuilder.fill(0.9, 0.9, Units.degreesToRadians(30));
+        Vector<N3> TELE_LOW = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
         public static Vector<N3> get(Noise noise) {
             if (DriverStation.isAutonomous()) {
