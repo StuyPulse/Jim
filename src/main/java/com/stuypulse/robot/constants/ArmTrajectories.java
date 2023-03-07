@@ -76,8 +76,8 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/High Cube Front/Shoulder", -180 - (-175)),
                 new SmartNumber("Arm Trajectories/High Cube Front/Wrist", 180 - 130));
             ArmState kCubeBack = new ArmState(
-                new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", 180),
-                new SmartNumber("Arm Trajectories/High Cube Back/Wrist", -160));
+                new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", -175),
+                new SmartNumber("Arm Trajectories/High Cube Back/Wrist", -153));
         }
     }
 
