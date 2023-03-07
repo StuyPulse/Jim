@@ -112,6 +112,14 @@ public class OdometryImpl extends Odometry {
         }
         
         for (Result result : results) {
+
+            if (Vision.getInstance().APRIL_TAG_RESET.get()) {
+                if (result.noise != Noise.HIGH) {
+                    reset(result.getPose());
+                }
+                continue;
+            }
+
             poseEstimator.addVisionMeasurement(
                 result.getPose(),
                 Timer.getFPGATimestamp() - result.getLatency(),

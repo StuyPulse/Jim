@@ -7,6 +7,7 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
@@ -171,6 +172,17 @@ public class VisionImpl extends Vision {
 
             if (ll.hasAprilTagData()) {
                 var data = ll.getAprilTagData().get();
+
+                if (APRIL_TAG_RESET.get()) {
+                    putAprilTagData("Vision/" + ll.getTableName(), data);
+                    ll2d.setPose(data.pose);
+
+                    if (!Field.isValidAprilTagId(data.id)) {
+                        continue;
+                    }
+                    results.add(new Result(data, Noise.LOW));
+                    continue;
+                }
 
                 if (isAcceptable(robotPose, data.pose)) {
                     putAprilTagData("Vision/" + ll.getTableName(), data);
