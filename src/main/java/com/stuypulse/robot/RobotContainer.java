@@ -129,7 +129,7 @@ public class RobotContainer {
         // arm
         driver.getBottomButton()
             .whileTrue(new RobotScore());
-        driver.getRightButton()
+        driver.getLeftBumper()
             .whileTrue(new RobotRelease());
 
         driver.getTopButton().onTrue(new ArmReady());
@@ -148,8 +148,8 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        driver.getRightBumper().onTrue(new PlantEngage());
-        driver.getLeftBumper().onTrue(new PlantDisengage());
+        driver.getRightButton().onTrue(new PlantEngage());
+        driver.getRightBumper().onTrue(new PlantDisengage());
 
     }
 
