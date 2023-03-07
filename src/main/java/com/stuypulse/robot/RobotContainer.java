@@ -128,7 +128,7 @@ public class RobotContainer {
 
         // arm
         driver.getBottomButton()
-            .whileTrue(new RobotScore()); 
+            .whileTrue(new RobotScore());
         driver.getRightButton()
             .whileTrue(new RobotRelease());
 
