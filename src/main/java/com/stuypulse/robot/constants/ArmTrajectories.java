@@ -28,8 +28,8 @@ public interface ArmTrajectories {
 
     public interface Deacquire {
         ArmState kFrontTrajectory = new ArmState(
-			    new SmartNumber("Arm Trajectories/Deacquire Front Shoulder", -65),
-			    new SmartNumber("Arm Trajectories/Deacquire Front Wrist", 45));
+			    new SmartNumber("Arm Trajectories/Deacquire Front Shoulder", -77),
+			    new SmartNumber("Arm Trajectories/Deacquire Front Wrist", 90));
 
         ArmState kBackTrajectory = new ArmState(
             new SmartNumber("Arm Trajectories/Deacquire Back Shoulder", -134),
