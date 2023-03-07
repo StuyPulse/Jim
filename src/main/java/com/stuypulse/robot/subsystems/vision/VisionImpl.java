@@ -23,18 +23,29 @@ public class VisionImpl extends Vision {
     private static final Pose2d kNoPose = 
         new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
+    // store limelight network tables
     private final Limelight[] limelights;
-    private final List<Result> results;
 
+    // store fieldobject2d's to display limelight data
     private final FieldObject2d[] limelightPoses;
 
-    protected VisionImpl() {
-        // setup limelight objects
-        String[] hostNames = LIMELIGHTS;
-        limelights = new Limelight[hostNames.length];
+    // cache results every loop in a list
+    private final List<Result> results;
 
+    protected VisionImpl() {
+        // reference to all limelights on robot
+        String[] hostNames = LIMELIGHTS;
+
+        // setup limelight objects and field objects for april tag data
+        limelights = new Limelight[hostNames.length];
+        limelightPoses = new FieldObject2d[limelights.length];
+
+        // setup all objects
+        Field2d field = Odometry.getInstance().getField();
         for(int i = 0; i < hostNames.length; i++){
             limelights[i] = new Limelight(hostNames[i]);
+            limelightPoses[i] = field.getObject(hostNames[i] + " pose");
+
             for (int port : PORTS) {
                 PortForwarder.add(port, hostNames[i] + ".local", port);
             }
@@ -42,13 +53,6 @@ public class VisionImpl extends Vision {
 
         // constantly store results in array
         results = new ArrayList<>();
-
-        // store field objects to log poses from limelights
-        Field2d field = Odometry.getInstance().getField();
-        limelightPoses = new FieldObject2d[limelights.length];
-        for (int i = 0; i < limelightPoses.length; ++i) {
-            limelightPoses[i] = field.getObject(hostNames[i] + " pose");
-        }
     }
 
     @Override
