@@ -8,6 +8,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
@@ -37,7 +38,7 @@ public class VisionImpl extends Vision {
     private final FieldObject2d[] limelightPoses;
 
     // cache results every loop in a list
-    private final List<Result> results;
+    private final List<AprilTagData> results;
 
     protected VisionImpl() {
         // reference to all limelights on robot
@@ -63,7 +64,7 @@ public class VisionImpl extends Vision {
     }
 
     @Override
-    public List<Result> getResults() {
+    public List<AprilTagData> getResults() {
         return results;
     }
 
@@ -93,37 +94,6 @@ public class VisionImpl extends Vision {
         return deg;
     }
 
-    // assigns error to data and returns a result 
-    private Result process(AprilTagData data) {
-        if (!Field.isValidAprilTagId(data.id))
-            return new Result(data, Noise.HIGH);
-
-        double angleDegrees = getDistanceToTag(data.pose, data.id);
-        double distance = getDegreesToTag(data.pose, data.id);
-
-        SmartDashboard.putNumber("Vision/Angle to Tag", angleDegrees);
-        SmartDashboard.putNumber("Vision/Distance", distance);
-        SmartDashboard.putNumber("Vision/Tag ID", data.id);
-
-
-        if (Math.abs(angleDegrees) > TRUST_ANGLE)
-            return new Result(data, Noise.HIGH);
-        
-        boolean inZone = distance <= TRUST_DISTANCE;
-        boolean inTolerance = distance <= USABLE_DISTANCE;
-
-        // defaults to high error
-        Noise error = Noise.HIGH;
-
-        if(inZone){
-            error = Noise.LOW;
-        }
-        else if (inTolerance) {
-            error = Noise.MID;
-        }
-        return new Result(data, error);
-    }
-
     private static void putAprilTagData(String prefix, AprilTagData data) {
         SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
         SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
@@ -139,7 +109,7 @@ public class VisionImpl extends Vision {
         return d;
     }
 
-    private static boolean isAcceptable(Pose2d robot, Pose2d vision) {
+    private static boolean isAcceptable(Pose2d robot, Pose2d vision, int tagid) {
         // check if distance greater than cutoff
         double distance = robot.getTranslation().getDistance(vision.getTranslation());
         if (distance > Units.feetToMeters(4)) return false;
@@ -147,6 +117,14 @@ public class VisionImpl extends Vision {
         // check if angle is greater than cutoff
         double degrees = getDegreesBetween(robot.getRotation(), vision.getRotation());
         if (degrees > 6) return false;
+
+        // check if distance to tag is greater than cutoff
+        double distanceToTag = getDegreesToTag(vision, tagid);
+        if (distanceToTag > TRUST_DISTANCE) return false;
+
+        // check if angle to tag is greater than cutoff
+        double angleToTag = Math.abs(getDistanceToTag(vision, tagid));
+        if (angleToTag > TRUST_ANGLE) return false;
 
         // OK
         return true;
@@ -173,27 +151,15 @@ public class VisionImpl extends Vision {
             if (ll.hasAprilTagData()) {
                 var data = ll.getAprilTagData().get();
 
-                if (APRIL_TAG_RESET.get()) {
-                    putAprilTagData("Vision/" + ll.getTableName(), data);
-                    ll2d.setPose(data.pose);
-
-                    if (!Field.isValidAprilTagId(data.id)) {
-                        continue;
-                    }
-                    results.add(new Result(data, Noise.LOW));
-                    continue;
-                }
-
-                if (isAcceptable(robotPose, data.pose)) {
+                if (isAcceptable(robotPose, data.pose, data.id) || APRIL_TAG_RESET.get()) {
+                    if (!Field.isValidAprilTagId(data.id)) continue;
                     putAprilTagData("Vision/" + ll.getTableName(), data);
                     ll2d.setPose(data.pose);
                     
-                    results.add(new Result(data, Noise.LOW));
+                    results.add(data);
                 } else {
                     putAprilTagData("Vision/" + ll.getTableName(), kNoData);
-                    ll2d.setPose(kNoPose);    
-                
-                    System.out.println("Rejected data from " + ll.getTableName());
+                    ll2d.setPose(kNoPose);
                 }
 
 

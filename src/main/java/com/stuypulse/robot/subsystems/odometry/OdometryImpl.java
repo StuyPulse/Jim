@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
-import com.stuypulse.robot.subsystems.vision.Vision.Noise;
-import com.stuypulse.robot.subsystems.vision.Vision.Result;
+import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.VecBuilder;
@@ -31,7 +30,7 @@ public class OdometryImpl extends Odometry {
         Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
         Vector<N3> TELE_LOW = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
-        public static Vector<N3> get(Noise noise) {
+        public static Vector<N3> get() {
             if (DriverStation.isAutonomous()) {
                 return AUTO_LOW;
             } else {
@@ -106,24 +105,22 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
-    private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
+    private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){ 
         if (DISABLE_APRIL_TAGS.get()) {
             return;
         }
         
-        for (Result result : results) {
+        for (AprilTagData result : results) {
 
             if (Vision.getInstance().APRIL_TAG_RESET.get()) {
-                if (result.noise != Noise.HIGH) {
-                    reset(result.getPose());
-                }
+                reset(result.pose);
                 continue;
             }
 
             poseEstimator.addVisionMeasurement(
-                result.getPose(),
-                Timer.getFPGATimestamp() - result.getLatency(),
-                VisionStdDevs.get(result.getNoise()));
+                result.pose,
+                Timer.getFPGATimestamp() - result.latency,
+                VisionStdDevs.get());
         }  
     }
 
@@ -136,7 +133,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
-        List<Result> results = Vision.getInstance().getResults();
+        List<AprilTagData> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
         odometryPose2d.setPose(odometry.getPoseMeters());

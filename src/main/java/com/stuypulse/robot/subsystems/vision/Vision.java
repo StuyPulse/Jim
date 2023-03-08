@@ -28,39 +28,6 @@ public abstract class Vision extends SubsystemBase {
 
     /** VISION TYPES **/
 
-    // TODO: remove noise type
-    public enum Noise {
-        LOW,
-        MID,
-        HIGH;
-    }
-
-    public static class Result {
-        public final AprilTagData data;
-        public Noise noise;
-
-        public Result(AprilTagData data, Noise error) {
-            this.data = data;
-            this.noise = error;
-        }
-
-        public Pose2d getPose() {
-            return data.pose;
-        }
-
-        public double getLatency() {
-            return data.latency;
-        }
-
-        public Noise getNoise() {
-            return noise;
-        }
-
-        public AprilTagData getData(){
-            return data;
-        }
-    }
-
     /** ABSTRACT METHODS **/
-    public abstract List<Result> getResults();
+    public abstract List<AprilTagData> getResults();
 }

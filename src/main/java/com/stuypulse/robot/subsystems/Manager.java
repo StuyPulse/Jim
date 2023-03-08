@@ -4,6 +4,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -160,7 +161,29 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Translation2d getScoreTranslation() {
+    public Translation2d getNearestScoreTranslation() {
+        var robot = Odometry.getInstance().getTranslation();
+
+        Translation2d[] positions = RobotContainer.getCachedAlliance() == Alliance.Blue ?
+            Field.BLUE_ALIGN_POSES : 
+            Field.RED_ALIGN_POSES;
+
+        Translation2d nearest = positions[0];
+        double nearestDistance = robot.getDistance(nearest);
+
+        for (int i = 1; i < positions.length; i++) {
+            double distance = robot.getDistance(positions[i]);
+
+            if (distance < nearestDistance) {
+                nearest = positions[i];
+                nearestDistance = distance;
+            }
+        }
+
+        return nearest;
+    }
+
+    public Translation2d getSelectedScoreTranslation() {
         int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
         
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
@@ -171,12 +194,11 @@ public class Manager extends SubsystemBase {
     }
 
     public Pose2d getScorePose() {
-        Rotation2d rotation = new Rotation2d();
+        Rotation2d rotation = scoreSide == ScoreSide.FRONT ?
+            Rotation2d.fromDegrees(180) :
+            Rotation2d.fromDegrees(0);
 
-        if (scoreSide == ScoreSide.FRONT)
-            rotation = Rotation2d.fromDegrees(180);
-
-        return new Pose2d(getScoreTranslation(), rotation);
+        return new Pose2d(getNearestScoreTranslation(), rotation);
     }
 
     /** Change and Read State **/
