@@ -121,10 +121,11 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
+        // new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
 
-        driver.getSelectButton().onTrue(new WingRetract());
-        driver.getStartButton().onTrue(new WingRetract());
+        // driver.getSelectButton().onTrue(new WingRetract());
+        // driver.getStartButton().onTrue(new WingRetract());
+        driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getBottomButton()
