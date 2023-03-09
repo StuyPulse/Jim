@@ -32,6 +32,13 @@
       "ypos": "29"
     }
   },
+  "Table": {
+    "0x542B5671,2": {
+      "Column 0  Width": "248",
+      "Column 1  Width": "269",
+      "RefScale": "16"
+    }
+  },
   "Window": {
     "###/SmartDashboard/Arm Mech2d": {
       "Collapsed": "0",
@@ -101,8 +108,8 @@
     },
     "###Plot <15>": {
       "Collapsed": "0",
-      "Pos": "64,243",
-      "Size": "647,296"
+      "Pos": "90,118",
+      "Size": "1127,672"
     },
     "###Plot <1>": {
       "Collapsed": "0",
