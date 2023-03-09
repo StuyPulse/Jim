@@ -161,6 +161,10 @@ public class RobotContainer {
         new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
             .onTrue(new ArmVoltageDrive(operator));
         
+        // wing
+        operator.getSelectButton().onTrue(new WingExtend());
+        operator.getStartButton().onTrue(new WingRetract());
+
         // intaking
         operator.getRightTriggerButton()
             .whileTrue(new ArmIntake())
