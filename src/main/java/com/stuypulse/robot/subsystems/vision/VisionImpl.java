@@ -88,12 +88,18 @@ public class VisionImpl extends Vision {
         return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation());
     }
 
-    private static void putAprilTagData(String prefix, AprilTagData data) {
+    private static void putAprilTagData(String prefix, AprilTagData data, boolean accepted) {
         SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
         SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
         SmartDashboard.putNumber(prefix + "/Pose Rotation (Deg)" , data.pose.getRotation().getDegrees());
         SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
+
+        SmartDashboard.putNumber(prefix + "/Distance to Tag", getDistanceToTag(data.pose, data.id));
+        SmartDashboard.putNumber(prefix + "/Angle to Tag", getDegreesToTag(data.pose, data.id));
+
+
+        SmartDashboard.putBoolean(prefix + "/Accepted", accepted);
     }
 
     private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
@@ -139,18 +145,18 @@ public class VisionImpl extends Vision {
 
                 if (isAcceptable(robotPose, data.pose, data.id)) {
                     if (!Field.isValidAprilTagId(data.id)) continue;
-                    putAprilTagData("Vision/" + ll.getTableName(), data);
+                    putAprilTagData("Vision/" + ll.getTableName(), data, true);
                     ll2d.setPose(data.pose);
                     
                     results.add(data);
                 } else {
-                    putAprilTagData("Vision/" + ll.getTableName(), kNoData);
+                    putAprilTagData("Vision/" + ll.getTableName(), kNoData, false);
                     ll2d.setPose(kNoPose);
                 }
 
 
             } else {
-                putAprilTagData("Vision/" + ll.getTableName(), kNoData);
+                putAprilTagData("Vision/" + ll.getTableName(), kNoData, false);
                 ll2d.setPose(kNoPose);
             }
         }
