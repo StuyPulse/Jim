@@ -68,7 +68,7 @@ public interface Settings {
     }
 
     public interface Vision {
-        double USABLE_DISTANCE = Units.feetToMeters(10);
+        double USABLE_DISTANCE = Units.inchesToMeters(95.25);
         double TRUST_DISTANCE = Units.feetToMeters(5);
         double TRUST_ANGLE = 50;
 
