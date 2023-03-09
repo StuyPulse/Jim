@@ -118,7 +118,7 @@ public class OdometryImpl extends Odometry {
             }
 
             poseEstimator.addVisionMeasurement(
-                result.pose,
+                new Pose2d(result.pose.getTranslation(), getRotation()),
                 Timer.getFPGATimestamp() - result.latency,
                 VisionStdDevs.get());
         }  
