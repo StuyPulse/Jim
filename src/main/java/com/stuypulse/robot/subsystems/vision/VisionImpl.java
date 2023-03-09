@@ -68,7 +68,6 @@ public class VisionImpl extends Vision {
         return results;
     }
 
-
     // helper for process
     private static double getDistanceToTag(Pose2d pose, int id) {
         if (id < 1)
@@ -84,14 +83,9 @@ public class VisionImpl extends Vision {
         if (id < 1)
             return Double.POSITIVE_INFINITY;
 
-        Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.getAprilTagFromId(id).toPose2d().getTranslation();
-        
-        double deg = robot.minus(tag).getAngle().getDegrees();
-        if (Math.abs(deg) > 90)
-            deg += 180;
+        Rotation2d tag = Field.getAprilTagFromId(id).toPose2d().getRotation();
 
-        return deg;
+        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation());
     }
 
     private static void putAprilTagData(String prefix, AprilTagData data) {
@@ -119,11 +113,11 @@ public class VisionImpl extends Vision {
         if (degrees > 6) return false;
 
         // check if distance to tag is greater than cutoff
-        double distanceToTag = getDegreesToTag(vision, tagid);
+        double distanceToTag = getDistanceToTag(vision, tagid);
         if (distanceToTag > TRUST_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
-        double angleToTag = Math.abs(getDistanceToTag(vision, tagid));
+        double angleToTag = Math.abs(getDegreesToTag(vision, tagid));
         if (angleToTag > TRUST_ANGLE) return false;
 
         // OK
