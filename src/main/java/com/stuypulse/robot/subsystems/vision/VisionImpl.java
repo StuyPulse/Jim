@@ -104,21 +104,13 @@ public class VisionImpl extends Vision {
     }
 
     private static boolean isAcceptable(Pose2d robot, Pose2d vision, int tagid) {
-        // check if distance greater than cutoff
-        double distance = robot.getTranslation().getDistance(vision.getTranslation());
-        if (distance > Units.feetToMeters(4)) return false;
-
-        // check if angle is greater than cutoff
-        double degrees = getDegreesBetween(robot.getRotation(), vision.getRotation());
-        if (degrees > 6) return false;
-
         // check if distance to tag is greater than cutoff
         double distanceToTag = getDistanceToTag(vision, tagid);
-        if (distanceToTag > TRUST_DISTANCE) return false;
+        if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
         double angleToTag = Math.abs(getDegreesToTag(vision, tagid));
-        if (angleToTag > TRUST_ANGLE) return false;
+        if (angleToTag < MAX_USE_ANGLE || angleToTag > MAX_USE_ANGLE) return false;
 
         // OK
         return true;
@@ -145,7 +137,7 @@ public class VisionImpl extends Vision {
             if (ll.hasAprilTagData()) {
                 var data = ll.getAprilTagData().get();
 
-                if (isAcceptable(robotPose, data.pose, data.id) || APRIL_TAG_RESET.get()) {
+                if (isAcceptable(robotPose, data.pose, data.id)) {
                     if (!Field.isValidAprilTagId(data.id)) continue;
                     putAprilTagData("Vision/" + ll.getTableName(), data);
                     ll2d.setPose(data.pose);

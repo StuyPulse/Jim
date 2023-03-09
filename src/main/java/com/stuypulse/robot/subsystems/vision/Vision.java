@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Vision extends SubsystemBase {
 
-    public SmartBoolean APRIL_TAG_RESET = new SmartBoolean("Odometry/April Tag Reset", false);
-
     /** SINGLETON **/
     private static final Vision instance;
 

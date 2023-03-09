@@ -27,16 +27,16 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", true);
 
     private interface VisionStdDevs {
-        Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
-        Vector<N3> TELE_LOW = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
+        // Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
+        Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
-        public static Vector<N3> get() {
-            if (DriverStation.isAutonomous()) {
-                return AUTO_LOW;
-            } else {
-                return TELE_LOW;
-            }
-        }
+        // public static Vector<N3> get() {
+        //     if (DriverStation.isAutonomous()) {
+        //         return AUTO_LOW;
+        //     } else {
+        //         return TELE_LOW;
+        //     }
+        // }
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -58,11 +58,11 @@ public class OdometryImpl extends Odometry {
                 startingPose, 
 
                 VecBuilder.fill(
-                    Units.inchesToMeters(8), 
-                    Units.inchesToMeters(8), 
-                    Math.toRadians(2)), 
+                    Units.inchesToMeters(694), 
+                    Units.inchesToMeters(694), 
+                    Math.toRadians(1)), 
 
-                    VisionStdDevs.TELE_LOW);
+                VisionStdDevs.TELEOP);
 
         odometry = 
             new SwerveDriveOdometry(
@@ -106,22 +106,16 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){ 
-        if (DISABLE_APRIL_TAGS.get()) {
+        if (DISABLE_APRIL_TAGS.get() || DriverStation.isAutonomous()) {
             return;
         }
         
         for (AprilTagData result : results) {
-
-            if (Vision.getInstance().APRIL_TAG_RESET.get()) {
-                reset(result.pose);
-                continue;
-            }
-
             poseEstimator.addVisionMeasurement(
                 new Pose2d(result.pose.getTranslation(), getRotation()),
                 Timer.getFPGATimestamp() - result.latency,
-                VisionStdDevs.get());
-        }  
+                VisionStdDevs.TELEOP);
+        }
     }
 
     @Override
