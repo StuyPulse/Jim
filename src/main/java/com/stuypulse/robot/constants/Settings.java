@@ -73,7 +73,7 @@ public interface Settings {
         double TRUST_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight-front", "limelight-back"};
+            String [] LIMELIGHTS = {"limelight-back"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
         }
     }
