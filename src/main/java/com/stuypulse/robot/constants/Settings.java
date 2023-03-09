@@ -39,7 +39,7 @@ public interface Settings {
 
     public interface Intake{
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
-        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 40);
+        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 35);
 
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
