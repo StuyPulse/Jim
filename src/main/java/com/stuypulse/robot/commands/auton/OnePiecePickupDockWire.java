@@ -104,7 +104,7 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.RAINBOW),
 
             new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.8)
+                .withMaxSpeed(0.7)
                 .withTimeout(ENGAGE_TIME),
 
             new PlantEngage()
