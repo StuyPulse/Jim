@@ -41,7 +41,7 @@ public class VisionImpl extends Vision {
         for(int i = 0; i < hostNames.length; i++){
             limelights[i] = new Limelight(hostNames[i]);
             for (int port : PORTS) {
-                PortForwarder.add(port, hostNames[i] + ".local", port + i * 6);
+                PortForwarder.add(port, hostNames[i] + ".local", port + i * 10);
             }
         }
 
