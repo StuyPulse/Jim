@@ -70,7 +70,8 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
-                    .robotRelative(),
+                    .robotRelative()
+                    .withStop(),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
@@ -79,7 +80,7 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
                 new ArmIntake()
                     .withTolerance(7, 10)
-                    .withTimeout(6.5)
+                    .withTimeout(4.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
