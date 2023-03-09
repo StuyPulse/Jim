@@ -133,7 +133,9 @@ public class RobotContainer {
         driver.getLeftBumper()
             .whileTrue(new RobotRelease());
 
-        driver.getTopButton().onTrue(new ArmReady());
+        // driver.getTopButton().onTrue(new ArmReady());
+        driver.getTopButton()
+            .whileTrue(new ManagerSetScoreIndex(8).andThen(new SwerveDriveToScorePose()));
 
         // swerve
         driver.getLeftTriggerButton()

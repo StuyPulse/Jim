@@ -68,9 +68,10 @@ public interface Settings {
     }
 
     public interface Vision {
-        double USABLE_DISTANCE = Units.feetToMeters(10);
-        double TRUST_DISTANCE = Units.feetToMeters(5);
-        double TRUST_ANGLE = 50;
+        double MAX_USE_DISTANCE = Units.inchesToMeters(95.25);
+        double MIN_USE_DISTANCE  = Units.feetToMeters(5);
+        double MIN_USE_ANGLE = 0;
+        double MAX_USE_ANGLE = 50;
 
         public interface Limelight {
             String [] LIMELIGHTS = {"limelight-back"};
