@@ -92,12 +92,12 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),
-                new ParallelCommandGroup(
-                    new SwerveDriveFollowTrajectory(paths.get("Dock"))
-                            .fieldRelative(),
+            new ParallelDeadlineGroup(
+                new SwerveDriveFollowTrajectory(paths.get("Dock"))
+                        .fieldRelative(),
 
-                    new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
-                )
+                new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
+            )
         );
 
         addCommands(
