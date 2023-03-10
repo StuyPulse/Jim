@@ -20,6 +20,8 @@ public class Robot extends TimedRobot {
 
     private CommandScheduler scheduler;
 
+    private boolean isTeleop;
+
     /*************************/
     /*** ROBOT SCHEDULEING ***/
     /*************************/
@@ -30,6 +32,8 @@ public class Robot extends TimedRobot {
 
         scheduler = CommandScheduler.getInstance();
         robot = new RobotContainer();
+
+        isTeleop = false;
     }
 
     @Override
@@ -43,7 +47,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        robot.arm.setCoast(true, true);
+        if (!isTeleop) {
+            robot.arm.setCoast(true, true);
+        }
     }
 
     @Override
@@ -55,6 +61,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        isTeleop = false;
+
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(true, true);
         robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
@@ -80,6 +88,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        isTeleop = true;
+
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(false, false);
         new TeleopInit().schedule();
