@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -135,6 +136,7 @@ public class SL_SwerveModule extends SwerveModule {
             getVelocity()));
         
 
+        SmartDashboard.putNumber("Swerve/" + id + "/Raw Angle (deg)", Units.rotationsToDegrees(absoluteEncoder.getPosition()));
         SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
