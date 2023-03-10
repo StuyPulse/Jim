@@ -232,7 +232,7 @@
     "Plot <12>": {
       "plots": [
         {
-          "height": 423,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -474,7 +474,7 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": 418,
+          "height": -30,
           "series": [
             {
               "color": [
