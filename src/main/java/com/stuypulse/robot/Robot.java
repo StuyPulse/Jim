@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         if (!isTeleop) {
             robot.arm.setCoast(true, true);
+        } else {
+            robot.arm.setCoast(false, false);
         }
     }
 
