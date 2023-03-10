@@ -94,7 +94,7 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.PURPLE),
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Dock"))
-                        .fieldRelative(),
+                        .fieldRelative().withStop(),
 
                 new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
             )

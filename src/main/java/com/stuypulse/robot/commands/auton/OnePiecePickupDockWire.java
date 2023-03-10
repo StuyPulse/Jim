@@ -16,6 +16,7 @@ import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -92,9 +93,9 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),
-                new ParallelCommandGroup(
+                new ParallelDeadlineGroup(
                     new SwerveDriveFollowTrajectory(paths.get("Dock"))
-                            .fieldRelative(),
+                            .fieldRelative().withStop(),
 
                     new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
                 )
