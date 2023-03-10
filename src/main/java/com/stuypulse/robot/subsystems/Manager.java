@@ -198,7 +198,7 @@ public class Manager extends SubsystemBase {
             Rotation2d.fromDegrees(180) :
             Rotation2d.fromDegrees(0);
 
-        return new Pose2d(getNearestScoreTranslation(), rotation);
+        return new Pose2d(getSelectedScoreTranslation(), rotation);
     }
 
     /** Change and Read State **/

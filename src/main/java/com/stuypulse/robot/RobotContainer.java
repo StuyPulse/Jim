@@ -135,7 +135,7 @@ public class RobotContainer {
 
         // driver.getTopButton().onTrue(new ArmReady());
         driver.getTopButton()
-            .whileTrue(new SwerveDriveToScorePose());
+            .whileTrue(new ManagerSetScoreIndex(1).andThen(new SwerveDriveToScorePose()));
 
         // swerve
         driver.getLeftTriggerButton()
@@ -230,8 +230,8 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.addOption("Mobility", new MobilityAuton());
-        autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        autonChooser.setDefaultOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
+        autonChooser.setDefaultOption("1.5 Piece Dock", new OnePiecePickupDock());
+        autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
