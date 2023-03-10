@@ -68,8 +68,8 @@ public interface Settings {
     }
 
     public interface Vision {
-        double MAX_USE_DISTANCE = Units.inchesToMeters(95.25);
-        double MIN_USE_DISTANCE  = Units.feetToMeters(5);
+        double MAX_USE_DISTANCE = 3;
+        double MIN_USE_DISTANCE  = Units.inchesToMeters(5);
         double MIN_USE_ANGLE = 0;
         double MAX_USE_ANGLE = 50;
 

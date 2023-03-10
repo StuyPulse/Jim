@@ -3,6 +3,7 @@ package com.stuypulse.robot.util;
 import java.util.Optional;
 
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,6 +66,11 @@ public class Limelight {
         Pose2d botpose = new Pose2d(botposeData[0], botposeData[1], Rotation2d.fromDegrees(botposeData[5]));
         double latency = Units.millisecondsToSeconds(botposeData[6]);
         int id = (int) idEntry.get();
+
+        if (!Field.isValidAprilTagId(id)) {
+            data = Optional.empty();
+            return;
+        }
 
         data = Optional.of(new AprilTagData(botpose, latency, id));
     }

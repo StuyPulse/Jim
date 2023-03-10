@@ -3,6 +3,7 @@ package com.stuypulse.robot.constants;
 import com.stuypulse.robot.util.AllianceUtil;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -18,11 +19,11 @@ public interface Field {
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
 
-    Pose3d APRIL_TAGS[] = {
-        new Pose3d(Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), Units.inchesToMeters(27.38), new Rotation3d(0, 0 , 0)),
-        new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(174.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
-        new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
-        new Pose3d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), Units.inchesToMeters(18.22), new Rotation3d(0, 0 , 0)),
+    Pose2d APRIL_TAGS[] = {
+        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(174.19), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), new Rotation2d(0)),        
     };
 
     public static boolean isValidAprilTagId(int id) {
@@ -33,7 +34,8 @@ public interface Field {
         return id >= 5 && id <= 8;
     }
 
-    public static Pose3d getAprilTagFromId(int id) {
+    public static Pose2d getAprilTagFromId(int id) {
+        // TODO: assumes the april tag "color" is the same as our team color
         if (isAprilTagBlueFromId(id)) {
             return APRIL_TAGS[8 - id];
         } else {
@@ -48,7 +50,7 @@ public interface Field {
 
         Translation2d ONE =   new Translation2d(CUBE_X, (3.03));
         Translation2d TWO =   new Translation2d(CUBE_X, (4.8087));
-        Translation2d THREE = new Translation2d(CUBE_X, (3.724));
+                Translation2d THREE = new Translation2d(CUBE_X, (3.724));
         Translation2d FOUR =  new Translation2d(CUBE_X, (4.258));
         Translation2d FIVE =  new Translation2d(CUBE_X, (5.044971));
         Translation2d SIX =   new Translation2d(CUBE_X, (5.308));
