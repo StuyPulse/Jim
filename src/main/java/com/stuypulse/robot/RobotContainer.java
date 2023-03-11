@@ -31,7 +31,9 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
 
 import com.stuypulse.stuylib.network.SmartBoolean;
-
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
+import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
@@ -41,6 +43,7 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.VideoCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -48,6 +51,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -69,7 +73,7 @@ public class RobotContainer {
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
     public final Pump pump = Pump.getInstance();
-  
+
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -154,6 +158,12 @@ public class RobotContainer {
         driver.getRightButton().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
+        new Trigger(intake::hasCone)
+            .debounce(0.5, DebounceType.kFalling)
+            .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
+            .onFalse(new InstantCommand(() -> driver.setRumble(0.0)))
+        ;
+
     }
 
     private void configureOperatorBindings() {
@@ -231,9 +241,9 @@ public class RobotContainer {
     public void configureAutons() {
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        autonChooser.setDefaultOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
+        autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
-        autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
+        autonChooser.setDefaultOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         
         SmartDashboard.putData("Autonomous", autonChooser);
