@@ -19,12 +19,6 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Arm": {
-          "open": true
-        },
-        "Arm Trajectories": {
-          "open": true
-        },
         "Auto Balance": {
           "Translation": {
             "open": true
@@ -35,6 +29,9 @@
           "With Plant": {
             "open": true
           }
+        },
+        "BOOM": {
+          "open": true
         },
         "Back Left": {
           "open": true
@@ -54,6 +51,9 @@
           "Drive": {
             "open": true
           },
+          "Front Right": {
+            "open": true
+          },
           "open": true
         },
         "Vision": {
@@ -65,13 +65,11 @@
           },
           "limelight-back": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Wrist": {
           "open": true
-        },
-        "open": true
+        }
       }
     },
     "types": {
@@ -123,7 +121,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 933,
+          "height": 911,
           "series": [
             {
               "color": [
@@ -232,6 +230,11 @@
     "Plot <12>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": -30,
           "series": [
             {
@@ -372,7 +375,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 933,
+          "height": 911,
           "series": [
             {
               "color": [
