@@ -121,7 +121,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 911,
+          "height": 933,
           "series": [
             {
               "color": [
@@ -200,7 +200,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": 418,
           "series": [
             {
               "color": [
@@ -235,7 +235,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -375,7 +375,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 911,
+          "height": 933,
           "series": [
             {
               "color": [
