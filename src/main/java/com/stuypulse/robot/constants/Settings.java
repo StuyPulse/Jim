@@ -39,7 +39,7 @@ public interface Settings {
 
     public interface Intake{
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
-        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 40);
+        SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 35);
 
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
@@ -68,12 +68,13 @@ public interface Settings {
     }
 
     public interface Vision {
-        double USABLE_DISTANCE = Units.feetToMeters(10);
-        double TRUST_DISTANCE = Units.feetToMeters(5);
-        double TRUST_ANGLE = 50;
+        double MAX_USE_DISTANCE = 3;
+        double MIN_USE_DISTANCE  = Units.inchesToMeters(5);
+        double MIN_USE_ANGLE = 0;
+        double MAX_USE_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight-front", "limelight-back"};
+            String [] LIMELIGHTS = {"limelight-back"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
         }
     }
@@ -112,7 +113,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(174).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(1.75).plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
@@ -124,7 +125,7 @@ public interface Settings {
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(119).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(8.810134).plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
@@ -177,8 +178,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.355135 + 0.5).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 330);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270);
 
             SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
