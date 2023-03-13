@@ -18,6 +18,7 @@ import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -35,6 +36,9 @@ public class SwerveDriveDrive extends CommandBase {
     private final Gamepad driver;
 
     public SwerveDriveDrive(Gamepad driver) {
+        IStream thrust = IStream.create(driver::getRightTrigger)
+            .filtered(x -> MathUtil.interpolate(x, Settings.Driver.THRUST_PERCENTAGE.get() , 1.0));
+
         this.driver = driver;
         swerve = SwerveDrive.getInstance();
         arm = Arm.getInstance();
@@ -44,16 +48,16 @@ public class SwerveDriveDrive extends CommandBase {
                 new VDeadZone(Settings.Driver.Drive.DEADBAND),
                 x -> x.clamp(1.0),
                 x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
-                x -> x.mul(Settings.Driver.Drive.MAX_TELEOP_SPEED.get()),
-                new VLowPassFilter(Settings.Driver.Drive.RC),
-                new VRateLimit(Settings.Driver.Drive.MAX_TELEOP_ACCEL)
+                x -> x.mul(Settings.Driver.Drive.MAX_TELEOP_SPEED.get().mul(thrust.get().number()),
+                new VRateLimit(Settings.Driver.Drive.MAX_TELEOP_ACCEL),
+                new VLowPassFilter(Settings.Driver.Drive.RC)
             );
 
         turn = IStream.create(driver::getRightX)
             .filtered(
                 x -> SLMath.deadband(x, Settings.Driver.Turn.DEADBAND.get()),
                 x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
-                x -> x * Settings.Driver.Turn.MAX_TELEOP_TURNING.get(),
+                x -> x.mul(Settings.Driver.Turn.MAX_TELEOP_TURNING.get().mul(thrust.get().number())),
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
         

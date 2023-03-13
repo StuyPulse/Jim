@@ -6,6 +6,7 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -301,21 +302,23 @@ public interface Settings {
 
     public interface Driver {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
-
+        SmartNumber THRUST_PERCENTAGE = new SmartNumber("Driver Settings/Thrust Precentage", 0.5);
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 3);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 6.5);
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 10);
 
             SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(3.0));
         }
 
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.08);
+
+            SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Turn/Gyro Feedback", true);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
