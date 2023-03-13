@@ -15,6 +15,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +36,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 	}
 
 	private boolean robotRelative;
+	private boolean shouldStop;
 	private PathPlannerTrajectory path;
 	private HashMap<String, Command> events;
 
@@ -58,6 +60,12 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		trajectory = Odometry.getInstance().getField().getObject("Trajectory");
 		this.path = path;
 		events = new HashMap<String, Command>();
+		shouldStop = false;
+	}
+
+	public SwerveDriveFollowTrajectory withStop() {
+		shouldStop = true;
+		return this;
 	}
 
 	public SwerveDriveFollowTrajectory robotRelative() {
@@ -103,6 +111,9 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	@Override
 	public void end(boolean interrupted) {
+		if (shouldStop) {
+			SwerveDrive.getInstance().setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+		}
 		trajectory.setPose(
 			new Pose2d(Double.NaN, Double.NaN, new Rotation2d(Double.NaN))
 		);

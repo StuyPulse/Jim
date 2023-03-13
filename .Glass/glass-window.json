@@ -1,0 +1,174 @@
+{
+  "Docking": {
+    "Data": [
+      "DockSpace         ID=0x8B93E3BD Window=0xA787BDB4 Pos=0,22 Size=1920,979 Split=X Selected=0xC98BB475",
+      "DockNode        ID=0x00000002 Parent=0x8B93E3BD SizeRef=1446,979 Split=X",
+      "DockNode      ID=0x00000001 Parent=0x00000002 SizeRef=804,213 Split=Y",
+      "DockNode    ID=0x00000004 Parent=0x00000001 SizeRef=742,213 Split=X Selected=0x0EC36FA3",
+      "DockNode  ID=0x00000008 Parent=0x00000004 SizeRef=391,190 Selected=0x88571D0D",
+      "DockNode  ID=0x00000009 Parent=0x00000004 SizeRef=411,190 Selected=0x2395FA29",
+      "DockNode    ID=0x00000005 Parent=0x00000001 SizeRef=742,211 Split=X Selected=0xC59FBC06",
+      "DockNode  ID=0x0000000A Parent=0x00000005 SizeRef=390,188 Selected=0x95522DB5",
+      "DockNode  ID=0x0000000B Parent=0x00000005 SizeRef=412,188 Selected=0xD2C348FC",
+      "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=640,213 CentralNode=1 Selected=0xC98BB475",
+      "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=472,979 Split=Y Selected=0x2D9B9756",
+      "DockNode      ID=0x00000006 Parent=0x00000003 SizeRef=501,787 Split=Y Selected=0x2D9B9756",
+      "DockNode    ID=0x0000000D Parent=0x00000006 SizeRef=501,493 Split=Y Selected=0x2D9B9756",
+      "DockNode  ID=0x0000000F Parent=0x0000000D SizeRef=501,431 Selected=0x2D9B9756",
+      "DockNode  ID=0x00000010 Parent=0x0000000D SizeRef=501,60 Selected=0x410DE7DE",
+      "DockNode    ID=0x0000000E Parent=0x00000006 SizeRef=501,292 Selected=0xB5CBE9F0",
+      "DockNode      ID=0x0000000C Parent=0x00000003 SizeRef=501,190 Selected=0xB4604DB7"
+    ]
+  },
+  "MainWindow": {
+    "GLOBAL": {
+      "fps": "120",
+      "height": "1001",
+      "maximized": "1",
+      "style": "0",
+      "userScale": "2",
+      "width": "1920",
+      "xpos": "0",
+      "ypos": "29"
+    }
+  },
+  "Table": {
+    "0x542B5671,2": {
+      "Column 0  Width": "248",
+      "Column 1  Width": "269",
+      "RefScale": "16"
+    }
+  },
+  "Window": {
+    "###/SmartDashboard/Arm Mech2d": {
+      "Collapsed": "0",
+      "DockId": "0x00000007,0",
+      "Pos": "806,22",
+      "Size": "640,979"
+    },
+    "###/SmartDashboard/Autonomous": {
+      "Collapsed": "0",
+      "DockId": "0x00000010,0",
+      "Pos": "1448,455",
+      "Size": "472,60"
+    },
+    "###/SmartDashboard/Field": {
+      "Collapsed": "0",
+      "DockId": "0x0000000E,0",
+      "Pos": "1448,517",
+      "Size": "472,292"
+    },
+    "###NetworkTables": {
+      "Collapsed": "0",
+      "DockId": "0x0000000F,0",
+      "Pos": "1448,22",
+      "Size": "472,431"
+    },
+    "###NetworkTables Settings": {
+      "Collapsed": "0",
+      "DockId": "0x0000000C,0",
+      "Pos": "1448,811",
+      "Size": "472,190"
+    },
+    "###Plot <0>": {
+      "Collapsed": "0",
+      "DockId": "0x00000007,1",
+      "Pos": "806,22",
+      "Size": "640,979"
+    },
+    "###Plot <10>": {
+      "Collapsed": "0",
+      "DockId": "0x00000008,0",
+      "Pos": "0,22",
+      "Size": "391,491"
+    },
+    "###Plot <11>": {
+      "Collapsed": "0",
+      "DockId": "0x0000000A,0",
+      "Pos": "0,515",
+      "Size": "390,486"
+    },
+    "###Plot <12>": {
+      "Collapsed": "0",
+      "DockId": "0x00000009,1",
+      "Pos": "393,22",
+      "Size": "411,491"
+    },
+    "###Plot <13>": {
+      "Collapsed": "0",
+      "DockId": "0x00000008,1",
+      "Pos": "0,22",
+      "Size": "391,491"
+    },
+    "###Plot <14>": {
+      "Collapsed": "0",
+      "DockId": "0x0000000A,1",
+      "Pos": "0,515",
+      "Size": "390,486"
+    },
+    "###Plot <15>": {
+      "Collapsed": "1",
+      "Pos": "132,356",
+      "Size": "1127,672"
+    },
+    "###Plot <1>": {
+      "Collapsed": "0",
+      "DockId": "0x00000007,2",
+      "Pos": "806,22",
+      "Size": "640,979"
+    },
+    "###Plot <2>": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "505,376"
+    },
+    "###Plot <3>": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "561,541"
+    },
+    "###Plot <4>": {
+      "Collapsed": "0",
+      "DockId": "0x0000000B,1",
+      "Pos": "392,515",
+      "Size": "412,486"
+    },
+    "###Plot <5>": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "775,427"
+    },
+    "###Plot <6>": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "559,348"
+    },
+    "###Plot <7>": {
+      "Collapsed": "0",
+      "DockId": "0x00000009,0",
+      "Pos": "393,22",
+      "Size": "411,491"
+    },
+    "###Plot <8>": {
+      "Collapsed": "0",
+      "DockId": "0x0000000B,0",
+      "Pos": "392,515",
+      "Size": "412,486"
+    },
+    "###Plot <9>": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "663,419"
+    },
+    "Debug##Default": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "400,400"
+    },
+    "DockSpaceViewport_11111111": {
+      "Collapsed": "0",
+      "Pos": "0,22",
+      "Size": "1920,979"
+    }
+  }
+}

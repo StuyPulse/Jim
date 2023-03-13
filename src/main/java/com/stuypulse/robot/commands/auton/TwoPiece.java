@@ -22,7 +22,7 @@ public class TwoPiece extends DebugSequentialCommandGroup {
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
+    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(1.5, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
 
 
