@@ -118,13 +118,6 @@ public class VisionImpl extends Vision {
     }
 
     private static boolean isAcceptable(Pose2d robot, Pose2d vision, Rotation2d cameraYaw, int tagid) {
-        // reject april tags that aren't on our team
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            if (!Field.isAprilTagBlueFromId(tagid)) return false;
-        } else if (RobotContainer.getCachedAlliance() == Alliance.Red) {
-            if (Field.isAprilTagBlueFromId(tagid)) return false;
-        }
-
         // check if distance to tag is greater than cutoff
         double distanceToTag = getDistanceToTag(vision, tagid);
         if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
