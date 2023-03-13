@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
-import com.stuypulse.robot.subsystems.vision.Vision.Noise;
-import com.stuypulse.robot.subsystems.vision.Vision.Result;
+import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.VecBuilder;
@@ -15,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -25,44 +25,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class OdometryImpl extends Odometry {
 
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", true);
-    public static final SmartBoolean OVERRIDE = new SmartBoolean("Odometry/April Tag Override", false);
 
-    static class StandardDeviations {
-        public static final Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(30));
-        public static final Vector<N3> AUTO_MID = VecBuilder.fill(15, 15, Math.toRadians(35));
+    private interface VisionStdDevs {
+        // Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
+        Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
-        public static final Vector<N3> TELE_LOW = VecBuilder.fill(3, 3, Math.toRadians(10));
-        public static final Vector<N3> TELE_MID = VecBuilder.fill(10, 10, Math.toRadians(15));
-
-        public static final Vector<N3> OVERRIDE_STDS = VecBuilder.fill(1,1,Math.toRadians(10));
-
-        private StandardDeviations() {}
-
-        public static Vector<N3> get(Noise noise) {
-            if (OVERRIDE.get()) {
-                return OVERRIDE_STDS;
-            }
-
-            if (DriverStation.isAutonomous()) {
-                switch (noise) {
-                    case LOW:
-                        return AUTO_LOW;
-                    case MID:
-                        return AUTO_MID;
-                    default:
-                        return null;
-                }
-            } else {
-                switch (noise) {
-                    case LOW:
-                        return TELE_LOW;
-                    case MID:
-                        return TELE_MID;
-                    default:
-                        return null;
-                }
-            }
-        }
+        // public static Vector<N3> get() {
+        //     if (DriverStation.isAutonomous()) {
+        //         return AUTO_LOW;
+        //     } else {
+        //         return TELE_LOW;
+        //     }
+        // }
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -75,10 +49,28 @@ public class OdometryImpl extends Odometry {
     protected OdometryImpl() {   
         var swerve = SwerveDrive.getInstance();
         var startingPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        poseEstimator = new SwerveDrivePoseEstimator(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose, 
-            VecBuilder.fill(5, 5, Math.toRadians(10)), StandardDeviations.TELE_MID);
-        odometry = new SwerveDriveOdometry(swerve.getKinematics(), swerve.getGyroAngle(), swerve.getModulePositions(), startingPose);
-        // poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(1000000, 100000, Units.degreesToRadians(10000)));
+        
+        poseEstimator = 
+            new SwerveDrivePoseEstimator(
+                swerve.getKinematics(), 
+                swerve.getGyroAngle(), 
+                swerve.getModulePositions(), 
+                startingPose, 
+
+                VecBuilder.fill(
+                    Units.inchesToMeters(694), 
+                    Units.inchesToMeters(694), 
+                    Math.toRadians(1)), 
+
+                VisionStdDevs.TELEOP);
+
+        odometry = 
+            new SwerveDriveOdometry(
+                swerve.getKinematics(), 
+                swerve.getGyroAngle(), 
+                swerve.getModulePositions(), 
+                startingPose);
+
         field = new Field2d();
 
         odometryPose2d = field.getObject("Odometry Pose2d");
@@ -96,10 +88,11 @@ public class OdometryImpl extends Odometry {
     @Override
     public void reset(Pose2d pose) {
         SwerveDrive drive = SwerveDrive.getInstance();
+
         poseEstimator.resetPosition(
-                    drive.getGyroAngle(), 
-                    drive.getModulePositions(), 
-                    pose);
+            drive.getGyroAngle(), 
+            drive.getModulePositions(), 
+            pose);
 
         odometry.resetPosition(
             drive.getGyroAngle(), 
@@ -112,26 +105,17 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
-    private void processResults(List<Result> results, SwerveDrive drive, Vision vision){ 
-        for (Result result : results) {
-            if (!DISABLE_APRIL_TAGS.get()) {
-                switch (result.getNoise()) {
-                    case HIGH:
-                        continue;
-                    case MID:
-                        poseEstimator.addVisionMeasurement(
-                            result.getPose(),
-                            Timer.getFPGATimestamp() - result.getLatency(),
-                            StandardDeviations.get(result.getNoise()));
-                        field.getObject("Vision Pose2d").setPose(result.getPose());
-                        continue;
-                    default:
-                        reset(result.getPose());
-                        field.getObject("Vision Pose2d").setPose(result.getPose());
-                        continue;
-                }
-            }
-        }  
+    private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){ 
+        if (DISABLE_APRIL_TAGS.get() || DriverStation.isAutonomous()) {
+            return;
+        }
+        
+        for (AprilTagData result : results) {
+            poseEstimator.addVisionMeasurement(
+                new Pose2d(result.pose.getTranslation(), getRotation()),
+                Timer.getFPGATimestamp() - result.latency,
+                VisionStdDevs.TELEOP);
+        }
     }
 
     @Override
@@ -143,7 +127,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
-        List<Result> results = vision.getResults();
+        List<AprilTagData> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
         odometryPose2d.setPose(odometry.getPoseMeters());

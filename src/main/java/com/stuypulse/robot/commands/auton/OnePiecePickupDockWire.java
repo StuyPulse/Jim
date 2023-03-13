@@ -16,6 +16,7 @@ import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -70,7 +71,8 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
-                    .robotRelative(),
+                    .robotRelative()
+                    .withStop(),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
@@ -79,7 +81,7 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
                 new ArmIntake()
                     .withTolerance(7, 10)
-                    .withTimeout(6.5)
+                    .withTimeout(4.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
@@ -91,9 +93,9 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),
-                new ParallelCommandGroup(
+                new ParallelDeadlineGroup(
                     new SwerveDriveFollowTrajectory(paths.get("Dock"))
-                            .fieldRelative(),
+                            .fieldRelative().withStop(),
 
                     new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
                 )
@@ -103,7 +105,7 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.RAINBOW),
 
             new SwerveDriveBalanceBlay()
-                .withMaxSpeed(1.0)
+                .withMaxSpeed(0.5)
                 .withTimeout(ENGAGE_TIME),
 
             new PlantEngage()

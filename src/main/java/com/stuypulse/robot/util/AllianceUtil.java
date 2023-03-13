@@ -4,6 +4,7 @@ import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -17,13 +18,12 @@ public class AllianceUtil {
         return new Pose2d(getMirroredTranslation(pose.getTranslation()), pose.getRotation());
     }
 
-    public static Translation3d getMirroredTranslation(Translation3d translation) {
-        var mirrored = getMirroredTranslation(translation.toTranslation2d());
-        return new Translation3d(mirrored.getX(), mirrored.getY(), translation.getZ());
+    public static Translation2d getReflectedTranslation(Translation2d translation) {
+        return new Translation2d(Field.WIDTH - translation.getX(), translation.getY());
     }
 
-    public static Pose3d getMirroredPose(Pose3d pose) {
-        return new Pose3d(getMirroredTranslation(pose.getTranslation()), pose.getRotation());
+    public static Pose2d getReflectedPose(Pose2d pose) {
+        return new Pose2d(getReflectedTranslation(pose.getTranslation()), pose.getRotation().plus(Rotation2d.fromDegrees(180)));
     }
 
     // 2 origin system, convert from red to blue

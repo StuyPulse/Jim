@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveToPose extends CommandBase{
@@ -61,18 +62,29 @@ public class SwerveDriveToPose extends CommandBase{
         Pose2d currentState = Odometry.getInstance().getPose();
         Pose2d targetPose = targetPoses.get();
 
+        SmartDashboard.putNumber("Alignment/Target Pose X", targetPose.getX());
+        SmartDashboard.putNumber("Alignment/Target Pose Y", targetPose.getY());
+        SmartDashboard.putNumber("Alignment/Target Pose Rotation (deg)", targetPose.getRotation().getDegrees());
+
+
         targetPose2d.setPose(targetPose);
 
         // boolean alignY = xController.isDone(Units.inchesToMeters(6));
 
         xController.update(targetPose.getX(), currentState.getX());
         yController.update(targetPose.getY(), currentState.getY());
+        angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation()));
+
+        SmartDashboard.putNumber("Alignment/X Controller Error", xController.getError());
+        SmartDashboard.putNumber("Alignment/Y Controller Error", yController.getError());
+        SmartDashboard.putNumber("Alignment/Angle Controller Controller Error (deg)", angleController.getError().toDegrees());
+
         
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             // alignY ? 0 : xController.getOutput(),
             // alignY ? yController.getOutput() : 0,
             xController.getOutput(), yController.getOutput(),
-            angleController.update(Angle.fromRotation2d(targetPose.getRotation()), Angle.fromRotation2d(currentState.getRotation())),
+            angleController.getOutput(),
             currentState.getRotation()
         );
 

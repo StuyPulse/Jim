@@ -13,6 +13,8 @@ import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -59,6 +61,9 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        if (DriverStation.isAutonomous() && Timer.getMatchTime() < 0.1) {
+            return true;
+        }
         return control.isDone(angleThreshold.doubleValue());
     }
 

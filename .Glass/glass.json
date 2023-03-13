@@ -1,6 +1,18 @@
 {
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "retained": {
+      "CameraPublisher": {
+        "limelight-back": {
+          "open": true
+        },
+        "open": true
+      },
       "limelight": {
         "open": true
       }
@@ -8,7 +20,7 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
-          "Wrist": {
+          "Shoulder": {
             "open": true
           },
           "open": true
@@ -23,6 +35,9 @@
           "With Plant": {
             "open": true
           }
+        },
+        "BOOM": {
+          "open": true
         },
         "Back Left": {
           "open": true
@@ -41,6 +56,9 @@
         "Swerve": {
           "Drive": {
             "open": true
+          },
+          "Front Right": {
+            "open": true
           }
         },
         "Vision": {
@@ -48,6 +66,9 @@
             "open": true
           },
           "limelight": {
+            "open": true
+          },
+          "limelight-back": {
             "open": true
           }
         },
@@ -74,6 +95,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -94,14 +120,19 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT4)",
+    "mode": "Client (NT3)",
     "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 1504,
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 933,
           "series": [
             {
               "color": [
@@ -132,7 +163,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "name": "Shoulder Setpoint vs Target"
+      }
     },
     "Plot <10>": {
       "plots": [
@@ -142,7 +176,7 @@
               "autoFit": true
             }
           ],
-          "height": 1532,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -166,7 +200,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Front Left Velocity vs Target"
       }
     },
     "Plot <11>": {
@@ -177,7 +211,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -201,7 +235,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Back Left Velocity vs Target"
       }
     },
     "Plot <12>": {
@@ -212,7 +246,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -236,7 +270,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Front Right Angle vs Target"
       }
     },
     "Plot <13>": {
@@ -247,7 +281,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -271,7 +305,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Front Left Angle vs Target"
       }
     },
     "Plot <14>": {
@@ -282,7 +316,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 418,
           "series": [
             {
               "color": [
@@ -306,18 +340,13 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Back Left Angle vs Target"
       }
     },
     "Plot <15>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 0,
+          "height": 604,
           "series": [
             {
               "color": [
@@ -326,7 +355,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve/Back Right/Angle"
+              "id": "NT:/SmartDashboard/Intake/Back Roller Current"
             },
             {
               "color": [
@@ -335,19 +364,29 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Swerve/Back Right/Target Angle"
+              "id": "NT:/SmartDashboard/Intake/Front Roller Current"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Intake/Is Stalling"
             }
           ]
         }
       ],
       "window": {
+        "name": "Intake Current",
         "visible": false
       }
     },
     "Plot <1>": {
       "plots": [
         {
-          "height": 949,
+          "height": 933,
           "series": [
             {
               "color": [
@@ -380,7 +419,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Wrist Setpoint vs Target"
       }
     },
     "Plot <2>": {
@@ -391,7 +430,7 @@
               "autoFit": true
             }
           ],
-          "height": 424,
+          "height": 308,
           "series": [
             {
               "color": [
@@ -406,6 +445,7 @@
         }
       ],
       "window": {
+        "name": "Balance Angle",
         "visible": false
       }
     },
@@ -417,7 +457,7 @@
               "autoFit": true
             }
           ],
-          "height": 607,
+          "height": 473,
           "series": [
             {
               "color": [
@@ -441,6 +481,7 @@
         }
       ],
       "window": {
+        "name": "Front Right Velocity vs Target",
         "visible": false
       }
     },
@@ -452,37 +493,37 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": -30,
           "series": [
             {
               "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Right/Angle"
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Angle"
             },
             {
               "color": [
-                0.8666667342185974,
-                0.5176470875740051,
+                0.7686275243759155,
+                0.30588236451148987,
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Back Right/Target Angle"
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Target Angle"
             }
           ]
         }
       ],
       "window": {
-        "visible": false
+        "name": "Back Right Angle vs Target"
       }
     },
     "Plot <5>": {
       "plots": [
         {
-          "height": 0,
+          "height": 359,
           "series": [
             {
               "color": [
@@ -515,6 +556,7 @@
         }
       ],
       "window": {
+        "name": "Pose Estimator",
         "visible": false
       }
     },
@@ -526,7 +568,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 280,
           "series": [
             {
               "color": [
@@ -550,6 +592,7 @@
         }
       ],
       "window": {
+        "name": "Front Left Velocity vs Target",
         "visible": false
       }
     },
@@ -561,7 +604,7 @@
               "autoFit": true
             }
           ],
-          "height": 0,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -585,7 +628,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Front Right Velocity vs Target"
       }
     },
     "Plot <8>": {
@@ -596,7 +639,7 @@
               "autoFit": true
             }
           ],
-          "height": 718,
+          "height": 418,
           "series": [
             {
               "color": [
@@ -620,7 +663,7 @@
         }
       ],
       "window": {
-        "visible": false
+        "name": "Back Right Velocity vs Target"
       }
     },
     "Plot <9>": {
@@ -631,7 +674,7 @@
               "autoFit": true
             }
           ],
-          "height": 128,
+          "height": 351,
           "series": [
             {
               "color": [
@@ -655,6 +698,7 @@
         }
       ],
       "window": {
+        "name": "Back Left Velocity vs Target",
         "visible": false
       }
     }

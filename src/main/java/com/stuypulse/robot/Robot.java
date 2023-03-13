@@ -10,6 +10,7 @@ import com.stuypulse.robot.commands.TeleopInit;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,6 +20,15 @@ public class Robot extends TimedRobot {
     private Command auto;
 
     private CommandScheduler scheduler;
+
+    private enum MatchState {
+        AUTO,
+        TELEOP,
+        TEST,
+        DISABLE
+    }
+
+    private MatchState state = MatchState.DISABLE;
 
     /*************************/
     /*** ROBOT SCHEDULEING ***/
@@ -30,6 +40,9 @@ public class Robot extends TimedRobot {
 
         scheduler = CommandScheduler.getInstance();
         robot = new RobotContainer();
+
+        state = MatchState.DISABLE;
+        SmartDashboard.putString("Match State", state.name());
     }
 
     @Override
@@ -43,8 +56,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        robot.arm.setCoast(true, true);
-        robot.plant.engage();
+        if (state == MatchState.TELEOP) {
+            robot.arm.setCoast(false, false);
+        } else {
+            robot.arm.setCoast(true, true);
+        }
+
+        state = MatchState.DISABLE;
+        SmartDashboard.putString("Match State", state.name());
     }
 
     @Override
@@ -56,6 +75,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        state = MatchState.AUTO;
+        SmartDashboard.putString("Match State", state.name());
+
+
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(true, true);
         robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
@@ -81,6 +104,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        state = MatchState.TELEOP;
+        SmartDashboard.putString("Match State", state.name());
+
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(false, false);
         new TeleopInit().schedule();
@@ -104,6 +130,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        state = MatchState.TEST;
+        SmartDashboard.putString("Match State", state.name());
+
         robot.arm.setCoast(false, false);
         
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
