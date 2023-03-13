@@ -3,6 +3,7 @@ package com.stuypulse.robot.commands.swerve;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -18,18 +19,23 @@ import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveDrive extends CommandBase {
     
     private final SwerveDrive swerve;
+    private final Plant plant;
     private final Arm arm;
 
     private VStream speed;
     private IStream turn;
     private BStream robotRelative;
 
+    private final Gamepad driver;
+
     public SwerveDriveDrive(Gamepad driver) {
+        this.driver = driver;
         swerve = SwerveDrive.getInstance();
         arm = Arm.getInstance();
 
@@ -53,7 +59,8 @@ public class SwerveDriveDrive extends CommandBase {
         
         robotRelative = BStream.create(driver::getRightTriggerPressed);
 
-        addRequirements(swerve);
+        plant = Plant.getInstance();
+        addRequirements(swerve, plant);
     }
     
     @Override
@@ -71,6 +78,14 @@ public class SwerveDriveDrive extends CommandBase {
                 new ChassisSpeeds(translation.x, translation.y, -turn.get()));
         } else {
             swerve.drive(speed.get(), turn.get());
+        }
+
+        if (Timer.getMatchTime() < 30) {
+            if ((driver.getLeftStick().magnitude() > 0.5) ||
+                (driver.getRightStick().magnitude() > 0.5)) {
+             
+                plant.disengage();
+            }
         }
     }
 }

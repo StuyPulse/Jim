@@ -46,7 +46,8 @@ public class IntakeImpl extends Intake {
         return stalling.get();
     }
 
-    private boolean hasCone() {
+    @Override
+    public boolean hasCone() {
         return isStalling();
     }
 
