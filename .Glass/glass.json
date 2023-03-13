@@ -19,6 +19,12 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Arm": {
+          "Shoulder": {
+            "open": true
+          },
+          "open": true
+        },
         "Auto Balance": {
           "Translation": {
             "open": true
@@ -53,8 +59,7 @@
           },
           "Front Right": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -69,7 +74,8 @@
         },
         "Wrist": {
           "open": true
-        }
+        },
+        "open": true
       }
     },
     "types": {
@@ -121,6 +127,11 @@
     "Plot <0>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": 933,
           "series": [
             {
@@ -200,7 +211,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -235,7 +246,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -477,6 +488,11 @@
     "Plot <4>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": -30,
           "series": [
             {
