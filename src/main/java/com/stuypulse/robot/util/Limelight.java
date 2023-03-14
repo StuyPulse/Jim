@@ -6,6 +6,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayEntry;
@@ -24,8 +25,11 @@ public class Limelight {
     
     private Optional<AprilTagData> data;
 
-    public Limelight(String tableName) {
+    private final Pose3d robotRelativePose;
+
+    public Limelight(String tableName, Pose3d robotRelativePose) {
         this.tableName = tableName;
+        this.robotRelativePose = robotRelativePose;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
 
@@ -73,6 +77,23 @@ public class Limelight {
         }
 
         data = Optional.of(new AprilTagData(botpose, latency, id));
+    }
+
+
+    public double getDegreesToTag(Pose2d pose, int id) {
+        if (!Field.isValidAprilTagId(id))
+            return Double.POSITIVE_INFINITY;
+
+        Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
+
+        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().plus(robotRelativePose.getRotation().toRotation2d()));
+    }
+
+    private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
+        double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
+        double d = (1 - c) * 180;
+
+        return d;
     }
 
 }
