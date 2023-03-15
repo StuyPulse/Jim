@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands;
 
+import com.stuypulse.robot.constants.ArmTrajectories.Ready.Score;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
@@ -44,7 +45,7 @@ public class RobotScore extends CommandBase {
                 arm.setWristVoltage(kWristVoltage.get());
                 break;
             case CONE_TIP_OUT:
-                arm.setShoulderVoltage(-kShoulderDownVolts.get());
+                arm.setTargetState(Score.High.kConeTipOutFront);
                 break;
             default:
                 break;
