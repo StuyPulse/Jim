@@ -140,6 +140,9 @@ public class Manager extends SubsystemBase {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 return Ready.High.kConeTipInBack;
+            
+            case CONE_TIP_OUT:
+                return Ready.High.kConeTipOutFront;
 
             case CONE_TIP_UP:
                 return Ready.High.kConeTipUpBack;
