@@ -57,9 +57,9 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         if (state == MatchState.TELEOP) {
-            robot.arm.setCoast(false, false);
-        } else {
             robot.arm.setCoast(true, true);
+        } else {
+            robot.arm.setCoast(false, false);
         }
 
         state = MatchState.DISABLE;
