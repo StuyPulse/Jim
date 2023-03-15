@@ -76,11 +76,11 @@ public class Limelight {
             return;
         }
 
-        data = Optional.of(new AprilTagData(botpose, latency, id));
+        data = Optional.of(new AprilTagData(botpose, latency, id, this));
     }
 
 
-    public double getDegreesToTag(Pose2d pose, int id) {
+    protected double getDegreesToTag(Pose2d pose, int id) {
         if (!Field.isValidAprilTagId(id))
             return Double.POSITIVE_INFINITY;
 

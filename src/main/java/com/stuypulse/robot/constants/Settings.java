@@ -81,7 +81,6 @@ public interface Settings {
                 new Pose3d(),
                 new Pose3d()
             };
-                // Rotation2d.fromDegrees(180);
         }
     }
 
