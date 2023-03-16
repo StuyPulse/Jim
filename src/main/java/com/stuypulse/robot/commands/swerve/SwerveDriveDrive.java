@@ -47,7 +47,7 @@ public class SwerveDriveDrive extends CommandBase {
 
     public SwerveDriveDrive(Gamepad driver) {
         IStream thrust = IStream.create(driver::getRightTrigger)
-            .filtered(x -> MathUtil.interpolate(x, Settings.Driver.THRUST_PERCENTAGE.get() , 1.0));
+            .filtered(x -> MathUtil.interpolate(Settings.Driver.THRUST_PERCENTAGE.get(), 1.0 , x));
 
         this.driver = driver;
 
