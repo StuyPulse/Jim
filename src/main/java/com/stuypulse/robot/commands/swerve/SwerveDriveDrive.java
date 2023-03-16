@@ -97,7 +97,9 @@ public class SwerveDriveDrive extends CommandBase {
                 holdAngle = Optional.of(Odometry.getInstance().getRotation());
             }
 
-            angularVel = gyroFeedback.update(Angle.fromRotation2d(holdAngle.get()), Angle.fromRotation2d(odometry.getRotation()));
+            angularVel = -gyroFeedback.update(
+                Angle.fromRotation2d(holdAngle.get()),
+                Angle.fromRotation2d(odometry.getRotation()));
         } 
         
         // if turn outside deadband, clear the saved angle
