@@ -77,9 +77,13 @@ public class VisionImpl extends Vision {
         SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
 
-        SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistanceToTag());
-        SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegreesToTag());
-
+        if (accepted != DataStatus.NONE) {
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistanceToTag());
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegreesToTag());
+        } else {
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", Double.NaN);
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
+        }
 
         SmartDashboard.putString(prefix + "/Accepted", accepted.name());
     }

@@ -81,9 +81,6 @@ public class Limelight {
 
 
     protected double getDegreesToTag(Pose2d pose, int id) {
-        if (!Field.isValidAprilTagId(id))
-            return Double.POSITIVE_INFINITY;
-
         Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
 
         return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().plus(robotRelativePose.getRotation().toRotation2d()));
