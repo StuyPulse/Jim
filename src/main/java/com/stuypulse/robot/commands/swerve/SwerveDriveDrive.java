@@ -3,11 +3,12 @@ package com.stuypulse.robot.commands.swerve;
 import java.util.Optional;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Driver.Drive;
+import com.stuypulse.robot.constants.Settings.Driver.Turn;
+import com.stuypulse.robot.constants.Settings.Driver.Turn.GyroFeedback;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -32,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SwerveDriveDrive extends CommandBase {
     
     private final SwerveDrive swerve;
-    private final Odometry odometry;
     private final Plant plant;
     private final Arm arm;
 
@@ -51,40 +51,43 @@ public class SwerveDriveDrive extends CommandBase {
 
         this.driver = driver;
 
-        odometry = Odometry.getInstance();
         swerve = SwerveDrive.getInstance();
         plant = Plant.getInstance();
         arm = Arm.getInstance();
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
-                new VDeadZone(Settings.Driver.Drive.DEADBAND),
+                new VDeadZone(Drive.DEADBAND),
                 x -> x.clamp(1.0),
-                x -> Settings.vpow(x, Settings.Driver.Drive.POWER.get()),
-                x -> x.mul(Settings.Driver.Drive.MAX_TELEOP_SPEED.get()).mul(thrust.get()),
-                new VRateLimit(Settings.Driver.Drive.MAX_TELEOP_ACCEL),
-                new VLowPassFilter(Settings.Driver.Drive.RC)
+                x -> Settings.vpow(x, Drive.POWER.get()),
+                x -> x.mul(Drive.MAX_TELEOP_SPEED.get()).mul(thrust.get()),
+                new VRateLimit(Drive.MAX_TELEOP_ACCEL),
+                new VLowPassFilter(Drive.RC)
             );
 
 
         turn = IStream.create(driver::getRightX)
             .filtered(
-                x -> SLMath.deadband(x, Settings.Driver.Turn.DEADBAND.get()),
-                x -> SLMath.spow(x, Settings.Driver.Turn.POWER.get()),
-                x -> x * Settings.Driver.Turn.MAX_TELEOP_TURNING.get() * thrust.get(),
-                new LowPassFilter(Settings.Driver.Turn.RC)
+                x -> SLMath.deadband(x, Turn.DEADBAND.get()),
+                x -> SLMath.spow(x, Turn.POWER.get()),
+                x -> x * Turn.MAX_TELEOP_TURNING.get() * thrust.get(),
+                new LowPassFilter(Turn.RC)
             );
         
-        robotRelative = BStream.create(driver::getRightTriggerPressed);
+        robotRelative = BStream.create(() -> false /*driver::getRightTriggerPressed*/);
 
         holdAngle = Optional.empty();
-        gyroFeedback = new AnglePIDController(Alignment.Rotation.P, Alignment.Rotation.I, Alignment.Rotation.D);
+        gyroFeedback = new AnglePIDController(GyroFeedback.P, GyroFeedback.I, GyroFeedback.D);
 
         addRequirements(swerve, plant);
     }
 
     private boolean isTurnInDeadband() {
-        return Math.abs(turn.get()) < Settings.Driver.Turn.DEADBAND.get();
+        return Math.abs(turn.get()) < Turn.DEADBAND.get();
+    }
+
+    private boolean isDriveInDeadband() {
+        return driver.getLeftStick().magnitude() < Drive.DEADBAND.get();
     }
     
     @Override
@@ -94,13 +97,15 @@ public class SwerveDriveDrive extends CommandBase {
         // if turn in deadband, save the current angle and calculate small adjustments
         if (isTurnInDeadband()) {
             if (holdAngle.isEmpty()) {
-                holdAngle = Optional.of(Odometry.getInstance().getRotation());
+                holdAngle = Optional.of(swerve.getGyroAngle());
             }
 
-            angularVel = -gyroFeedback.update(
-                Angle.fromRotation2d(holdAngle.get()),
-                Angle.fromRotation2d(odometry.getRotation()));
-        } 
+            if (GyroFeedback.GYRO_FEEDBACK_ENABLED.get() && !isDriveInDeadband()) {
+                angularVel = -gyroFeedback.update(
+                    Angle.fromRotation2d(holdAngle.get()),
+                    Angle.fromRotation2d(swerve.getGyroAngle()));
+            }
+        }
         
         // if turn outside deadband, clear the saved angle
         else {

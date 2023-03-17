@@ -318,14 +318,20 @@ public interface Settings {
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.08);
 
-            SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Turn/Gyro Feedback", true);
-
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
             SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
 
             SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(135));
+            
+            public interface GyroFeedback {
+                SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
+
+                SmartNumber P = new SmartNumber("Driver Settings/Gyro Feedback/kP", 0.5);
+                SmartNumber I = new SmartNumber("Driver Settings/Gyro Feedback/kI", 0.0);
+                SmartNumber D = new SmartNumber("Driver Settings/Gyro Feedback/kD", 0.1);
+            }
         }
 
     }
