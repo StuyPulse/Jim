@@ -11,7 +11,7 @@ public class SwerveDriveToScorePose extends SwerveDriveFollowTrajectory {
         SwerveTrajectory trajectory = new SwerveTrajectory(Odometry.getInstance().getPose(), 
                                                 Manager.getInstance().getScorePose());
         return trajectory.getTrajectory();
-    }
+    }   
 
     public SwerveDriveToScorePose() {
         super(getTrajectory());
