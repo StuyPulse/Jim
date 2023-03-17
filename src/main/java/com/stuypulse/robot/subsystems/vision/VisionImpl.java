@@ -3,13 +3,9 @@ import java.util.*;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 import static com.stuypulse.robot.constants.Settings.Vision.*;
@@ -17,8 +13,6 @@ import static com.stuypulse.robot.constants.Settings.Vision.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -37,7 +31,7 @@ public class VisionImpl extends Vision {
         new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
     private static final AprilTagData kNoData =
-        new AprilTagData(kNoPose, Double.NaN, -1);
+        new AprilTagData(kNoPose, Double.NaN, -1, null);
 
     // store limelight network tables
     private final Limelight[] limelights;
@@ -59,7 +53,7 @@ public class VisionImpl extends Vision {
         // setup all objects
         Field2d field = Odometry.getInstance().getField();
         for(int i = 0; i < hostNames.length; i++){
-            limelights[i] = new Limelight(hostNames[i]);
+            limelights[i] = new Limelight(hostNames[i], POSITIONS[i]);
             limelightPoses[i] = field.getObject(hostNames[i] + " pose");
 
             for (int port : PORTS) {
@@ -76,54 +70,34 @@ public class VisionImpl extends Vision {
         return results;
     }
 
-    // helper for process
-    private static double getDistanceToTag(Pose2d pose, int id) {
-        if (id < 1)
-            return Double.POSITIVE_INFINITY;
-
-        Translation2d robot = pose.getTranslation();
-        Translation2d tag = Field.getAprilTagFromId(id).getTranslation();
-        
-        return robot.getDistance(tag);
-    }
-
-    private static double getDegreesToTag(Pose2d pose, int id, Rotation2d cameraYaw) {
-        if (id < 1)
-            return Double.POSITIVE_INFINITY;
-
-        Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
-
-        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().plus(cameraYaw));
-    }
-
-    private static void putAprilTagData(String prefix, AprilTagData data, DataStatus accepted, Rotation2d cameraYaw) {
+    private static void putAprilTagData(String prefix, AprilTagData data, DataStatus accepted) {
         SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
         SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
         SmartDashboard.putNumber(prefix + "/Pose Rotation (Deg)" , data.pose.getRotation().getDegrees());
         SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
 
-        SmartDashboard.putNumber(prefix + "/Distance to Tag", getDistanceToTag(data.pose, data.id));
-        SmartDashboard.putNumber(prefix + "/Angle to Tag", getDegreesToTag(data.pose, data.id, cameraYaw));
-
+        if (accepted != DataStatus.NONE) {
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistanceToTag());
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegreesToTag());
+        } else {
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", Double.NaN);
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
+        }
 
         SmartDashboard.putString(prefix + "/Accepted", accepted.name());
     }
 
-    private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
-        double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
-        double d = (1 - c) * 180;
+    private static boolean isAcceptable(Pose2d robot, AprilTagData data) {
+        // reject invalid apriltag ids
+        if (!Field.isValidAprilTagId(data.id)) return false;
 
-        return d;
-    }
-
-    private static boolean isAcceptable(Pose2d robot, Pose2d vision, Rotation2d cameraYaw, int tagid) {
         // check if distance to tag is greater than cutoff
-        double distanceToTag = getDistanceToTag(vision, tagid);
+        double distanceToTag = data.getDistanceToTag();
         if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
-        double angleToTag = Math.abs(getDegreesToTag(vision, tagid, Rotation2d.fromDegrees(180)));
+        double angleToTag = Math.abs(data.getDegreesToTag());
         if (angleToTag < MIN_USE_ANGLE || angleToTag > MAX_USE_ANGLE) return false;
 
         // OK
@@ -153,19 +127,19 @@ public class VisionImpl extends Vision {
 
                 Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
 
-                if (isAcceptable(robotPose, data.pose, Rotation2d.fromDegrees(180), data.id)) {
+                if (isAcceptable(robotPose, data)) {
                     if (!Field.isValidAprilTagId(data.id)) continue;
-                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED, Rotation2d.fromDegrees(180));
+                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
                     ll2d.setPose(data.pose);
                     
                     results.add(data);
                 } else {
-                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED, Rotation2d.fromDegrees(180));
+                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
                     ll2d.setPose(kNoPose);
                 }
 
             } else {
-                putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE, Rotation2d.fromDegrees(180));
+                putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
                 ll2d.setPose(kNoPose);
             }
         }

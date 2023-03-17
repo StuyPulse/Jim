@@ -11,8 +11,11 @@ import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
@@ -76,6 +79,9 @@ public interface Settings {
         public interface Limelight {
             String [] LIMELIGHTS = {"limelight-back"};
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
+            Pose3d [] POSITIONS = new Pose3d[] {
+                new Pose3d(new Translation3d(), new Rotation3d(0, 0, Math.PI))
+            };
         }
     }
 
