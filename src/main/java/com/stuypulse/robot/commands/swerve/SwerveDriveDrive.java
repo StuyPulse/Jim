@@ -57,7 +57,7 @@ public class SwerveDriveDrive extends CommandBase {
                 new LowPassFilter(Settings.Driver.Turn.RC)
             );
         
-        robotRelative = BStream.create(driver::getRightTriggerPressed);
+        robotRelative = BStream.create(() -> false /*driver::getRightTriggerPressed*/);
 
         plant = Plant.getInstance();
         addRequirements(swerve, plant);

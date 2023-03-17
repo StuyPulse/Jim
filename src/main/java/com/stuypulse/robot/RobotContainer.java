@@ -134,7 +134,7 @@ public class RobotContainer {
         // arm
         driver.getBottomButton()
             .whileTrue(new RobotScore());
-        driver.getLeftBumper()
+        driver.getLeftTriggerButton()
             .whileTrue(new RobotRelease());
 
         // driver.getTopButton().onTrue(new ArmReady());
@@ -142,8 +142,8 @@ public class RobotContainer {
             .whileTrue(new ManagerSetScoreIndex(1).andThen(new SwerveDriveToScorePose()));
 
         // swerve
-        driver.getLeftTriggerButton()
-            .whileTrue(new SwerveDriveSlowDrive(driver));
+        // driver.getLeftTriggerButton()
+        //     .whileTrue(new SwerveDriveSlowDrive(driver));
             // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
         // right trigger -> robotrelative override
