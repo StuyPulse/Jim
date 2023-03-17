@@ -56,7 +56,7 @@ public class RobotRelease extends CommandBase {
         swerve.stop();
 
         // holds arm in place
-        arm.setTargetState(arm.getState());
+        // arm.setTargetState(arm.getState());
     }
 
 }
