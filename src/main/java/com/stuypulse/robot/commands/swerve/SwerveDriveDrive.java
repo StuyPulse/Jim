@@ -82,6 +82,11 @@ public class SwerveDriveDrive extends CommandBase {
         addRequirements(swerve, plant);
     }
 
+    @Override
+    public void initialize() {
+        holdAngle = Optional.empty();
+    }
+
     private boolean isTurnInDeadband() {
         return Math.abs(turn.get()) < Turn.DEADBAND.get();
     }
