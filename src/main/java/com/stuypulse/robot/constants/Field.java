@@ -1,5 +1,6 @@
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.util.AllianceUtil;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -9,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public interface Field {
     SmartNumber CHARGING_STATION_CENTER = new SmartNumber("Field/Charging Station Center", 172.631 - 14);
@@ -19,27 +21,29 @@ public interface Field {
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
 
-    Pose2d APRIL_TAGS[] = {
-        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), new Rotation2d(0)),
-        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), new Rotation2d(0)),
+    Pose2d BLUE_APRIL_TAGS[] = {
+        // 1-4
+        new Pose2d(WIDTH - Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), Rotation2d.fromDegrees(180)),
+        new Pose2d(WIDTH - Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), Rotation2d.fromDegrees(180)),
+        new Pose2d(WIDTH - Units.inchesToMeters(40.45), Units.inchesToMeters(174.19), Rotation2d.fromDegrees(180)),
+        new Pose2d(WIDTH - Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), Rotation2d.fromDegrees(180)),
+
+        // 5-8
+        new Pose2d(Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), new Rotation2d(0)),
         new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(174.19), new Rotation2d(0)),
-        new Pose2d(Units.inchesToMeters(14.25), Units.inchesToMeters(265.74), new Rotation2d(0)),        
+        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(108.19), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(40.45), Units.inchesToMeters(42.19),  new Rotation2d(0)),
     };
 
     public static boolean isValidAprilTagId(int id) {
         return id >= 1 && id <= 8;
     }
 
-    public static boolean isAprilTagBlueFromId(int id) {
-        return id >= 5 && id <= 8;
-    }
-
     public static Pose2d getAprilTagFromId(int id) {
-        // TODO: assumes the april tag "color" is the same as our team color
-        if (isAprilTagBlueFromId(id)) {
-            return APRIL_TAGS[8 - id];
+        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
+            return BLUE_APRIL_TAGS[id - 1];
         } else {
-            return AllianceUtil.getMirroredPose(APRIL_TAGS[id - 1]);
+            return AllianceUtil.getMirroredPose(BLUE_APRIL_TAGS[8 - id]);
         }
     }
 
@@ -50,7 +54,7 @@ public interface Field {
 
         Translation2d ONE =   new Translation2d(CUBE_X, (3.03));
         Translation2d TWO =   new Translation2d(CUBE_X, (4.8087));
-                Translation2d THREE = new Translation2d(CUBE_X, (3.724));
+        Translation2d THREE = new Translation2d(CUBE_X, (3.724));
         Translation2d FOUR =  new Translation2d(CUBE_X, (4.258));
         Translation2d FIVE =  new Translation2d(CUBE_X, (5.044971));
         Translation2d SIX =   new Translation2d(CUBE_X, (5.308));

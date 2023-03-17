@@ -89,13 +89,7 @@ public class VisionImpl extends Vision {
     }
 
     private static boolean isAcceptable(Pose2d robot, AprilTagData data) {
-        // reject april tags that aren't on our team
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            if (!Field.isAprilTagBlueFromId(data.id)) return false;
-        } else if (RobotContainer.getCachedAlliance() == Alliance.Red) {
-            if (Field.isAprilTagBlueFromId(data.id)) return false;
-        }
-
+        // reject invalid apriltag ids
         if (!Field.isValidAprilTagId(data.id)) return false;
 
         // check if distance to tag is greater than cutoff
