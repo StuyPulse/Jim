@@ -194,7 +194,6 @@ public class RobotContainer {
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
-                    .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady()));
 
         operator.getRightButton()
