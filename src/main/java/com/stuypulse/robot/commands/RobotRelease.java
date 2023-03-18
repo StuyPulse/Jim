@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RobotRelease extends CommandBase {
     
-    private final static SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip InBackwards Speed (in per s)", 16);
+    private final static SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
     private final static SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 16);
 
     private final SwerveDrive swerve;
