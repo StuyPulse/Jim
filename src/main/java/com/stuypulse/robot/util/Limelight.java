@@ -76,14 +76,6 @@ public class Limelight {
             return;
         }
 
-        data = Optional.of(new AprilTagData(botpose, latency, id, this));
-    }
-
-    public Rotation2d getRobotRelativeRotation() {
-        return robotRelativePose.getRotation().toRotation2d();
-    }
-
-    public Pose2d getRobotRelativePose() {
-        return robotRelativePose.toPose2d();
+        data = Optional.of(new AprilTagData(botpose, latency, id, robotRelativePose));
     }
 }

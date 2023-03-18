@@ -3,6 +3,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -10,7 +11,7 @@ public class AprilTagData {
     public final Pose2d pose;
     public final double latency;
     public final int id;
-    public final Limelight limelight;
+    public final Pose3d cameraPose;
 
     private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
         double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
@@ -22,7 +23,7 @@ public class AprilTagData {
     public double getDegreesToTag() {
         Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
 
-        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().minus(limelight.getRobotRelativeRotation()));
+        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().minus(cameraPose.getRotation().toRotation2d()));
     }
 
     public double getDistanceToTag() {
@@ -35,15 +36,15 @@ public class AprilTagData {
     /**
      * Record april tag data, usually from a vision system
      * 
-     * @param pose robot pose information, in meters with blue/red corner as origin
+     * @param robotPose robot pose information, in meters with blue/red corner as origin
      * @param latency total latency, in seconds
      * @param id tag id
-     * @param limelight associated limelight
+     * @param cameraPose associated camera's robot relative pose
      */
-    public AprilTagData(Pose2d pose, double latency, int id, Limelight limelight) {
-        this.pose = pose;
+    public AprilTagData(Pose2d robotPose, double latency, int id, Pose3d cameraPose) {
+        this.pose = robotPose;
         this.latency = latency;
         this.id = id;
-        this.limelight = limelight;
+        this.cameraPose = cameraPose;
     }
 }
