@@ -9,6 +9,7 @@ import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -76,41 +77,19 @@ public class ArmImpl extends Arm {
     }
 
     @Override
-    public double getShoulderRadians() {
-        return shoulderEncoder.getPosition() * Math.PI * 2 - Rotation2d.toRadians(Shoulder.ZERO_ANGLE);
+    public void setShoulderIdleMode(IdleMode mode) {
+        shoulderRight.setIdleMode(mode);
+        shoulderLeft.setIdleMode(mode);
     }
 
     @Override
-    public Rotation2d getRelativeWristAngle() {
-        return Rotation2d.fromRotations(wristEncoder.getPosition()).minus(Wrist.ZERO_ANGLE);
-    }
-
-    @Override
-    protected void setShoulderVoltageImpl(double voltage) {
-        shoulderLeft.setVoltage(voltage);
-        shoulderRight.setVoltage(voltage);
-    }
-
-    @Override
-    protected void setWristVoltageImpl(double voltage) {
-        wrist.setVoltage(voltage);
-    }
-
-    @Override
-    public void setCoast(boolean wristCoast, boolean shoulderCoast) {
-        shoulderLeft.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
-        shoulderRight.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
-        wrist.setIdleMode(wristCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
+    public void setWristIdleMode(IdleMode mode) {
+        wrist.setIdleMode(mode);
     }
 
     @Override
     public double getShoulderVelocityRadiansPerSecond() {
         return shoulderVelocityFilter.get(shoulderEncoder.getVelocity());
-    }
-
-    @Override
-    public double getWristVelocityRadiansPerSecond() {
-        return wristVelocityFilter.get(wristEncoder.getVelocity());
     }
 
     // private boolean isShoulderStalling() {
@@ -151,11 +130,39 @@ public class ArmImpl extends Arm {
         // runShoulder(shoulderVolts);
         // runWrist(wristVolts);
 
+        SmartDashboard.putNumber("Arm/Wrist/Looped Encoder Angle (deg)", Units.rotationsToDegrees(wristEncoder.getRotations()));
+
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
-        SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
+        SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getEncoder().getPosition());
 
         SmartDashboard.putNumber("Arm/Shoulder/Left Duty Cycle", shoulderLeft.get());
         SmartDashboard.putNumber("Arm/Shoulder/Right Duty Cycle", shoulderRight.get());
         SmartDashboard.putNumber("Arm/Wrist/Duty Cycle", wrist.get());
+    }
+
+    @Override
+    public double getShoulderAngleRadians() {
+        return Units.rotationsToRadians(shoulderEncoder.getPosition());
+    }
+
+    @Override
+    protected double getRelativeWristAngleRadians() {
+        return Units.rotationsToRadians(wristEncoder.getRotations());
+    }
+
+    @Override
+    public double getWristVelocityRadiansPerSecond() {
+        return wristVelocityFilter.get(wristEncoder.getEncoder().getVelocity());
+    }
+
+    @Override
+    protected void setShoulderVoltageImpl(double voltage) {
+        shoulderRight.setVoltage(voltage);
+        shoulderLeft.setVoltage(voltage);
+    }
+
+    @Override
+    protected void setWristVoltageImpl(double voltage) {
+        wrist.setVoltage(voltage);
     }
 }
