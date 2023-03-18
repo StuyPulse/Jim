@@ -240,7 +240,7 @@ public abstract class Arm extends SubsystemBase {
         
         armVisualizer.setTargetAngles(Math.toDegrees(shoulderController.getSetpoint()), Math.toDegrees(wristController.getSetpoint()));
         armVisualizer.setMeasuredAngles(Math.toDegrees(getShoulderAngleRadians()), Math.toDegrees(getWristAngleRadians()));
-        // armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
+        armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg) ", Math.toDegrees(getShoulderAngleRadians()));
         SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)",Math.toDegrees(shoulderController.getSetpoint()));

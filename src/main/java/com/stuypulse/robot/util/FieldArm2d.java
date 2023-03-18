@@ -16,7 +16,7 @@ public class FieldArm2d {
 
     public void update(Pose2d robot, ArmState state) {
         // Visualize the arm on the field
-        double distanceFromSwerveCenter = state.getShoulderState().getCos() * Shoulder.LENGTH + state.getWristState().getCos() * Wrist.LENGTH;
+        double distanceFromSwerveCenter = state.getShoulderAngle().getCos() * Shoulder.LENGTH + state.getWristAngle().getCos() * Wrist.LENGTH;
 
         Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, robot.getRotation());
         
