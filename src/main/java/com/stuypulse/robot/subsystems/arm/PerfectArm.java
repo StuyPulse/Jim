@@ -1,24 +1,23 @@
 package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.angles.filters.AFilter;
-import com.stuypulse.stuylib.streams.angles.filters.ALowPassFilter;
-
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.stuypulse.stuylib.streams.filters.Derivative;
+import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.filters.LowPassFilter;
 
 public class PerfectArm extends Arm {
 
-    private AFilter wristFilter = new ALowPassFilter(0.2).then(new ALowPassFilter(0.2).then(new ALowPassFilter(0.2)));
-    private AFilter shoulderFilter = new ALowPassFilter(0.2).then(new ALowPassFilter(0.2).then(new ALowPassFilter(0.2)));
+    private IFilter wristFilter = new LowPassFilter(0.2).then(new LowPassFilter(0.2).then(new LowPassFilter(0.2)));
+    private IFilter shoulderFilter = new LowPassFilter(0.2).then(new LowPassFilter(0.2).then(new LowPassFilter(0.2)));
 
-    @Override
-    public Rotation2d getShoulderAngle() {
-        return shoulderFilter.get(Angle.fromRotation2d(getShoulderTargetAngle())).getRotation2d();
+    private IFilter wristDerivative = new Derivative();
+    private IFilter shoulderDerivative = new Derivative();
+
+    public double getShoulderAngleRadians() {
+        return shoulderFilter.get(getShoulderTargetAngleRadians());
     }
 
-    @Override
-    public Rotation2d getRelativeWristAngle() {
-        return wristFilter.get(Angle.fromRotation2d(getWristTargetAngle().minus(getShoulderAngle()))).getRotation2d();
+    public double getRelativeWristAngleRadians() {
+        return wristFilter.get(getWristTargetAngleRadians() - getShoulderAngleRadians());
     }
 
 	@Override
@@ -29,14 +28,12 @@ public class PerfectArm extends Arm {
 
     @Override
     public double getShoulderVelocityRadiansPerSecond() {
-        // TODO Auto-generated method stub
-        return 0;
+        return shoulderDerivative.get(getShoulderAngleRadians());
     }
 
     @Override
     public double getWristVelocityRadiansPerSecond() {
-        // TODO Auto-generated method stub
-        return 0;
+        return wristDerivative.get(getRelativeWristAngleRadians());
     }
 
 }
