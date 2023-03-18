@@ -79,18 +79,11 @@ public class Limelight {
         data = Optional.of(new AprilTagData(botpose, latency, id, this));
     }
 
-
-    protected double getDegreesToTag(Pose2d pose, int id) {
-        Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
-
-        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().plus(robotRelativePose.getRotation().toRotation2d()));
+    public Rotation2d getRobotRelativeRotation() {
+        return robotRelativePose.getRotation().toRotation2d();
     }
 
-    private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
-        double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
-        double d = (1 - c) * 180;
-
-        return d;
+    public Pose2d getRobotRelativePose() {
+        return robotRelativePose.toPose2d();
     }
-
 }
