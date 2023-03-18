@@ -36,7 +36,8 @@ public class ArmVoltageDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        arm.setCoast(false, false);
+        arm.enableShoulderBrakeMode();
+        arm.enableWristBrakeMode();
     }
 
     @Override
