@@ -47,12 +47,12 @@ public class ArmState {
         return wrist.doubleValue();
     }
 
-    public Rotation2d getShoulderState() {
+    public Rotation2d getShoulderAngle() {
         return Rotation2d.fromDegrees(getShoulderDegrees());
     }
 
 
-    public Rotation2d getWristState() {
+    public Rotation2d getWristAngle() {
         return Rotation2d.fromDegrees(getWristDegrees());
     }
 

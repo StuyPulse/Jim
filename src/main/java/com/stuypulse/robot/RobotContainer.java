@@ -31,17 +31,11 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
 
 import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
-import com.stuypulse.stuylib.network.SmartBoolean;
-
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -174,22 +168,12 @@ public class RobotContainer {
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
-        // outtake
-        operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
-            .onFalse(new IntakeStop())
-            .onFalse(new ArmStow());
-
-        // ready & score
+        // ready
         operator.getLeftBumper()
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ArmReady()));
-
-        operator.getRightButton()
-            .onTrue(new IntakeScore())
-            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
@@ -205,14 +189,6 @@ public class RobotContainer {
 
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
-
-
-        operator.getRightBumper()
-            .onTrue(arm.runOnce(arm::enableLimp))
-            .onFalse(arm.runOnce(arm::disableLimp));
-
-        // arm to neutral
-        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
     }
 
     private void configureChooserBindings() {

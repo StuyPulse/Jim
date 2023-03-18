@@ -13,7 +13,7 @@ public class ArmStow extends ArmRoutine {
 
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-        double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 120 : 60;
+        double wristSafeAngle = src.getShoulderAngle().getCos() > 0 ? 120 : 60;
         if (Math.abs(src.getShoulderDegrees() + 90) < 30)
             wristSafeAngle = 90;
 

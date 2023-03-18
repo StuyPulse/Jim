@@ -5,7 +5,9 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.AutonInit;
 import com.stuypulse.robot.commands.TeleopInit;
+import com.stuypulse.robot.commands.TestInit;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,7 +30,13 @@ public class Robot extends TimedRobot {
         DISABLE
     }
 
-    private MatchState state = MatchState.DISABLE;
+    private static MatchState kMatchState = MatchState.DISABLE;
+
+    private static void setMatchState(MatchState state) {
+        kMatchState = state;
+        SmartDashboard.putString("Match State", kMatchState.name());
+    }
+
 
     /*************************/
     /*** ROBOT SCHEDULEING ***/
@@ -41,8 +49,7 @@ public class Robot extends TimedRobot {
         scheduler = CommandScheduler.getInstance();
         robot = new RobotContainer();
 
-        state = MatchState.DISABLE;
-        SmartDashboard.putString("Match State", state.name());
+        setMatchState(MatchState.DISABLE);
     }
 
     @Override
@@ -56,14 +63,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        if (state == MatchState.TELEOP) {
-            robot.arm.setCoast(true, true);
+        if (kMatchState == MatchState.AUTO) {
+            robot.arm.enableShoulderBrakeMode();
+            robot.arm.enableWristBrakeMode();
         } else {
-            robot.arm.setCoast(false, false);
+            robot.arm.enableShoulderCoastMode();
+            robot.arm.enableWristCoastMode();
         }
 
-        state = MatchState.DISABLE;
-        SmartDashboard.putString("Match State", state.name());
+        setMatchState(MatchState.DISABLE);
     }
 
     @Override
@@ -75,15 +83,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        state = MatchState.AUTO;
-        SmartDashboard.putString("Match State", state.name());
-
-
-        robot.arm.setCoast(false, false);
-        robot.arm.setLimp(true, true);
-        robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
-
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
+
+        setMatchState(MatchState.AUTO);
+        new AutonInit().schedule();
 
         auto = robot.getAutonomousCommand();
 
@@ -104,14 +107,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        state = MatchState.TELEOP;
-        SmartDashboard.putString("Match State", state.name());
-
-        robot.arm.setCoast(false, false);
-        robot.arm.setLimp(false, false);
-        new TeleopInit().schedule();
-
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
+
+        setMatchState(MatchState.TELEOP);
+        new TeleopInit().schedule();
 
         if (auto != null) {
             auto.cancel();
@@ -130,12 +129,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        state = MatchState.TEST;
-        SmartDashboard.putString("Match State", state.name());
-
-        robot.arm.setCoast(false, false);
-        
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
+
+        setMatchState(MatchState.TELEOP);
+        new TestInit().schedule();
+
+        robot.arm.enableShoulderBrakeMode();
+        robot.arm.enableWristBrakeMode();
 
         scheduler.cancelAll();
     }

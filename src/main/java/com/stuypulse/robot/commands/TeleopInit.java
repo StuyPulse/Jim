@@ -22,6 +22,11 @@ public class TeleopInit extends InstantCommand {
     public void initialize() {
         plant.disengage();
         Intake.getInstance().stop(); 
-        arm.setTargetState(arm.getState());
+        
+        arm.enableWristBrakeMode();
+        arm.enableShoulderBrakeMode();
+
+        arm.setWristVoltage(0);
+        arm.setShoulderVoltage(0);
     }
 }
