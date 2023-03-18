@@ -125,10 +125,6 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        // new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
-
-        // driver.getSelectButton().onTrue(new WingRetract());
-        // driver.getStartButton().onTrue(new WingRetract());
         driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
@@ -138,12 +134,9 @@ public class RobotContainer {
             .whileTrue(new RobotRelease());
 
         driver.getTopButton()
-            .whileTrue(/*new ManagerSetScoreIndex(5).andThen(*/new SwerveDriveToScorePose());
+            .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
-        // driver.getLeftTriggerButton()
-        //     .whileTrue(new SwerveDriveSlowDrive(driver));
-            // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
         // right trigger -> thrust
 
@@ -193,7 +186,6 @@ public class RobotContainer {
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
-                    .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady()));
 
         operator.getRightButton()

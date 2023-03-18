@@ -15,7 +15,6 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
@@ -34,11 +33,9 @@ public class SwerveDriveDrive extends CommandBase {
     
     private final SwerveDrive swerve;
     private final Plant plant;
-    private final Arm arm;
 
     private VStream speed;
     private IStream turn;
-    private BStream robotRelative;
 
     private final Gamepad driver;
 
@@ -53,7 +50,6 @@ public class SwerveDriveDrive extends CommandBase {
 
         swerve = SwerveDrive.getInstance();
         plant = Plant.getInstance();
-        arm = Arm.getInstance();
 
         speed = VStream.create(driver::getLeftStick)
             .filtered(
@@ -74,8 +70,6 @@ public class SwerveDriveDrive extends CommandBase {
                 new LowPassFilter(Turn.RC)
             );
         
-        robotRelative = BStream.create(() -> false /*driver::getRightTriggerPressed*/);
-
         holdAngle = Optional.empty();
         gyroFeedback = new AnglePIDController(GyroFeedback.P, GyroFeedback.I, GyroFeedback.D);
 
@@ -118,20 +112,7 @@ public class SwerveDriveDrive extends CommandBase {
         }
 
         // use the angularVelocity for drive
-        if (robotRelative.get()) {
-            Vector2D s = speed.get();
-            Vector2D translation = new Vector2D(s.y, -s.x);
-
-            double shoulderDegNormalized = arm.getShoulderAngle().getDegrees() + 90;
-            if (Math.abs(shoulderDegNormalized) > Shoulder.OVER_BUMPER_ANGLE.get() && arm.getShoulderAngle().getCos() < 0) {
-                translation = translation.negative();
-            }
-
-            swerve.setChassisSpeeds(
-                new ChassisSpeeds(translation.x, translation.y, angularVel));
-        } else {
-            swerve.drive(speed.get(), angularVel);
-        }
+        swerve.drive(speed.get(), angularVel);
 
         // unplant if driving in endgame
         if (Timer.getMatchTime() < 30) {
