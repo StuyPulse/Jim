@@ -6,6 +6,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayEntry;
@@ -24,8 +25,11 @@ public class Limelight {
     
     private Optional<AprilTagData> data;
 
-    public Limelight(String tableName) {
+    private final Pose3d robotRelativePose;
+
+    public Limelight(String tableName, Pose3d robotRelativePose) {
         this.tableName = tableName;
+        this.robotRelativePose = robotRelativePose;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
 
@@ -72,7 +76,6 @@ public class Limelight {
             return;
         }
 
-        data = Optional.of(new AprilTagData(botpose, latency, id));
+        data = Optional.of(new AprilTagData(botpose, latency, id, robotRelativePose));
     }
-
 }

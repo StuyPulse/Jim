@@ -71,9 +71,6 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        // holds arm in place
-        // arm.setTargetState(arm.getState());
-        
         if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_IN) { 
             arm.setWristVoltage(0);
         }

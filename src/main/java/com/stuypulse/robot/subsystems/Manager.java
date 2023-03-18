@@ -6,6 +6,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -253,5 +254,7 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
+        SmartDashboard.putString("Manager/Grid Section", gridSection.name());
+        SmartDashboard.putString("Manager/Grid Column", gridColumn.name());
     }
 }
