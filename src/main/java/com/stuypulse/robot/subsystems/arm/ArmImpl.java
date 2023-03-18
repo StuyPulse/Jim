@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.util.WrappedAbsoluteEncoder;
 import com.stuypulse.stuylib.streams.filters.IFilter;
 import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
 
@@ -30,7 +31,7 @@ public class ArmImpl extends Arm {
     private final CANSparkMax wrist;
 
     private final AbsoluteEncoder shoulderEncoder;
-    private final AbsoluteEncoder wristEncoder;
+    private final WrappedAbsoluteEncoder wristEncoder;
 
     private final IFilter wristVelocityFilter;
     private final IFilter shoulderVelocityFilter;
@@ -42,7 +43,7 @@ public class ArmImpl extends Arm {
 
         shoulderEncoder = shoulderRight.getAbsoluteEncoder(Type.kDutyCycle);
 
-        wristEncoder = wrist.getAbsoluteEncoder(Type.kDutyCycle);
+        wristEncoder = new WrappedAbsoluteEncoder(wrist.getAbsoluteEncoder(Type.kDutyCycle));
 
         // Probably helps?
         wristVelocityFilter = new TimedMovingAverage(0.1);
@@ -53,7 +54,7 @@ public class ArmImpl extends Arm {
 
     private void configureMotors() {
         shoulderEncoder.setZeroOffset(0);
-        wristEncoder.setZeroOffset(0);
+        wristEncoder.getEncoder().setZeroOffset(0);
 
         shoulderEncoder.setInverted(true);
         shoulderEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
@@ -62,8 +63,8 @@ public class ArmImpl extends Arm {
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
-        wristEncoder.setInverted(true);
-        wristEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
+        wristEncoder.getEncoder().setInverted(true);
+        wristEncoder.getEncoder().setVelocityConversionFactor(Units.rotationsToRadians(1));
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
@@ -75,8 +76,8 @@ public class ArmImpl extends Arm {
     }
 
     @Override
-    public Rotation2d getShoulderAngle() {
-        return Rotation2d.fromRotations(shoulderEncoder.getPosition()).minus(Shoulder.ZERO_ANGLE);
+    public double getShoulderRadians() {
+        return shoulderEncoder.getPosition() * Math.PI * 2 - Rotation2d.toRadians(Shoulder.ZERO_ANGLE);
     }
 
     @Override
