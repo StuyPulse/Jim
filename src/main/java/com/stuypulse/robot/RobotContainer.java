@@ -177,22 +177,12 @@ public class RobotContainer {
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
-        // outtake
-        operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
-            .onFalse(new IntakeStop())
-            .onFalse(new ArmStow());
-
-        // ready & score
+        // ready
         operator.getLeftBumper()
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ArmReady()));
-
-        operator.getRightButton()
-            .onTrue(new IntakeScore())
-            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
@@ -208,14 +198,6 @@ public class RobotContainer {
 
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
-
-
-        // operator.getRightBumper()
-        //     .onTrue(arm.runOnce(arm::enableLimp))
-        //     .onFalse(arm.runOnce(arm::disableLimp));
-
-        // arm to neutral
-        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
     }
 
     private void configureChooserBindings() {
