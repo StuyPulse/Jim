@@ -357,9 +357,6 @@ public interface Settings {
         SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
         SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
 
-        SmartNumber MAX_SPEED = new SmartNumber("Alignment/Max Speed", 3);
-        SmartNumber MAX_ACCELERATION = new SmartNumber("Alignment/Max Acceleration", 2);
-        
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
