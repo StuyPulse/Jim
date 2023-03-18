@@ -48,7 +48,7 @@ public abstract class ArmRoutine extends CommandBase {
 
     @Override
     public void initialize() {
-        trajectory = getTrajectory(Arm.getInstance().getTargetState(), endState.get());
+        trajectory = getTrajectory(Arm.getInstance().getState(), endState.get());
         
         // for (ArmState state : trajectory.getStates()) {
         //     System.out.println("Shoulder: " + state.getShoulderDegrees() + ", Wrist: " + state.getWristDegrees());
@@ -63,7 +63,9 @@ public abstract class ArmRoutine extends CommandBase {
         var targetState = trajectory.getStates().get(currentIndex);
         arm.setTargetState(targetState);
 
-        arm.setLimp(targetState.isWristLimp(), false);
+        if (targetState.isWristLimp()) {
+            arm.setWristVoltage(0);
+        }
 
         double currentShoulderTolerance = (targetState.getShoulderTolerance().orElse(shoulderTolerance)).doubleValue();
         double currentWristTolerance = (targetState.getWristTolerance().orElse(wristTolerance)).doubleValue();
@@ -75,9 +77,8 @@ public abstract class ArmRoutine extends CommandBase {
             currentWristTolerance = 360;
         }
 
-        if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance)) {
-            // var targetState = trajectory.getStates().get(currentIndex);
-            // System.out.println("COMPLETED: " + "Shoulder: " + targetState.getShoulderDegrees() + ", Wrist: " + targetState.getWristDegrees());
+        if (arm.isShoulderAtTarget(currentShoulderTolerance) &&
+            arm.isWristAtTarget(currentWristTolerance)) {
             currentIndex++;
         }
     }

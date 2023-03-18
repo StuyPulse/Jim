@@ -119,6 +119,12 @@ public abstract class Arm extends SubsystemBase {
         return Math.toRadians(normalizeWristAngleDegrees(wristTargetDegrees.get()));
     }
 
+    public final ArmState getTargetState() {
+        return new ArmState(
+            Units.radiansToDegrees(getShoulderTargetAngleRadians()),
+            Units.radiansToDegrees(getWristTargetAngleRadians()));
+    }
+
     // sets target shoulder angle, normalizes input angle
     public final void setShoulderTargetAngle(Rotation2d angle) {
         shoulderVoltageOverride = Optional.empty();
