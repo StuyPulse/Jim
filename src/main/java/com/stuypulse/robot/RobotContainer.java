@@ -125,28 +125,19 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        // new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
-
-        // driver.getSelectButton().onTrue(new WingRetract());
-        // driver.getStartButton().onTrue(new WingRetract());
         driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getBottomButton()
             .whileTrue(new RobotScore());
-        driver.getLeftBumper()
+        driver.getLeftTriggerButton()
             .whileTrue(new RobotRelease());
 
-        // driver.getTopButton().onTrue(new ArmReady());
         driver.getTopButton()
-            .whileTrue(new ManagerSetScoreIndex(1).andThen(new SwerveDriveToScorePose()));
+            .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
-        driver.getLeftTriggerButton()
-            .whileTrue(new SwerveDriveSlowDrive(driver));
-            // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
-        // right trigger -> robotrelative override
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
