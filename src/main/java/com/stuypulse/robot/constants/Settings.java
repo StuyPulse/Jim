@@ -311,7 +311,6 @@ public interface Settings {
 
     public interface Driver {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
-        SmartNumber THRUST_PERCENTAGE = new SmartNumber("Driver Settings/Thrust Precentage", 0.5);
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
 

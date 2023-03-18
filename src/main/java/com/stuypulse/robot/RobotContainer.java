@@ -138,7 +138,6 @@ public class RobotContainer {
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
-        // right trigger -> thrust
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
