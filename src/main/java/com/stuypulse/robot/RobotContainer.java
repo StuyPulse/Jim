@@ -31,17 +31,11 @@ import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
 
 import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
-import com.stuypulse.stuylib.network.SmartBoolean;
-
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -216,9 +210,9 @@ public class RobotContainer {
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
 
-        operator.getRightBumper()
-            .onTrue(arm.runOnce(arm::enableLimp))
-            .onFalse(arm.runOnce(arm::disableLimp));
+        // operator.getRightBumper()
+        //     .onTrue(arm.runOnce(arm::enableLimp))
+        //     .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
         operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
