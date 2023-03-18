@@ -59,15 +59,15 @@ public class ArmImpl extends Arm {
         shoulderEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
         shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
 
         wristEncoder.setInverted(true);
         wristEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
         wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
