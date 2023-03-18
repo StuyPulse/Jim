@@ -15,6 +15,7 @@ import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 import com.stuypulse.robot.util.ArmEncoderFeedforward;
+import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -130,6 +131,11 @@ public abstract class Arm extends SubsystemBase {
         wristTargetDegrees.set(normalizeWristAngleDegrees(angle.getDegrees())); // probably redundant to normalize here
     }
 
+    public final void setTargetState(ArmState state) {
+        setShoulderTargetAngle(state.getShoulderAngle());
+        setWristTargetAngle(state.getWristAngle());
+    }
+
     // Check if shoulder is at target state (not profiled, "in between" setpoint)
     public final boolean isShoulderAtTarget(double epsilonDegrees) {
         return Math.abs(getShoulderTargetAngleRadians() - getShoulderAngleRadians()) < epsilonDegrees;
@@ -152,6 +158,12 @@ public abstract class Arm extends SubsystemBase {
     public final double getWristAngleRadians() {
         // may want to normalize shoulder angle here, but it physically cannot go out of bounds
         return getShoulderAngleRadians() + getRelativeWristAngleRadians();
+    }
+
+    public final ArmState getState() {
+        return new ArmState(
+            Units.radiansToDegrees(getShoulderAngleRadians()),
+            Units.radiansToDegrees(getWristAngleRadians()));
     }
 
     // reads 
