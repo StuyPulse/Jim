@@ -76,8 +76,6 @@ public class Manager extends SubsystemBase {
     private Direction gridSection;
     private Direction gridColumn;
 
-    private SmartBoolean scoreFront = new SmartBoolean("Manager/Score Front", false);
-
     protected Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
@@ -252,8 +250,6 @@ public class Manager extends SubsystemBase {
     @Override
     public void periodic() {
         Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
-
-        setScoreSide(scoreFront.get() ? ScoreSide.FRONT : ScoreSide.BACK);
 
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
