@@ -158,6 +158,9 @@ public interface Settings {
     public interface Arm {
 
         public interface Shoulder {
+            double MIN_CONTROL_ANGLE = -270;
+            double MAX_CONTROL_ANGLE = 90;
+
             SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 10.0);
             SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
 
@@ -206,6 +209,8 @@ public interface Settings {
         }
     
         public interface Wrist {
+            double MIN_CONTROL_ANGLE = -90;
+            double MAX_CONTROL_ANGLE = 270;
             
             int MOTORS = 1;
             double REDUCTION = 70.0;
