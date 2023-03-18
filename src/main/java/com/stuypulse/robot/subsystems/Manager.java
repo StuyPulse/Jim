@@ -6,6 +6,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -74,6 +75,8 @@ public class Manager extends SubsystemBase {
 
     private Direction gridSection;
     private Direction gridColumn;
+
+    private SmartBoolean scoreFront = new SmartBoolean("Manager/Score Front", false);
 
     protected Manager() {
         gamePiece = GamePiece.CUBE;
@@ -247,8 +250,12 @@ public class Manager extends SubsystemBase {
     public void periodic() {
         Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
+        setScoreSide(scoreFront.get() ? ScoreSide.FRONT : ScoreSide.BACK);
+
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
+        SmartDashboard.putString("Manager/Grid Section", gridSection.name());
+        SmartDashboard.putString("Manager/Grid Column", gridColumn.name());
     }
 }

@@ -48,15 +48,15 @@ public interface Field {
         double CUBE_X = 2.1;
         double CONE_X = 2.052;
 
-        Translation2d ONE =   new Translation2d(CUBE_X, (7)); // definitely wrong
-        Translation2d TWO =   new Translation2d(CUBE_X, (6.674766));
-        Translation2d THREE = new Translation2d(CUBE_X, (5.8913));
-        Translation2d FOUR =  new Translation2d(CUBE_X, (5.308));
-        Translation2d FIVE =  new Translation2d(CUBE_X, (5.044971));
-        Translation2d SIX =   new Translation2d(CUBE_X, (4.258));
-        Translation2d SEVEN = new Translation2d(CUBE_X, (3.724));
-        Translation2d EIGHT = new Translation2d(CUBE_X, (4.8087));
-        Translation2d NINE =  new Translation2d(CUBE_X, (3.03));
+        Translation2d ONE =   new Translation2d(CUBE_X, 7.0); // definitely wrong
+        Translation2d TWO =   new Translation2d(CUBE_X, 6.674766);
+        Translation2d THREE = new Translation2d(CUBE_X, 5.8913);
+        Translation2d FOUR =  new Translation2d(CUBE_X, 5.308);
+        Translation2d FIVE =  new Translation2d(CUBE_X, 5.044971);
+        Translation2d SIX =   new Translation2d(CUBE_X, 4.258);
+        Translation2d SEVEN = new Translation2d(CUBE_X, 3.724);
+        Translation2d EIGHT = new Translation2d(CUBE_X, 4.8087);
+        Translation2d NINE =  new Translation2d(CUBE_X, 3.03);
     }
 
     Translation2d RED_ALIGN_POSES[] = {
