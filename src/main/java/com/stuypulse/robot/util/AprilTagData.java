@@ -3,6 +3,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class AprilTagData {
@@ -11,8 +12,17 @@ public class AprilTagData {
     public final int id;
     public final Limelight limelight;
 
+    private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
+        double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
+        double d = (1 - c) * 180;
+
+        return d;
+    }
+
     public double getDegreesToTag() {
-        return limelight.getDegreesToTag(pose, id);
+        Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
+
+        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().minus(limelight.getRobotRelativeRotation()));
     }
 
     public double getDistanceToTag() {
