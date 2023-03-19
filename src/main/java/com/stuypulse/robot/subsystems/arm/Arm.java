@@ -17,6 +17,8 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.robot.util.AngleVelocity;
 import com.stuypulse.robot.util.ArmDriveFeedforward;
 import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
@@ -76,9 +78,16 @@ public abstract class Arm extends SubsystemBase {
     private Optional<Double> wristVoltageOverride;
     private Optional<Double> shoulderVoltageOverride;
 
+    private BStream wristEnabled;
+
+    private SmartNumber feedbackDebounce = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.1);
+
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
+
+        wristEnabled = BStream.create(this::isWristFeedbackEnabled)
+            .filtered(new BDebounce.Both(feedbackDebounce));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
@@ -97,7 +106,7 @@ public abstract class Arm extends SubsystemBase {
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
             .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
-                .setOutputFilter(x -> isWristFeedbackEnabled() ? x : 0))
+                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
@@ -105,8 +114,7 @@ public abstract class Arm extends SubsystemBase {
             .setOutputFilter(x -> {
                 if (isWristLimp()) return 0;
                 return wristVoltageOverride.orElse(x);
-            })
-        ;
+            });
 
         wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
         shoulderLimp = new SmartBoolean("Arm/Shoulder/Is Limp?", false);
@@ -127,9 +135,9 @@ public abstract class Arm extends SubsystemBase {
         return shoulderLimp.get();
     }
 
+    SmartNumber tolerance = new SmartNumber("Arm/Wrist/Feedback Tolerance (deg)", 5);
     private final boolean isWristFeedbackEnabled() {
-        final double velocity = Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond());
-        return Math.abs(velocity) < Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get();
+        return isShoulderAtTarget(tolerance.doubleValue());
     }
 
     // Read target State
@@ -275,7 +283,8 @@ public abstract class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristController.getOutput());
         SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
-        SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", isWristFeedbackEnabled());
+        SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled Raw", isWristFeedbackEnabled());
+        SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", wristEnabled.get());
 
         periodicallyCalled();
     }
