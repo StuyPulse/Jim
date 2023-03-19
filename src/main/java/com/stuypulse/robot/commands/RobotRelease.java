@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class RobotRelease extends CommandBase {
     
     private final static SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
-    private final static SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 16);
+    private final static SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", -16);
 
     private final SwerveDrive swerve;
     private final Arm arm;
@@ -34,7 +34,9 @@ public class RobotRelease extends CommandBase {
 
     @Override
     public void initialize() {
-        intake.deacquire();
+        if (!(manager.getGamePiece() == GamePiece.CONE_TIP_OUT && manager.getNodeLevel() != NodeLevel.LOW)) {
+            intake.deacquire();
+        }
     }
 
     @Override
