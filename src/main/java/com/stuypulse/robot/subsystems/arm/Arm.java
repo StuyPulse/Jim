@@ -242,16 +242,16 @@ public abstract class Arm extends SubsystemBase {
     @Override
     public final void periodic() {
         // Validate shoulder and wrist target states
-        // Rotation2d shoulderTarget = getShoulderTargetAngle();
-        // Rotation2d wristTarget = getWristTargetAngle();
+        Rotation2d shoulderTarget = getShoulderTargetAngle();
+        Rotation2d wristTarget = getWristTargetAngle();
 
-        // double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
+        double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
 
-        // if (normalizedDeg > Shoulder.MAX_SHOULDER_ANGLE.get() + 90) {
-        //     setShoulderTargetAngle(Rotation2d.fromDegrees(Shoulder.MAX_SHOULDER_ANGLE.get()));
-        // } else if (normalizedDeg < -90 - Shoulder.MAX_SHOULDER_ANGLE.get()) {
-        //     setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
-        // }
+        if (normalizedDeg > Shoulder.MAX_SHOULDER_ANGLE.get() + 90) {
+            setShoulderTargetAngle(Rotation2d.fromDegrees(Shoulder.MAX_SHOULDER_ANGLE.get()));
+        } else if (normalizedDeg < -90 - Shoulder.MAX_SHOULDER_ANGLE.get()) {
+            setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
+        }
 
 
         // Run control loops on validated target angles
