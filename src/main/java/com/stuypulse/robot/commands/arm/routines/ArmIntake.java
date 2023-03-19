@@ -48,7 +48,7 @@ public class ArmIntake extends ArmRoutine {
         }
 
         double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
-        double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
+        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 90 : 60;
 
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
