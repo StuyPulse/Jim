@@ -45,8 +45,7 @@ public abstract class Arm extends SubsystemBase {
 
     static {
         if (RobotBase.isSimulation())
-            instance = new PerfectArm();
-            // instance = new SimArm();
+            instance = new SimArm();
         else if (Settings.ROBOT == Robot.JIM)
             instance = new ArmImpl();
         else
@@ -91,7 +90,7 @@ public abstract class Arm extends SubsystemBase {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
-            .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
+            // .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
@@ -105,13 +104,13 @@ public abstract class Arm extends SubsystemBase {
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
-                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
+                if (wristEnabled.get()) return x;
                 if (isWristLimp()) return 0;
                 return wristVoltageOverride.orElse(x);
             });
@@ -243,16 +242,16 @@ public abstract class Arm extends SubsystemBase {
     @Override
     public final void periodic() {
         // Validate shoulder and wrist target states
-        Rotation2d shoulderTarget = getShoulderTargetAngle();
-        Rotation2d wristTarget = getWristTargetAngle();
+        // Rotation2d shoulderTarget = getShoulderTargetAngle();
+        // Rotation2d wristTarget = getWristTargetAngle();
 
-        double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
+        // double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
 
-        if (normalizedDeg > Shoulder.MAX_SHOULDER_ANGLE.get() + 90) {
-            setShoulderTargetAngle(Rotation2d.fromDegrees(Shoulder.MAX_SHOULDER_ANGLE.get()));
-        } else if (normalizedDeg < -90 - Shoulder.MAX_SHOULDER_ANGLE.get()) {
-            setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
-        }
+        // if (normalizedDeg > Shoulder.MAX_SHOULDER_ANGLE.get() + 90) {
+        //     setShoulderTargetAngle(Rotation2d.fromDegrees(Shoulder.MAX_SHOULDER_ANGLE.get()));
+        // } else if (normalizedDeg < -90 - Shoulder.MAX_SHOULDER_ANGLE.get()) {
+        //     setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
+        // }
 
 
         // Run control loops on validated target angles

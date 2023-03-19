@@ -23,6 +23,15 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
+        "Arm": {
+          "Shoulder": {
+            "open": true
+          },
+          "Wrist": {
+            "open": true
+          },
+          "open": true
+        },
         "Manager": {
           "open": true
         },
