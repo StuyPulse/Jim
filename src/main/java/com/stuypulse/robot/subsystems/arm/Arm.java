@@ -110,7 +110,9 @@ public abstract class Arm extends SubsystemBase {
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
+                // return wristVoltageOverride.orElse(x);
                 if (isWristLimp()) return 0;
+
                 if (wristVoltageOverride.isPresent()) return wristVoltageOverride.get();
                 if (!wristEnabled.get()) return 0;
                 return x;
@@ -137,7 +139,8 @@ public abstract class Arm extends SubsystemBase {
 
     SmartNumber tolerance = new SmartNumber("Arm/Wrist/Feedback Tolerance (deg)", 5);
     private final boolean isWristFeedbackEnabled() {
-        return isShoulderAtTarget(tolerance.doubleValue());
+        return getShoulderVelocityRadiansPerSecond() < Units.degreesToRadians(Settings.Arm.Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
+        // return isShoulderAtTarget(tolerance.doubleValue());
     }
 
     // Read target State
