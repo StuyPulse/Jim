@@ -103,16 +103,18 @@ public abstract class Arm extends SubsystemBase {
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
+                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
                 if (isWristLimp()) return 0;
-                if (wristVoltageOverride.isPresent()) return wristVoltageOverride.get();
-                if (!wristEnabled.get()) return x;
-                return 0;
+                return wristVoltageOverride.orElse(x);
+                // if (wristVoltageOverride.isPresent()) return wristVoltageOverride.get();
+                // if (!wristEnabled.get()) return x;
+                // return 0;
             });
 
         wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
