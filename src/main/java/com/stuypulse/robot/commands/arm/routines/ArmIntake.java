@@ -9,6 +9,7 @@ import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 
 public class ArmIntake extends ArmRoutine {
 
@@ -73,7 +74,7 @@ public class ArmIntake extends ArmRoutine {
         // super.end(interrupted);
 
         if (!interrupted) {
-            if (manager.getGamePiece().isCube()) {
+            if (RobotBase.isReal() && manager.getGamePiece().isCube()) {
                 arm.setShoulderVoltage(Shoulder.INTAKE_VOLTAGE.get());
             }
             // if (manager.getGamePiece().isCube()) {

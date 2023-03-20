@@ -41,28 +41,22 @@ public class SimArm extends Arm {
 	}
 
 	@Override
-protected void setWristVoltageImpl(double voltage) {
+    protected void setWristVoltageImpl(double voltage) {
 		wristVolts = voltage;
 	}
 
     @Override
     public void periodicallyCalled() {
-        // if (!isWristFeedbackEnabled()) {
-        //     simulation.update(0, wristVolts, Settings.DT);
-        // } else {
-            simulation.update(shoulderVolts, wristVolts, Settings.DT);
-        // // }
+        simulation.update(shoulderVolts, wristVolts, Settings.DT);
     }
 
     @Override
     public double getShoulderVelocityRadiansPerSecond() {
-        // TODO Auto-generated method stub
-        return 0;
+        return simulation.getShoulderVelocityRadiansPerSecond();
     }
 
     @Override
     public double getWristVelocityRadiansPerSecond() {
-        // TODO Auto-generated method stub
-        return 0;
+        return simulation.getWristVelocityRadiansPerSecond();
     }
 }

@@ -45,8 +45,7 @@ public abstract class Arm extends SubsystemBase {
 
     static {
         if (RobotBase.isSimulation())
-            instance = new PerfectArm();
-            // instance = new SimArm();
+            instance = new SimArm();
         else if (Settings.ROBOT == Robot.JIM)
             instance = new ArmImpl();
         else
@@ -91,7 +90,6 @@ public abstract class Arm extends SubsystemBase {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
-            .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
@@ -105,13 +103,13 @@ public abstract class Arm extends SubsystemBase {
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
-                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
+                if (wristEnabled.get()) return x;
                 if (isWristLimp()) return 0;
                 return wristVoltageOverride.orElse(x);
             });
