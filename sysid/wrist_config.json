@@ -38,5 +38,5 @@
   "secondary motors inverted": [
     false
   ],
-  "velocity measurement period": 5
+  "velocity measurement period": 8
 }

@@ -110,12 +110,8 @@ public abstract class Arm extends SubsystemBase {
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
-                // return wristVoltageOverride.orElse(x);
                 if (isWristLimp()) return 0;
-
-                if (wristVoltageOverride.isPresent()) return wristVoltageOverride.get();
-                if (!wristEnabled.get()) return 0;
-                return x;
+                return wristVoltageOverride.orElse(x);
             });
 
         wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
