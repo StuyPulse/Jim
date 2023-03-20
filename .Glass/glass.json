@@ -23,6 +23,9 @@
           "Shoulder": {
             "open": true
           },
+          "Wrist": {
+            "open": true
+          },
           "open": true
         },
         "Auto Balance": {
@@ -132,7 +135,7 @@
               "autoFit": true
             }
           ],
-          "height": 933,
+          "height": 947,
           "series": [
             {
               "color": [
@@ -176,7 +179,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -211,7 +214,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -246,7 +249,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -281,7 +284,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": 438,
           "series": [
             {
               "color": [
@@ -316,7 +319,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": 433,
           "series": [
             {
               "color": [
@@ -383,10 +386,88 @@
         "visible": false
       }
     },
+    "Plot <16>": {
+      "plots": [
+        {
+          "height": 436,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Velocity (deg per s)"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Velocity (deg per s)"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Arm Velocities"
+      }
+    },
+    "Plot <17>": {
+      "plots": [
+        {
+          "height": 435,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Output (V)"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Output (V)"
+            },
+            {
+              "color": [
+                0.14131689071655273,
+                0.7481481432914734,
+                0.2802300751209259,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled Raw"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Arm Voltages"
+      }
+    },
     "Plot <1>": {
       "plots": [
         {
-          "height": 933,
+          "height": 545,
           "series": [
             {
               "color": [
@@ -493,7 +574,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -604,7 +685,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": 438,
           "series": [
             {
               "color": [
@@ -639,7 +720,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": 433,
           "series": [
             {
               "color": [
