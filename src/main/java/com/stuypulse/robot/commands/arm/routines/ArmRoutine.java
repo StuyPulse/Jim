@@ -38,7 +38,7 @@ public abstract class ArmRoutine extends CommandBase {
 
     protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         // TODO: check if src and dest are on the same side
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
+        double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)

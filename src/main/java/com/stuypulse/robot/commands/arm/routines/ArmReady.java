@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands.arm.routines;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
@@ -48,7 +49,7 @@ public class ArmReady extends ArmRoutine {
         //     Manager.getInstance().getScoreSide() == ScoreSide.BACK) {
         // }
 
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
+        double wristSafeAngle = Settings.Arm.Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
             .addState(
