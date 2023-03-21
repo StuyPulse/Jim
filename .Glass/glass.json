@@ -123,7 +123,7 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT3)",
+    "mode": "Client (NT4)",
     "serverTeam": "10.6.94.2"
   },
   "Plots": {
@@ -135,7 +135,7 @@
               "autoFit": true
             }
           ],
-          "height": 947,
+          "height": 933,
           "series": [
             {
               "color": [
@@ -179,7 +179,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -214,7 +214,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -249,7 +249,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -284,7 +284,7 @@
               "autoFit": true
             }
           ],
-          "height": 438,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -319,7 +319,7 @@
               "autoFit": true
             }
           ],
-          "height": 433,
+          "height": 418,
           "series": [
             {
               "color": [
@@ -389,7 +389,7 @@
     "Plot <16>": {
       "plots": [
         {
-          "height": 436,
+          "height": 933,
           "series": [
             {
               "color": [
@@ -419,7 +419,7 @@
     "Plot <17>": {
       "plots": [
         {
-          "height": 435,
+          "height": 10,
           "series": [
             {
               "color": [
@@ -467,7 +467,12 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 545,
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 379,
           "series": [
             {
               "color": [
@@ -574,7 +579,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -685,7 +690,7 @@
               "autoFit": true
             }
           ],
-          "height": 438,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -720,7 +725,7 @@
               "autoFit": true
             }
           ],
-          "height": 433,
+          "height": 418,
           "series": [
             {
               "color": [
