@@ -52,8 +52,8 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ArmReady()
-                .withTolerance(7, 13)
-                .withTimeout(3.5)
+                .withTolerance(7, 9)
+                .withTimeout(4)
         );
 
         addCommands(
@@ -77,13 +77,13 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new IntakeAcquire()),
 
-                new WaitCommand(0.3).andThen(new ArmIntake()
-                    .withTolerance(7, 12)
-                    .withTimeout(6.5))
+                new ArmIntake()
+                    .withTolerance(7, 10)
+                    .withTimeout(6.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
-                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
@@ -98,18 +98,12 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                .alongWith(
-                    new WaitCommand(0.2)
-                        .andThen(
-                            new ArmReady()
-                            .alongWith(
-                                new WaitCommand(0.1)
-                                    .andThen(new IntakeStop())))),
+                .alongWith(new WaitCommand(1.0).andThen(new ArmReady().alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
 
             new ManagerSetScoreIndex(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
-            new WaitCommand(CUBE_DEACQUIRE_TIME),
+            new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
         );
         

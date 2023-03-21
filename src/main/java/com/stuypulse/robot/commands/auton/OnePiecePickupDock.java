@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
-    private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double INTAKE_ACQUIRE_TIME = 0.8;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;

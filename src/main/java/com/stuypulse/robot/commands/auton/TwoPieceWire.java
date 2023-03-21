@@ -20,6 +20,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
     private static final double READY_WAIT_TIME = 0.5;
@@ -93,8 +94,9 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
+                    .withStop()
                 .alongWith(new WaitCommand(READY_WAIT_TIME).andThen(new ArmReady()))
-                .alongWith(new WaitCommand(1.0).andThen(new IntakeStop())),
+                .alongWith(new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())),
 
             new ManagerSetScoreIndex(7),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
