@@ -113,13 +113,13 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 2.38;
+            double kP = 0.8;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17459;
-            double kV = 2.4561;
-            double kA = 0.40442;
+            double kS = 0.22304;
+            double kV = 2.4899;
+            double kA = 0.41763;
         }
 
         public interface FrontRight {
@@ -317,11 +317,11 @@ public interface Settings {
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 10);
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 20);
 
             SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(3.0));
         }
