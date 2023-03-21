@@ -201,16 +201,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.1);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 0.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 1.0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.0);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.29727);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.74431);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 1.2977);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.0675);
             }
         }
     
