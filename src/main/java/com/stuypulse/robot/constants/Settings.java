@@ -201,7 +201,7 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 0.0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.0);
             }
