@@ -15,7 +15,7 @@
     "###Analyzer": {
       "Collapsed": "0",
       "Pos": "391,28",
-      "Size": "450,687"
+      "Size": "450,748"
     },
     "###Generator": {
       "Collapsed": "0",
@@ -24,13 +24,13 @@
     },
     "###Logger": {
       "Collapsed": "0",
-      "Pos": "6,412",
+      "Pos": "8,413",
       "Size": "387,481"
     },
     "###Program Log": {
       "Collapsed": "0",
-      "Pos": "400,725",
-      "Size": "450,168"
+      "Pos": "398,808",
+      "Size": "450,174"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -45,7 +45,7 @@
     "Diagnostic Plots": {
       "Collapsed": "0",
       "Pos": "864,40",
-      "Size": "590,690"
+      "Size": "1012,1012"
     },
     "Exception Caught!": {
       "Collapsed": "0",

@@ -19,13 +19,7 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Arm": {
-          "Shoulder": {
-            "open": true
-          },
-          "Wrist": {
-            "open": true
-          },
+        "Arm Trajectories": {
           "open": true
         },
         "Auto Balance": {
@@ -123,19 +117,14 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT4)",
+    "mode": "Client (NT3)",
     "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
-          "height": 933,
+          "height": 382,
           "series": [
             {
               "color": [
@@ -467,11 +456,6 @@
     "Plot <1>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": 379,
           "series": [
             {

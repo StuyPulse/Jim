@@ -2,20 +2,20 @@
   "Docking": {
     "Data": [
       "DockSpace         ID=0x8B93E3BD Window=0xA787BDB4 Pos=0,22 Size=1920,979 Split=X Selected=0xC98BB475",
-      "DockNode        ID=0x00000002 Parent=0x8B93E3BD SizeRef=1252,979 Split=X",
-      "DockNode      ID=0x00000001 Parent=0x00000002 SizeRef=537,213 Split=Y",
+      "DockNode        ID=0x00000002 Parent=0x8B93E3BD SizeRef=1127,979 Split=X",
+      "DockNode      ID=0x00000001 Parent=0x00000002 SizeRef=308,213 Split=Y",
       "DockNode    ID=0x00000004 Parent=0x00000001 SizeRef=742,213 Split=X Selected=0x0EC36FA3",
-      "DockNode  ID=0x00000008 Parent=0x00000004 SizeRef=274,190 Selected=0x88571D0D",
-      "DockNode  ID=0x00000009 Parent=0x00000004 SizeRef=261,190 Selected=0x2395FA29",
+      "DockNode  ID=0x00000008 Parent=0x00000004 SizeRef=185,190 Selected=0x88571D0D",
+      "DockNode  ID=0x00000009 Parent=0x00000004 SizeRef=121,190 Selected=0x2395FA29",
       "DockNode    ID=0x00000005 Parent=0x00000001 SizeRef=742,211 Split=X Selected=0xC59FBC06",
-      "DockNode  ID=0x0000000A Parent=0x00000005 SizeRef=271,188 Selected=0x95522DB5",
-      "DockNode  ID=0x0000000B Parent=0x00000005 SizeRef=264,188 Selected=0xD2C348FC",
-      "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=713,213 Split=Y Selected=0xF5CC1934",
+      "DockNode  ID=0x0000000A Parent=0x00000005 SizeRef=168,188 Selected=0x95522DB5",
+      "DockNode  ID=0x0000000B Parent=0x00000005 SizeRef=138,188 Selected=0xD2C348FC",
+      "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=817,213 Split=Y Selected=0xF5CC1934",
       "DockNode    ID=0x00000011 Parent=0x00000007 SizeRef=718,899 Split=Y Selected=0x3E90CA91",
-      "DockNode  ID=0x0000000D Parent=0x00000011 SizeRef=713,450 CentralNode=1 Selected=0xB5CBE9F0",
+      "DockNode  ID=0x0000000D Parent=0x00000011 SizeRef=713,450 CentralNode=1 Selected=0xC98BB475",
       "DockNode  ID=0x0000000E Parent=0x00000011 SizeRef=713,447 Selected=0xF5CC1934",
       "DockNode    ID=0x00000012 Parent=0x00000007 SizeRef=718,78 Selected=0x13C65F1B",
-      "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=666,979 Split=Y Selected=0x2D9B9756",
+      "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=791,979 Split=Y Selected=0x2D9B9756",
       "DockNode      ID=0x00000006 Parent=0x00000003 SizeRef=501,757 Split=Y Selected=0x2D9B9756",
       "DockNode    ID=0x0000000F Parent=0x00000006 SizeRef=501,642 Selected=0x2D9B9756",
       "DockNode    ID=0x00000010 Parent=0x00000006 SizeRef=501,113 Selected=0x410DE7DE",
@@ -36,77 +36,77 @@
   },
   "Table": {
     "0x542B5671,2": {
-      "Column 0  Width": "293",
-      "Column 1  Width": "319",
-      "RefScale": "19"
+      "Column 0  Width": "384",
+      "Column 1  Width": "268",
+      "RefScale": "16"
     }
   },
   "Window": {
     "###/SmartDashboard/Arm Mech2d": {
       "Collapsed": "0",
       "DockId": "0x0000000D,0",
-      "Pos": "539,22",
-      "Size": "713,450"
+      "Pos": "310,22",
+      "Size": "817,450"
     },
     "###/SmartDashboard/Autonomous": {
       "Collapsed": "0",
       "DockId": "0x00000010,0",
-      "Pos": "1254,666",
-      "Size": "666,113"
+      "Pos": "1129,666",
+      "Size": "791,113"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
       "DockId": "0x0000000D,3",
-      "Pos": "539,22",
-      "Size": "713,450"
+      "Pos": "310,22",
+      "Size": "817,450"
     },
     "###NetworkTables": {
       "Collapsed": "0",
       "DockId": "0x0000000F,0",
-      "Pos": "1254,22",
-      "Size": "666,642"
+      "Pos": "1129,22",
+      "Size": "791,642"
     },
     "###NetworkTables Settings": {
       "Collapsed": "0",
       "DockId": "0x0000000C,0",
-      "Pos": "1254,781",
-      "Size": "666,220"
+      "Pos": "1129,781",
+      "Size": "791,220"
     },
     "###Plot <0>": {
       "Collapsed": "0",
       "DockId": "0x0000000D,1",
-      "Pos": "539,22",
-      "Size": "713,450"
+      "Pos": "310,22",
+      "Size": "817,450"
     },
     "###Plot <10>": {
       "Collapsed": "0",
       "DockId": "0x00000008,0",
       "Pos": "0,22",
-      "Size": "274,491"
+      "Size": "185,491"
     },
     "###Plot <11>": {
       "Collapsed": "0",
       "DockId": "0x0000000A,0",
       "Pos": "0,515",
-      "Size": "271,486"
+      "Size": "168,486"
     },
     "###Plot <12>": {
       "Collapsed": "0",
       "DockId": "0x00000009,1",
-      "Pos": "276,22",
-      "Size": "261,491"
+      "Pos": "187,22",
+      "Size": "121,491"
     },
     "###Plot <13>": {
       "Collapsed": "0",
       "DockId": "0x00000008,1",
       "Pos": "0,22",
-      "Size": "274,491"
+      "Size": "185,491"
     },
     "###Plot <14>": {
       "Collapsed": "0",
       "DockId": "0x0000000A,1",
       "Pos": "0,515",
-      "Size": "271,486"
+      "Size": "168,486"
     },
     "###Plot <15>": {
       "Collapsed": "1",
@@ -116,20 +116,20 @@
     "###Plot <16>": {
       "Collapsed": "0",
       "DockId": "0x0000000D,2",
-      "Pos": "539,22",
-      "Size": "713,450"
+      "Pos": "310,22",
+      "Size": "817,450"
     },
     "###Plot <17>": {
       "Collapsed": "0",
       "DockId": "0x00000012,0",
-      "Pos": "539,923",
-      "Size": "713,78"
+      "Pos": "310,923",
+      "Size": "817,78"
     },
     "###Plot <1>": {
       "Collapsed": "0",
       "DockId": "0x0000000E,0",
-      "Pos": "539,474",
-      "Size": "713,447"
+      "Pos": "310,474",
+      "Size": "817,447"
     },
     "###Plot <2>": {
       "Collapsed": "0",
@@ -144,8 +144,8 @@
     "###Plot <4>": {
       "Collapsed": "0",
       "DockId": "0x0000000B,1",
-      "Pos": "273,515",
-      "Size": "264,486"
+      "Pos": "170,515",
+      "Size": "138,486"
     },
     "###Plot <5>": {
       "Collapsed": "0",
@@ -160,14 +160,14 @@
     "###Plot <7>": {
       "Collapsed": "0",
       "DockId": "0x00000009,0",
-      "Pos": "276,22",
-      "Size": "261,491"
+      "Pos": "187,22",
+      "Size": "121,491"
     },
     "###Plot <8>": {
       "Collapsed": "0",
       "DockId": "0x0000000B,0",
-      "Pos": "273,515",
-      "Size": "264,486"
+      "Pos": "170,515",
+      "Size": "138,486"
     },
     "###Plot <9>": {
       "Collapsed": "0",

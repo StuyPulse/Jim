@@ -207,9 +207,9 @@ public interface Settings {
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.29727);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.74431);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 1.2977);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.30);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.0675);
             }
         }
