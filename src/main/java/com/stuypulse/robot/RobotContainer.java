@@ -128,9 +128,11 @@ public class RobotContainer {
         driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
+        driver.getLeftTriggerButton()
+            .whileTrue(new RobotScore());
         driver.getBottomButton()
             .whileTrue(new RobotScore());
-        driver.getLeftTriggerButton()
+        driver.getLeftBumper()
             .whileTrue(new RobotRelease());
 
         driver.getTopButton()
@@ -206,9 +208,6 @@ public class RobotContainer {
 
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
-
-        operator.getRightTriggerButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
-
 
         operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
