@@ -21,6 +21,10 @@ public interface ArmTrajectories {
         ArmState kCubeAuton = new ArmState(
             new SmartNumber("Arm Trajectories/Auton Acquire Cube Front Shoulder", -70.82),
             new SmartNumber("Arm Trajectories/Auton Acquire Cube Front Wrist", 8.37));
+
+        ArmState kBOOMCubeAuton = new ArmState(
+            new SmartNumber("Arm Trajectories/Auton BOOM Acquire Cube Front Shoulder", -75),
+            new SmartNumber("Arm Trajectories/Auton BOOM Acquire Cube Front Wrist", 20));
         ArmState kIntermediateAuton = new ArmState(
             new SmartNumber("Arm Trajectories/Auton Acquire Intermediate Front Shoulder", -45),
             new SmartNumber("Arm Trajectories/Auton Acquire Intermediate Front Wrist", 0));

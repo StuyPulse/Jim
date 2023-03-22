@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands.arm.routines;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
@@ -34,7 +35,14 @@ public class ArmReady extends ArmRoutine {
         }
 
         if (DriverStation.isAutonomous()) {
-            return super.getTrajectory(src, dest);
+            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
+    
+            return new ArmTrajectory()
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(10))
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristLimp(true).setWristTolerance(360))
+                .addState(dest);
         }
 
         if (src.isOnSameSide(dest) && !src.isOverBumper()) {

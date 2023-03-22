@@ -207,6 +207,8 @@ public class RobotContainer {
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
+        operator.getRightTriggerButton().onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_UP));
+
 
         operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
@@ -235,8 +237,8 @@ public class RobotContainer {
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
-        autonChooser.setDefaultOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
+        autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
+        autonChooser.setDefaultOption("Two Piece Dock", new TwoPieceDock());
         
         SmartDashboard.putData("Autonomous", autonChooser);
     }

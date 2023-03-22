@@ -19,6 +19,9 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Arm": {
+          "open": true
+        },
         "Arm Trajectories": {
           "open": true
         },
@@ -124,7 +127,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 382,
+          "height": 933,
           "series": [
             {
               "color": [
@@ -408,7 +411,12 @@
     "Plot <17>": {
       "plots": [
         {
-          "height": 10,
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 425,
           "series": [
             {
               "color": [
@@ -456,7 +464,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 379,
+          "height": -36,
           "series": [
             {
               "color": [

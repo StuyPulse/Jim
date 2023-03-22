@@ -11,10 +11,10 @@
       "DockNode  ID=0x0000000A Parent=0x00000005 SizeRef=168,188 Selected=0x95522DB5",
       "DockNode  ID=0x0000000B Parent=0x00000005 SizeRef=138,188 Selected=0xD2C348FC",
       "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=817,213 Split=Y Selected=0xF5CC1934",
-      "DockNode    ID=0x00000011 Parent=0x00000007 SizeRef=718,899 Split=Y Selected=0x3E90CA91",
-      "DockNode  ID=0x0000000D Parent=0x00000011 SizeRef=713,450 CentralNode=1 Selected=0xC98BB475",
-      "DockNode  ID=0x0000000E Parent=0x00000011 SizeRef=713,447 Selected=0xF5CC1934",
-      "DockNode    ID=0x00000012 Parent=0x00000007 SizeRef=718,78 Selected=0x13C65F1B",
+      "DockNode    ID=0x00000011 Parent=0x00000007 SizeRef=718,484 Split=Y Selected=0x3E90CA91",
+      "DockNode  ID=0x0000000D Parent=0x00000011 SizeRef=713,450 CentralNode=1 Selected=0xB5CBE9F0",
+      "DockNode  ID=0x0000000E Parent=0x00000011 SizeRef=713,32 Selected=0xF5CC1934",
+      "DockNode    ID=0x00000012 Parent=0x00000007 SizeRef=718,493 Selected=0x13C65F1B",
       "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=791,979 Split=Y Selected=0x2D9B9756",
       "DockNode      ID=0x00000006 Parent=0x00000003 SizeRef=501,757 Split=Y Selected=0x2D9B9756",
       "DockNode    ID=0x0000000F Parent=0x00000006 SizeRef=501,642 Selected=0x2D9B9756",
@@ -122,14 +122,14 @@
     "###Plot <17>": {
       "Collapsed": "0",
       "DockId": "0x00000012,0",
-      "Pos": "310,923",
-      "Size": "817,78"
+      "Pos": "310,508",
+      "Size": "817,493"
     },
     "###Plot <1>": {
       "Collapsed": "0",
       "DockId": "0x0000000E,0",
       "Pos": "310,474",
-      "Size": "817,447"
+      "Size": "817,32"
     },
     "###Plot <2>": {
       "Collapsed": "0",

@@ -203,13 +203,13 @@ public interface Settings {
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.5);
             }
             
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.30);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.1);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.0675);
             }
         }

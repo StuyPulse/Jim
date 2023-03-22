@@ -52,6 +52,8 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ArmReady()
+                .setWristVelocityTolerance(25)
+                .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
                 .withTimeout(4)
         );
@@ -68,19 +70,18 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.GREEN),
 
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
-                    .robotRelative()
-                    .withStop(),
+                    .robotRelative().withStop(),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new IntakeAcquire()),
 
-                new ArmIntake()
-                    .withTolerance(7, 10)
-                    .withTimeout(4.5)
+                new ArmIntakeBOOM()
+                    .withTolerance(12, 10)
+                    .withTimeout(6.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
