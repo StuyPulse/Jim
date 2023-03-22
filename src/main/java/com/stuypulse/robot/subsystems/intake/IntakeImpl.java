@@ -5,6 +5,7 @@ import static com.stuypulse.robot.constants.Settings.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -31,6 +32,17 @@ public class IntakeImpl extends Intake {
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
     }
+
+    public void enableCoast() { 
+        frontMotor.setIdleMode(IdleMode.kCoast);
+        backMotor.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void enableBreak() { 
+        frontMotor.setIdleMode(IdleMode.kBrake);
+        backMotor.setIdleMode(IdleMode.kBrake);
+    }
+
 
     // CONE DETECTION (stall detection)
 

@@ -214,7 +214,8 @@ public class RobotContainer {
             .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
-        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
+        operator.getDPadRight().onTrue(new IntakeAcquire())
+            .onFalse(new IntakeStop());
     }
 
     private void configureChooserBindings() {

@@ -48,7 +48,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
     private class FastStow extends ArmRoutine {
         public FastStow() {
-            super(() -> new ArmState(-134, 90)
+            super(() -> new ArmState(-90, 90)
                             .setWristTolerance(360));
         }
 
@@ -172,7 +172,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(1)
                 .withTimeout(ENGAGE_TIME)
-                .alongWith(new ArmStow().withTolerance(15, 10)),
+                .alongWith(new FastStow().withTolerance(15, 10)),
 
             new PlantEngage()
         );

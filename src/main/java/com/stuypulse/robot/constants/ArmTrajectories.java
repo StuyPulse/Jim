@@ -10,7 +10,7 @@ public interface ArmTrajectories {
     public interface Acquire {
         ArmState kCone = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cone Tip In Front Shoulder", -72),
-            new SmartNumber("Arm Trajectories/Acquire Cone Tip In Front Wrist", 8));
+            new SmartNumber("Arm Trajectories/Acquire Cone Tip In Front Wrist", 10));
         ArmState kCube = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cube Front Shoulder", -70.82),
             new SmartNumber("Arm Trajectories/Acquire Cube Front Wrist", 8.37));
@@ -52,7 +52,7 @@ public interface ArmTrajectories {
     public interface Ready {
         public interface Mid {
             ArmState kConeTipInBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Shoulder", -175),
+                new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Shoulder", -180),
                 new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Wrist", -158));
             
             ArmState kConeTipOutFront = new ArmState(
