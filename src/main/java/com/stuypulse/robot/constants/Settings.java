@@ -173,7 +173,7 @@ public interface Settings {
             SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
 
             int MOTORS = 2;
-            double REDUCTION = 61.67;
+            double REDUCTION = 63.0;
             double MASS = 3.054; // kg
             double LENGTH = 1.1557; // m, length
             double MOI = 0.369; // kg m^2
