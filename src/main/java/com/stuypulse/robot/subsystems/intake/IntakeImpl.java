@@ -24,6 +24,8 @@ public class IntakeImpl extends Intake {
 
     private BStream stalling;
 
+    private boolean acquiring;
+
     protected IntakeImpl() {
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
@@ -70,6 +72,7 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void acquire() {
+        acquiring = true;
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE:
                 frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
@@ -89,6 +92,7 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void deacquire() {
+        acquiring = false;
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE:
                 frontMotor.set(-Deacquire.CUBE_FRONT.doubleValue());
@@ -110,12 +114,18 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void stop() {
+        acquiring = false;
         frontMotor.stopMotor();
         backMotor.stopMotor();
     }
 
     @Override
     public void periodic() {
+        // acquiring 
+        if (DriverStation.isTeleop() && acquiring) {
+            acquire();
+        }
+
         // forward and stalling
         if (DriverStation.isTeleop() && frontMotor.get() > 0 && hasCone()) {
             stop();
