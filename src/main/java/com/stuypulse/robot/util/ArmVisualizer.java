@@ -74,8 +74,8 @@ public class ArmVisualizer {
         shoulderLigament.setColor(new Color8Bit(255, 0, 255));
         wristLigament.setColor(new Color8Bit(0, 0, 255));
 
-        targetShoulderLigament.setColor(new Color8Bit(255, 100, 255));
-        targetWristLigament.setColor(new Color8Bit(0, 100, 255));
+        targetShoulderLigament.setColor(new Color8Bit(255/2, 100/2, 255/2));
+        targetWristLigament.setColor(new Color8Bit(0, 100/2, 255/2));
 
         intakeDirection = new MechanismLigament2d("Intake Direction", 0, 90);
         intakeDirection.setColor(new Color8Bit(200, 0, 0));
@@ -134,6 +134,8 @@ public class ArmVisualizer {
             case CUBE:
                 color = new Color8Bit(220, 30, 220);
                 break;
+            case CONE_TIP_OUT:
+            case CONE_TIP_UP:
             case CONE_TIP_IN:
                 color = new Color8Bit(255, 255, 63);
                 break;
