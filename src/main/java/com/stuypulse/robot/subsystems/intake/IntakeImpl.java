@@ -7,6 +7,8 @@ import static com.stuypulse.robot.constants.Ports.Intake.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -25,6 +27,9 @@ public class IntakeImpl extends Intake {
     protected IntakeImpl() {
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
+
+        Motors.disableStatusFrames(frontMotor, 3, 4, 5, 6);
+        Motors.disableStatusFrames(backMotor, 3, 4, 5, 6);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
