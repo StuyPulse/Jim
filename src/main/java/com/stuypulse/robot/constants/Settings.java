@@ -95,8 +95,9 @@ public interface Settings {
         double LENGTH = Units.inchesToMeters(20.508);
         
         double MAX_SPEED = Units.feetToMeters(15.76);
-        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 6.28);
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad per s)", 6.28);
 
+        SmartNumber MODULE_VELOCITY_DEADBAND = new SmartNumber("Swerve/Module Velocity Deadband (m per s)", Units.inchesToMeters(0.05));
 
         public interface Motion {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
@@ -124,25 +125,29 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(2.102487).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(2.419310) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(35.442882).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(249.731491) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(8.810134).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(118.741436) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(125.385847) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
