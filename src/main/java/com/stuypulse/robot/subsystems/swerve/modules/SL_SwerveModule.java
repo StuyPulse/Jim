@@ -118,6 +118,10 @@ public class SL_SwerveModule extends SwerveModule {
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
+        
+        if (Math.abs(targetState.speedMetersPerSecond) < Swerve.MODULE_VELOCITY_DEADBAND.get()) {
+            targetState.speedMetersPerSecond = 0;
+        }
     }
     
     @Override
