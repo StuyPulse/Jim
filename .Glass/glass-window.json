@@ -2,7 +2,7 @@
   "Docking": {
     "Data": [
       "DockSpace         ID=0x8B93E3BD Window=0xA787BDB4 Pos=0,22 Size=1920,979 Split=X Selected=0xC98BB475",
-      "DockNode        ID=0x00000002 Parent=0x8B93E3BD SizeRef=1567,979 Split=X",
+      "DockNode        ID=0x00000002 Parent=0x8B93E3BD SizeRef=1281,979 Split=X",
       "DockNode      ID=0x00000001 Parent=0x00000002 SizeRef=793,213 Split=Y",
       "DockNode    ID=0x00000004 Parent=0x00000001 SizeRef=742,213 Split=X Selected=0x0EC36FA3",
       "DockNode  ID=0x00000008 Parent=0x00000004 SizeRef=377,190 Selected=0x88571D0D",
@@ -10,12 +10,12 @@
       "DockNode    ID=0x00000005 Parent=0x00000001 SizeRef=742,211 Split=X Selected=0xC59FBC06",
       "DockNode  ID=0x0000000A Parent=0x00000005 SizeRef=383,188 Selected=0x95522DB5",
       "DockNode  ID=0x0000000B Parent=0x00000005 SizeRef=408,188 Selected=0xD2C348FC",
-      "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=772,213 Split=Y Selected=0xF5CC1934",
+      "DockNode      ID=0x00000007 Parent=0x00000002 SizeRef=486,213 Split=Y Selected=0xF5CC1934",
       "DockNode    ID=0x00000011 Parent=0x00000007 SizeRef=718,484 Split=Y Selected=0x3E90CA91",
       "DockNode  ID=0x0000000D Parent=0x00000011 SizeRef=713,450 CentralNode=1 Selected=0xB5CBE9F0",
       "DockNode  ID=0x0000000E Parent=0x00000011 SizeRef=713,32 Selected=0xF5CC1934",
       "DockNode    ID=0x00000012 Parent=0x00000007 SizeRef=718,493 Selected=0xC98BB475",
-      "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=351,979 Split=Y Selected=0x2D9B9756",
+      "DockNode        ID=0x00000003 Parent=0x8B93E3BD SizeRef=637,979 Split=Y Selected=0x2D9B9756",
       "DockNode      ID=0x00000006 Parent=0x00000003 SizeRef=501,757 Split=Y Selected=0x2D9B9756",
       "DockNode    ID=0x0000000F Parent=0x00000006 SizeRef=501,642 Selected=0x2D9B9756",
       "DockNode    ID=0x00000010 Parent=0x00000006 SizeRef=501,113 Selected=0x410DE7DE",
@@ -46,37 +46,37 @@
       "Collapsed": "0",
       "DockId": "0x00000012,1",
       "Pos": "795,508",
-      "Size": "772,493"
+      "Size": "486,493"
     },
     "###/SmartDashboard/Autonomous": {
       "Collapsed": "0",
       "DockId": "0x00000010,0",
-      "Pos": "1569,666",
-      "Size": "351,113"
+      "Pos": "1283,666",
+      "Size": "637,113"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
       "DockId": "0x0000000D,2",
       "Pos": "795,22",
-      "Size": "772,450"
+      "Size": "486,450"
     },
     "###NetworkTables": {
       "Collapsed": "0",
       "DockId": "0x0000000F,0",
-      "Pos": "1569,22",
-      "Size": "351,642"
+      "Pos": "1283,22",
+      "Size": "637,642"
     },
     "###NetworkTables Settings": {
       "Collapsed": "0",
       "DockId": "0x0000000C,0",
-      "Pos": "1569,781",
-      "Size": "351,220"
+      "Pos": "1283,781",
+      "Size": "637,220"
     },
     "###Plot <0>": {
       "Collapsed": "0",
       "DockId": "0x0000000D,0",
       "Pos": "795,22",
-      "Size": "772,450"
+      "Size": "486,450"
     },
     "###Plot <10>": {
       "Collapsed": "0",
@@ -117,19 +117,19 @@
       "Collapsed": "0",
       "DockId": "0x0000000D,1",
       "Pos": "795,22",
-      "Size": "772,450"
+      "Size": "486,450"
     },
     "###Plot <17>": {
       "Collapsed": "0",
       "DockId": "0x00000012,0",
       "Pos": "795,508",
-      "Size": "772,493"
+      "Size": "486,493"
     },
     "###Plot <1>": {
       "Collapsed": "0",
       "DockId": "0x0000000E,0",
       "Pos": "795,474",
-      "Size": "772,32"
+      "Size": "486,32"
     },
     "###Plot <2>": {
       "Collapsed": "0",

@@ -54,12 +54,22 @@
           }
         },
         "Swerve": {
+          "Back Left": {
+            "open": true
+          },
+          "Back Right": {
+            "open": true
+          },
           "Drive": {
+            "open": true
+          },
+          "Front Left": {
             "open": true
           },
           "Front Right": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
