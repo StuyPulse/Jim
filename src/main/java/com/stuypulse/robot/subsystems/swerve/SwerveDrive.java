@@ -162,6 +162,13 @@ public class SwerveDrive extends SubsystemBase {
     public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
+
+    private SwerveModuleState filterModuleState(SwerveModuleState state) {
+        if (Math.abs(state.speedMetersPerSecond) > Swerve.MODULE_VELOCITY_DEADBAND.get())
+            return state;
+
+        return new SwerveModuleState(0, state.angle);
+    }
     
     public void setModuleStates(SwerveModuleState... states) {
         if (states.length != modules.length) {
@@ -171,7 +178,7 @@ public class SwerveDrive extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.MAX_SPEED);
         
         for(int i = 0; i < modules.length; i++) {
-            modules[i].setTargetState(states[i]);
+            modules[i].setTargetState(filterModuleState(states[i]));
         }
     }
 
