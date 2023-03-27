@@ -61,10 +61,7 @@ public class ArmDynamics {
                       M(position)
                           .inv()
                           .times(
-                              torque.minus(C(position, velocity).times(velocity))
-                                .minus(Tg(position))
-                            )
-                    ;
+                              torque.minus(C(position, velocity).times(velocity)).minus(Tg(position)));
 
                   // Return state vector
                   return new MatBuilder<>(Nat.N4(), Nat.N1())
@@ -81,23 +78,23 @@ public class ArmDynamics {
 
     private Matrix<N2, N2> M(Vector<N2> position) {
         var M = new Matrix<>(N2.instance, N2.instance);
-        // alpha1 = theta1
-        // alpha2 = theta1 + theta2
-
-        // alpha1 - alpha2 = (theta1) - (theta1 + theta2)
-        //                 = theta1 - theta1 - theta2
-        //                 = -theta2
 
         M.set(0, 0, 
-            wrist.mass * Math.pow(shoulder.length, 2) + 
-            shoulder.mass * Math.pow(shoulder.radius, 2) + 
-            shoulder.moi);
+            shoulder.mass * Math.pow(shoulder.radius, 2) +
+            wrist.mass * (Math.pow(shoulder.length, 2) + Math.pow(wrist.radius, 2)) +
+            shoulder.moi + 
+            wrist.moi + 
+            2 * wrist.mass * shoulder.length * wrist.radius * Math.cos(position.get(1, 0)));
 
         M.set(1, 0,
-            shoulder.length * wrist.mass * wrist.radius * Math.cos(-position.get(1, 0)));
+            wrist.mass * Math.pow(wrist.radius, 2) + 
+            wrist.moi + 
+            wrist.mass * shoulder.length * wrist.radius * Math.cos(position.get(1, 0)));
 
         M.set(0, 1,
-            shoulder.length * wrist.mass * wrist.radius * Math.cos(-position.get(1, 0)));
+            wrist.mass * Math.pow(wrist.radius, 2) + 
+            wrist.moi + 
+            wrist.mass * shoulder.length * wrist.radius * Math.cos(position.get(1, 0)));
 
         M.set(1, 1, 
             wrist.mass * Math.pow(wrist.radius, 2) + wrist.moi);
@@ -107,27 +104,15 @@ public class ArmDynamics {
 
     private Matrix<N2, N2> C(Vector<N2> position, Vector<N2> velocity) {
         var C = new Matrix<>(N2.instance, N2.instance);
-        // alpha1 = theta1
-        // alpha2 = theta1 + theta2
 
-        // alpha1 - alpha2 = (theta1) - (theta1 + theta2)
-        //                 = theta1 - theta1 - theta2
-        //                 = -theta2
-
-        // alpha2 - alpha1 = (theta1 + theta2) - (theta1)
-        //                 = theta2
-
-        // d/dt (alpha1) = d/dt(theta1) = velocity1
-        // d/dt (alpha2) = d/dt(theta1 + theta2) = velocity1 + velocity2
-
-
-        C.set(0, 0, 0);
+        C.set(0, 0,
+            -wrist.mass * shoulder.length * wrist.radius * Math.sin(position.get(1, 0)) * velocity.get(1, 0));
 
         C.set(0, 1,
-            shoulder.length * wrist.mass * wrist.radius * Math.sin(-position.get(1, 0)) * (velocity.get(0, 0) + velocity.get(1, 0)));
+            -wrist.mass * shoulder.length * wrist.radius * Math.sin(position.get(1, 0) * (velocity.get(0, 0) + velocity.get(1, 0))));
 
         C.set(1, 0,
-            shoulder.length * wrist.mass * wrist.radius * Math.sin(position.get(1, 0)) * (velocity.get(0, 0)));
+            wrist.mass * shoulder.length * wrist.radius * Math.sin(position.get(1, 0)) * velocity.get(0, 0));
 
         C.set(1, 1, 0);
 
@@ -136,18 +121,13 @@ public class ArmDynamics {
 
     private Matrix<N2, N1> Tg(Vector<N2> position) {
         var Tg = new Matrix<>(N2.instance, N1.instance);
-        // alpha1 = theta1
-        // alpha2 = theta1 + theta2
 
-        // Tg.set(0, 0,
-        //     g * Math.cos(position.get(0, 0)) * (shoulder.length * wrist.mass + shoulder.mass * shoulder.radius));
+        Tg.set(0, 0,
+            (shoulder.mass * shoulder.radius + wrist.mass * shoulder.length) * g * Math.cos(position.get(0, 0)) + 
+            wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
 
-        Tg.set(0, 0, 0);
-
-        // Tg.set(1, 0,
-        //     g * wrist.mass * wrist.radius * Math.cos(position.get(0, 0) + position.get(1, 0)));
-
-        Tg.set(0, 0, 0);
+        Tg.set(1, 0,
+            wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
 
         return Tg;
     }
