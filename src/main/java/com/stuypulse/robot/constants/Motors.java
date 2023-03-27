@@ -44,8 +44,8 @@ public interface Motors {
     }
 
     public interface Swerve {
-        CANSparkMaxConfig DRIVE = new CANSparkMaxConfig(false, IdleMode.kBrake, 40, 0);
-        CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, 20, 0);
+        CANSparkMaxConfig DRIVE = new CANSparkMaxConfig(false, IdleMode.kBrake, new CurrentLimit(60, 80), 0);
+        CANSparkMaxConfig TURN  = new CANSparkMaxConfig(false, IdleMode.kBrake, new CurrentLimit(20, 40), 0);
     }
 
     /** Classes to store all of the values a motor needs */
@@ -114,35 +114,61 @@ public interface Motors {
     public static class CANSparkMaxConfig {
         public final boolean INVERTED;
         public final IdleMode IDLE_MODE;
-        public final int CURRENT_LIMIT_AMPS;
+        public final CurrentLimit CURRENT_LIMIT;
         public final double OPEN_LOOP_RAMP_RATE;
 
         public CANSparkMaxConfig(
                 boolean inverted,
                 IdleMode idleMode,
-                int currentLimitAmps,
+                CurrentLimit currentLimitAmps,
                 double openLoopRampRate) {
             this.INVERTED = inverted;
             this.IDLE_MODE = idleMode;
-            this.CURRENT_LIMIT_AMPS = currentLimitAmps;
+            this.CURRENT_LIMIT = currentLimitAmps;
             this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
+        }
+
+        public CANSparkMaxConfig(boolean inverted, IdleMode idleMode, int currentLimitAmps, double openLoopRampRate) {
+            this(inverted, idleMode, new CurrentLimit(currentLimitAmps), openLoopRampRate);
         }
 
         public CANSparkMaxConfig(boolean inverted, IdleMode idleMode, int currentLimitAmps) {
             this(inverted, idleMode, currentLimitAmps, 0.0);
         }
 
+        public CANSparkMaxConfig(boolean inverted, IdleMode idleMode, CurrentLimit currentLimitAmps) {
+            this(inverted, idleMode, currentLimitAmps, 0.0);
+        }
+
         public CANSparkMaxConfig(boolean inverted, IdleMode idleMode) {
-            this(inverted, idleMode, 80);
+            this(inverted, idleMode, new CurrentLimit());
         }
 
         public void configure(CANSparkMax motor) {
             motor.setInverted(INVERTED);
             motor.setIdleMode(IDLE_MODE);
-            motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
+            motor.setSmartCurrentLimit(CURRENT_LIMIT.CURRENT_LIMIT_AMPS, CURRENT_LIMIT.FREE_LIMIT_AMPS);
             motor.setOpenLoopRampRate(OPEN_LOOP_RAMP_RATE);
             motor.burnFlash();
          }
           
-     }
+    }
+
+    public static class CurrentLimit {
+        public final int CURRENT_LIMIT_AMPS;
+        public final int FREE_LIMIT_AMPS;
+
+        public CurrentLimit(int currentLimitAmps, int freeLimitAmps) {
+            CURRENT_LIMIT_AMPS = currentLimitAmps;
+            FREE_LIMIT_AMPS = freeLimitAmps;
+        }
+
+        public CurrentLimit(int currentLimitAmps) {
+            this(currentLimitAmps, 100);
+        }
+
+        public CurrentLimit() {
+            this(80, 100);
+        }
+    }
 }
