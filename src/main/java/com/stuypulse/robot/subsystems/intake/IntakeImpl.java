@@ -5,7 +5,10 @@ import static com.stuypulse.robot.constants.Settings.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.stuylib.streams.booleans.BStream;
@@ -21,9 +24,14 @@ public class IntakeImpl extends Intake {
 
     private BStream stalling;
 
+    private boolean acquiring;
+
     protected IntakeImpl() {
         frontMotor = new CANSparkMax(FRONT_MOTOR_PORT, MotorType.kBrushless);
         backMotor = new CANSparkMax(BACK_MOTOR_PORT, MotorType.kBrushless);
+
+        Motors.disableStatusFrames(frontMotor, 3, 4, 5, 6);
+        Motors.disableStatusFrames(backMotor, 3, 4, 5, 6);
 
         FRONT_MOTOR.configure(frontMotor);
         BACK_MOTOR.configure(backMotor);
@@ -31,6 +39,17 @@ public class IntakeImpl extends Intake {
         stalling = BStream.create(this::isMomentarilyStalling)
             .filtered(new BDebounce.Rising(STALL_TIME));
     }
+
+    public void enableCoast() { 
+        frontMotor.setIdleMode(IdleMode.kCoast);
+        backMotor.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void enableBreak() { 
+        frontMotor.setIdleMode(IdleMode.kBrake);
+        backMotor.setIdleMode(IdleMode.kBrake);
+    }
+
 
     // CONE DETECTION (stall detection)
 
@@ -53,6 +72,7 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void acquire() {
+        acquiring = true;
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE:
                 frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
@@ -72,6 +92,7 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void deacquire() {
+        acquiring = false;
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE:
                 frontMotor.set(-Deacquire.CUBE_FRONT.doubleValue());
@@ -93,12 +114,18 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void stop() {
+        acquiring = false;
         frontMotor.stopMotor();
         backMotor.stopMotor();
     }
 
     @Override
     public void periodic() {
+        // acquiring 
+        if (DriverStation.isTeleop() && acquiring) {
+            acquire();
+        }
+
         // forward and stalling
         if (DriverStation.isTeleop() && frontMotor.get() > 0 && hasCone()) {
             stop();

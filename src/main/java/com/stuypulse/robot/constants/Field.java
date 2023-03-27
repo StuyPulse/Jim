@@ -57,9 +57,9 @@ public interface Field {
         Translation2d THREE = new Translation2d(CUBE_X, 5.8913);
         Translation2d FOUR =  new Translation2d(CUBE_X, 5.308);
         Translation2d FIVE =  new Translation2d(CUBE_X, 5.044971);
-        Translation2d SIX =   new Translation2d(CUBE_X, 4.258);
-        Translation2d SEVEN = new Translation2d(CUBE_X, 3.724);
-        Translation2d EIGHT = new Translation2d(CUBE_X, 4.8087);
+        Translation2d SIX =   new Translation2d(CUBE_X, 4.8087);
+        Translation2d SEVEN = new Translation2d(CUBE_X, 4.258);
+        Translation2d EIGHT = new Translation2d(CUBE_X, 3.724);
         Translation2d NINE =  new Translation2d(CUBE_X, 3.03);
     }
 

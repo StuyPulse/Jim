@@ -2,9 +2,11 @@ package com.stuypulse.robot.commands.swerve.balance;
 
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 import com.stuypulse.robot.constants.Settings.AutoBalance;
+import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.util.LEDColor;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -59,9 +61,12 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         SmartDashboard.putNumber("Auto Balance/Speed", control.getOutput());
     }
 
+private boolean timedOut = false;
+
     @Override
     public boolean isFinished() {
         if (DriverStation.isAutonomous() && Timer.getMatchTime() < 0.1) {
+            timedOut = true;
             return true;
         }
         return control.isDone(angleThreshold.doubleValue());
@@ -69,8 +74,13 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        swerve.stop();   
+        swerve.stop();
+        swerve.setXMode();
         plant.engage();
+
+        if (timedOut) {
+            LEDController.getInstance().setColor(LEDColor.YELLOW.pulse());
+        }
     }
 
     public SwerveDriveBalanceBlay withMaxSpeed(double maxSpeed) {
