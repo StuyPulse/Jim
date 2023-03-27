@@ -68,6 +68,7 @@ public class SL_SwerveModule extends SwerveModule {
         // TODO: add as configurable setting
         absoluteEncoder.setInverted(true);
         turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        Motors.disableStatusFrames(turnMotor, 3, 4);
 
         turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
             .setSetpointFilter(new ARateLimit(Swerve.MAX_TURNING));
@@ -80,6 +81,7 @@ public class SL_SwerveModule extends SwerveModule {
         driveEncoder = driveMotor.getEncoder();
         driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
         driveEncoder.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
+        Motors.disableStatusFrames(driveMotor, 3, 4, 5, 6);
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
@@ -116,6 +118,10 @@ public class SL_SwerveModule extends SwerveModule {
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
+        
+        if (Math.abs(targetState.speedMetersPerSecond) < Swerve.MODULE_VELOCITY_DEADBAND.get()) {
+            targetState.speedMetersPerSecond = 0;
+        }
     }
     
     @Override

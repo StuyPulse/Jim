@@ -8,6 +8,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,6 +17,9 @@ public abstract class ArmRoutine extends CommandBase {
 
     private Number shoulderTolerance;
     private Number wristTolerance;
+
+    private Number shoulderVelocityTolerance;
+    private Number wristVelocityTolerance;
     
     private final Arm arm;
     protected final Supplier<ArmState> endState;
@@ -31,24 +35,38 @@ public abstract class ArmRoutine extends CommandBase {
         
         this.endState = endState;
         currentIndex = 0;
+
+        shoulderVelocityTolerance = 1000000;
+        wristVelocityTolerance = 1000000;
         
 
         addRequirements(arm);
     }
 
+    public ArmRoutine setWristVelocityTolerance(double toleranceDegreesPerSecond) {
+        wristVelocityTolerance = toleranceDegreesPerSecond;
+        return this;
+    }
+
+    public ArmRoutine setShoulderVelocityTolerance(double toleranceDegreesPerSecond) {
+        shoulderVelocityTolerance = toleranceDegreesPerSecond;
+        return this;
+    }
+
     protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         // TODO: check if src and dest are on the same side
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
+        double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
-            .addState(dest.getShoulderDegrees(), wristSafeAngle)
+            .addState(
+                new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristLimp(true).setWristTolerance(360))
             .addState(dest);
     }
 
     @Override
     public void initialize() {
-        trajectory = getTrajectory(Arm.getInstance().getTargetState(), endState.get());
+        trajectory = getTrajectory(Arm.getInstance().getState(), endState.get());
         
         // for (ArmState state : trajectory.getStates()) {
         //     System.out.println("Shoulder: " + state.getShoulderDegrees() + ", Wrist: " + state.getWristDegrees());
@@ -75,7 +93,9 @@ public abstract class ArmRoutine extends CommandBase {
             currentWristTolerance = 360;
         }
 
-        if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance)) {
+        if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance) && 
+            Math.abs(Units.radiansToDegrees(arm.getWristVelocityRadiansPerSecond())) < wristVelocityTolerance.doubleValue() &&
+            Math.abs(Units.radiansToDegrees(arm.getShoulderVelocityRadiansPerSecond())) < shoulderVelocityTolerance.doubleValue()) {
             // var targetState = trajectory.getStates().get(currentIndex);
             // System.out.println("COMPLETED: " + "Shoulder: " + targetState.getShoulderDegrees() + ", Wrist: " + targetState.getWristDegrees());
             currentIndex++;
@@ -90,11 +110,13 @@ public abstract class ArmRoutine extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            arm.setTargetState(arm.getState());
+            arm.setWristVoltage(0);
+            arm.setShoulderVoltage(0);
+            // arm.setTargetState(arm.getState());
         }
     }
     
-    public Command withTolerance(double wristTolerance, double shoulderTolerance) {
+    public ArmRoutine withTolerance(double wristTolerance, double shoulderTolerance) {
         this.wristTolerance = wristTolerance;
         this.shoulderTolerance = shoulderTolerance;
         return this;

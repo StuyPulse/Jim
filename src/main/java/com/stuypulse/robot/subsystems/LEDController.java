@@ -70,7 +70,7 @@ public class LEDController extends SubsystemBase {
             case CUBE: return LEDColor.PURPLE;
             case CONE_TIP_IN: return LEDColor.YELLOW;
             case CONE_TIP_UP: return LEDColor.GREEN;
-            case CONE_TIP_OUT: return LEDColor.YELLOW.pulse();
+            case CONE_TIP_OUT: return LEDColor.ORANGE;
             default: return LEDColor.OFF;
         }
     }
