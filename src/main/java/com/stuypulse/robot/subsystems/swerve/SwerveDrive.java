@@ -225,6 +225,16 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromRadians(Math.signum(facingSlope) * Math.atan(maxSlope));
     }
 
+    public void setXMode() {
+        SwerveModuleState[] state = {
+            new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(315)),
+        };
+        setModuleStates(state);
+    }
+
     @Override
     public void periodic() {
         Odometry odometry = Odometry.getInstance();

@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
-    private static final double INTAKE_ACQUIRE_TIME = 1.5;
+    private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ENGAGE_TIME = 10.0;
@@ -53,13 +53,15 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ArmReady()
+                .setWristVelocityTolerance(25)
+                .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
                 .withTimeout(4)
         );
 
         addCommands(
             new LEDSet(LEDColor.BLUE),
-            new IntakeScore(),
+            new IntakeScore(),  
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
@@ -69,19 +71,18 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.GREEN),
 
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
-                    .robotRelative()
-                    .withStop(),
+                    .robotRelative().withStop(),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new IntakeAcquire()),
 
-                new ArmIntake()
-                    .withTolerance(7, 10)
-                    .withTimeout(4.5)
+                new ArmIntakeBOOM()
+                    .withTolerance(12, 10)
+                    .withTimeout(6.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)

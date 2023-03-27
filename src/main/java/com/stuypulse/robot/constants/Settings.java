@@ -6,13 +6,17 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.math.Vector2D;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
@@ -74,8 +78,15 @@ public interface Settings {
         double MAX_USE_ANGLE = 50;
 
         public interface Limelight {
-            String [] LIMELIGHTS = {"limelight-back"};
+            String [] LIMELIGHTS = {
+                "limelight-back",
+                "limelight-front"
+            };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
+            Pose3d [] POSITIONS = new Pose3d[] {
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+            };
         }
     }
 
@@ -84,8 +95,9 @@ public interface Settings {
         double LENGTH = Units.inchesToMeters(20.508);
         
         double MAX_SPEED = Units.feetToMeters(15.76);
-        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad/s)", 6.28);
+        SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad per s)", 6.28);
 
+        SmartNumber MODULE_VELOCITY_DEADBAND = new SmartNumber("Swerve/Module Velocity Deadband (m per s)", Units.inchesToMeters(0.05));
 
         public interface Motion {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
@@ -102,36 +114,40 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 2.38;
+            double kP = 0.8;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.17459;
-            double kV = 2.4561;
-            double kA = 0.40442;
+            double kS = 0.22304;
+            double kV = 2.4899;
+            double kA = 0.41763;
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(1.75).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(2.419310) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-131).plus(Rotation2d.fromDegrees(270));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(249.731491) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(270));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(8.810134).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(118.741436) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-2).plus(Rotation2d.fromDegrees(90));
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(125.385847) // recalibrated 3/24
+                .plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -176,10 +192,10 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.355135 + 0.5).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.85).plus(Rotation2d.fromDegrees(+90));
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 270);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
 
             SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
@@ -190,18 +206,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 5.1);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 1.0);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.5);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.0);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.30);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                // empty kG - 0.275
-                // cone  kG - 0.35
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 1.0);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.1);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.0675);
             }
         }
     
@@ -222,12 +236,16 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.2).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.65).plus(Rotation2d.fromDegrees(180));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 360.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 360.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 480.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 480.0);
 
-            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 15.0);
+            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)",10.0);
+
+            SmartNumber SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.0);
+
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 110);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 
@@ -301,15 +319,14 @@ public interface Settings {
 
     public interface Driver {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
-
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.25);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 3);
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 6.5);
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 20);
 
             SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(3.0));
         }
@@ -323,6 +340,14 @@ public interface Settings {
             SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
 
             SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(135));
+            
+            public interface GyroFeedback {
+                SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
+
+                SmartNumber P = new SmartNumber("Driver Settings/Gyro Feedback/kP", 0.5);
+                SmartNumber I = new SmartNumber("Driver Settings/Gyro Feedback/kI", 0.0);
+                SmartNumber D = new SmartNumber("Driver Settings/Gyro Feedback/kD", 0.1);
+            }
         }
 
     }
@@ -340,16 +365,13 @@ public interface Settings {
         SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
         SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
 
-        SmartNumber MAX_SPEED = new SmartNumber("Alignment/Max Speed", 0.5);
-        SmartNumber MAX_ACCELERATION = new SmartNumber("Alignment/Max Acceleration", 0.5);
-        
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 1);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }

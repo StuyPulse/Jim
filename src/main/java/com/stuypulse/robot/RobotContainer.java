@@ -60,7 +60,7 @@ public class RobotContainer {
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
-    public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
+    // public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
     // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
@@ -89,13 +89,13 @@ public class RobotContainer {
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
-        DriverStation.silenceJoystickConnectionWarning(true);
+        // DriverStation.silenceJoystickConnectionWarning(true);
+        // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
         CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
-        // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
 
         SmartDashboard.putData("Gamepads/Driver", driver);
         SmartDashboard.putData("Gamepads/Operator", operator);
-        SmartDashboard.putData("Gamepads/Chooser", chooser);
+        // SmartDashboard.putData("Gamepads/Chooser", chooser);
     }
 
     /****************/
@@ -126,28 +126,24 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        // new Trigger(() -> driver.getRawSelectButton() && driver.getRawStartButton()).onTrue(new WingExtend());
-
-        // driver.getSelectButton().onTrue(new WingRetract());
-        // driver.getStartButton().onTrue(new WingRetract());
         driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
+        driver.getLeftTriggerButton()
+            .whileTrue(new RobotScore());
         driver.getBottomButton()
             .whileTrue(new RobotScore());
         driver.getLeftBumper()
             .whileTrue(new RobotRelease());
+        driver.getRightTriggerButton()
+            .whileTrue(new RobotRelease());
 
-        // driver.getTopButton().onTrue(new ArmReady());
         driver.getTopButton()
-            .whileTrue(new ManagerSetScoreIndex(1).andThen(new ProxyCommand(() -> new SwerveDriveToScorePose())));
+            .onTrue(new ManagerValidateState())
+            .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
-        driver.getLeftTriggerButton()
-            .whileTrue(new SwerveDriveSlowDrive(driver));
-            // .whileTrue(new ManagerChooseScoreSide().andThen(new SwerveDriveToScorePose()));
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
-        // right trigger -> robotrelative override
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
@@ -165,7 +161,6 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
             .onFalse(new InstantCommand(() -> driver.setRumble(0.0)))
         ;
-
     }
 
     private void configureOperatorBindings() {
@@ -195,7 +190,6 @@ public class RobotContainer {
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
-                    .andThen(new ManagerChooseScoreSide())
                     .andThen(new ArmReady()));
 
         operator.getRightButton()
@@ -217,23 +211,23 @@ public class RobotContainer {
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
-
         operator.getRightBumper()
             .onTrue(arm.runOnce(arm::enableLimp))
             .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
-        operator.getDPadRight().onTrue(new ManagerFlipScoreSide());
+        operator.getDPadRight().onTrue(new IntakeAcquire())
+            .onFalse(new IntakeStop());
     }
 
     private void configureChooserBindings() {
-        chooser.getDPadLeft().onTrue(new ManagerSetGridSection(Direction.LEFT));
-        chooser.getDPadUp().onTrue(new ManagerSetGridSection(Direction.CENTER));
-        chooser.getDPadRight().onTrue(new ManagerSetGridSection(Direction.RIGHT));
+        // chooser.getDPadLeft().onTrue(new ManagerSetGridSection(Direction.LEFT));
+        // chooser.getDPadUp().onTrue(new ManagerSetGridSection(Direction.CENTER));
+        // chooser.getDPadRight().onTrue(new ManagerSetGridSection(Direction.RIGHT));
         
-        chooser.getLeftButton().onTrue(new ManagerSetGridColumn(Direction.LEFT));
-        chooser.getTopButton().onTrue(new ManagerSetGridColumn(Direction.CENTER));
-        chooser.getRightButton().onTrue(new ManagerSetGridColumn(Direction.RIGHT));
+        // chooser.getLeftButton().onTrue(new ManagerSetGridColumn(Direction.LEFT));
+        // chooser.getTopButton().onTrue(new ManagerSetGridColumn(Direction.CENTER));
+        // chooser.getRightButton().onTrue(new ManagerSetGridColumn(Direction.RIGHT));
     }
 
     /**************/

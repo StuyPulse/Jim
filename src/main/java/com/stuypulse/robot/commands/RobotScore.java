@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands;
 
+import com.stuypulse.robot.constants.ArmTrajectories.Ready.Score;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
@@ -44,7 +45,10 @@ public class RobotScore extends CommandBase {
                 arm.setWristVoltage(kWristVoltage.get());
                 break;
             case CONE_TIP_OUT:
-                arm.setShoulderVoltage(-kShoulderDownVolts.get());
+                if (manager.getNodeLevel() == NodeLevel.HIGH)
+                    arm.setTargetState(Score.High.kConeTipOutFront);
+                else if (manager.getNodeLevel() == NodeLevel.MID)
+                    arm.setTargetState(Score.Mid.kConeTipOutFront);
                 break;
             default:
                 break;
@@ -70,9 +74,6 @@ public class RobotScore extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        // holds arm in place
-        // arm.setTargetState(arm.getState());
-        
         if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_IN) { 
             arm.setWristVoltage(0);
         }
