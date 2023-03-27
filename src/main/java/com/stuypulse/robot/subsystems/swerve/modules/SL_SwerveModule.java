@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -84,6 +85,7 @@ public class SL_SwerveModule extends SwerveModule {
         Motors.disableStatusFrames(driveMotor, 3, 4, 5, 6);
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
+                .setOutputFilter(x -> DriverStation.isTeleop() ? 0 : x)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
@@ -118,10 +120,6 @@ public class SL_SwerveModule extends SwerveModule {
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
-        
-        if (Math.abs(targetState.speedMetersPerSecond) < Swerve.MODULE_VELOCITY_DEADBAND.get()) {
-            targetState.speedMetersPerSecond = 0;
-        }
     }
     
     @Override

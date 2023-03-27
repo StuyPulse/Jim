@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -145,6 +146,7 @@ public class SacrodModule extends SwerveModule {
         Motors.Swerve.DRIVE.configure(driveMotor);
 
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
+                    .setOutputFilter(x -> DriverStation.isTeleop() ? 0 : x)
                 .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
     }
 
