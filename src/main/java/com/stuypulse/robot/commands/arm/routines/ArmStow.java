@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands.arm.routines;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.util.ArmState;
@@ -13,9 +14,7 @@ public class ArmStow extends ArmRoutine {
 
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 120 : 60;
-        if (Math.abs(src.getShoulderDegrees() + 90) < 30)
-            wristSafeAngle = 90;
+        double wristSafeAngle = Settings.Arm.Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)

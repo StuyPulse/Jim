@@ -80,14 +80,12 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
-    private SmartNumber feedbackDebounce = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.1);
-
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
-            .filtered(new BDebounce.Both(feedbackDebounce));
+            .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
@@ -135,9 +133,8 @@ public abstract class Arm extends SubsystemBase {
         return shoulderLimp.get();
     }
 
-    SmartNumber tolerance = new SmartNumber("Arm/Wrist/Feedback Tolerance (deg)", 5);
     private final boolean isWristFeedbackEnabled() {
-        return isShoulderAtTarget(tolerance.doubleValue());
+        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
     }
 
     // Read target State

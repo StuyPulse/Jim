@@ -20,9 +20,9 @@
     "transitory": {
       "SmartDashboard": {
         "Arm": {
-          "Shoulder": {
-            "open": true
-          },
+          "open": true
+        },
+        "Arm Trajectories": {
           "open": true
         },
         "Auto Balance": {
@@ -54,12 +54,22 @@
           }
         },
         "Swerve": {
+          "Back Left": {
+            "open": true
+          },
+          "Back Right": {
+            "open": true
+          },
           "Drive": {
+            "open": true
+          },
+          "Front Left": {
             "open": true
           },
           "Front Right": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -127,11 +137,6 @@
     "Plot <0>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": 933,
           "series": [
             {
@@ -241,11 +246,6 @@
     "Plot <12>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": -30,
           "series": [
             {
@@ -311,11 +311,6 @@
     "Plot <14>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": 418,
           "series": [
             {
@@ -383,10 +378,93 @@
         "visible": false
       }
     },
-    "Plot <1>": {
+    "Plot <16>": {
       "plots": [
         {
           "height": 933,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Velocity (deg per s)"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Velocity (deg per s)"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Arm Velocities"
+      }
+    },
+    "Plot <17>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 425,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Shoulder/Output (V)"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Output (V)"
+            },
+            {
+              "color": [
+                0.14131689071655273,
+                0.7481481432914734,
+                0.2802300751209259,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled Raw"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Arm Voltages"
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": -36,
           "series": [
             {
               "color": [
@@ -488,11 +566,6 @@
     "Plot <4>": {
       "plots": [
         {
-          "axis": [
-            {
-              "autoFit": true
-            }
-          ],
           "height": -30,
           "series": [
             {
