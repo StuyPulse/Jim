@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 /*-
@@ -22,6 +23,14 @@ import com.stuypulse.stuylib.network.SmartNumber;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+
+    int kDisableStatusFrame = 65535;
+
+    public static void disableStatusFrames(CANSparkMax motor, int... ids) {
+        for (int id : ids) {
+            motor.setPeriodicFramePeriod(PeriodicFrame.fromId(id), kDisableStatusFrame);
+        }
+    }
 
     public interface Arm {
         CANSparkMaxConfig SHOULDER_LEFT_CONFIG = new CANSparkMaxConfig(true, IdleMode.kCoast, 40);

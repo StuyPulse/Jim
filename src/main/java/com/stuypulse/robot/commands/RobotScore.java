@@ -45,7 +45,10 @@ public class RobotScore extends CommandBase {
                 arm.setWristVoltage(kWristVoltage.get());
                 break;
             case CONE_TIP_OUT:
-                arm.setTargetState(Score.High.kConeTipOutFront);
+                if (manager.getNodeLevel() == NodeLevel.HIGH)
+                    arm.setTargetState(Score.High.kConeTipOutFront);
+                else if (manager.getNodeLevel() == NodeLevel.MID)
+                    arm.setTargetState(Score.Mid.kConeTipOutFront);
                 break;
             default:
                 break;
