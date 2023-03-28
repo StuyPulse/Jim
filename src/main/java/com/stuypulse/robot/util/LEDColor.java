@@ -50,17 +50,6 @@ public class LEDColor {
     /*** COLOR CONSTANTS ***/
     /***********************/
 
-    public static final LEDColor BEAT = new LEDColor(-0.67);
-
-    public static final LEDColor BREATH = new LEDColor(-0.17);
-    public static final LEDColor CONFETTI = new LEDColor(-0.87);
-    public static final LEDColor FIRE = new LEDColor(0.57);
-    public static final LEDColor HEARTBEAT = new LEDColor(-0.25);
-    public static final LEDColor SINELON = new LEDColor(-0.77);
-    public static final LEDColor TWINKLES = new LEDColor(-0.53);
-    public static final LEDColor WAVE = new LEDColor(-0.43);
-    public static final LEDColor RAINBOW = new LEDColor(-0.99);
-
     public static final LEDColor AQUA = new LEDColor(0.81);
     public static final LEDColor BLACK = new LEDColor(0.99);
     public static final LEDColor BLUE = new LEDColor(0.87);
