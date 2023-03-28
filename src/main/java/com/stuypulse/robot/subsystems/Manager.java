@@ -212,11 +212,11 @@ public class Manager extends SubsystemBase {
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
             return new Translation2d(
                 gridDistance,
-                ScoreYPoses.BLUE_Y_POSES[(int)gridNode.get()]);
+                ScoreYPoses.BLUE_Y_POSES[gridNode.intValue()]);
         } else {
             return new Translation2d(
                 gridDistance,
-                ScoreYPoses.RED_Y_POSES[(int)gridNode.get()]);
+                ScoreYPoses.RED_Y_POSES[gridNode.intValue()]);
         }
     }
 
@@ -255,7 +255,7 @@ public class Manager extends SubsystemBase {
     }
 
     public int getGridNode() {
-        return (int)gridNode.get();
+        return gridNode.intValue();
     }
 
     public void setGridNode(int gridNode) {
