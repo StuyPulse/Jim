@@ -47,45 +47,56 @@ public interface Field {
         }
     }
 
-    // red left to right
-    public interface ScorePoses {
-        double CUBE_X = 2.042;
-        double CONE_X = 2.052;
+    public interface ScoreXPoses {
+        public interface High {
+            double CUBE = 2.042;
+            double CONE_TIP_IN = 2.052;
+            double CONE_TIP_OUT = 2.052;
+        }
 
-        Translation2d ONE =   new Translation2d(CUBE_X, 7.479); // definitely wrong
-        Translation2d TWO =   new Translation2d(CUBE_X, 6.905);
-        Translation2d THREE = new Translation2d(CUBE_X, 6.3584);
-        Translation2d FOUR =  new Translation2d(CUBE_X, 5.7619);
-        Translation2d FIVE =  new Translation2d(CUBE_X, 5.2947);
-        Translation2d SIX =   new Translation2d(CUBE_X, 4.6819);
-        Translation2d SEVEN = new Translation2d(CUBE_X, 4.1075);
-        Translation2d EIGHT = new Translation2d(CUBE_X, 3.557);
-        Translation2d NINE =  new Translation2d(CUBE_X, 2.93240 694);
+        public interface Mid {
+            double CUBE = 2.042;
+            double CONE_TIP_IN = 2.052;
+            double CONE_TIP_OUT = 2.052;
+        }
     }
 
-    Translation2d RED_ALIGN_POSES[] = {
-        ScorePoses.ONE,
-        ScorePoses.TWO,
-        ScorePoses.THREE,
-        ScorePoses.FOUR,
-        ScorePoses.FIVE,
-        ScorePoses.SIX,
-        ScorePoses.SEVEN,
-        ScorePoses.EIGHT,
-        ScorePoses.NINE
-    };
+    // red left to right
+    public interface ScoreYPoses {
+        double ONE =   7.479;
+        double TWO =   6.905;
+        double THREE = 6.3584;
+        double FOUR =  5.7619;
+        double FIVE =  5.2947;
+        double SIX =   4.6819;
+        double SEVEN = 4.1075;
+        double EIGHT = 3.557;
+        double NINE =  2.932400694;
 
-    Translation2d BLUE_ALIGN_POSES[] = {
-        AllianceUtil.getMirroredTranslation(ScorePoses.NINE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.EIGHT),
-        AllianceUtil.getMirroredTranslation(ScorePoses.SEVEN),
-        AllianceUtil.getMirroredTranslation(ScorePoses.SIX),
-        AllianceUtil.getMirroredTranslation(ScorePoses.FIVE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.FOUR),
-        AllianceUtil.getMirroredTranslation(ScorePoses.THREE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.TWO),
-        AllianceUtil.getMirroredTranslation(ScorePoses.ONE)
-    };
+        double RED_Y_POSES[] = {
+            ScoreYPoses.ONE,
+            ScoreYPoses.TWO,
+            ScoreYPoses.THREE,
+            ScoreYPoses.FOUR,
+            ScoreYPoses.FIVE,
+            ScoreYPoses.SIX,
+            ScoreYPoses.SEVEN,
+            ScoreYPoses.EIGHT,
+            ScoreYPoses.NINE
+        };
+
+        double BLUE_Y_POSES[] = {
+            Field.HEIGHT - ScoreYPoses.NINE,
+            Field.HEIGHT - ScoreYPoses.EIGHT,
+            Field.HEIGHT - ScoreYPoses.SEVEN,
+            Field.HEIGHT - ScoreYPoses.SIX,
+            Field.HEIGHT - ScoreYPoses.FIVE,
+            Field.HEIGHT - ScoreYPoses.FOUR,
+            Field.HEIGHT - ScoreYPoses.THREE,
+            Field.HEIGHT - ScoreYPoses.TWO,
+            Field.HEIGHT - ScoreYPoses.ONE
+        };
+    }
 
 }
 

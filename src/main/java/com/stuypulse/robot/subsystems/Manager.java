@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
+import com.stuypulse.robot.constants.Field.ScoreYPoses;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
@@ -160,18 +161,20 @@ public class Manager extends SubsystemBase {
     public Translation2d getNearestScoreTranslation() {
         var robot = Odometry.getInstance().getTranslation();
 
-        Translation2d[] positions = RobotContainer.getCachedAlliance() == Alliance.Blue ?
-            Field.BLUE_ALIGN_POSES : 
-            Field.RED_ALIGN_POSES;
+        double gridDistance = getSelectedScoreX();
+        double[] positions = RobotContainer.getCachedAlliance() == Alliance.Blue ?
+            Field.ScoreYPoses.BLUE_Y_POSES : 
+            Field.ScoreYPoses.RED_Y_POSES;
 
-        Translation2d nearest = positions[0];
+        Translation2d nearest = new Translation2d(gridDistance, positions[0]);
         double nearestDistance = robot.getDistance(nearest);
 
         for (int i = 1; i < positions.length; i++) {
-            double distance = robot.getDistance(positions[i]);
+            Translation2d current = new Translation2d(gridDistance, positions[i]);
+            double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
-                nearest = positions[i];
+                nearest = current;
                 nearestDistance = distance;
             }
         }
@@ -179,11 +182,41 @@ public class Manager extends SubsystemBase {
         return nearest;
     }
 
+    private double getSelectedScoreX() {
+        if (nodeLevel == NodeLevel.HIGH) {
+            switch (gamePiece) {
+                case CUBE:
+                    return Field.ScoreXPoses.High.CUBE;
+                case CONE_TIP_IN:
+                    return Field.ScoreXPoses.High.CONE_TIP_IN;
+                case CONE_TIP_OUT:
+                    return Field.ScoreXPoses.High.CONE_TIP_OUT;
+            }
+        } else if (nodeLevel == NodeLevel.MID) {
+            switch (gamePiece) {
+                case CUBE:
+                    return Field.ScoreXPoses.Mid.CUBE;
+                case CONE_TIP_IN:
+                    return Field.ScoreXPoses.Mid.CONE_TIP_IN;
+                case CONE_TIP_OUT:
+                    return Field.ScoreXPoses.Mid.CONE_TIP_OUT;
+            }
+        }
+        
+        return 0;
+    }
+
     public Translation2d getSelectedScoreTranslation() {
+        double gridDistance = getSelectedScoreX();
+
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            return Field.BLUE_ALIGN_POSES[(int)gridNode.get()];
+            return new Translation2d(
+                gridDistance,
+                ScoreYPoses.BLUE_Y_POSES[(int)gridNode.get()]);
         } else {
-            return Field.RED_ALIGN_POSES[(int)gridNode.get()];
+            return new Translation2d(
+                gridDistance,
+                ScoreYPoses.RED_Y_POSES[(int)gridNode.get()]);
         }
     }
 
