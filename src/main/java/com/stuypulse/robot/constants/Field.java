@@ -60,7 +60,7 @@ public interface Field {
         Translation2d SIX =   new Translation2d(CUBE_X, 4.6819);
         Translation2d SEVEN = new Translation2d(CUBE_X, 4.1075);
         Translation2d EIGHT = new Translation2d(CUBE_X, 3.557);
-        Translation2d NINE =  new Translation2d(CUBE_X, 2.93240 694);
+        Translation2d NINE =  new Translation2d(CUBE_X, 2.93240694);
     }
 
     Translation2d RED_ALIGN_POSES[] = {

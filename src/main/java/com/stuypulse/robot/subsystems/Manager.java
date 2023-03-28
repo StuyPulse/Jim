@@ -181,9 +181,9 @@ public class Manager extends SubsystemBase {
 
     public Translation2d getSelectedScoreTranslation() {
         if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            return Field.BLUE_ALIGN_POSES[(int)gridNode.get()];
+            return Field.BLUE_ALIGN_POSES[gridNode.intValue()];
         } else {
-            return Field.RED_ALIGN_POSES[(int)gridNode.get()];
+            return Field.RED_ALIGN_POSES[gridNode.intValue()];
         }
     }
 
@@ -222,7 +222,7 @@ public class Manager extends SubsystemBase {
     }
 
     public int getGridNode() {
-        return (int)gridNode.get();
+        return gridNode.intValue();
     }
 
     public void setGridNode(int gridNode) {
