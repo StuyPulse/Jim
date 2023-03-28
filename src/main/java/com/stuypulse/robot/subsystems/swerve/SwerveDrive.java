@@ -163,7 +163,7 @@ public class SwerveDrive extends SubsystemBase {
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
 
-    private SwerveModuleState filterModuleState(SwerveModuleState state) {
+    private static SwerveModuleState filterModuleState(SwerveModuleState state) {
         if (Math.abs(state.speedMetersPerSecond) > Swerve.MODULE_VELOCITY_DEADBAND.get())
             return state;
 
