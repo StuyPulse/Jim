@@ -1,5 +1,7 @@
 package com.stuypulse.robot.commands.arm.routines;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
@@ -24,7 +26,7 @@ public class ArmIntakeBOOM extends ArmRoutine {
 
 	@Override
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-        if (DriverStation.isAutonomous()) {
+        if (Robot.getMatchState() == MatchState.AUTO) {
             dest = Acquire.kBOOMCubeAuton;
             double intermediateShoulderDegrees = Acquire.kIntermediateAuton.getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();

@@ -2,6 +2,8 @@ package com.stuypulse.robot.subsystems.odometry;
 
 import java.util.List;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.util.AprilTagData;
@@ -31,7 +33,7 @@ public class OdometryImpl extends Odometry {
         Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
         // public static Vector<N3> get() {
-        //     if (DriverStation.isAutonomous()) {
+        //     if (Robot.getMatchState() == MatchState.AUTO) {
         //         return AUTO_LOW;
         //     } else {
         //         return TELE_LOW;
@@ -106,7 +108,7 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){ 
-        if (DISABLE_APRIL_TAGS.get() || DriverStation.isAutonomous()) {
+        if (DISABLE_APRIL_TAGS.get() || Robot.getMatchState() == MatchState.AUTO) {
             return;
         }
         

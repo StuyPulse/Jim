@@ -6,6 +6,8 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.util.StopWatch;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.LEDColor;
@@ -78,7 +80,7 @@ public class LEDController extends SubsystemBase {
     @Override
     public void periodic() {
         // If we called .setColor() recently, use that value
-        if (DriverStation.isAutonomous() || lastUpdate.getTime() < manualTime) {
+        if (Robot.getMatchState() == MatchState.AUTO || lastUpdate.getTime() < manualTime) {
             controller.set(manualColor.get());
         }
 

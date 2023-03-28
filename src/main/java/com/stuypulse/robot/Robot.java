@@ -21,14 +21,14 @@ public class Robot extends TimedRobot {
 
     private CommandScheduler scheduler;
 
-    private enum MatchState {
+    public enum MatchState {
         AUTO,
         TELEOP,
         TEST,
         DISABLE
     }
 
-    private MatchState state = MatchState.DISABLE;
+    private static MatchState state = MatchState.DISABLE;
 
     /*************************/
     /*** ROBOT SCHEDULEING ***/
@@ -145,4 +145,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testExit() {}
+
+    public static MatchState getMatchState() {
+        return state;
+    }
 }

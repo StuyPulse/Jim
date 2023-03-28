@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.swerve.modules;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
@@ -79,7 +81,7 @@ public class SimModule extends SwerveModule {
         driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV, Drive.kA));
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-                .setOutputFilter(x -> DriverStation.isTeleop() ? 0 : x)
+                .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();

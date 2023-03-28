@@ -3,6 +3,8 @@ package com.stuypulse.robot.subsystems.swerve.modules;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.control.Controller;
@@ -146,7 +148,7 @@ public class SacrodModule extends SwerveModule {
         Motors.Swerve.DRIVE.configure(driveMotor);
 
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-                    .setOutputFilter(x -> DriverStation.isTeleop() ? 0 : x)
+                    .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
                 .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
     }
 
