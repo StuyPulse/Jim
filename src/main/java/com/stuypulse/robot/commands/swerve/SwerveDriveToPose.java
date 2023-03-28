@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -51,9 +53,10 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     private boolean isAligned() {
-        return xController.isDone(Alignment.ALIGNED_THRESHOLD_X.get())
-            && yController.isDone(Alignment.ALIGNED_THRESHOLD_Y.get())
-            && angleController.isDoneDegrees(Alignment.ALIGNED_THRESHOLD_ANGLE.get());
+        boolean isCone = Manager.getInstance().getGamePiece().isCone();
+        return xController.isDone(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_X.get() : Alignment.ALIGNED_CUBE_THRESHOLD_X.get())
+            && yController.isDone(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_Y.get() : Alignment.ALIGNED_CUBE_THRESHOLD_Y.get())
+            && angleController.isDoneDegrees(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get() : Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
     }
 
     @Override

@@ -136,7 +136,7 @@ public class RobotContainer {
 
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
-            .whileTrue(new SwerveDriveToScorePose());
+            .whileTrue(new RobotAlignThenScore());
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());

@@ -225,7 +225,10 @@ public class Manager extends SubsystemBase {
             Rotation2d.fromDegrees(180) :
             Rotation2d.fromDegrees(0);
 
-        return new Pose2d(getSelectedScoreTranslation(), rotation);
+        var translation = getSelectedScoreTranslation();
+        SmartDashboard.putNumber("Manager/Selected Score X", translation.getX());
+        SmartDashboard.putNumber("Manager/Selected Score Y", translation.getY());
+        return new Pose2d(translation, rotation);
     }
 
     /** Change and Read State **/

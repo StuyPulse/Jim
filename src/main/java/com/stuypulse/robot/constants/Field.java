@@ -49,8 +49,8 @@ public interface Field {
 
     public interface ScoreXPoses {
         public interface High {
-            double CUBE = 2.042;
-            double CONE_TIP_IN = 2.052;
+            double CUBE = 1.98;
+            double CONE_TIP_IN = 1.9;
             double CONE_TIP_OUT = 2.052;
         }
 
@@ -71,7 +71,7 @@ public interface Field {
         double SIX =   4.6819;
         double SEVEN = 4.1075;
         double EIGHT = 3.557;
-        double NINE =  2.932400694;
+        double NINE =  3.071;
 
         double RED_Y_POSES[] = {
             ScoreYPoses.ONE,
@@ -86,15 +86,15 @@ public interface Field {
         };
 
         double BLUE_Y_POSES[] = {
-            Field.HEIGHT - ScoreYPoses.NINE,
-            Field.HEIGHT - ScoreYPoses.EIGHT,
-            Field.HEIGHT - ScoreYPoses.SEVEN,
-            Field.HEIGHT - ScoreYPoses.SIX,
-            Field.HEIGHT - ScoreYPoses.FIVE,
-            Field.HEIGHT - ScoreYPoses.FOUR,
-            Field.HEIGHT - ScoreYPoses.THREE,
-            Field.HEIGHT - ScoreYPoses.TWO,
-            Field.HEIGHT - ScoreYPoses.ONE
+            AllianceUtil.getMirroredYPose(ScoreYPoses.NINE),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.EIGHT),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.SEVEN),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.SIX),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.FIVE),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.FOUR),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.THREE),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.TWO),
+            AllianceUtil.getMirroredYPose(ScoreYPoses.ONE)
         };
     }
 
