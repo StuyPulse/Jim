@@ -102,7 +102,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                 .alongWith(new WaitCommand(READY_WAIT_TIME).andThen(new ArmReady()))
                 .alongWith(new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())),
 
-            new ManagerSetScoreIndex(7),
+            new ManagerSetGridNode(7),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),

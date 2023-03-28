@@ -59,7 +59,6 @@ public class RobotContainer {
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
-    // public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
     // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
@@ -84,7 +83,6 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
-        configureChooserBindings();
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
@@ -112,7 +110,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         configureOperatorBindings();
         configureDriverBindings();
-        configureChooserBindings();
 
         new Trigger(new SmartBoolean("BOOM/ACQUIRE", false)::get)
             .onTrue(new IntakeAcquire())
@@ -217,16 +214,6 @@ public class RobotContainer {
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());
-    }
-
-    private void configureChooserBindings() {
-        // chooser.getDPadLeft().onTrue(new ManagerSetGridSection(Direction.LEFT));
-        // chooser.getDPadUp().onTrue(new ManagerSetGridSection(Direction.CENTER));
-        // chooser.getDPadRight().onTrue(new ManagerSetGridSection(Direction.RIGHT));
-        
-        // chooser.getLeftButton().onTrue(new ManagerSetGridColumn(Direction.LEFT));
-        // chooser.getTopButton().onTrue(new ManagerSetGridColumn(Direction.CENTER));
-        // chooser.getRightButton().onTrue(new ManagerSetGridColumn(Direction.RIGHT));
     }
 
     /**************/

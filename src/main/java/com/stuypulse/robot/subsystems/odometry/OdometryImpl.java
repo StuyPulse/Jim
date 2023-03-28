@@ -28,7 +28,7 @@ public class OdometryImpl extends Odometry {
 
     private interface VisionStdDevs {
         // Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
-        Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
+        Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(694));
 
         // public static Vector<N3> get() {
         //     if (DriverStation.isAutonomous()) {
@@ -58,9 +58,9 @@ public class OdometryImpl extends Odometry {
                 startingPose, 
 
                 VecBuilder.fill(
-                    Units.inchesToMeters(694), 
-                    Units.inchesToMeters(694), 
-                    Math.toRadians(1)), 
+                    0.1,
+                    0.1,
+                    0.1),
 
                 VisionStdDevs.TELEOP);
 
