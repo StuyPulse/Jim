@@ -82,6 +82,8 @@ public class Manager extends SubsystemBase {
 
 
     public ArmState getIntakeTrajectory() {
+        if (nodeLevel == NodeLevel.HIGH)
+            return Acquire.kHPCone;
         if (gamePiece.isCone())
             return Acquire.kCone;
         else

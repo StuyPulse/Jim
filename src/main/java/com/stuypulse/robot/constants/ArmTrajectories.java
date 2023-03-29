@@ -14,6 +14,11 @@ public interface ArmTrajectories {
         ArmState kCube = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cube Front Shoulder", -70.82),
             new SmartNumber("Arm Trajectories/Acquire Cube Front Wrist", 8.37));
+
+        ArmState kHPCone = new ArmState(
+            new SmartNumber("Arm Trajectories/Acquire HP Cone Tip In Front Shoulder", -176.94),
+            new SmartNumber("Arm Trajectories/Acquire HP Cone Tip In Front Wrist", -158));
+
         ArmState kIntermediate = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Intermediate Front Shoulder", -45),
             new SmartNumber("Arm Trajectories/Acquire Intermediate Front Wrist", 0));
