@@ -175,7 +175,9 @@ public class MAX_SwerveModule extends SwerveModule {
 
         SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnMotor.getOutputCurrent());
         SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", vel);
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveMotor.getOutputCurrent());
     }
 }

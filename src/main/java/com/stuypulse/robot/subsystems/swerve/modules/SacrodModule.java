@@ -205,11 +205,13 @@ public class SacrodModule extends SwerveModule {
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
         SmartDashboard.putNumber("Swerve/" + id + "/Absolute Angle", getAbsolutePosition().getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnMotor.getOutputCurrent());
 
         SmartDashboard.putNumber("Swerve/" + id + "/Target Speed", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/" + id + "/Speed", getSpeed());
-        SmartDashboard.putNumber("Swerve/" + id + "/Speed Error", driveController.getError());
-        SmartDashboard.putNumber("Swerve/" + id + "/Speed Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getSpeed());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveMotor.getOutputCurrent());
 
     }
 }

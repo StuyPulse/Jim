@@ -140,10 +140,12 @@ public class SimModule extends SwerveModule {
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnSim.getCurrentDrawAmps());
         SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getVelocity());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveSim.getCurrentDrawAmps());
     }
 
     @Override
