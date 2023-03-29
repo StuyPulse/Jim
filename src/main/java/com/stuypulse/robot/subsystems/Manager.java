@@ -160,7 +160,7 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Translation2d getNearestScoreTranslation() {
+    public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
         double gridDistance = getSelectedScoreX();
@@ -168,15 +168,15 @@ public class Manager extends SubsystemBase {
             Field.ScoreYPoses.BLUE_Y_POSES : 
             Field.ScoreYPoses.RED_Y_POSES;
 
-        Translation2d nearest = new Translation2d(gridDistance, positions[0]);
-        double nearestDistance = robot.getDistance(nearest);
+        int nearest = 0;
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
 
         for (int i = 1; i < positions.length; i++) {
             Translation2d current = new Translation2d(gridDistance, positions[i]);
             double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
-                nearest = current;
+                nearest = i;
                 nearestDistance = distance;
             }
         }
