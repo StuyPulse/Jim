@@ -3,10 +3,12 @@ package com.stuypulse.robot.commands;
 import com.stuypulse.robot.commands.swerve.SwerveDriveToScorePose;
 import com.stuypulse.robot.subsystems.Manager;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class RobotAlignThenScore extends SequentialCommandGroup {    
+public class RobotAlignThenScore extends SwerveDriveToScorePose {    
     private static double getTimeout() {
         switch (Manager.getInstance().getGamePiece()) {
             case CONE_TIP_IN:
@@ -19,10 +21,20 @@ public class RobotAlignThenScore extends SequentialCommandGroup {
     }
 
     public RobotAlignThenScore() {
-        addCommands(
-            new SwerveDriveToScorePose(),
-            new RobotScore().withTimeout(getTimeout()),
-            new RobotRelease()
-        );
     }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+    }
+
+    @Override
+    public void execute() {
+        // if (isReadyToScore()) {
+        //     // do stuff >w<
+        // } else {
+        //     super.execute();
+        // }
+    }
+
 }
