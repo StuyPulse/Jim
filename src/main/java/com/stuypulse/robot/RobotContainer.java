@@ -138,7 +138,7 @@ public class RobotContainer {
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
             .onTrue(new ManagerChooseScoreNode())
-            .whileTrue(new ProxyCommand(() -> new RobotAlignThenScore()));
+            .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
@@ -177,7 +177,7 @@ public class RobotContainer {
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
-        // intakeing from HP
+        // intaking from HP
         operator.getLeftTriggerButton()
         .whileTrue(new ArmIntakeHP())
         .onTrue(new IntakeAcquire())
