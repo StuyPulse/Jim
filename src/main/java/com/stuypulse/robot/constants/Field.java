@@ -51,27 +51,27 @@ public interface Field {
         public interface High {
             double CUBE = 1.98;
             double CONE_TIP_IN = 1.9;
-            double CONE_TIP_OUT = 2.052;
+            double CONE_TIP_OUT = 1.783;
         }
 
         public interface Mid {
             double CUBE = 2.042;
             double CONE_TIP_IN = 2.052;
-            double CONE_TIP_OUT = 2.052;
+            double CONE_TIP_OUT = 2.184;
         }
     }
 
     // red left to right
     public interface ScoreYPoses {
-        double ONE =   7.479;
+        double ONE =   7.4367;
         double TWO =   6.905;
-        double THREE = 6.3584;
-        double FOUR =  5.7619;
+        double THREE = 6.3238;
+        double FOUR =  5.7976;
         double FIVE =  5.2947;
-        double SIX =   4.6819;
-        double SEVEN = 4.1075;
+        double SIX =   4.666;
+        double SEVEN = 4.035;
         double EIGHT = 3.557;
-        double NINE =  3.071;
+        double NINE =  2.89;
 
         double RED_Y_POSES[] = {
             ScoreYPoses.ONE,

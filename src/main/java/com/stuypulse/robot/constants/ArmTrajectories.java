@@ -79,7 +79,7 @@ public interface ArmTrajectories {
 
             ArmState kConeTipOutFront = new ArmState(
                 new SmartNumber("Arm Trajectories/Ready High Tip Out Front Shoulder", 13),
-                new SmartNumber("Arm Trajectories/Ready High Tip Out Front Wrist", 47));
+                new SmartNumber("Arm Trajectories/Ready High Tip Out Front Wrist", 50));
 
             ArmState kCubeFront = new ArmState(
                 new SmartNumber("Arm Trajectories/High Cube Front/Shoulder", 0),
