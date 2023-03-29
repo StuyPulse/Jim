@@ -54,6 +54,7 @@ public class LEDController extends SubsystemBase {
         ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); // get length of led strip ?
 
         // set data
+        leds.setLength(ledsBuffer.getLength());
         leds.setData(ledsBuffer);
         leds.start();
 
@@ -70,6 +71,7 @@ public class LEDController extends SubsystemBase {
         for (int i = 0; i < ledsBuffer.getLength(); i++) {
             ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
         }
+        leds.setData(ledsBuffer);
     }
 
     private void setLEDConditions() {
