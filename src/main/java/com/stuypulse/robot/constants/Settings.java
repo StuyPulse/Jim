@@ -48,11 +48,11 @@ public interface Settings {
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
         public interface Acquire {
-            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1);
-            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1);
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
         
-            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 0.8);
-            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 0.8);
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1.0);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1.0);
         }
 
         public interface Deacquire {
@@ -203,7 +203,7 @@ public interface Settings {
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
-            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
+            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
