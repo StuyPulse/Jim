@@ -27,15 +27,20 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
  */
 public class LEDController extends SubsystemBase {
 
-    private static AddressableLED instance;
-    private static AddressableLEDBuffer instanceBuffer;
+// singleton
+    private static LEDController instance;
 
-    public static AddressableLED getInstance() {
+    static {
+        instance = new LEDController();
+    }
+
+    public static LEDController getInstance() {
         return instance;
     }
 
     // Motor that controlls the LEDs
-    private final AddressableLED controller;
+    private AddressableLED leds;
+    private AddressableLEDBuffer ledsBuffer;
 
     // Stopwatch to check when to start overriding manual updates
     private final StopWatch lastUpdate;
@@ -45,15 +50,13 @@ public class LEDController extends SubsystemBase {
     private LEDColor manualColor;
 
     protected LEDController() {
-        instance = new AddressableLED(Ports.LEDController.PORT);
-        instanceBuffer = new AddressableLEDBuffer(Ports.LEDController.PORT) // get length of led strip ?
-        instance.setLength(instanceBuffer.getLength());
+        leds = new AddressableLED(Ports.LEDController.PORT);
+        ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); // get length of led strip ?
 
         // set data
-        instance.setData(instanceBuffer);
-        instance.start();
+        leds.setData(ledsBuffer);
+        leds.start();
 
-        this.controller = new PWMSparkMax(Ports.LEDController.PORT);
         this.lastUpdate = new StopWatch();
     }
 
@@ -63,34 +66,9 @@ public class LEDController extends SubsystemBase {
         lastUpdate.reset();
     }
 
-    public LEDColor setColor(LEDColor color) {
-        // setColor(color, Settings.LED.MANUAL_UPDATE_TIME);
-        int red = 0;
-        int green = 0;
-        int blue = 0;
-        
-        if (color == LEDColor.PURPLE) {
-            red = 102;
-            blue = 204;
-        }
-        
-        if (color == LEDColor.YELLOW) {
-            red = 255;
-            green = 255;
-        }
-        
-        if (color == LEDColor.GREEN) {
-            green = 204;
-        }
-
-        instance.setData(instanceBuffer);
-
-        return color;
-    }
-
-    private void setLEDs() {
-        for (int i = 0; i < instanceBuffer.getLength(); i++) {
-            instanceBuffer.setRGB(i, red, green, blue);
+    private void forceSetLEDs(LEDColor color) {
+        for (int i = 0; i < ledsBuffer.getLength(); i++) {
+            ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
         }
     }
 
@@ -99,24 +77,28 @@ public class LEDController extends SubsystemBase {
 
     public LEDColor getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
-            case CUBE: setColor(LEDColor.PURPLE);
-            case CONE_TIP_IN: setColor(LEDColor.YELLOW);
-            case CONE_TIP_UP: setColor(LEDColor.GREEN);
-            case CONE_TIP_OUT: setColor(LEDColor.YELLOW).pulse();
+            case CUBE: return LEDColor.PURPLE;
+            case CONE_TIP_IN: return LEDColor.YELLOW;
+            case CONE_TIP_UP: return LEDColor.GREEN;
+            case CONE_TIP_OUT: return LEDColor.YELLOW;
             default: return LEDColor.OFF;
         }
+    }
+
+    public void epicRainbow(){
+
     }
 
     @Override
     public void periodic() {
         // If we called .setColor() recently, use that value
         if (DriverStation.isAutonomous() || lastUpdate.getTime() < manualTime) {
-            controller.set(manualColor.get());
+            forceSetLEDs(manualColor);
         }
 
         // Otherwise use the default color
         else {
-            controller.set(getDefaultColor().get());
+            forceSetLEDs(getDefaultColor());
         }
     }
 }
