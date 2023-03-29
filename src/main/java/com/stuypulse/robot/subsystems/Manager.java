@@ -82,8 +82,6 @@ public class Manager extends SubsystemBase {
 
 
     public ArmState getIntakeTrajectory() {
-        if (nodeLevel == NodeLevel.HIGH)
-            return Acquire.kHPCone;
         if (gamePiece.isCone())
             return Acquire.kCone;
         else
@@ -160,6 +158,9 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
+    private final int[] CUBE_INDEXES = {1, 4, 7};
+    private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+
     public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
@@ -171,7 +172,7 @@ public class Manager extends SubsystemBase {
         int nearest = 0;
         double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
 
-        for (int i = 1; i < positions.length; i++) {
+        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
             Translation2d current = new Translation2d(gridDistance, positions[i]);
             double distance = robot.getDistance(current);
 

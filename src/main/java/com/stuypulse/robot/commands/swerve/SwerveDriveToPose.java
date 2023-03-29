@@ -60,6 +60,11 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     @Override
+    public void initialize() {
+        Odometry.USE_VISION_ANGLE.set(true);
+    }
+
+    @Override
     public void execute() {
 
         Pose2d currentState = Odometry.getInstance().getPose();
@@ -100,6 +105,7 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     public void end(boolean interupted) {
+        Odometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }

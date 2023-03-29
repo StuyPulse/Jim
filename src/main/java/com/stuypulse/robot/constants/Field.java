@@ -50,7 +50,7 @@ public interface Field {
     public interface ScoreXPoses {
         public interface High {
             double CUBE = 1.98;
-            double CONE_TIP_IN = 1.9;
+            double CONE_TIP_IN = 2.0;
             double CONE_TIP_OUT = 1.783;
         }
 

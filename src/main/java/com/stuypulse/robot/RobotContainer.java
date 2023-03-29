@@ -52,6 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -136,7 +137,8 @@ public class RobotContainer {
 
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
-            .whileTrue(new RobotAlignThenScore());
+            .onTrue(new ManagerChooseScoreNode())
+            .whileTrue(new ProxyCommand(() -> new RobotAlignThenScore()));
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
@@ -175,11 +177,12 @@ public class RobotContainer {
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
-        // outtake
+        // intakeing from HP
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
-            .onFalse(new IntakeStop())
-            .onFalse(new ArmStow());
+        .whileTrue(new ArmIntakeHP())
+        .onTrue(new IntakeAcquire())
+        .onFalse(new IntakeStop())
+        .onFalse(new ArmStow());
 
         // ready & score
         operator.getLeftBumper()
@@ -222,6 +225,7 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.addOption("Mobility", new MobilityAuton());
+        autonChooser.addOption("1 Piece Dock", new OnePieceDock());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
