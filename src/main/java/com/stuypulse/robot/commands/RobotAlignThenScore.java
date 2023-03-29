@@ -7,13 +7,21 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class RobotAlignThenScore extends SequentialCommandGroup {    
+    private static double getTimeout() {
+        switch (Manager.getInstance().getGamePiece()) {
+            case CONE_TIP_IN:
+                return 1;
+            case CONE_TIP_OUT:
+                return 0.5;
+            default:
+                return 0;
+        }
+    }
+
     public RobotAlignThenScore() {
         addCommands(
             new SwerveDriveToScorePose(),
-            // new ConditionalCommand(
-            //     new DoNothingCommand(),
-                new RobotScore().withTimeout(1),
-                // () -> Manager.getInstance().getGamePiece().isCube()),
+            new RobotScore().withTimeout(getTimeout()),
             new RobotRelease()
         );
     }
