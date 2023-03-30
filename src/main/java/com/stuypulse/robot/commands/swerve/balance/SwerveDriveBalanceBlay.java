@@ -81,7 +81,7 @@ private boolean timedOut = false;
         plant.engage();
 
         if (timedOut) {
-            // LEDController.getInstance().setColor(LEDColor.YELLOW);
+            LEDController.getInstance().setColor(LEDColor.YELLOW, 1);
         }
     }
 
