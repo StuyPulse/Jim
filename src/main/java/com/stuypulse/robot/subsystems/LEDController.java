@@ -6,6 +6,8 @@
 package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.stuylib.util.StopWatch;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.LEDColor;
@@ -13,6 +15,9 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 /*-
  * Contains:
@@ -24,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class LEDController extends SubsystemBase {
 
+// singleton
     private static LEDController instance;
 
     static {
@@ -35,7 +41,8 @@ public class LEDController extends SubsystemBase {
     }
 
     // Motor that controlls the LEDs
-    private final PWMSparkMax controller;
+    private AddressableLED leds;
+    private AddressableLEDBuffer ledsBuffer;
 
     // Stopwatch to check when to start overriding manual updates
     private final StopWatch lastUpdate;
@@ -45,11 +52,15 @@ public class LEDController extends SubsystemBase {
     private LEDColor manualColor;
 
     protected LEDController() {
-        this.controller = new PWMSparkMax(Ports.LEDController.PORT);
-        this.lastUpdate = new StopWatch();
+        leds = new AddressableLED(Ports.LEDController.PORT);
+        ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); // get length of led strip ?
 
-        setLEDConditions();
-        setColor(LEDColor.OFF);
+        // set data
+        leds.setLength(ledsBuffer.getLength());
+        leds.setData(ledsBuffer);
+        leds.start();
+
+        this.lastUpdate = new StopWatch();
     }
 
     public void setColor(LEDColor color, double time) {
@@ -58,8 +69,11 @@ public class LEDController extends SubsystemBase {
         lastUpdate.reset();
     }
 
-    public void setColor(LEDColor color) {
-        setColor(color, Settings.LED.MANUAL_UPDATE_TIME);
+    private void forceSetLEDs(LEDColor color) {
+        for (int i = 0; i < ledsBuffer.getLength(); i++) {
+            ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
+        }
+        leds.setData(ledsBuffer);
     }
 
     private void setLEDConditions() {
@@ -78,13 +92,13 @@ public class LEDController extends SubsystemBase {
     @Override
     public void periodic() {
         // If we called .setColor() recently, use that value
-        if (DriverStation.isAutonomous() || lastUpdate.getTime() < manualTime) {
-            controller.set(manualColor.get());
+        if (Robot.getMatchState() == MatchState.AUTO || lastUpdate.getTime() < manualTime) {
+            forceSetLEDs(manualColor);
         }
 
         // Otherwise use the default color
         else {
-            controller.set(getDefaultColor().get());
+            forceSetLEDs(getDefaultColor());
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.stuypulse.robot.commands.arm.routines;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
@@ -34,7 +36,7 @@ public class ArmReady extends ArmRoutine {
                 .addState(dest);
         }
 
-        if (DriverStation.isAutonomous()) {
+        if (Robot.getMatchState() == MatchState.AUTO) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
@@ -75,7 +77,7 @@ public class ArmReady extends ArmRoutine {
 
     @Override
     public boolean isFinished() {
-        if (DriverStation.isAutonomous()) {
+        if (Robot.getMatchState() == MatchState.AUTO) {
             return super.isFinished(); // Math.abs(Arm.getInstance().getWristVelocityRadiansPerSecond()) < Math.toRadians(5);
         } else {
             return super.isFinished();
