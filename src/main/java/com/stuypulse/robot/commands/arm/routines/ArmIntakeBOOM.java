@@ -2,6 +2,7 @@ package com.stuypulse.robot.commands.arm.routines;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
+import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
@@ -18,7 +19,7 @@ public class ArmIntakeBOOM extends ArmRoutine {
     private final Manager manager;
     
     public ArmIntakeBOOM() {
-        super(Manager.getInstance()::getIntakeTrajectory);
+        super(() -> ArmTrajectories.Acquire.kBOOMCubeAuton);
 
         arm = Arm.getInstance();
         manager = Manager.getInstance();
