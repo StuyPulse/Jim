@@ -87,10 +87,6 @@ public class LEDController extends SubsystemBase {
         }
     }
 
-    public void epicRainbow(){
-
-    }
-
     @Override
     public void periodic() {
         // If we called .setColor() recently, use that value
