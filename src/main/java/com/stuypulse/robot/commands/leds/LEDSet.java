@@ -8,20 +8,28 @@ package com.stuypulse.robot.commands.leds;
 import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.util.LEDColor;
 
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class LEDSet extends InstantCommand {
 
     private LEDColor color;
+    private double updateTime;
     private LEDController controller;
 
-    public LEDSet(LEDColor color) {
+    public LEDSet(LEDColor color, double updateTime) {
         this.controller = LEDController.getInstance();
+        this.updateTime = updateTime;
         this.color = color;
+    }
+
+    public LEDSet(LEDColor color) {
+        this(color, Settings.LED.MANUAL_UPDATE_TIME);
     }
 
     @Override
     public void initialize() {
-        controller.setColor(color);
+        controller.setColor(color, updateTime);
     }
 }
