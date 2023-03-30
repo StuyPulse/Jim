@@ -45,7 +45,8 @@ public abstract class Arm extends SubsystemBase {
 
     static {
         if (RobotBase.isSimulation())
-            instance = new SimArm();
+            instance = new PerfectArm();
+            // instance = new SimArm();
         else if (Settings.ROBOT == Robot.JIM)
             instance = new ArmImpl();
         else
@@ -79,17 +80,16 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
-    private SmartNumber feedbackDebounce = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.1);
-
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
-            .filtered(new BDebounce.Both(feedbackDebounce));
+            .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
+            .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
@@ -103,16 +103,15 @@ public abstract class Arm extends SubsystemBase {
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
+                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
                     Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
                 if (isWristLimp()) return 0;
-                if (wristVoltageOverride.isPresent()) return wristVoltageOverride.get();
-                if (!wristEnabled.get()) return x;
-                return 0;
+                return wristVoltageOverride.orElse(x);
             });
 
         wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
@@ -134,9 +133,8 @@ public abstract class Arm extends SubsystemBase {
         return shoulderLimp.get();
     }
 
-    SmartNumber tolerance = new SmartNumber("Arm/Wrist/Feedback Tolerance (deg)", 5);
     private final boolean isWristFeedbackEnabled() {
-        return isShoulderAtTarget(tolerance.doubleValue());
+        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
     }
 
     // Read target State

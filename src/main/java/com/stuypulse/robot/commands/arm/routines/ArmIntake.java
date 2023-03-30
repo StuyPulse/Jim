@@ -9,7 +9,6 @@ import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 
 public class ArmIntake extends ArmRoutine {
 
@@ -28,7 +27,7 @@ public class ArmIntake extends ArmRoutine {
         if (DriverStation.isAutonomous()) {
             dest = Acquire.kCubeAuton;
             double intermediateShoulderDegrees = Acquire.kIntermediateAuton.getShoulderDegrees();
-            double wristSafeAngle = src.getShoulderState().getCos() > 0 ? 90 : 60;
+            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
                 .addState(src.getShoulderDegrees(), wristSafeAngle)
@@ -49,7 +48,7 @@ public class ArmIntake extends ArmRoutine {
         }
 
         double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
-        double wristSafeAngle = 90; // src.getShoulderState().getCos() > 0 ? 90 : 60;
+        double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
@@ -74,7 +73,7 @@ public class ArmIntake extends ArmRoutine {
         // super.end(interrupted);
 
         if (!interrupted) {
-            if (RobotBase.isReal() && manager.getGamePiece().isCube()) {
+            if (manager.getGamePiece().isCube()) {
                 arm.setShoulderVoltage(Shoulder.INTAKE_VOLTAGE.get());
             }
             // if (manager.getGamePiece().isCube()) {

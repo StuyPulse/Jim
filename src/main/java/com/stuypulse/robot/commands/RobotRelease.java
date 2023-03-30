@@ -37,6 +37,10 @@ public class RobotRelease extends CommandBase {
         if (!(manager.getGamePiece() == GamePiece.CONE_TIP_OUT && manager.getNodeLevel() != NodeLevel.LOW)) {
             intake.deacquire();
         }
+
+        if ( manager.getGamePiece() == GamePiece.CONE_TIP_OUT) { 
+            intake.enableCoast();
+        }
     }
 
     @Override
@@ -60,6 +64,7 @@ public class RobotRelease extends CommandBase {
     @Override
     public void end(boolean i) {
         intake.stop();
+        intake.enableBreak();
         swerve.stop();
     }
 

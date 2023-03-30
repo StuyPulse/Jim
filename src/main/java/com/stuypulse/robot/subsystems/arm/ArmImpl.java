@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.stuylib.streams.filters.IFilter;
@@ -22,8 +23,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
-
-    private static int kDisableStatusFrame = 65535;
 
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
@@ -57,17 +56,17 @@ public class ArmImpl extends Arm {
 
         shoulderEncoder.setInverted(true);
         shoulderEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
-        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+        Motors.disableStatusFrames(shoulderRight, 3, 4);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        shoulderRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+
+        Motors.disableStatusFrames(shoulderLeft, 3, 4, 5, 6);
 
         wristEncoder.setInverted(true);
         wristEncoder.setVelocityConversionFactor(Units.rotationsToRadians(1));
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus3, kDisableStatusFrame);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus4, kDisableStatusFrame);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 10);
-        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 10);
+        Motors.disableStatusFrames(wrist, 3, 4);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        wrist.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
 
         SHOULDER_LEFT_CONFIG.configure(shoulderLeft);
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);

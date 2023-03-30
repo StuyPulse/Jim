@@ -13,7 +13,7 @@ import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -21,6 +21,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
     private static final double READY_WAIT_TIME = 0.5;
@@ -37,6 +38,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
         var arm = Arm.getInstance();
 
+
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.HIGH),
@@ -48,13 +50,15 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ArmReady()
+                .setWristVelocityTolerance(25)
+                .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
                 .withTimeout(4)
         );
 
         addCommands(
             new LEDSet(LEDColor.BLUE),
-            new IntakeScore(),
+            new IntakeScore(),  
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
@@ -64,26 +68,26 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.GREEN),
 
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
-                    .robotRelative(),
+                    .robotRelative().withStop(),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new IntakeAcquire()),
 
-                new ArmIntake()
-                    .withTolerance(7, 10)
+                new ArmIntakeBOOM()
+                    .withTolerance(12, 10)
                     .withTimeout(6.5)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
-            arm.runOnce(() -> arm.setWristVoltage(0)) 
+            arm.runOnce(() -> arm.setWristVoltage(0))
         );
-        
+
         // drive to grid and score second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
@@ -94,8 +98,9 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
+                    .withStop()
                 .alongWith(new WaitCommand(READY_WAIT_TIME).andThen(new ArmReady()))
-                .alongWith(new WaitCommand(1.0).andThen(new IntakeStop())),
+                .alongWith(new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop())),
 
             new ManagerSetScoreIndex(7),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -108,6 +113,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.RAINBOW),
             new SwerveDriveFollowTrajectory(
                 paths.get("Back Away"))
+                    .withStop()
                     .fieldRelative()
         );
     }
