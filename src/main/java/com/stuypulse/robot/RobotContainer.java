@@ -138,6 +138,7 @@ public class RobotContainer {
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
             .onTrue(new ManagerChooseScoreNode())
+            .whileTrue(new ArmAlignmentReady())
             .whileTrue(new SwerveDriveToScorePose());
 
         // swerve

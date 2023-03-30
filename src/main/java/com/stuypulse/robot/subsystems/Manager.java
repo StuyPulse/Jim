@@ -2,8 +2,10 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
+import com.stuypulse.robot.constants.ArmTrajectories.Ready.Alignment;
 import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.constants.Field.ScoreYPoses;
+import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
@@ -182,6 +184,40 @@ public class Manager extends SubsystemBase {
         }
 
         return nearest;
+    }
+
+    public ArmState getAlignmentReadyTrajectory() {
+        if (nodeLevel == NodeLevel.HIGH) {
+            switch (gamePiece) {
+                case CUBE:
+                    if (scoreSide == ScoreSide.FRONT)
+                        return Alignment.High.kCubeFront;
+                    else
+                        return Alignment.High.kCubeBack;
+                case CONE_TIP_IN:
+                    return Alignment.High.kConeTipInBack;
+                case CONE_TIP_OUT:
+                    return Alignment.High.kConeTipOutFront;
+                default:
+                    return Alignment.Mid.kConeTipInBack;
+            }
+        } else if (nodeLevel == NodeLevel.MID) {
+            switch (gamePiece) {
+                case CUBE:
+                    if (scoreSide == ScoreSide.FRONT)
+                        return Alignment.Mid.kCubeFront;
+                    else
+                        return Alignment.Mid.kCubeBack;
+                case CONE_TIP_IN:
+                    return Alignment.Mid.kConeTipInBack;
+                case CONE_TIP_OUT:
+                    return Alignment.Mid.kConeTipOutFront;
+                default:
+                    return Alignment.Mid.kConeTipInBack;
+            }
+        }
+
+        return Alignment.Mid.kConeTipInBack;
     }
 
     private double getSelectedScoreX() {

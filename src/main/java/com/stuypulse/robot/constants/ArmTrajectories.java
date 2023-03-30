@@ -61,16 +61,16 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Wrist", -158));
             
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Mid Tip Out/Shoulder", -4),
-                new SmartNumber("Arm Trajectories/Mid Tip Out/Wrist", 42));
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Shoulder", -4),
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Wrist", 42));
             
             ArmState kCubeFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Mid Cube Front/Shoulder", -16),
-                new SmartNumber("Arm Trajectories/Mid Cube Front/Wrist", 49));
+                new SmartNumber("Arm Trajectories/Ready Mid Cube Front/Shoulder", -16),
+                new SmartNumber("Arm Trajectories/Ready Mid Cube Front/Wrist", 49));
 
             ArmState kCubeBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Mid Cube Back/Shoulder", -171),
-                new SmartNumber("Arm Trajectories/Mid Cube Back/Wrist", -62));
+                new SmartNumber("Arm Trajectories/Ready Mid Cube Back/Shoulder", -171),
+                new SmartNumber("Arm Trajectories/Ready Mid Cube Back/Wrist", -62));
         }
 
         public interface High {
@@ -87,11 +87,53 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/Ready High Tip Out Front Wrist", 50));
 
             ArmState kCubeFront = new ArmState(
-                new SmartNumber("Arm Trajectories/High Cube Front/Shoulder", 0),
-                new SmartNumber("Arm Trajectories/High Cube Front/Wrist", 46));
+                new SmartNumber("Arm Trajectories/Ready High Cube Front/Shoulder", 0),
+                new SmartNumber("Arm Trajectories/Ready High Cube Front/Wrist", 46));
             ArmState kCubeBack = new ArmState(
-                new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", -181),
-                new SmartNumber("Arm Trajectories/High Cube Back/Wrist", -138));
+                new SmartNumber("Arm Trajectories/Ready High Cube Back/Shoulder", -181),
+                new SmartNumber("Arm Trajectories/Ready High Cube Back/Wrist", -138));
+        }
+
+        // Alignment
+        public interface Alignment {
+            public interface Mid {
+                ArmState kConeTipInBack = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Tip In Back Shoulder", -176.94),
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Tip In Back Wrist", -158));
+                
+                ArmState kConeTipOutFront = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Tip Out/Shoulder", -4),
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Tip Out/Wrist", 42));
+                
+                ArmState kCubeFront = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Cube Front/Shoulder", -16),
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Cube Front/Wrist", 49));
+    
+                ArmState kCubeBack = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Cube Back/Shoulder", -171),
+                    new SmartNumber("Arm Trajectories/Alignment/ Mid Cube Back/Wrist", -62));
+            }
+    
+            public interface High {
+                ArmState kConeTipInBack = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment High Tip In Back Shoulder", 170),
+                    new SmartNumber("Arm Trajectories/Alignment High Tip In Back Wrist", -170));
+                
+                ArmState kConeTipUpBack = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment High Tip Up Back Shoulder", -180),
+                    new SmartNumber("Arm Trajectories/Alignment High Tip Up Back Wrist", 135.5));
+    
+                ArmState kConeTipOutFront = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment High Tip Out Front Shoulder", 13),
+                    new SmartNumber("Arm Trajectories/Alignment High Tip Out Front Wrist", 50));
+    
+                ArmState kCubeFront = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment High Cube Front/Shoulder", 0),
+                    new SmartNumber("Arm Trajectories/Alignment High Cube Front/Wrist", 46));
+                ArmState kCubeBack = new ArmState(
+                    new SmartNumber("Arm Trajectories/Alignment High Cube Back/Shoulder", -181),
+                    new SmartNumber("Arm Trajectories/Alignment High Cube Back/Wrist", -138));
+            }
         }
 
         public interface Score {
