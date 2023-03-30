@@ -27,7 +27,7 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
 
     private interface VisionStdDevs {
-        // Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
+        Vector<N3> AUTO = VecBuilder.fill(10, 10, Math.toRadians(90));
         Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(694));
 
         // public static Vector<N3> get() {
