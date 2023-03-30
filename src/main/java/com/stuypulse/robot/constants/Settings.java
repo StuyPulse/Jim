@@ -269,6 +269,7 @@ public interface Settings {
     public interface LED {
         double MANUAL_UPDATE_TIME = 0.75;
         double BLINK_TIME = 0.5;
+        int LED_LENGTH = 55;
     }
     public interface Wings {
         SmartNumber LATCH_DELAY = new SmartNumber("Wings/Red Latch Delay", 0.25);
