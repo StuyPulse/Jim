@@ -2,6 +2,8 @@ package com.stuypulse.robot.subsystems.odometry;
 
 import java.util.List;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.util.AprilTagData;
@@ -27,11 +29,11 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
 
     private interface VisionStdDevs {
-        // Vector<N3> AUTO_LOW = VecBuilder.fill(10, 10, Math.toRadians(90));
+        Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
         Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
 
         // public static Vector<N3> get() {
-        //     if (DriverStation.isAutonomous()) {
+        //     if (Robot.getMatchState() == MatchState.AUTO) {
         //         return AUTO_LOW;
         //     } else {
         //         return TELE_LOW;
@@ -106,15 +108,22 @@ public class OdometryImpl extends Odometry {
     }
 
     private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){ 
-        if (DISABLE_APRIL_TAGS.get() || DriverStation.isAutonomous()) {
-            return;
+        if (DISABLE_APRIL_TAGS.get()) {
+            return; 
         }
         
         for (AprilTagData result : results) {
-            poseEstimator.addVisionMeasurement(
-                new Pose2d(result.pose.getTranslation(), getRotation()),
-                Timer.getFPGATimestamp() - result.latency,
-                VisionStdDevs.TELEOP);
+            if (Robot.getMatchState() == MatchState.AUTO) {
+                // poseEstimator.addVisionMeasurement(
+                //     new Pose2d(result.pose.getTranslation(), getRotation()),
+                //     Timer.getFPGATimestamp() - result.latency,
+                //     VisionStdDevs.AUTO);
+            } else {
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(result.pose.getTranslation(), getRotation()),
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.TELEOP);
+            }
         }
     }
 

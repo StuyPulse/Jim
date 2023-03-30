@@ -94,10 +94,10 @@ public interface Settings {
         double WIDTH = Units.inchesToMeters(26.504);
         double LENGTH = Units.inchesToMeters(20.508);
         
-        double MAX_SPEED = Units.feetToMeters(15.76);
+        SmartNumber MAX_MODULE_SPEED = new SmartNumber("Swerve/Max Module Speed (meter per s)", 5.0);
         SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad per s)", 6.28);
 
-        SmartNumber MODULE_VELOCITY_DEADBAND = new SmartNumber("Swerve/Module Velocity Deadband (m per s)", Units.inchesToMeters(0.05));
+        SmartNumber MODULE_VELOCITY_DEADBAND = new SmartNumber("Swerve/Module Velocity Deadband (m per s)", 0.02);
 
         public interface Motion {
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
@@ -114,13 +114,13 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 0.8;
+            double kP = 0.50121;
             double kI = 0.0;
             double kD = 0.0; 
 
-            double kS = 0.22304;
-            double kV = 2.4899;
-            double kA = 0.41763;
+            double kS = 0.17475;
+            double kV = 2.5728;
+            double kA = 0.33987;
         }
 
         public interface FrontRight {
@@ -320,28 +320,25 @@ public interface Settings {
 
     public interface Driver {
         SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
+
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.1);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
-            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Units.feetToMeters(15.67));
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.MAX_MODULE_SPEED.get());
             SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 20);
-
-            SmartNumber MAX_SLOW_SPEED = new SmartNumber("Driver Settings/Drive/Max Slow Speed", Units.feetToMeters(3.0));
         }
 
         public interface Turn {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.08);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
             SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
 
-            SmartNumber MAX_SLOW_TURNING = new SmartNumber("Driver Settings/Turn/Max Slow Turning", Units.degreesToRadians(135));
-            
             public interface GyroFeedback {
                 SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
 

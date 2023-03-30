@@ -1,5 +1,7 @@
 package com.stuypulse.robot.commands.swerve.balance;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 import com.stuypulse.robot.constants.Settings.AutoBalance;
 import com.stuypulse.robot.subsystems.LEDController;
@@ -65,7 +67,7 @@ private boolean timedOut = false;
 
     @Override
     public boolean isFinished() {
-        if (DriverStation.isAutonomous() && Timer.getMatchTime() < 0.1) {
+        if (Robot.getMatchState() == MatchState.AUTO && Timer.getMatchTime() < 0.1) {
             timedOut = true;
             return true;
         }
@@ -79,7 +81,7 @@ private boolean timedOut = false;
         plant.engage();
 
         if (timedOut) {
-            LEDController.getInstance().setColor(LEDColor.YELLOW.pulse());
+            LEDController.getInstance().setColor(LEDColor.YELLOW, 1);
         }
     }
 

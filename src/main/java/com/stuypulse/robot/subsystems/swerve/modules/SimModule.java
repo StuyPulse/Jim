@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.swerve.modules;
 
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
@@ -23,6 +25,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -78,6 +81,7 @@ public class SimModule extends SwerveModule {
         driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV, Drive.kA));
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
+                .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
@@ -136,10 +140,12 @@ public class SimModule extends SwerveModule {
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnSim.getCurrentDrawAmps());
         SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getVelocity());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveSim.getCurrentDrawAmps());
     }
 
     @Override

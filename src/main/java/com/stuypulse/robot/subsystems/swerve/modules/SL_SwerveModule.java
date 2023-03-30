@@ -6,6 +6,8 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings.Swerve;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
@@ -25,6 +27,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -84,6 +87,7 @@ public class SL_SwerveModule extends SwerveModule {
         Motors.disableStatusFrames(driveMotor, 3, 4, 5, 6);
         
         driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
+                .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
             .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
         
         targetState = new SwerveModuleState();
@@ -118,10 +122,6 @@ public class SL_SwerveModule extends SwerveModule {
     @Override 
     public void setTargetState(SwerveModuleState state) {
         targetState = SwerveModuleState.optimize(state, getAngle());
-        
-        if (Math.abs(targetState.speedMetersPerSecond) < Swerve.MODULE_VELOCITY_DEADBAND.get()) {
-            targetState.speedMetersPerSecond = 0;
-        }
     }
     
     @Override
@@ -147,9 +147,11 @@ public class SL_SwerveModule extends SwerveModule {
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnMotor.getOutputCurrent());
         SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getVelocity());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveMotor.getOutputCurrent());
     }
 }
