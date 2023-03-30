@@ -52,6 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -59,7 +60,6 @@ public class RobotContainer {
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
-    // public final Gamepad chooser = new BootlegXbox(Ports.Gamepad.CHOOSER);
     
     // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
@@ -84,7 +84,6 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
-        configureChooserBindings();
         configureAutons();
 
         LiveWindow.disableAllTelemetry();
@@ -112,7 +111,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         configureOperatorBindings();
         configureDriverBindings();
-        configureChooserBindings();
 
         new Trigger(new SmartBoolean("BOOM/ACQUIRE", false)::get)
             .onTrue(new IntakeAcquire())
@@ -139,6 +137,7 @@ public class RobotContainer {
 
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
+            .onTrue(new ManagerChooseScoreNode())
             .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
@@ -178,11 +177,12 @@ public class RobotContainer {
             .onFalse(new IntakeStop())
             .onFalse(new ArmStow());
 
-        // outtake
+        // intaking from HP
         operator.getLeftTriggerButton()
-            .whileTrue(new ArmOuttake().andThen(new IntakeDeacquire()))
-            .onFalse(new IntakeStop())
-            .onFalse(new ArmStow());
+        .whileTrue(new ArmIntakeHP())
+        .onTrue(new IntakeAcquire())
+        .onFalse(new IntakeStop())
+        .onFalse(new ArmStow());
 
         // ready & score
         operator.getLeftBumper()
@@ -217,16 +217,6 @@ public class RobotContainer {
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());
-    }
-
-    private void configureChooserBindings() {
-        // chooser.getDPadLeft().onTrue(new ManagerSetGridSection(Direction.LEFT));
-        // chooser.getDPadUp().onTrue(new ManagerSetGridSection(Direction.CENTER));
-        // chooser.getDPadRight().onTrue(new ManagerSetGridSection(Direction.RIGHT));
-        
-        // chooser.getLeftButton().onTrue(new ManagerSetGridColumn(Direction.LEFT));
-        // chooser.getTopButton().onTrue(new ManagerSetGridColumn(Direction.CENTER));
-        // chooser.getRightButton().onTrue(new ManagerSetGridColumn(Direction.RIGHT));
     }
 
     /**************/

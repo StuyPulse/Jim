@@ -98,7 +98,7 @@ public class TwoPiece extends DebugSequentialCommandGroup {
                 .alongWith(new WaitCommand(0.8).andThen(new ArmReady()
                     .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
 
-            new ManagerSetScoreIndex(1),
+            new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),

@@ -2,11 +2,14 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
+import com.stuypulse.robot.constants.Field.ScoreXPoses;
+import com.stuypulse.robot.constants.Field.ScoreYPoses;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,27 +65,18 @@ public class Manager extends SubsystemBase {
         BACK
     }
 
-    // Direction that describes a scoring position
-    public enum Direction {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
     private GamePiece gamePiece;
     private NodeLevel nodeLevel;
     private ScoreSide scoreSide;
 
-    private Direction gridSection;
-    private Direction gridColumn;
+    private SmartNumber gridNode;
 
     protected Manager() {
         gamePiece = GamePiece.CUBE;
         nodeLevel = NodeLevel.HIGH;
         scoreSide = ScoreSide.FRONT;
 
-        gridSection = Direction.CENTER;
-        gridColumn = Direction.CENTER;
+        gridNode = new SmartNumber("Manager/Grid Node", 0);
     }
 
     /** Generate Intake Trajectories **/
@@ -165,21 +159,24 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Translation2d getNearestScoreTranslation() {
+    private final int[] CUBE_INDEXES = {1, 4, 7};
+    private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+
+    public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
-        Translation2d[] positions = RobotContainer.getCachedAlliance() == Alliance.Blue ?
-            Field.BLUE_ALIGN_POSES : 
-            Field.RED_ALIGN_POSES;
+        double gridDistance = getSelectedScoreX();
+        double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
-        Translation2d nearest = positions[0];
-        double nearestDistance = robot.getDistance(nearest);
+        int nearest = 0;
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
 
-        for (int i = 1; i < positions.length; i++) {
-            double distance = robot.getDistance(positions[i]);
+        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
+            Translation2d current = new Translation2d(gridDistance, positions[i]);
+            double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
-                nearest = positions[i];
+                nearest = i;
                 nearestDistance = distance;
             }
         }
@@ -187,14 +184,47 @@ public class Manager extends SubsystemBase {
         return nearest;
     }
 
-    public Translation2d getSelectedScoreTranslation() {
-        int index = gridSection.ordinal() * 3 + gridColumn.ordinal();
-        
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            return Field.BLUE_ALIGN_POSES[index];
-        } else {
-            return Field.RED_ALIGN_POSES[index];
+    private double getSelectedScoreX() {
+        if (nodeLevel == NodeLevel.HIGH) {
+            switch (gamePiece) {
+                case CUBE:
+                    if (scoreSide == ScoreSide.FRONT)
+                        return ScoreXPoses.High.CUBE_FRONT;
+                    else
+                        return ScoreXPoses.High.CUBE_BACK;
+                case CONE_TIP_IN:
+                    return ScoreXPoses.High.CONE_TIP_IN;
+                case CONE_TIP_OUT:
+                    return ScoreXPoses.High.CONE_TIP_OUT;
+                default:
+                    return ScoreXPoses.Mid.CONE_TIP_IN;
+            }
+        } else if (nodeLevel == NodeLevel.MID) {
+            switch (gamePiece) {
+                case CUBE:
+                    if (scoreSide == ScoreSide.FRONT)
+                        return Field.ScoreXPoses.Mid.CUBE_FRONT;
+                    else
+                        return Field.ScoreXPoses.Mid.CUBE_BACK;
+                case CONE_TIP_IN:
+                    return Field.ScoreXPoses.Mid.CONE_TIP_IN;
+                case CONE_TIP_OUT:
+                    return Field.ScoreXPoses.Mid.CONE_TIP_OUT;
+                default:
+                    return ScoreXPoses.Mid.CONE_TIP_IN;
+            }
         }
+
+        return ScoreXPoses.Mid.CONE_TIP_IN;
+    }
+
+    public Translation2d getSelectedScoreTranslation() {
+        double gridDistance = getSelectedScoreX();
+        double positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+
+        return new Translation2d(
+            gridDistance,
+            positions[gridNode.intValue()]);
     }
 
     public Pose2d getScorePose() {
@@ -202,7 +232,10 @@ public class Manager extends SubsystemBase {
             Rotation2d.fromDegrees(180) :
             Rotation2d.fromDegrees(0);
 
-        return new Pose2d(getSelectedScoreTranslation(), rotation);
+        var translation = getSelectedScoreTranslation();
+        SmartDashboard.putNumber("Manager/Selected Score X", translation.getX());
+        SmartDashboard.putNumber("Manager/Selected Score Y", translation.getY());
+        return new Pose2d(translation, rotation);
     }
 
     /** Change and Read State **/
@@ -231,20 +264,12 @@ public class Manager extends SubsystemBase {
         this.scoreSide = scoreSide;
     }
 
-    public Direction getGridSection() {
-        return gridSection;
+    public int getGridNode() {
+        return gridNode.intValue();
     }
 
-    public void setGridSection(Direction gridSection) {
-        this.gridSection = gridSection;
-    }
-
-    public Direction getGridColumn() {
-        return gridColumn;
-    }
-
-    public void setGridColumn(Direction gridColumn) {
-        this.gridColumn = gridColumn;
+    public void setGridNode(int gridNode) {
+        this.gridNode.set(gridNode);
     }
 
     @Override
@@ -254,7 +279,5 @@ public class Manager extends SubsystemBase {
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());
         SmartDashboard.putString("Manager/Node Level", nodeLevel.name());
         SmartDashboard.putString("Manager/Score Side", scoreSide.name());
-        SmartDashboard.putString("Manager/Grid Section", gridSection.name());
-        SmartDashboard.putString("Manager/Grid Column", gridColumn.name());
     }
 }
