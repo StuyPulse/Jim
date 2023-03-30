@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.odometry;
 
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,6 +16,8 @@ public abstract class Odometry extends SubsystemBase {
     static {
         instance = new OdometryImpl();
     }
+
+    public static final SmartBoolean USE_VISION_ANGLE = new SmartBoolean("Odometry/Use Vision Angle Data", false);
 
     public static Odometry getInstance(){
         return instance;

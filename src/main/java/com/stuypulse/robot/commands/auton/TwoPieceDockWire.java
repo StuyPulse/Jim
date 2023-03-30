@@ -70,8 +70,8 @@ public class TwoPieceDockWire extends DebugSequentialCommandGroup {
                     .addEvent("ReadyArmOne", new ArmReady())
                     .withEvents(),
 
-            new ManagerSetScoreIndex(7),
-            new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
+            new ManagerSetGridNode(7),
+            // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop(),

@@ -1,6 +1,7 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -47,45 +48,99 @@ public interface Field {
         }
     }
 
-    // blue left to right
-    public interface ScorePoses {
-        double CUBE_X = 2.1;
-        double CONE_X = 2.052;
+    public interface ScoreXPoses {
+        public interface High {
+            double CUBE_BACK = 1.98;
+            double CUBE_FRONT = 1.830060;
+            double CONE_TIP_IN = 1.894;
+            double CONE_TIP_OUT = 1.783;
+        }
 
-        Translation2d ONE =   new Translation2d(CUBE_X, 7.0); // definitely wrong
-        Translation2d TWO =   new Translation2d(CUBE_X, 6.674766);
-        Translation2d THREE = new Translation2d(CUBE_X, 5.8913);
-        Translation2d FOUR =  new Translation2d(CUBE_X, 5.308);
-        Translation2d FIVE =  new Translation2d(CUBE_X, 5.044971);
-        Translation2d SIX =   new Translation2d(CUBE_X, 4.8087);
-        Translation2d SEVEN = new Translation2d(CUBE_X, 4.258);
-        Translation2d EIGHT = new Translation2d(CUBE_X, 3.724);
-        Translation2d NINE =  new Translation2d(CUBE_X, 3.03);
+        public interface Mid {
+            double CUBE_BACK = 1.868;
+            double CUBE_FRONT = 2.083577;
+            double CONE_TIP_IN = 2.275;
+            double CONE_TIP_OUT = 2.1433;
+        }
+
+        // Low Cube: 1.768088
     }
 
-    Translation2d RED_ALIGN_POSES[] = {
-        ScorePoses.ONE,
-        ScorePoses.TWO,
-        ScorePoses.THREE,
-        ScorePoses.FOUR,
-        ScorePoses.FIVE,
-        ScorePoses.SIX,
-        ScorePoses.SEVEN,
-        ScorePoses.EIGHT,
-        ScorePoses.NINE
-    };
+    // red left to right
+    public interface ScoreYPoses {
+        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
+            if (side == ScoreSide.FRONT)
+                return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
+            else
+                return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
+        }
 
-    Translation2d BLUE_ALIGN_POSES[] = {
-        AllianceUtil.getMirroredTranslation(ScorePoses.NINE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.EIGHT),
-        AllianceUtil.getMirroredTranslation(ScorePoses.SEVEN),
-        AllianceUtil.getMirroredTranslation(ScorePoses.SIX),
-        AllianceUtil.getMirroredTranslation(ScorePoses.FIVE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.FOUR),
-        AllianceUtil.getMirroredTranslation(ScorePoses.THREE),
-        AllianceUtil.getMirroredTranslation(ScorePoses.TWO),
-        AllianceUtil.getMirroredTranslation(ScorePoses.ONE)
-    };
+        public interface Back {
+            double ONE =   7.4376;
+            double TWO =   6.905;
+            double THREE = 6.3238;
+            double FOUR =  5.822;
+            double FIVE =  5.2947;
+            double SIX =   4.6;
+            double SEVEN = 4.1028;
+            double EIGHT = 3.557;
+            double NINE =  2.89;
+    
+            double RED_Y_POSES[] = {
+                Back.ONE,
+                Back.TWO,
+                Back.THREE,
+                Back.FOUR,
+                Back.FIVE,
+                Back.SIX,
+                Back.SEVEN,
+                Back.EIGHT,
+                Back.NINE
+            };
+    
+            double BLUE_Y_POSES[] = {
+                AllianceUtil.getMirroredYPose(Back.NINE),
+                AllianceUtil.getMirroredYPose(Back.EIGHT),
+                AllianceUtil.getMirroredYPose(Back.SEVEN),
+                AllianceUtil.getMirroredYPose(Back.SIX),
+                AllianceUtil.getMirroredYPose(Back.FIVE),
+                AllianceUtil.getMirroredYPose(Back.FOUR),
+                AllianceUtil.getMirroredYPose(Back.THREE),
+                AllianceUtil.getMirroredYPose(Back.TWO),
+                AllianceUtil.getMirroredYPose(Back.ONE)
+            };
+        }
+
+        public interface Front {
+            private static double backToFront(double backYPose) {
+                return backYPose - Units.inchesToMeters(3.0);
+            }
+    
+            double RED_Y_POSES[] = {
+                backToFront(Back.ONE),
+                backToFront(Back.TWO),
+                backToFront(Back.THREE),
+                backToFront(Back.FOUR),
+                backToFront(Back.FIVE),
+                backToFront(Back.SIX),
+                backToFront(Back.SEVEN),
+                backToFront(Back.EIGHT),
+                backToFront(Back.NINE)
+            };
+    
+            double BLUE_Y_POSES[] = {
+                AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.SIX)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.FIVE)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.FOUR)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.THREE)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.TWO)),
+                AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
+            };
+        }
+    }
 
 }
 
