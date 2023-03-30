@@ -10,8 +10,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class AllianceUtil {
+    public static double getMirroredYPose(double y) {
+        return Field.HEIGHT - y;
+    }
+
     public static Translation2d getMirroredTranslation(Translation2d translation) {
-        return new Translation2d(translation.getX(), Field.HEIGHT - translation.getY());
+        return new Translation2d(translation.getX(), getMirroredYPose(translation.getY()));
     }
 
     public static Pose2d getMirroredPose(Pose2d pose) {

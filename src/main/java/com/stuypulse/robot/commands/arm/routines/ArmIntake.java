@@ -75,9 +75,9 @@ public class ArmIntake extends ArmRoutine {
         // super.end(interrupted);
 
         if (!interrupted) {
-            if (manager.getGamePiece().isCube()) {
+            // if (manager.getGamePiece().isCube()) {
                 arm.setShoulderVoltage(Shoulder.INTAKE_VOLTAGE.get());
-            }
+            // }
             // if (manager.getGamePiece().isCube()) {
             //     arm.setWristVoltage(Wrist.INTAKE_VOLTAGE.get());
             // }

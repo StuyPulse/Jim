@@ -31,14 +31,6 @@ public class OdometryImpl extends Odometry {
     private interface VisionStdDevs {
         Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
         Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
-
-        // public static Vector<N3> get() {
-        //     if (Robot.getMatchState() == MatchState.AUTO) {
-        //         return AUTO_LOW;
-        //     } else {
-        //         return TELE_LOW;
-        //     }
-        // }
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -60,9 +52,9 @@ public class OdometryImpl extends Odometry {
                 startingPose, 
 
                 VecBuilder.fill(
-                    Units.inchesToMeters(694), 
-                    Units.inchesToMeters(694), 
-                    Math.toRadians(1)), 
+                    0.1,
+                    0.1,
+                    0.1),
 
                 VisionStdDevs.TELEOP);
 
@@ -119,10 +111,17 @@ public class OdometryImpl extends Odometry {
                 //     Timer.getFPGATimestamp() - result.latency,
                 //     VisionStdDevs.AUTO);
             } else {
-                poseEstimator.addVisionMeasurement(
-                    new Pose2d(result.pose.getTranslation(), getRotation()),
-                    Timer.getFPGATimestamp() - result.latency,
-                    VisionStdDevs.TELEOP);
+                if (USE_VISION_ANGLE.get()) {
+                    poseEstimator.addVisionMeasurement(
+                        result.pose,
+                        Timer.getFPGATimestamp() - result.latency,
+                        VisionStdDevs.TELEOP);
+                } else {
+                    poseEstimator.addVisionMeasurement(
+                        new Pose2d(result.pose.getTranslation(), getRotation()),
+                        Timer.getFPGATimestamp() - result.latency,
+                        VisionStdDevs.TELEOP);
+                }
             }
         }
     }
