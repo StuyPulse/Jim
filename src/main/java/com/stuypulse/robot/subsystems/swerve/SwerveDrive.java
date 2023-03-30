@@ -175,7 +175,7 @@ public class SwerveDrive extends SubsystemBase {
             throw new IllegalArgumentException("Number of desired module states does not match number of modules (" + modules.length + ")");
         }
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.MAX_MODULE_SPEED.get());
         
         for(int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(filterModuleState(states[i]));
