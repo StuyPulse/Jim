@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
+import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.constants.Field.ScoreYPoses;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -158,23 +159,24 @@ public class Manager extends SubsystemBase {
 
     /** Generate Score Pose **/
 
-    public Translation2d getNearestScoreTranslation() {
+    private final int[] CUBE_INDEXES = {1, 4, 7};
+    private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+
+    public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
         double gridDistance = getSelectedScoreX();
-        double[] positions = RobotContainer.getCachedAlliance() == Alliance.Blue ?
-            Field.ScoreYPoses.BLUE_Y_POSES : 
-            Field.ScoreYPoses.RED_Y_POSES;
+        double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
-        Translation2d nearest = new Translation2d(gridDistance, positions[0]);
-        double nearestDistance = robot.getDistance(nearest);
+        int nearest = 0;
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
 
-        for (int i = 1; i < positions.length; i++) {
+        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
             Translation2d current = new Translation2d(gridDistance, positions[i]);
             double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
-                nearest = current;
+                nearest = i;
                 nearestDistance = distance;
             }
         }
@@ -186,38 +188,43 @@ public class Manager extends SubsystemBase {
         if (nodeLevel == NodeLevel.HIGH) {
             switch (gamePiece) {
                 case CUBE:
-                    return Field.ScoreXPoses.High.CUBE;
+                    if (scoreSide == ScoreSide.FRONT)
+                        return ScoreXPoses.High.CUBE_FRONT;
+                    else
+                        return ScoreXPoses.High.CUBE_BACK;
                 case CONE_TIP_IN:
-                    return Field.ScoreXPoses.High.CONE_TIP_IN;
+                    return ScoreXPoses.High.CONE_TIP_IN;
                 case CONE_TIP_OUT:
-                    return Field.ScoreXPoses.High.CONE_TIP_OUT;
+                    return ScoreXPoses.High.CONE_TIP_OUT;
+                default:
+                    return ScoreXPoses.Mid.CONE_TIP_IN;
             }
         } else if (nodeLevel == NodeLevel.MID) {
             switch (gamePiece) {
                 case CUBE:
-                    return Field.ScoreXPoses.Mid.CUBE;
+                    if (scoreSide == ScoreSide.FRONT)
+                        return Field.ScoreXPoses.Mid.CUBE_FRONT;
+                    else
+                        return Field.ScoreXPoses.Mid.CUBE_BACK;
                 case CONE_TIP_IN:
                     return Field.ScoreXPoses.Mid.CONE_TIP_IN;
                 case CONE_TIP_OUT:
                     return Field.ScoreXPoses.Mid.CONE_TIP_OUT;
+                default:
+                    return ScoreXPoses.Mid.CONE_TIP_IN;
             }
         }
-        
-        return 0;
+
+        return ScoreXPoses.Mid.CONE_TIP_IN;
     }
 
     public Translation2d getSelectedScoreTranslation() {
         double gridDistance = getSelectedScoreX();
+        double positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
-            return new Translation2d(
-                gridDistance,
-                ScoreYPoses.BLUE_Y_POSES[gridNode.intValue()]);
-        } else {
-            return new Translation2d(
-                gridDistance,
-                ScoreYPoses.RED_Y_POSES[gridNode.intValue()]);
-        }
+        return new Translation2d(
+            gridDistance,
+            positions[gridNode.intValue()]);
     }
 
     public Pose2d getScorePose() {
@@ -225,7 +232,10 @@ public class Manager extends SubsystemBase {
             Rotation2d.fromDegrees(180) :
             Rotation2d.fromDegrees(0);
 
-        return new Pose2d(getSelectedScoreTranslation(), rotation);
+        var translation = getSelectedScoreTranslation();
+        SmartDashboard.putNumber("Manager/Selected Score X", translation.getX());
+        SmartDashboard.putNumber("Manager/Selected Score Y", translation.getY());
+        return new Pose2d(translation, rotation);
     }
 
     /** Change and Read State **/

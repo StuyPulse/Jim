@@ -111,10 +111,17 @@ public class OdometryImpl extends Odometry {
         }
         
         for (AprilTagData result : results) {
-            poseEstimator.addVisionMeasurement(
-                new Pose2d(result.pose.getTranslation(), getRotation()),
-                Timer.getFPGATimestamp() - result.latency,
-                VisionStdDevs.TELEOP);
+            if (USE_VISION_ANGLE.get()) {
+                poseEstimator.addVisionMeasurement(
+                    result.pose,
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.TELEOP);
+            } else {
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(result.pose.getTranslation(), getRotation()),
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.TELEOP);
+            }
         }
     }
 

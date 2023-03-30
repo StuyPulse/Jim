@@ -48,11 +48,11 @@ public interface Settings {
         SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
 
         public interface Acquire {
-            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1);
-            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1);
+            SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
+            SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
         
-            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 0.8);
-            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 0.8);
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1.0);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1.0);
         }
 
         public interface Deacquire {
@@ -203,7 +203,7 @@ public interface Settings {
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
-            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", -0.75);
+            SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
@@ -361,9 +361,13 @@ public interface Settings {
 
         SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.3);
 
-        SmartNumber ALIGNED_THRESHOLD_X = new SmartNumber("Alignment/X Threshold", 0.1);
-        SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
-        SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 5);
+
+        SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.05);
+        SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
+        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
 
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
