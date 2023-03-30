@@ -19,9 +19,6 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Arm": {
-          "open": true
-        },
         "Arm Trajectories": {
           "open": true
         },
@@ -137,7 +134,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 933,
+          "height": 972,
           "series": [
             {
               "color": [
@@ -181,7 +178,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -216,7 +213,7 @@
               "autoFit": true
             }
           ],
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -246,7 +243,7 @@
     "Plot <12>": {
       "plots": [
         {
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -281,7 +278,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -311,7 +308,7 @@
     "Plot <14>": {
       "plots": [
         {
-          "height": 418,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -381,7 +378,7 @@
     "Plot <16>": {
       "plots": [
         {
-          "height": 933,
+          "height": 972,
           "series": [
             {
               "color": [
@@ -416,7 +413,7 @@
               "autoFit": true
             }
           ],
-          "height": 425,
+          "height": 419,
           "series": [
             {
               "color": [
@@ -461,10 +458,70 @@
         "name": "Arm Voltages"
       }
     },
+    "Plot <18>": {
+      "plots": [
+        {
+          "height": 438,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Velocity Current"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Left/Angle Current"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Front Left Current"
+      }
+    },
+    "Plot <19>": {
+      "plots": [
+        {
+          "height": -33,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Angle Current"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Front Right/Velocity Current"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Front Right Current"
+      }
+    },
     "Plot <1>": {
       "plots": [
         {
-          "height": -36,
+          "height": -42,
           "series": [
             {
               "color": [
@@ -498,6 +555,66 @@
       ],
       "window": {
         "name": "Wrist Setpoint vs Target"
+      }
+    },
+    "Plot <20>": {
+      "plots": [
+        {
+          "height": 433,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Angle Current"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Left/Velocity Current"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Back Left Current"
+      }
+    },
+    "Plot <21>": {
+      "plots": [
+        {
+          "height": -33,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Angle Current"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Swerve/Back Right/Velocity Current"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "Back Right Current"
       }
     },
     "Plot <2>": {
@@ -566,7 +683,7 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": -30,
+          "height": -33,
           "series": [
             {
               "color": [
@@ -677,7 +794,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": 438,
           "series": [
             {
               "color": [
@@ -712,7 +829,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": 433,
           "series": [
             {
               "color": [

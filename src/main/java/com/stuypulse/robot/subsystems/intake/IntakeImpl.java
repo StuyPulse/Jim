@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -122,12 +124,12 @@ public class IntakeImpl extends Intake {
     @Override
     public void periodic() {
         // acquiring 
-        if (DriverStation.isTeleop() && acquiring) {
+        if (Robot.getMatchState() == MatchState.TELEOP && acquiring) {
             acquire();
         }
 
         // forward and stalling
-        if (DriverStation.isTeleop() && frontMotor.get() > 0 && hasCone()) {
+        if (Robot.getMatchState() == MatchState.TELEOP && frontMotor.get() > 0 && hasCone()) {
             stop();
         }
 
