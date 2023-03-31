@@ -20,6 +20,7 @@ import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
+import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;

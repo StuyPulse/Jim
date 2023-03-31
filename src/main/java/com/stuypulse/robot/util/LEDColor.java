@@ -6,7 +6,12 @@
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.leds.LEDImpl;
+import com.stuypulse.robot.subsystems.leds.LEDInstruction;
+import com.stuypulse.robot.subsystems.leds.LEDRainbow;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -16,13 +21,15 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Andrew Liu
  * @author Reya Miller
  * @author Colyi Chen
+ * @author Richie Xue
+ * @author Jo Walkup
  */
-public class LEDColor {
+public class LEDColor implements LEDInstruction{
     private final int red;
     private final int green;
     private final int blue; 
 
-    private LEDColor(int red, int green, int blue) {
+    public LEDColor(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -39,10 +46,17 @@ public class LEDColor {
     public int getBlue() {
         return blue;
     }
-    
-    public LEDColor setColor(int red, int green, int blue) {
-        return new LEDColor(red, green, blue);
+
+    @Override
+    public void setLED(AddressableLEDBuffer ledsBuffer) {
+        for (int i = 0; i < ledsBuffer.getLength(); i++) {
+            ledsBuffer.setRGB(i, getRed(), getGreen(), getBlue());
+        }
     }
+
+    // new LEDColor(255, 0, 0).setLED(buffer);
+    // new LEDRainbow().setLED(buffer);
+
 
     /***********************/
     /*** COLOR CONSTANTS ***/
@@ -74,7 +88,8 @@ public class LEDColor {
     public static final LEDColor YELLOW = new LEDColor(255, 255, 0);
 
     public static final LEDColor OFF = new LEDColor(0, 0, 0);
-    public static final LEDColor RAINBOW = OFF;
 
+    public static final LEDInstruction RAINBOW = new LEDRainbow();
+    
     
 }

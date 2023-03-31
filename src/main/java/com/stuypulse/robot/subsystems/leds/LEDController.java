@@ -3,21 +3,14 @@
 /* This work is licensed under the terms of the MIT license.    */
 /****************************************************************/
 
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.leds;
 
 import com.stuypulse.stuylib.util.StopWatch;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.util.LEDColor;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 /*-
  * Contains:
@@ -26,23 +19,21 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
  *
  * @author Sam Belliveau
  * @author Andrew Liu
+ * @author Richie Xue
+ * @author Jo Walkup
  */
-public class LEDController extends SubsystemBase {
+public abstract class LEDController extends SubsystemBase {
 
 // singleton
-    private static LEDController instance;
-
+    private static LEDControllerImpl instance;
+    
     static {
-        instance = new LEDController();
+        instance = new LEDControllerImpl();
     }
 
-    public static LEDController getInstance() {
+    public static LEDControllerImpl getInstance() {
         return instance;
     }
-
-    // Motor that controlls the LEDs
-    private AddressableLED leds;
-    private AddressableLEDBuffer ledsBuffer;
 
     // Stopwatch to check when to start overriding manual updates
     private final StopWatch lastUpdate;
@@ -52,34 +43,21 @@ public class LEDController extends SubsystemBase {
     private LEDColor manualColor;
 
     public LEDController() {
-        leds = new AddressableLED(Ports.LEDController.PORT);
-        ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); // get length of led strip ?
-
-        // set data
-        leds.setLength(ledsBuffer.getLength());
-        leds.setData(ledsBuffer);
-        leds.start();
-
         this.lastUpdate = new StopWatch();
     }
 
-    public void setColor(LEDColor color, double time) {
+    public final void setColor(LEDColor color, double time) {
         manualColor = color;
         manualTime = time;
         lastUpdate.reset();
     }
 
-    private void forceSetLEDs(LEDColor color) {
-        for (int i = 0; i < ledsBuffer.getLength(); i++) {
-            ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
-        }
-        leds.setData(ledsBuffer);
+    abstract protected void forceSetLED(LEDInstruction instruction);
+
+    public final void setLEDConditions() {
     }
 
-    private void setLEDConditions() {
-    }
-
-    public LEDColor getDefaultColor() {
+    public final LEDColor getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE: return LEDColor.PURPLE;
             case CONE_TIP_IN: return LEDColor.YELLOW;
@@ -93,12 +71,12 @@ public class LEDController extends SubsystemBase {
     public void periodic() {
         // If we called .setColor() recently, use that value
         if (Robot.getMatchState() == MatchState.AUTO || lastUpdate.getTime() < manualTime) {
-            forceSetLEDs(manualColor);
+            forceSetLED(manualColor);
         }
 
         // Otherwise use the default color
         else {
-            forceSetLEDs(getDefaultColor());
+            forceSetLED(getDefaultColor());
         }
     }
 }
