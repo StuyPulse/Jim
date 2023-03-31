@@ -56,13 +56,21 @@ public interface ArmTrajectories {
 
     public interface Ready {
         public interface Mid {
+            ArmState kConeTipUpBack = new ArmState(
+                new SmartNumber("Arm Trajectories/Alignment High Tip Up Back Shoulder", -145.5),
+                new SmartNumber("Arm Trajectories/Alignment High Tip Up Back Wrist",175.5));
+
             ArmState kConeTipInBack = new ArmState(
                 new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Shoulder", -176.94),
                 new SmartNumber("Arm Trajectories/Ready Mid Tip In Back Wrist", -158));
             
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Mid Tip Out/Shoulder", -4),
-                new SmartNumber("Arm Trajectories/Mid Tip Out/Wrist", 42));
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Shoulder", -4),
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Wrist", 42));
+
+            ArmState kAutonCubeBack = new ArmState(
+                new SmartNumber("Arm Trajectories/Ready Auton Mid Cube Back/Shoulder", 143.1),
+                new SmartNumber("Arm Trajectories/Ready Auton Mid Cube Back/Wrist", -133.5));
             
             ArmState kCubeFront = new ArmState(
                 new SmartNumber("Arm Trajectories/Mid Cube Front/Shoulder", -16),
