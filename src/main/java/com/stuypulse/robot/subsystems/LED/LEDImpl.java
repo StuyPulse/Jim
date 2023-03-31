@@ -1,15 +1,12 @@
-/************************ PROJECT DORCAS ************************/
-/* Copyright (c) 2022 StuyPulse Robotics. All rights reserved.  */
-/* This work is licensed under the terms of the MIT license.    */
-/****************************************************************/
-
-package com.stuypulse.robot.subsystems;
+package com.stuypulse.robot.subsystems.LED;
 
 import com.stuypulse.stuylib.util.StopWatch;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.LEDController;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,24 +16,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-/*-
- * Contains:
- *      - setColor() : sets color of LEDs for short time
- *      - getDefaultColor() : determines LED color if it is not set
- *
- * @author Sam Belliveau
- * @author Andrew Liu
- */
-public class LEDController extends SubsystemBase {
-
-// singleton
-    private static LEDController instance;
+public class LEDImpl extends LED{
+    private static LEDImpl instance;
 
     static {
-        instance = new LEDController();
+        instance = new LEDImpl();
     }
 
-    public static LEDController getInstance() {
+    public static LEDImpl getInstance() {
         return instance;
     }
 
@@ -45,13 +32,13 @@ public class LEDController extends SubsystemBase {
     private AddressableLEDBuffer ledsBuffer;
 
     // Stopwatch to check when to start overriding manual updates
-    private final StopWatch lastUpdate;
+    private StopWatch lastUpdate;
     private double manualTime;
 
     // The current color to set the LEDs to
     private LEDColor manualColor;
 
-    public LEDController() {
+    protected LEDImpl() {
         leds = new AddressableLED(Ports.LEDController.PORT);
         ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); // get length of led strip ?
 
