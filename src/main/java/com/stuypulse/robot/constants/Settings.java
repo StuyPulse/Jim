@@ -277,11 +277,13 @@ public interface Settings {
     }
 
     public interface AutoBalance {
-        SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 8);
+        SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Distance Threshold", 0.05);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Angle Thrshold", 12);
+
+        SmartNumber ANGULAR_VELOCITY_THRESHOLD = new SmartNumber("Auto Balance/Velocity Balance/Angular Velocity Thrshold", 4 );
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
-        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.8);
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 5);
 
         SmartNumber kT_u = new SmartNumber("Auto Balance/With Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
 

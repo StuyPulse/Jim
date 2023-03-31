@@ -135,13 +135,15 @@ public class RobotContainer {
         driver.getRightTriggerButton()
             .whileTrue(new RobotRelease());
 
-        driver.getTopButton()
-            .onTrue(new ManagerValidateState())
-            .onTrue(new ManagerChooseScoreNode())
-            .whileTrue(new SwerveDriveToScorePose());
+        // driver.getTopButton()
+        //     .onTrue(new ManagerValidateState())
+        //     .onTrue(new ManagerChooseScoreNode())
+        //     .whileTrue(new SwerveDriveToScorePose());
 
         // swerve
-        driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+        driver.getTopButton().whileTrue(new SwerveDriveAlignThenBalance());
+
+        driver.getLeftButton().whileTrue(new SwerveDriveVelocityBalance());
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
