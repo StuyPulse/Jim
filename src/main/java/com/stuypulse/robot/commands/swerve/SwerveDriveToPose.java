@@ -54,9 +54,16 @@ public class SwerveDriveToPose extends CommandBase{
 
     private boolean isAligned() {
         boolean isCone = Manager.getInstance().getGamePiece().isCone();
-        return xController.isDone(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_X.get() : Alignment.ALIGNED_CUBE_THRESHOLD_X.get())
-            && yController.isDone(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_Y.get() : Alignment.ALIGNED_CUBE_THRESHOLD_Y.get())
-            && angleController.isDoneDegrees(isCone ? Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get() : Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
+        if (isCone) {
+            return xController.isDone(Alignment.ALIGNED_CONE_THRESHOLD_X.get())
+                && yController.isDone(Alignment.ALIGNED_CONE_THRESHOLD_Y.get())
+                && angleController.isDoneDegrees(Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
+
+        } else {
+            return xController.isDone(Alignment.ALIGNED_CUBE_THRESHOLD_X.get())
+                && yController.isDone(Alignment.ALIGNED_CUBE_THRESHOLD_Y.get())
+                && angleController.isDoneDegrees(Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
+        }
     }
 
     @Override
