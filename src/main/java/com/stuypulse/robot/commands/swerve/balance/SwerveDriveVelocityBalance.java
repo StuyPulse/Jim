@@ -12,6 +12,7 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveVelocityBalance extends CommandBase {
@@ -52,6 +53,8 @@ public class SwerveDriveVelocityBalance extends CommandBase {
 
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             currentAngle < 0 ? -speed.doubleValue() : speed.doubleValue(), 0, 0, odometry.getRotation()));
+
+        SmartDashboard.putNumber("Auto Balance/CS Angular Velocity (deg per s)", angleVelocity);
     }
 
     @Override
