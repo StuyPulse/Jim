@@ -1,6 +1,6 @@
 package com.stuypulse.robot.commands;
 
-import com.stuypulse.robot.constants.ArmTrajectories.Ready.Score;
+import com.stuypulse.robot.constants.ArmTrajectories.Score;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
