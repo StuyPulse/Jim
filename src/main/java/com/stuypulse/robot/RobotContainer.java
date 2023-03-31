@@ -89,7 +89,7 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         // DriverStation.silenceJoystickConnectionWarning(true);
         // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
-        CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
+        // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
 
         SmartDashboard.putData("Gamepads/Driver", driver);
         SmartDashboard.putData("Gamepads/Operator", operator);
@@ -232,7 +232,9 @@ public class RobotContainer {
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.setDefaultOption("One Piece Mobility Dock", new OnePieceMobilityDock());
-        
+        autonChooser.addOption("Three Piece", new ThreePiece());
+        autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
+
         SmartDashboard.putData("Autonomous", autonChooser);
     }
 
