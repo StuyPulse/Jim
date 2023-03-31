@@ -30,7 +30,7 @@ public class SwerveDriveVelocityBalance extends CommandBase {
 
     public SwerveDriveVelocityBalance() {
         speed = AutoBalance.MAX_SPEED;
-        angleVelocityThreshold = AutoBalance.ANGLE_THRESHOLD.doubleValue();
+        angleVelocityThreshold = AutoBalance.ANGULAR_VELOCITY_THRESHOLD.doubleValue();
 
         angleVelocity = 0;
         previousAngle = 0;
