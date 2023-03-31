@@ -100,7 +100,7 @@ public abstract class Arm extends SubsystemBase {
                 if (isShoulderLimp()) return 0;
                 return shoulderVoltageOverride.orElse(x);
             })
-        ;
+            ;
         
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
@@ -260,6 +260,7 @@ public abstract class Arm extends SubsystemBase {
         // Run control loops on validated target angles
         shoulderController.update(
             getWrappedShoulderAngle(getShoulderTargetAngle()), 
+            // getShoulderTargetAngle().getRadians(),
             getShoulderAngle().getRadians());
 
         wristController.update(
