@@ -36,7 +36,7 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
         
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
@@ -87,7 +87,6 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
         // drive to grid and score second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetScoreSide(ScoreSide.BACK),
 
             new LEDSet(LEDColor.RED),
