@@ -10,8 +10,10 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
@@ -19,10 +21,12 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-import com.stuypulse.robot.util.AngleVelocity;
+import com.stuypulse.stuylib.streams.filters.MotionProfile;
 import com.stuypulse.robot.util.ArmDriveFeedforward;
 import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
+import com.stuypulse.robot.util.ArmEncoderFeedforward;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -44,13 +48,10 @@ public abstract class Arm extends SubsystemBase {
     private static final Arm instance;
 
     static {
-        if (RobotBase.isSimulation())
-            instance = new PerfectArm();
-            // instance = new SimArm();
-        else if (Settings.ROBOT == Robot.JIM)
+        if (RobotBase.isReal() && Settings.ROBOT == Robot.JIM)
             instance = new ArmImpl();
         else
-            instance = new PerfectArm();
+            instance = new SimArm();
     }
 
     public static Arm getInstance() {
@@ -64,7 +65,7 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber wristTargetDegrees;
 
     // controllers for each joint
-    private final AngleController shoulderController;
+    private final Controller shoulderController;
     private final AngleController wristController;
 
     // Mechanism2d visualizer
@@ -77,7 +78,7 @@ public abstract class Arm extends SubsystemBase {
     // Voltage overrides (used when present)
     private Optional<Double> wristVoltageOverride;
     private Optional<Double> shoulderVoltageOverride;
-
+    
     private BStream wristEnabled;
 
     protected Arm() {
@@ -87,12 +88,12 @@ public abstract class Arm extends SubsystemBase {
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
             .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
-        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-            .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
+            .add(new ArmEncoderFeedforward(Shoulder.Feedforward.kG))
             .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
-            .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+            .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
-                new AMotionProfile(
+                new MotionProfile(
                     Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
                     Shoulder.MAX_ACCELERATION.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
@@ -151,6 +152,10 @@ public abstract class Arm extends SubsystemBase {
     }
 
     // Set target states
+    private static double getWrappedShoulderAngle(Rotation2d angle) {
+        return MathUtil.inputModulus(angle.getRadians(), Units.degreesToRadians(-270), Units.degreesToRadians(+90));
+    }
+    
     public final void setShoulderTargetAngle(Rotation2d angle) {
         shoulderVoltageOverride = Optional.empty();
         shoulderTargetDegrees.set(angle.getDegrees());
@@ -254,8 +259,8 @@ public abstract class Arm extends SubsystemBase {
 
         // Run control loops on validated target angles
         shoulderController.update(
-            Angle.fromRotation2d(getShoulderTargetAngle()), 
-            Angle.fromRotation2d(getShoulderAngle()));
+            getWrappedShoulderAngle(getShoulderTargetAngle()), 
+            getShoulderAngle().getRadians());
 
         wristController.update(
             Angle.fromRotation2d(getWristTargetAngle()), 
@@ -264,13 +269,13 @@ public abstract class Arm extends SubsystemBase {
         setWristVoltageImpl(wristController.getOutput());
         setShoulderVoltageImpl(shoulderController.getOutput());
 
-        armVisualizer.setTargetAngles(shoulderController.getSetpoint().toDegrees(), wristController.getSetpoint().toDegrees());
+        armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()), wristController.getSetpoint().toDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", shoulderController.getSetpoint().toDegrees());
-        SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", shoulderController.getError().toDegrees());
+        SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", Units.radiansToDegrees(shoulderController.getSetpoint()));
+        SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", Units.radiansToDegrees(shoulderController.getError()));
         SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderController.getOutput());
         SmartDashboard.putNumber("Arm/Shoulder/Velocity (deg per s)", Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond()));
 
