@@ -192,7 +192,7 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 - 60.0/360.0).plus(Rotation2d.fromDegrees(+90));
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
@@ -206,16 +206,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 3.0);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 2.5);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
                 SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.5);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.30);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1977);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.1);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 2.0675);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.31279);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.3423);
             }
         }
     
