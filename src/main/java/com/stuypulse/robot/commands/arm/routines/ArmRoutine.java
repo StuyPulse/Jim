@@ -21,7 +21,7 @@ public abstract class ArmRoutine extends CommandBase {
     private Number shoulderVelocityTolerance;
     private Number wristVelocityTolerance;
     
-    private final Arm arm;
+    protected final Arm arm;
     protected final Supplier<ArmState> endState;
     
     protected ArmTrajectory trajectory;
@@ -68,6 +68,7 @@ public abstract class ArmRoutine extends CommandBase {
     public void initialize() {
         trajectory = getTrajectory(Arm.getInstance().getState(), endState.get());
         
+        arm.disableGamePieceGravityCompensation();
         // for (ArmState state : trajectory.getStates()) {
         //     System.out.println("Shoulder: " + state.getShoulderDegrees() + ", Wrist: " + state.getWristDegrees());
         // }
@@ -107,14 +108,6 @@ public abstract class ArmRoutine extends CommandBase {
         return trajectory.getEntries() == 0 || currentIndex >= trajectory.getEntries();
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
-            arm.setWristVoltage(0);
-            arm.setShoulderVoltage(0);
-            // arm.setTargetState(arm.getState());
-        }
-    }
     
     public ArmRoutine withTolerance(double wristTolerance, double shoulderTolerance) {
         this.wristTolerance = wristTolerance;

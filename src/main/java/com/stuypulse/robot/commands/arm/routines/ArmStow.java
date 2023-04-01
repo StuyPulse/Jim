@@ -17,8 +17,8 @@ public class ArmStow extends ArmRoutine {
         double wristSafeAngle = Settings.Arm.Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
-            .addState(src.getShoulderDegrees(), wristSafeAngle)
-            .addState(dest.getShoulderDegrees(), wristSafeAngle)
+            .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle).setWristTolerance(12))
+            .addState(new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristTolerance(45))
             .addState(dest.setShoulderTolerance(4).setWristTolerance(5));
 	}
 
