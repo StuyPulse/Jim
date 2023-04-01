@@ -206,16 +206,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 1.8);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 1.3);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.147);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.25);
             }
             
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.4222);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kV", 0.71483);
+                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.6); // CONE kG: 0.71
             }
         }
     
@@ -245,7 +245,7 @@ public interface Settings {
 
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.0);
 
-            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 110);
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 

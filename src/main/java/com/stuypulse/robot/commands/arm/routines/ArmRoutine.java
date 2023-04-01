@@ -107,14 +107,6 @@ public abstract class ArmRoutine extends CommandBase {
         return trajectory.getEntries() == 0 || currentIndex >= trajectory.getEntries();
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
-            arm.setWristVoltage(0);
-            arm.setShoulderVoltage(0);
-            // arm.setTargetState(arm.getState());
-        }
-    }
     
     public ArmRoutine withTolerance(double wristTolerance, double shoulderTolerance) {
         this.wristTolerance = wristTolerance;
