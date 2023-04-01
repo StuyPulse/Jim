@@ -50,17 +50,17 @@ public interface Field {
 
     public interface ScoreXPoses {
         public interface High {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Cube Back", 1.98);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Cube Front", 1.830060);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Cone Tip In", 1.894);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Cone Tip Out", 1.783);
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.783);
         }
 
         public interface Mid {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Cube Back", 1.868);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Cube Front", 2.083577);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Cone Tip In", 2.275);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Cone Tip Out", 2.1433);
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.868);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.083577);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433);
         }
 
         // Low Cube: 1.768088
@@ -76,15 +76,15 @@ public interface Field {
         }
 
         public interface Back {
-            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red", 7.4376);
-            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red", 6.905);
-            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red", 6.3238);
-            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red", 5.822);
-            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red", 5.2947);
-            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red", 4.6);
-            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red", 4.1028);
-            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red", 3.557);
-            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red", 2.89);
+            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", 7.4376);
+            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", 6.905);
+            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", 6.3238);
+            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", 5.822);
+            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", 5.2947);
+            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", 4.6);
+            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.1028);
+            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.557);
+            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 2.89);
     
             Number RED_Y_POSES[] = {
                 Back.ONE,
