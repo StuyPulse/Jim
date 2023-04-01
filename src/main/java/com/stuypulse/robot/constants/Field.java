@@ -4,6 +4,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -53,7 +54,7 @@ public interface Field {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
             SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
             SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.783);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82);
         }
 
         public interface Mid {
@@ -113,7 +114,7 @@ public interface Field {
 
         public interface Front {
             private static Number backToFront(Number backYPose) {
-                return backYPose.doubleValue() - Units.inchesToMeters(3.0);
+                return IStream.create(() -> backYPose.doubleValue() - Units.inchesToMeters(3.0)).number();
             }
     
             Number RED_Y_POSES[] = {

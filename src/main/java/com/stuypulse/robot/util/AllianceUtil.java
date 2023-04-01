@@ -1,6 +1,7 @@
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class AllianceUtil {
     public static Number getMirroredYPose(Number y) {
-        return Field.HEIGHT - y.doubleValue();
+        return IStream.create(() -> Field.HEIGHT - y.doubleValue()).number();
     }
 
     public static Translation2d getMirroredTranslation(Translation2d translation) {
