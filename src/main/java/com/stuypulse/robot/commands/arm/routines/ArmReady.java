@@ -37,9 +37,9 @@ public class ArmReady extends ArmRoutine {
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
                         .setWristLimp(true))
                 
-                // .addState(
-                //     dest.getShoulderDegrees(), 
-                //     (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+                .addState(
+                    dest.getShoulderDegrees(), 
+                    (Manager.getInstance().getNodeLevel() == NodeLevel.MID) ? dest.getWristDegrees() : (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
             
                 .addState(dest);
         }
