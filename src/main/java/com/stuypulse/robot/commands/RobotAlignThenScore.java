@@ -82,6 +82,7 @@ public class RobotAlignThenScore extends CommandBase {
     @Override
     public void initialize() {
         movingWhileScoring = false;
+        intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
     }
 
@@ -106,7 +107,8 @@ public class RobotAlignThenScore extends CommandBase {
                         ArmTrajectories.Score.Mid.kConeTipOutFront :
                         ArmTrajectories.Score.High.kConeTipOutFront);
 
-                if (arm.isAtTargetState(3, 3)) {
+                if (arm.isAtTargetState(5, 360)) {
+                    intake.enableCoast();
                     System.out.println("ALIGNED");
                     movingWhileScoring = true;
                     swerve.setChassisSpeeds(new ChassisSpeeds(-Units.inchesToMeters(16), 0, 0));
@@ -126,6 +128,7 @@ public class RobotAlignThenScore extends CommandBase {
     }
 
     public void end(boolean interupted) {
+        intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         intake.stop();
