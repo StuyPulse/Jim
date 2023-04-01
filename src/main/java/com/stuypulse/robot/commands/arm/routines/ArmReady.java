@@ -21,6 +21,14 @@ public class ArmReady extends ArmRoutine {
     }
 
     @Override
+    public void initialize() {
+        super.initialize();
+        
+
+        arm.enableGamePieceGravityCompensation();
+    }
+
+    @Override
     protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_UP) {
             return new ArmTrajectory()
@@ -75,12 +83,5 @@ public class ArmReady extends ArmRoutine {
                 .setWristTolerance(3));
     }
 
-    @Override
-    public boolean isFinished() {
-        if (Robot.getMatchState() == MatchState.AUTO) {
-            return super.isFinished(); // Math.abs(Arm.getInstance().getWristVelocityRadiansPerSecond()) < Math.toRadians(5);
-        } else {
-            return super.isFinished();
-        }
-    }
+    
 }
