@@ -49,7 +49,7 @@ public class ArmReady extends ArmRoutine {
     
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(10))
+                    .setWristTolerance(45))
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristLimp(true).setWristTolerance(360))
                 .addState(dest);

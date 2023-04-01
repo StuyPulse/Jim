@@ -23,9 +23,9 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.3;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(4, 3.2);
-    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.8, 4);
-    private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.8, 3);
+    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(4,3);
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4, 3);
+    private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
 
     public ThreePiece() {
 
@@ -50,7 +50,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 15)
-                .withTimeout(2.5)
+                .withTimeout(1.5)
         );
 
         addCommands(
@@ -77,7 +77,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
                 new ArmIntake()
                     .withTolerance(7, 10)
-                    .withTimeout(4)
+                    .withTimeout(paths.get("Intake Piece").getTotalTimeSeconds())
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
@@ -98,7 +98,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .fieldRelative()
                 .withStop()
                 .alongWith(new ArmReady()
-                .withTolerance(17, 9).alongWith(new IntakeStop())),
+                .withTolerance(20, 15).alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -124,8 +124,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntake()
-                    .withTolerance(7, 10)
-                    .withTimeout(4)
+                    .withTolerance(10, 10)
+                    .withTimeout(paths.get("Intake Third Piece").getTotalTimeSeconds())
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
@@ -143,11 +143,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.RED),
 
             new SwerveDriveFollowTrajectory(
-                paths.get("Score Piece"))
+                paths.get("Score Third Piece"))
                     .fieldRelative()
                 .withStop()
                 .alongWith(new ArmReady()
-                .withTolerance(17, 9).alongWith(new IntakeStop())),
+                .withTolerance(20, 15).alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),

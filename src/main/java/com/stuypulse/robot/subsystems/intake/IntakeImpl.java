@@ -129,7 +129,7 @@ public class IntakeImpl extends Intake {
         }
 
         // forward and stalling
-        if (Robot.getMatchState() == MatchState.TELEOP && frontMotor.get() > 0 && hasGamePiece()) {
+        if (frontMotor.get() > 0 && hasGamePiece()) {
             stop();
         }
 
