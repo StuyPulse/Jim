@@ -20,7 +20,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
-    private static final double INTAKE_WAIT_TIME = 2.0;
+    private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(4, 3.2);
