@@ -68,7 +68,7 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public boolean hasCone() {
+    public boolean hasGamePiece() {
         return isStalling();
     }
 
@@ -129,7 +129,7 @@ public class IntakeImpl extends Intake {
         }
 
         // forward and stalling
-        if (Robot.getMatchState() == MatchState.TELEOP && frontMotor.get() > 0 && hasCone()) {
+        if (Robot.getMatchState() == MatchState.TELEOP && frontMotor.get() > 0 && hasGamePiece()) {
             stop();
         }
 

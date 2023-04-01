@@ -153,7 +153,7 @@ public class RobotContainer {
         driver.getRightButton().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
-        new Trigger(intake::hasCone)
+        new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
             .debounce(0.5, DebounceType.kFalling)
             .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
