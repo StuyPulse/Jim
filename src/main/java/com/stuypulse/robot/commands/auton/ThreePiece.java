@@ -25,11 +25,12 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(4, 3.2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.8, 4);
+    private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.8, 3);
 
     public ThreePiece() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece"
         );
 
@@ -49,7 +50,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 15)
-                .withTimeout(4)
+                .withTimeout(2.5)
         );
 
         addCommands(
@@ -76,7 +77,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
                 new ArmIntake()
                     .withTolerance(7, 10)
-                    .withTimeout(6.5)
+                    .withTimeout(4)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
@@ -124,7 +125,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
                 new ArmIntake()
                     .withTolerance(7, 10)
-                    .withTimeout(6.5)
+                    .withTimeout(4)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
