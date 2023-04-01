@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.leds.LEDSetRainbow;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
@@ -15,6 +16,7 @@ import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -37,6 +39,8 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
     private static final double STOW_WAIT_TIME = 0.5;
     private static final double REF_REACTION_TIME = 0.8;
     private static final double ENGAGE_TIME = 10.0;
+
+    private AddressableLEDBuffer ledsBuffer;
 
     private static final PathConstraints OVER_CHARGE = new PathConstraints(1, 2);
     private static final PathConstraints DOCK = new PathConstraints(1, 2);
@@ -90,7 +94,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.RAINBOW),
+            new LEDSetRainbow(),
 
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(0.6)

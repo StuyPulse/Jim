@@ -6,7 +6,7 @@
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.leds.LEDImpl;
+import com.stuypulse.robot.subsystems.leds.LEDControllerImpl;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
 

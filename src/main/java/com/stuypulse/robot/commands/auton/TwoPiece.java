@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.leds.LEDSetRainbow;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -12,6 +13,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -21,6 +23,8 @@ public class TwoPiece extends DebugSequentialCommandGroup {
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
+
+    private AddressableLEDBuffer ledsBuffer;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(1.7, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
@@ -106,7 +110,7 @@ public class TwoPiece extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.RAINBOW),
+            new LEDSetRainbow(),
             new SwerveDriveFollowTrajectory(
                 paths.get("Back Away"))
                     .fieldRelative()

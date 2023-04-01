@@ -37,7 +37,7 @@ public class LEDControllerImpl extends LEDController {
     }
 
     @Override
-    protected void forceSetLED(LEDInstruction instruction) {
+    public void forceSetLED(LEDInstruction instruction) {
         instruction.setLED(ledsBuffer);
         leds.setData(ledsBuffer);
     }

@@ -25,13 +25,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class LEDController extends SubsystemBase {
 
 // singleton
-    private static LEDControllerImpl instance;
+    private static LEDController instance;
     
     static {
         instance = new LEDControllerImpl();
     }
 
-    public static LEDControllerImpl getInstance() {
+    public static LEDController getInstance() {
         return instance;
     }
 
@@ -46,18 +46,18 @@ public abstract class LEDController extends SubsystemBase {
         this.lastUpdate = new StopWatch();
     }
 
-    public final void setColor(LEDColor color, double time) {
+    public void setColor(LEDColor color, double time) {
         manualColor = color;
         manualTime = time;
         lastUpdate.reset();
     }
 
-    abstract protected void forceSetLED(LEDInstruction instruction);
+    public abstract void forceSetLED(LEDInstruction instruction);
 
-    public final void setLEDConditions() {
+    public void setLEDConditions() {
     }
 
-    public final LEDColor getDefaultColor() {
+    public LEDColor getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE: return LEDColor.PURPLE;
             case CONE_TIP_IN: return LEDColor.YELLOW;

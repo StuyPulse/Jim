@@ -15,6 +15,8 @@ package com.stuypulse.robot.commands.leds;
 import com.stuypulse.robot.util.LEDColor;
 
 import com.stuypulse.robot.constants.Settings;
+//import com.stuypulse.robot.constants.Ports.LEDController;
+import com.stuypulse.robot.subsystems.leds.*;
 import com.stuypulse.robot.subsystems.leds.LEDControllerImpl;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,10 +25,10 @@ public class LEDSet extends InstantCommand {
 
     private LEDColor color;
     private double updateTime;
-    private LEDControllerImpl controller;
+    private LEDController controller;
 
     public LEDSet(LEDColor color, double updateTime) {
-        this.controller = LEDControllerImpl.getInstance();
+        this.controller = LEDController.getInstance();
         this.updateTime = updateTime;
         this.color = color;
     }

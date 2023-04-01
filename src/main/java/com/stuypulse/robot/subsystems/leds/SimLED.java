@@ -24,6 +24,7 @@ public class SimLED extends LEDController{
         simulation = new SimLED();
     }
 
+    //@Override
     public static SimLED getInstance() {
         return simulation;
     }
@@ -64,7 +65,7 @@ public class SimLED extends LEDController{
         // leds.setData(ledsBuffer);
     }
 
-    private void setLEDConditions() {
+    public void setLEDConditions() {
     }
 
     public LEDColor getDefaultColor() {
@@ -88,5 +89,11 @@ public class SimLED extends LEDController{
         else {
             forceSetLEDs(getDefaultColor());
         }
+    }
+
+    @Override
+    public void forceSetLED(LEDInstruction instruction) {
+        // TODO Auto-generated method stub
+        
     }
 }
