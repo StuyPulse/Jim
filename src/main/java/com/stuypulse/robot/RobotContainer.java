@@ -191,7 +191,10 @@ public class RobotContainer {
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
-                    .andThen(new ArmReady()));
+                    .andThen(new ArmReady())
+                    .alongWith(new IntakeAcquire()).withTimeout(0.2)
+                    );
+
 
         operator.getRightButton()
             .onTrue(new IntakeScore())
