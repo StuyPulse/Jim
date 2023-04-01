@@ -83,9 +83,13 @@ public abstract class Arm extends SubsystemBase {
 
     private boolean pieceGravityCompensation;
 
-    private class kG extends Number {
+    private class GamePiecekG extends Number {
         @Override
         public double doubleValue() {
+            if (!pieceGravityCompensation) {
+                return Shoulder.Feedforward.kGEmpty.doubleValue();
+            }
+
             switch (Manager.getInstance().getGamePiece()) {
                 case CONE_TIP_IN:
                     return Shoulder.Feedforward.kGCone.doubleValue();
@@ -96,7 +100,7 @@ public abstract class Arm extends SubsystemBase {
                 case CUBE:
                     return Shoulder.Feedforward.kGCube.doubleValue();
                 default:
-                    return Shoulder.Feedforward.kG.doubleValue();
+                    return Shoulder.Feedforward.kGEmpty.doubleValue();
             }
         }
 
@@ -124,8 +128,8 @@ public abstract class Arm extends SubsystemBase {
             .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-            .add(new ArmEncoderAngleFeedforward(new kG()))
-            .add(new ArmDriveFeedforward(new kG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
+            .add(new ArmEncoderAngleFeedforward(new GamePiecekG()))
+            .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
@@ -330,6 +334,7 @@ public abstract class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled Raw", isWristFeedbackEnabled());
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", wristEnabled.get());
+        SmartDashboard.putNumber("Arm/Shoulder/kG", new GamePiecekG().doubleValue());
 
         SmartDashboard.putBoolean("Arm/Shoulder/Game Piece Compensation", pieceGravityCompensation);
 

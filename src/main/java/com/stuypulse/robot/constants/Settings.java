@@ -215,7 +215,7 @@ public interface Settings {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.6);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
 
                 SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
                 SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
