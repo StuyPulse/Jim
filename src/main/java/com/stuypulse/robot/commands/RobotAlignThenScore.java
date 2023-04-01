@@ -96,10 +96,7 @@ public class RobotAlignThenScore extends CommandBase {
 
         if (aligned.get() || movingWhileScoring) {
             // score
-            System.out.println("MOVING WHILE SCORING");
-            
             if (Manager.getInstance().getGamePiece().isCube()) {
-                System.out.println("SCORING CUBE");
                 intake.deacquire();
             } else if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_OUT) {
                 arm.setTargetState(
@@ -109,7 +106,6 @@ public class RobotAlignThenScore extends CommandBase {
 
                 if (arm.isAtTargetState(5, 360)) {
                     intake.enableCoast();
-                    System.out.println("ALIGNED");
                     movingWhileScoring = true;
                     swerve.setChassisSpeeds(new ChassisSpeeds(-Units.inchesToMeters(16), 0, 0));
                 }
@@ -117,7 +113,6 @@ public class RobotAlignThenScore extends CommandBase {
                 // don't automate yet
             }
         } else {
-            System.out.println("DONE ALIGNING");
             swerve.setChassisSpeeds(controller.getOutput());
         }
     }
