@@ -48,7 +48,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new ArmReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 9)
+                .withTolerance(7, 15)
                 .withTimeout(4)
         );
 
@@ -96,8 +96,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new WaitCommand(0.8).andThen(new ArmReady()
-                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
+                .alongWith(new ArmReady()
+                .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -145,8 +145,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new WaitCommand(0.8).andThen(new ArmReady()
-                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
+                .alongWith(new ArmReady()
+                .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),

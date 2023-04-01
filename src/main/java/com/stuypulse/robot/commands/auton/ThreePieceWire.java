@@ -96,8 +96,8 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new WaitCommand(0.8).andThen(new ArmReady()
-                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
+                .alongWith(new ArmReady()
+                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -145,8 +145,8 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                 paths.get("Score Third Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new WaitCommand(0.8).andThen(new ArmReady()
-                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop())))),
+                .alongWith(new ArmReady()
+                    .withTolerance(17, 9).alongWith(new WaitCommand(0.1).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
