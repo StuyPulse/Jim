@@ -85,7 +85,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
-        // drive to grid and score second piece
+        // drive to grid and score second piece :: TODO: make custom arm setpoint for this
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetScoreSide(ScoreSide.BACK),
