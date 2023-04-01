@@ -6,6 +6,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.ArmState;
@@ -80,6 +81,41 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
+    private boolean pieceGravityCompensation;
+
+    private class kG extends Number {
+        @Override
+        public double doubleValue() {
+            switch (Manager.getInstance().getGamePiece()) {
+                case CONE_TIP_IN:
+                    return Shoulder.Feedforward.kGCone.doubleValue();
+                case CONE_TIP_OUT:
+                    return Shoulder.Feedforward.kGCone.doubleValue();
+                case CONE_TIP_UP:
+                    return Shoulder.Feedforward.kGCone.doubleValue();
+                case CUBE:
+                    return Shoulder.Feedforward.kGCube.doubleValue();
+                default:
+                    return Shoulder.Feedforward.kG.doubleValue();
+            }
+        }
+
+        @Override
+        public float floatValue() {
+            return (float)doubleValue();
+        }
+
+        @Override
+        public int intValue() {
+            return (int)doubleValue();
+        }
+
+        @Override
+        public long longValue() {
+            return (long)doubleValue();
+        }
+    }
+
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
@@ -88,8 +124,8 @@ public abstract class Arm extends SubsystemBase {
             .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-            .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
-            .add(new ArmDriveFeedforward(Shoulder.Feedforward.kG, SwerveDrive.getInstance()::getForwardAccelerationGs))
+            .add(new ArmEncoderAngleFeedforward(new kG()))
+            .add(new ArmDriveFeedforward(new kG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
@@ -121,6 +157,18 @@ public abstract class Arm extends SubsystemBase {
         shoulderVoltageOverride = Optional.empty();
 
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
+
+        pieceGravityCompensation = false;
+    }
+
+    // 
+
+    public void enableGamePieceGravityCompensation() {
+        pieceGravityCompensation = true;
+    }
+
+    public void disableGamePieceGravityCompensation() {
+        pieceGravityCompensation = false;
     }
 
     // Arm Control Overrides
@@ -282,6 +330,8 @@ public abstract class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled Raw", isWristFeedbackEnabled());
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", wristEnabled.get());
+
+        SmartDashboard.putBoolean("Arm/Shoulder/Game Piece Compensation", pieceGravityCompensation);
 
         periodicallyCalled();
     }
