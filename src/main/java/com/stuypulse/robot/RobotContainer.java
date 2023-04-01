@@ -89,7 +89,8 @@ public class RobotContainer {
         LiveWindow.disableAllTelemetry();
         // DriverStation.silenceJoystickConnectionWarning(true);
         // CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
-        CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
+        if (Robot.isReal())
+            CameraServer.startAutomaticCapture().setVideoMode(PixelFormat.kMJPEG, 320, 240, 30);
 
         SmartDashboard.putData("Gamepads/Driver", driver);
         SmartDashboard.putData("Gamepads/Operator", operator);
@@ -156,6 +157,7 @@ public class RobotContainer {
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
             .debounce(0.5, DebounceType.kFalling)
+            .onTrue(new LEDSet(LEDColor.RED))
             .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
             .onFalse(new InstantCommand(() -> driver.setRumble(0.0)))
         ;
