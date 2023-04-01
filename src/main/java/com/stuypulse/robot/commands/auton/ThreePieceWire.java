@@ -9,6 +9,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -78,7 +79,7 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                     .withTimeout(6.5)
             ),
 
-            new WaitCommand(ACQUIRE_WAIT_TIME)
+            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
@@ -126,7 +127,7 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                     .withTimeout(6.5)
             ),
 
-            new WaitCommand(ACQUIRE_WAIT_TIME)
+            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
