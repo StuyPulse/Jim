@@ -50,17 +50,17 @@ public interface Field {
 
     public interface ScoreXPoses {
         public interface High {
-            double CUBE_BACK = 1.98;
-            double CUBE_FRONT = 1.830060;
-            double CONE_TIP_IN = 1.894;
-            double CONE_TIP_OUT = 1.783;
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Cube Back", 1.98);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Cube Front", 1.830060);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Cone Tip In", 1.894);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Cone Tip Out", 1.783);
         }
 
         public interface Mid {
-            double CUBE_BACK = 1.868;
-            double CUBE_FRONT = 2.083577;
-            double CONE_TIP_IN = 2.275;
-            double CONE_TIP_OUT = 2.1433;
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Cube Back", 1.868);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Cube Front", 2.083577);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Cone Tip In", 2.275);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Cone Tip Out", 2.1433);
         }
 
         // Low Cube: 1.768088
@@ -68,7 +68,7 @@ public interface Field {
 
     // red left to right
     public interface ScoreYPoses {
-        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
+        public static Number[] getYPoseArray(Alliance alliance, ScoreSide side) {
             if (side == ScoreSide.FRONT)
                 return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
@@ -76,17 +76,17 @@ public interface Field {
         }
 
         public interface Back {
-            double ONE =   7.4376;
-            double TWO =   6.905;
-            double THREE = 6.3238;
-            double FOUR =  5.822;
-            double FIVE =  5.2947;
-            double SIX =   4.6;
-            double SEVEN = 4.1028;
-            double EIGHT = 3.557;
-            double NINE =  2.89;
+            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red", 7.4376);
+            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red", 6.905);
+            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red", 6.3238);
+            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red", 5.822);
+            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red", 5.2947);
+            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red", 4.6);
+            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red", 4.1028);
+            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red", 3.557);
+            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red", 2.89);
     
-            double RED_Y_POSES[] = {
+            Number RED_Y_POSES[] = {
                 Back.ONE,
                 Back.TWO,
                 Back.THREE,
@@ -98,7 +98,7 @@ public interface Field {
                 Back.NINE
             };
     
-            double BLUE_Y_POSES[] = {
+            Number BLUE_Y_POSES[] = {
                 AllianceUtil.getMirroredYPose(Back.NINE),
                 AllianceUtil.getMirroredYPose(Back.EIGHT),
                 AllianceUtil.getMirroredYPose(Back.SEVEN),
@@ -112,11 +112,11 @@ public interface Field {
         }
 
         public interface Front {
-            private static double backToFront(double backYPose) {
-                return backYPose - Units.inchesToMeters(3.0);
+            private static Number backToFront(Number backYPose) {
+                return backYPose.doubleValue() - Units.inchesToMeters(3.0);
             }
     
-            double RED_Y_POSES[] = {
+            Number RED_Y_POSES[] = {
                 backToFront(Back.ONE),
                 backToFront(Back.TWO),
                 backToFront(Back.THREE),
@@ -128,7 +128,7 @@ public interface Field {
                 backToFront(Back.NINE)
             };
     
-            double BLUE_Y_POSES[] = {
+            Number BLUE_Y_POSES[] = {
                 AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
                 AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
                 AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN)),
