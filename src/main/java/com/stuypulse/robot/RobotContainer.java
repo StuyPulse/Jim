@@ -53,6 +53,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -188,13 +190,13 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .onTrue(new IntakeAcquire().withTimeout(0.2))
+            .onTrue(new IntakeAcquire()
+                    .andThen(new WaitCommand(0.2))
+                    .andThen(new IntakeStop()))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
-                    .andThen(new ArmReady())
-                    
-                    );
+                    .andThen(new ArmReady()));
 
 
         operator.getRightButton()
