@@ -60,6 +60,7 @@ public class LEDController extends SubsystemBase {
         leds.setData(ledsBuffer);
         leds.start();
 
+        manualColor = LEDColor.OFF;
         this.lastUpdate = new StopWatch();
     }
 
