@@ -45,8 +45,6 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 35);
 
-        SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
-
         public interface Acquire {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
@@ -65,10 +63,6 @@ public interface Settings {
             SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
             SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);
         }
-
-        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
-
-        SmartNumber IR_SENSOR_TIME = new SmartNumber("Intake/IR Sensor Debounce Time (Rising)", 0.1);
     }
 
     public interface Vision {
@@ -197,10 +191,6 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
 
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
-            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
-            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
-
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
@@ -223,7 +213,6 @@ public interface Settings {
         }
     
         public interface Wrist {
-            
             int MOTORS = 1;
             double REDUCTION = 70.0;
             double MASS = 1.317; // kg
@@ -322,8 +311,6 @@ public interface Settings {
     }
 
     public interface Driver {
-        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
-
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
 
