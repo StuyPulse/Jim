@@ -101,19 +101,19 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", -186),
                 new SmartNumber("Arm Trajectories/High Cube Back/Wrist", -138));
         }
+    }
 
-        public interface Score {
-            public interface High {
-                ArmState kConeTipOutFront = new ArmState(
-                    new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -11),
-                    new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 44));    
-            }
+    public interface Score {
+        public interface High {
+            ArmState kConeTipOutFront = new ArmState(
+                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -11),
+                new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 44));    
+        }
 
-            public interface Mid {
-                ArmState kConeTipOutFront = new ArmState(
-                    new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -28),
-                    new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 44));    
-            }
+        public interface Mid {
+            ArmState kConeTipOutFront = new ArmState(
+                new SmartNumber("Arm Trajectories/Score Mid Tip Out Front Shoulder", -28),
+                new SmartNumber("Arm Trajectories/Score Mid Tip Out Front Wrist", 44));    
         }
     }
 
