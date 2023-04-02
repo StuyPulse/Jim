@@ -83,6 +83,12 @@ public abstract class Arm extends SubsystemBase {
 
     private boolean pieceGravityCompensation;
 
+    private final SmartNumber shoulderMaxVelocity;
+    private final SmartNumber shoulderMaxAcceleration;
+
+    private final SmartNumber wristMaxVelocity;
+    private final SmartNumber wristMaxAcceleration;
+
     private class GamePiecekG extends Number {
         @Override
         public double doubleValue() {
@@ -127,14 +133,20 @@ public abstract class Arm extends SubsystemBase {
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
             .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
+        shoulderMaxVelocity = new SmartNumber("Arm/Shoulder/Current Max Velocity", Shoulder.MAX_VELOCITY.doubleValue());
+        shoulderMaxAcceleration = new SmartNumber("Arm/Shoulder/Current Max Acceleration", Shoulder.MAX_ACCELERATION.doubleValue());
+
+        wristMaxVelocity = new SmartNumber("Arm/Wrist/Current Max Velocity", Wrist.MAX_VELOCITY.doubleValue());
+        wristMaxAcceleration = new SmartNumber("Arm/Wrist/Current Max Acceleration", Wrist.MAX_ACCELERATION.doubleValue());
+
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(new GamePiecekG()))
             .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new AMotionProfile(
-                    Shoulder.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Shoulder.MAX_ACCELERATION.filtered(Math::toRadians).number()))
+                    shoulderMaxVelocity.filtered(Math::toRadians).number(), 
+                    shoulderMaxAcceleration.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
                 if (isShoulderLimp()) return 0;
                 return shoulderVoltageOverride.orElse(x);
@@ -147,8 +159,8 @@ public abstract class Arm extends SubsystemBase {
                 .setOutputFilter(x -> wristEnabled.get() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
-                    Wrist.MAX_VELOCITY.filtered(Math::toRadians).number(), 
-                    Wrist.MAX_ACCELERATION.filtered(Math::toRadians).number()))
+                    wristMaxVelocity.filtered(Math::toRadians).number(), 
+                    wristMaxAcceleration.filtered(Math::toRadians).number()))
             .setOutputFilter(x -> {
                 if (isWristLimp()) return 0;
                 return wristVoltageOverride.orElse(x);
@@ -187,6 +199,28 @@ public abstract class Arm extends SubsystemBase {
 
     private final boolean isWristFeedbackEnabled() {
         return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
+    }
+
+    // Set kinematic constraints
+
+    public final void setShoulderConstraints(double velocity, double acceleration) {
+        shoulderMaxVelocity.set(velocity);
+        shoulderMaxAcceleration.set(acceleration);
+    }
+
+    public final void setWristConstraints(double velocity, double acceleration) {
+        wristMaxVelocity.set(velocity);
+        wristMaxAcceleration.set(acceleration);
+    }
+
+    public final void resetShoulderConstraints() {
+        shoulderMaxVelocity.set(Shoulder.MAX_VELOCITY);
+        shoulderMaxAcceleration.set(Shoulder.MAX_ACCELERATION);
+    }
+
+    public final void resetWristConstraints() {
+        wristMaxVelocity.set(Wrist.MAX_VELOCITY);
+        wristMaxAcceleration.set(Wrist.MAX_ACCELERATION);
     }
 
     // Read target State
