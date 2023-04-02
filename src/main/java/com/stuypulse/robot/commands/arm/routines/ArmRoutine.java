@@ -1,5 +1,6 @@
 package com.stuypulse.robot.commands.arm.routines;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
@@ -20,6 +21,12 @@ public abstract class ArmRoutine extends CommandBase {
 
     private Number shoulderVelocityTolerance;
     private Number wristVelocityTolerance;
+
+    private Number shoulderMaxVelocity;
+    private Number shoulderMaxAcceleration;
+
+    private Number wristMaxVelocity;
+    private Number wristMaxAcceleration;
     
     protected final Arm arm;
     protected final Supplier<ArmState> endState;
@@ -39,6 +46,11 @@ public abstract class ArmRoutine extends CommandBase {
         shoulderVelocityTolerance = 1000000;
         wristVelocityTolerance = 1000000;
         
+        shoulderMaxVelocity = Shoulder.MAX_VELOCITY;
+        shoulderMaxAcceleration = Shoulder.MAX_ACCELERATION;
+
+        wristMaxVelocity = Wrist.MAX_VELOCITY;
+        wristMaxAcceleration = Wrist.MAX_ACCELERATION;
 
         addRequirements(arm);
     }
@@ -73,6 +85,9 @@ public abstract class ArmRoutine extends CommandBase {
         //     System.out.println("Shoulder: " + state.getShoulderDegrees() + ", Wrist: " + state.getWristDegrees());
         // }
         // System.out.println();
+
+        arm.setShoulderConstraints(shoulderMaxVelocity, shoulderMaxAcceleration);
+        arm.setWristConstraints(wristMaxVelocity, wristMaxAcceleration);
         
         currentIndex = 0;
     }
@@ -80,6 +95,14 @@ public abstract class ArmRoutine extends CommandBase {
     @Override
     public void execute() {
         var targetState = trajectory.getStates().get(currentIndex);
+
+        arm.setShoulderConstraints(
+            targetState.getShoulderMaxVelocity().orElse(shoulderMaxVelocity), 
+            targetState.getShoulderMaxAcceleration().orElse(shoulderMaxAcceleration));
+        arm.setWristConstraints(
+            targetState.getWristMaxVelocity().orElse(wristMaxVelocity), 
+            targetState.getWristMaxAcceleration().orElse(wristMaxAcceleration));
+        
         arm.setTargetState(targetState);
 
         arm.setLimp(targetState.isWristLimp(), false);
@@ -108,10 +131,26 @@ public abstract class ArmRoutine extends CommandBase {
         return trajectory.getEntries() == 0 || currentIndex >= trajectory.getEntries();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        arm.resetConstraints();
+    }
     
     public ArmRoutine withTolerance(double wristTolerance, double shoulderTolerance) {
         this.wristTolerance = wristTolerance;
         this.shoulderTolerance = shoulderTolerance;
+        return this;
+    }
+
+    public ArmRoutine withShoulderConstraints(double velocity, double acceleration) {
+        this.shoulderMaxVelocity = velocity;
+        this.shoulderMaxAcceleration = acceleration;
+        return this;
+    }
+
+    public ArmRoutine withWristConstraints(double velocity, double acceleration) {
+        this.wristMaxVelocity = velocity;
+        this.wristMaxAcceleration = acceleration;
         return this;
     }
 }
