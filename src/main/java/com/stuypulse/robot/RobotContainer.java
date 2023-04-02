@@ -17,6 +17,7 @@ import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.leds.LEDSetRainbow;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
@@ -35,7 +36,6 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
-import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 
@@ -151,7 +151,9 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        driver.getRightButton().onTrue(new PlantEngage());
+        //driver.getRightButton().onTrue(new PlantEngage());
+
+        driver.getRightButton().whileTrue(new LEDSetRainbow());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasCone)
@@ -192,9 +194,11 @@ public class RobotContainer {
                     .andThen(new ManagerValidateState())
                     .andThen(new ArmReady()));
 
-        operator.getRightButton()
-            .onTrue(new IntakeScore())
-            .onFalse(new IntakeStop());
+        // operator.getRightButton()
+            // .onTrue(new IntakeScore())
+            // .onFalse(new IntakeStop());
+
+        operator.getRightButton().onTrue(new LEDSetRainbow());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));

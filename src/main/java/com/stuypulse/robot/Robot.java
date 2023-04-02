@@ -6,6 +6,9 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.TeleopInit;
+import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.commands.leds.LEDSetRainbow;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -47,6 +50,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        //new LEDSetRainbow();
         scheduler.run();
     }
 

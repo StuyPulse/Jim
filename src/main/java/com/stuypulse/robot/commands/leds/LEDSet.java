@@ -35,10 +35,12 @@ public class LEDSet extends InstantCommand {
 
     public LEDSet(LEDColor color) {
         this(color, Settings.LED.MANUAL_UPDATE_TIME);
+        //System.out.println("LEDSet was called!!!");
     }
 
     @Override
     public void initialize() {
+        System.out.println("LEDSet was called!!!");
         controller.setColor(color, updateTime);
     }
 }
