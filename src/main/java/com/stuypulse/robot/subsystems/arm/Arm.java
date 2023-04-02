@@ -80,15 +80,15 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
-    private Number shoulderVelocityFeedbackDebounce;
-    private Number shoulderVelocityFeedbackCutoff;
+    private SmartNumber shoulderVelocityFeedbackDebounce;
+    private SmartNumber shoulderVelocityFeedbackCutoff;
 
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
-        shoulderVelocityFeedbackDebounce = Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE;
-        shoulderVelocityFeedbackCutoff = Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF;
+        shoulderVelocityFeedbackDebounce = new SmartNumber("Arm/Wrist/Current Feedback Enabled Debounce", Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
+        shoulderVelocityFeedbackCutoff = new SmartNumber("Arm/Wrist/Current Shoulder Velocity Feedback Cutoff (deg per s)", Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
 
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
             .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce));
@@ -157,11 +157,11 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final void setShoulderVelocityFeedbackDebounce(double time) {
-        shoulderVelocityFeedbackDebounce = time;
+        shoulderVelocityFeedbackDebounce.set(time);;
     }
 
     public final void setShoulderVelocityFeedbackCutoff(double velocity) {
-        shoulderVelocityFeedbackCutoff = velocity;
+        shoulderVelocityFeedbackCutoff.set(velocity);
     }
 
     // Set target states
