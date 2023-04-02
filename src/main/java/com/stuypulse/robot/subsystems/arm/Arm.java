@@ -213,12 +213,10 @@ public abstract class Arm extends SubsystemBase {
         wristMaxAcceleration.set(acceleration);
     }
 
-    public final void resetShoulderConstraints() {
+    public final void resetConstraints() {
         shoulderMaxVelocity.set(Shoulder.MAX_VELOCITY);
         shoulderMaxAcceleration.set(Shoulder.MAX_ACCELERATION);
-    }
 
-    public final void resetWristConstraints() {
         wristMaxVelocity.set(Wrist.MAX_VELOCITY);
         wristMaxAcceleration.set(Wrist.MAX_ACCELERATION);
     }
