@@ -203,12 +203,12 @@ public abstract class Arm extends SubsystemBase {
 
     // Set kinematic constraints
 
-    public final void setShoulderConstraints(double velocity, double acceleration) {
+    public final void setShoulderConstraints(Number velocity, Number acceleration) {
         shoulderMaxVelocity.set(velocity);
         shoulderMaxAcceleration.set(acceleration);
     }
 
-    public final void setWristConstraints(double velocity, double acceleration) {
+    public final void setWristConstraints(Number velocity, Number acceleration) {
         wristMaxVelocity.set(velocity);
         wristMaxAcceleration.set(acceleration);
     }
