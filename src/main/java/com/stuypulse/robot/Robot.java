@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.TeleopInit;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -82,6 +83,8 @@ public class Robot extends TimedRobot {
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(true, true);
         robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
+        robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+        robot.arm.setShoulderVelocityFeedbackDebounce(Wrist.AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
 
@@ -109,6 +112,9 @@ public class Robot extends TimedRobot {
 
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(false, false);
+        robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+        robot.arm.setShoulderVelocityFeedbackDebounce(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
+
         new TeleopInit().schedule();
 
         RobotContainer.setCachedAlliance(DriverStation.getAlliance());
