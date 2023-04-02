@@ -13,10 +13,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import static com.stuypulse.robot.constants.Settings.Score.*;
+
 public class RobotScore extends CommandBase {
-    
-    private final static SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4);
-    private final static SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
 
     private final SwerveDrive swerve;
     private final Arm arm;

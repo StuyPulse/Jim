@@ -381,4 +381,19 @@ public interface Settings {
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
     }
+
+    public interface Score {
+        
+        // Tip in scoring
+        SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4); 
+        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
+
+        // Tip in release
+        SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
+        
+        // Tip out releasing
+        SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 16);
+
+        SmartNumber kShoulderTipOutTolerance = new SmartNumber("Robot Score/Tip Out Shoulder Tolerance (degrees)", 5);
+    }
 }
