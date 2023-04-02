@@ -206,16 +206,19 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 2.5);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 1.3);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.5);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.25);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1977);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.31279);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.3423);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
+
+                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
+                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
             }
         }
     
@@ -245,7 +248,7 @@ public interface Settings {
 
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.0);
 
-            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 110);
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 
@@ -363,7 +366,7 @@ public interface Settings {
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
         SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 5);
 
-        SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.05);
+        SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.08);
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
         SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
 
