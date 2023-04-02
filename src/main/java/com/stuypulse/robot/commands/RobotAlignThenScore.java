@@ -1,10 +1,8 @@
 package com.stuypulse.robot.commands;
 
-import java.util.function.Supplier;
-
-import com.stuypulse.robot.commands.swerve.SwerveDriveToScorePose;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.constants.ArmTrajectories;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
@@ -20,17 +18,13 @@ import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class RobotAlignThenScore extends CommandBase {    
 
@@ -104,10 +98,14 @@ public class RobotAlignThenScore extends CommandBase {
                         ArmTrajectories.Score.Mid.kConeTipOutFront :
                         ArmTrajectories.Score.High.kConeTipOutFront);
 
-                if (arm.isAtTargetState(5, 360)) {
+                if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
                     intake.enableCoast();
                     movingWhileScoring = true;
-                    swerve.setChassisSpeeds(new ChassisSpeeds(-Units.inchesToMeters(16), 0, 0));
+                    swerve.setChassisSpeeds(
+                        new ChassisSpeeds(
+                            -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
+                            0,
+                            0));
                 }
             } else {
                 // don't automate yet
