@@ -188,11 +188,12 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
+            .onTrue(new IntakeAcquire().withTimeout(0.2))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
                     .andThen(new ArmReady())
-                    .alongWith(new IntakeAcquire()).withTimeout(0.2)
+                    
                     );
 
 
