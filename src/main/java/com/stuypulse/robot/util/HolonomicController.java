@@ -40,7 +40,7 @@ public class HolonomicController implements Sendable {
     }
     
     public boolean isDone(double xToleranceMeters, double yToleranceMeters, double angleToleranceDegrees) {
-        return xController.isDone(xToleranceMeters) && yController.isDone(yToleranceMeters) && angleController.isDoneRadians(angleToleranceDegrees);
+        return xController.isDone(xToleranceMeters) && yController.isDone(yToleranceMeters) && angleController.isDoneDegrees(angleToleranceDegrees);
     }
 
     @Override
