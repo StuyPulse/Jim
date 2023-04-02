@@ -80,12 +80,18 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
+    private Number shoulderVelocityFeedbackDebounce;
+    private Number shoulderVelocityFeedbackCutoff;
+
     protected Arm() {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
+        shoulderVelocityFeedbackDebounce = Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE;
+        shoulderVelocityFeedbackCutoff = Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF;
+
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
-            .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
+            .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Shoulder.Feedforward.kG))
@@ -134,7 +140,7 @@ public abstract class Arm extends SubsystemBase {
     }
 
     private final boolean isWristFeedbackEnabled() {
-        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
+        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(shoulderVelocityFeedbackCutoff.doubleValue());
     }
 
     // Read target State
@@ -148,6 +154,14 @@ public abstract class Arm extends SubsystemBase {
 
     public final ArmState getTargetState() {
         return new ArmState(getShoulderTargetAngle(), getWristTargetAngle());
+    }
+
+    public final void setShoulderVelocityFeedbackDebounce(double time) {
+        shoulderVelocityFeedbackDebounce = time;
+    }
+
+    public final void setShoulderVelocityFeedbackCutoff(double velocity) {
+        shoulderVelocityFeedbackCutoff = velocity;
     }
 
     // Set target states
