@@ -29,7 +29,7 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
 
     private interface VisionStdDevs {
-        Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
+        Vector<N3> AUTO = VecBuilder.fill(1, 1, Math.toRadians(30));
         Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
     }
 
@@ -106,10 +106,10 @@ public class OdometryImpl extends Odometry {
         
         for (AprilTagData result : results) {
             if (Robot.getMatchState() == MatchState.AUTO) {
-                // poseEstimator.addVisionMeasurement(
-                //     new Pose2d(result.pose.getTranslation(), getRotation()),
-                //     Timer.getFPGATimestamp() - result.latency,
-                //     VisionStdDevs.AUTO);
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(result.pose.getTranslation(), getRotation()),
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.AUTO);
             } else {
                 if (USE_VISION_ANGLE.get()) {
                     poseEstimator.addVisionMeasurement(
