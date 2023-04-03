@@ -25,6 +25,27 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ThreePiece extends DebugSequentialCommandGroup {
 
+    static class ConeReady extends ArmRoutine {
+        public ConeReady() {
+            super(Manager.getInstance()::getReadyTrajectory);
+        }
+
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            return new ArmTrajectory()
+
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+                
+                // .addState(
+                //     dest.getShoulderDegrees(), 
+                //     (Manager.getInstance().getNodeLevel() == NodeLevel.MID) ? dest.getWristDegrees() : (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+            
+                .addState(dest);        
+        }
+    }
+
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
             super(Manager.getInstance()::getReadyTrajectory);
@@ -36,11 +57,17 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             double wristSafeAngle = 80;
     
             return new ArmTrajectory()
+                .addState(
+                    new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                        .setShoulderTolerance(20)
+                        .setWristTolerance(25))
                 // .addState(
                 //     new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
                 //         .setWristLimp(true)
                 //         .setWristTolerance(360))
-                .addState(dest);
+                .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
+                    .setShoulderTolerance(10)
+                    .setWristTolerance(5));
         }
     }
 
@@ -102,9 +129,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 //         .setShoulderTolerance(15)
                 //         .setWristTolerance(360))
     
-                .addState(
-                    new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
-                        .setWristTolerance(360))
+                // .addState(
+                //     new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
+                //         .setShoulderTolerance(20)
+                //         .setWristTolerance(20))
     
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
@@ -142,11 +170,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady()
+            new ConeReady()
                 // .setWristVelocityTolerance(25)
                 // .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 15)
-                .withTimeout(1.2)
+                .withTolerance(3, 3)
+                .withTimeout(1.5)
         );
 
         addCommands(
@@ -178,7 +206,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
 
-            arm.runOnce(() -> arm.setWristVoltage(0))
+            arm.runOnce(() -> arm.setWristVoltage(6))
         );
 
         // drive to grid and score second piece :: TODO: make custom arm setpoint for this
@@ -192,8 +220,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new ArmReady().withTolerance(10, 20)
-                .alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
+                .alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))
+                .alongWith(new WaitCommand(0.5).andThen(new AutonReady())),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -220,7 +248,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeSecond()
-                    .withTolerance(4, 10)
+                    // .withTolerance(4, 10)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)

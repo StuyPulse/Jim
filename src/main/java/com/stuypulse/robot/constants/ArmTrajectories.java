@@ -57,7 +57,7 @@ public interface ArmTrajectories {
     public interface Ready {
         public interface Mid {
             ArmState kConeTipUpBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready Mid Tip Up Back Shoulder", -156.7),
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Up Back Shoulder", -156.7 - 5),
                 new SmartNumber("Arm Trajectories/Ready Mid Tip Up Back Wrist",133.9));
 
             ArmState kConeTipInBack = new ArmState(
