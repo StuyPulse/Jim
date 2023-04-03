@@ -92,12 +92,15 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
-                // .addState(src.getShoulderDegrees(), wristSafeAngle)
-    
                 .addState(
-                    new ArmState(intermediateShoulderDegrees, wristSafeAngle)
-                        .setShoulderTolerance(15)
-                        .setWristTolerance(360))
+                    new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                        .setShoulderTolerance(20)
+                        .setWristTolerance(10))
+    
+                // .addState(
+                //     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
+                //         .setShoulderTolerance(15)
+                //         .setWristTolerance(360))
     
                 .addState(
                     new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
