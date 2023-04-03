@@ -56,6 +56,7 @@ public class LEDColor implements LEDInstruction{
 
     // new LEDColor(255, 0, 0).setLED(buffer);
     // new LEDRainbow().setLED(buffer);
+    // new PulseRed().setLED(buffer);
 
 
     /***********************/

@@ -18,7 +18,6 @@ public class LEDSetRainbow extends InstantCommand{
 
     public LEDSetRainbow() {
         this(Settings.LED.MANUAL_UPDATE_TIME);
-        //System.out.println("RAINBOW SET WAS CALLED!!!! IT BETTER WORK?");
     }
 
     @Override
