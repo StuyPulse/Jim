@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Richie Xue
  * @author Jo Walkup
  */
-public class LEDColor implements LEDInstruction{
+public class LEDColor implements LEDInstruction {
     private final int red;
     private final int green;
     private final int blue; 
