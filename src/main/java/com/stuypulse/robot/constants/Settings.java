@@ -45,8 +45,6 @@ public interface Settings {
         SmartNumber STALL_TIME = new SmartNumber("Intake/Stall Time (Rising)", 0.05);
         SmartNumber STALL_CURRENT = new SmartNumber("Intake/Stall Current", 35);
 
-        SmartNumber CUBE_ACQUIRE_TIME = new SmartNumber("Intake/Cube Acquire Time", 0.5);
-
         public interface Acquire {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
@@ -65,10 +63,6 @@ public interface Settings {
             SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Deacquire Front", 0.5);
             SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Deacquire Back", 0.5);
         }
-
-        SmartNumber NEW_GAMEPIECE_TIME = new SmartNumber("Intake/New Gamepiece Time (Falling)", 0.5);
-
-        SmartNumber IR_SENSOR_TIME = new SmartNumber("Intake/IR Sensor Debounce Time (Rising)", 0.1);
     }
 
     public interface Vision {
@@ -197,30 +191,28 @@ public interface Settings {
             SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
 
-            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
-            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
-            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
-
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 2.5);
+                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 1.3);
                 SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.5);
+                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.25);
             }
             
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.1977);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.1);
-                SmartNumber kG = new SmartNumber("Arm/Shoulder/kG", 0.31279);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.3423);
+                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
+                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
+                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
+
+                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
+                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
             }
         }
     
         public interface Wrist {
-            
             int MOTORS = 1;
             double REDUCTION = 70.0;
             double MASS = 1.317; // kg
@@ -245,7 +237,7 @@ public interface Settings {
 
             SmartNumber SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.0);
 
-            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 110);
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 
@@ -319,8 +311,6 @@ public interface Settings {
     }
 
     public interface Driver {
-        SmartNumber PLANT_DEBOUNCE = new SmartNumber("Driver Settings/Plant Drive Rising Debounce", 0.5);
-
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
 
@@ -363,7 +353,7 @@ public interface Settings {
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
         SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 5);
 
-        SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.05);
+        SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.08);
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
         SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
 
@@ -377,5 +367,20 @@ public interface Settings {
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
+    }
+
+    public interface Score {
+        
+        // Tip in scoring
+        SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4); 
+        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
+
+        // Tip in release
+        SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
+        
+        // Tip out releasing
+        SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 16);
+
+        SmartNumber kShoulderTipOutTolerance = new SmartNumber("Robot Score/Tip Out Shoulder Tolerance (degrees)", 5);
     }
 }
