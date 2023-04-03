@@ -8,6 +8,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.leds.LEDControllerImpl;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
+import com.stuypulse.robot.subsystems.leds.LEDPulseRed;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
 
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -91,6 +92,7 @@ public class LEDColor implements LEDInstruction{
     public static final LEDColor OFF = new LEDColor(0, 0, 0);
 
     public static final LEDInstruction RAINBOW = new LEDRainbow();
+    public static final LEDInstruction PULSE_RED = new LEDPulseRed();
     
     
 }

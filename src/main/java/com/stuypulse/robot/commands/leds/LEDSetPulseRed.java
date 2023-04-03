@@ -6,23 +6,21 @@ import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class LEDSetRainbow extends InstantCommand{
+public class LEDSetPulseRed extends InstantCommand {
     private double updateTime;
     private LEDController controller;
 
-    public LEDSetRainbow(double updateTime) {
+    public LEDSetPulseRed(double updateTime) {
         this.controller = LEDController.getInstance();
         this.updateTime = updateTime;
     }
 
-    public LEDSetRainbow() {
+    public LEDSetPulseRed() {
         this(Settings.LED.MANUAL_UPDATE_TIME);
     }
 
     @Override
     public void initialize() {
-        System.out.println("RAINBOW SET WAS CALLED!!!! IT BETTER WORK?");
-        controller.forceSetLED(LEDColor.RAINBOW);
-        
+        controller.forceSetLED(LEDColor.PULSE_RED);
     }
 }
