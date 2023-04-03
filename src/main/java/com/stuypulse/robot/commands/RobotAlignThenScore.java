@@ -91,6 +91,7 @@ public class RobotAlignThenScore extends CommandBase {
         if (aligned.get() || movingWhileScoring) {
             // score
             if (Manager.getInstance().getGamePiece().isCube()) {
+                swerve.stop();
                 intake.deacquire();
             } else if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_OUT) {
                 arm.setTargetState(
@@ -106,9 +107,12 @@ public class RobotAlignThenScore extends CommandBase {
                             -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
                             0,
                             0));
+                } else {
+                    swerve.stop();
                 }
             } else {
-                // don't automate yet
+                // tip in (don't automate yet)
+                swerve.stop();
             }
         } else {
             swerve.setChassisSpeeds(controller.getOutput());
