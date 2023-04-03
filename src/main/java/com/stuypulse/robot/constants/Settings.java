@@ -194,8 +194,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 - 60.0/360.0).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 360);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 420);
 
             SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);

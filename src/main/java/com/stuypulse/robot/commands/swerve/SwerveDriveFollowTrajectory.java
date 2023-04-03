@@ -9,6 +9,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
@@ -37,6 +38,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private boolean shouldStop;
+	private boolean stopOnStall;
 	private PathPlannerTrajectory path;
 	private HashMap<String, Command> events;
 
@@ -61,10 +63,16 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		this.path = path;
 		events = new HashMap<String, Command>();
 		shouldStop = false;
+		stopOnStall = false;
 	}
 
 	public SwerveDriveFollowTrajectory withStop() {
 		shouldStop = true;
+		return this;
+	}
+
+	public SwerveDriveFollowTrajectory withStallStop() {
+		stopOnStall = true;
 		return this;
 	}
 
@@ -90,6 +98,11 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			path.getMarkers(),
 			events
 		);
+	}
+
+	@Override
+	public boolean isFinished() {
+		return super.isFinished() || (stopOnStall && Intake.getInstance().hasGamePiece());
 	}
 
 	@Override
