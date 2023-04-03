@@ -95,13 +95,6 @@ public abstract class ArmRoutine extends CommandBase {
     @Override
     public void execute() {
         var targetState = trajectory.getStates().get(currentIndex);
-
-        arm.setShoulderConstraints(
-            targetState.getShoulderMaxVelocity().orElse(shoulderMaxVelocity), 
-            targetState.getShoulderMaxAcceleration().orElse(shoulderMaxAcceleration));
-        arm.setWristConstraints(
-            targetState.getWristMaxVelocity().orElse(wristMaxVelocity), 
-            targetState.getWristMaxAcceleration().orElse(wristMaxAcceleration));
         
         arm.setTargetState(targetState);
 
