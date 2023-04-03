@@ -118,7 +118,7 @@ public class OdometryImpl extends Odometry {
                         VisionStdDevs.TELEOP);
                 } else {
                     poseEstimator.addVisionMeasurement(
-                        new Pose2d(result.pose.getTranslation(), getRotation()),
+                        new Pose2d(result.pose.getTranslation(), odometry.getPoseMeters().getRotation()),
                         Timer.getFPGATimestamp() - result.latency,
                         VisionStdDevs.TELEOP);
                 }
