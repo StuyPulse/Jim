@@ -76,7 +76,12 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+        if (USE_VISION_ANGLE.get())
+            return poseEstimator.getEstimatedPosition();
+        else
+            return new Pose2d(
+                poseEstimator.getEstimatedPosition().getTranslation(),
+                odometry.getPoseMeters().getRotation());
     }
 
     @Override
@@ -111,17 +116,10 @@ public class OdometryImpl extends Odometry {
                 //     Timer.getFPGATimestamp() - result.latency,
                 //     VisionStdDevs.AUTO);
             } else {
-                if (USE_VISION_ANGLE.get()) {
-                    poseEstimator.addVisionMeasurement(
-                        result.pose,
-                        Timer.getFPGATimestamp() - result.latency,
-                        VisionStdDevs.TELEOP);
-                } else {
-                    poseEstimator.addVisionMeasurement(
-                        new Pose2d(result.pose.getTranslation(), odometry.getPoseMeters().getRotation()),
-                        Timer.getFPGATimestamp() - result.latency,
-                        VisionStdDevs.TELEOP);
-                }
+                poseEstimator.addVisionMeasurement(
+                    result.pose,
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.TELEOP);
             }
         }
     }
