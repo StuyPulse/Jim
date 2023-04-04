@@ -102,9 +102,9 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                         .setShoulderTolerance(15)
                         .setWristTolerance(15))
     
-                // .addState(
-                //     new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
-                //         .setWristTolerance(360))
+                .addState(
+                    new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
+                        .setWristTolerance(20))
     
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
@@ -121,14 +121,16 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     private static final double WIGGLE_PERIOD = 0.3;
     private static final double WIGGLE_VEL_AMPLITUDE = 0.3;
 
-    private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
+    private static final PathConstraints INTAKE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
+    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 0.8);
+
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
     private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
 
     public ThreePiece() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece"
         );
 
