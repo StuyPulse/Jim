@@ -118,6 +118,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.3;
+    private static final double WIGGLE_PERIOD = 0.3;
+    private static final double WIGGLE_VEL_AMPLITUDE = 0.3;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
@@ -165,8 +167,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative()
                     .withStop()
-                    .withStallStop()
-                    .until(Intake.getInstance()::hasGamePiece),
+                    .withStallStop(),
+                    // .until(Intake.getInstance()::hasGamePiece), // interrupting IntakeScore? idk one time the intake just stopped early
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
@@ -178,6 +180,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
+
+            // new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+            //     .until(Intake.getInstance()::hasGamePiece)
+            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+            //     .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
@@ -227,8 +234,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .withTolerance(4, 10)
             ),
 
-            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
-                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
+            new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+                .until(Intake.getInstance()::hasGamePiece)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+                .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
