@@ -8,6 +8,7 @@ import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.ArmTrajectories;
+import com.stuypulse.robot.constants.ArmTrajectories.Ready;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -41,7 +42,13 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
-            super(Manager.getInstance()::getReadyTrajectory);
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH) {
+                    return Ready.High.kCubeAutonBack;
+                } else {
+                    return Ready.Mid.kAutonCubeBack;
+                }
+            });
         }
 
         @Override
@@ -52,7 +59,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
-                    .setWristTolerance(15).setShoulderTolerance(20));
+                    .setWristTolerance(23).setShoulderTolerance(20));
         }
     }
     static class ArmIntakeFirst extends ArmRoutine {
@@ -128,16 +135,18 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     private static final double WIGGLE_VEL_AMPLITUDE = 0.6;
 
     private static final PathConstraints INTAKE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.5, 2);
-    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 1);
+    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 1.2);
 
-    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.5, 3.5);
     private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+
+    private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
 
     public ThreePiece() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS),
-            "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece"
+            PathPlanner.loadPathGroup("3 Piece", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 
         var arm = Arm.getInstance();
@@ -258,8 +267,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Third Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new AutonReady()
-                .withTolerance(20, 15).alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
+                .alongWith(new AutonReady().alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
@@ -268,8 +276,14 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new IntakeStop()
         );
 
+        // back away
         addCommands(
-            new LEDSet(LEDColor.RAINBOW)
+            new LEDSet(LEDColor.RAINBOW),
+
+            new SwerveDriveFollowTrajectory(
+                paths.get("Back Away"))
+                    .fieldRelative()
+                .withStop()
         );
     }
 }
