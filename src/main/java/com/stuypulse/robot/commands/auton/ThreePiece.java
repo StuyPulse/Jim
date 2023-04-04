@@ -8,7 +8,6 @@ import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.ArmTrajectories;
-import com.stuypulse.robot.constants.ArmTrajectories.Acquire;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -19,11 +18,26 @@ import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ThreePiece extends DebugSequentialCommandGroup {
+
+    static class ConeAutonReady extends ArmRoutine {
+        public ConeAutonReady() {
+            super(Manager.getInstance()::getReadyTrajectory);
+        }
+
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+    
+            return new ArmTrajectory()
+                .addState(new ArmState(dest.getShoulderState(), src.getWristState())
+                            .setShoulderTolerance(20).setWristLimp(true).setWristTolerance(360))
+                .addState(new ArmState(dest.getShoulderState(), dest.getWristState()).setWristTolerance(7)
+                            .setShoulderTolerance(15));
+        }
+    }
 
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
@@ -35,18 +49,12 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
-                .addState(
-                    new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                        .setShoulderTolerance(20)
-                        .setWristTolerance(45))
-                .addState(
-                    new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
-                        .setWristLimp(true)
-                        .setWristTolerance(360))
-                .addState(dest);
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(45))
+                .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
+                    .setWristTolerance(15).setShoulderTolerance(20));
         }
     }
-
     static class ArmIntakeFirst extends ArmRoutine {
         public ArmIntakeFirst() {
             super(() -> ArmTrajectories.Acquire.kBOOMCubeAuton);
@@ -58,8 +66,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 -70.82,
                 11);
                // 8.37);
-            double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
-            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
                 // .addState(src.getShoulderDegrees(), wristSafeAngle)
@@ -118,11 +124,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.3;
-    private static final double WIGGLE_PERIOD = 0.3;
-    private static final double WIGGLE_VEL_AMPLITUDE = 0.3;
+    private static final double WIGGLE_PERIOD = 0.6;
+    private static final double WIGGLE_VEL_AMPLITUDE = 0.6;
 
-    private static final PathConstraints INTAKE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
-    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 0.8);
+    private static final PathConstraints INTAKE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.5, 2);
+    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 1);
 
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
     private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
@@ -146,10 +152,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady()
-                // .setWristVelocityTolerance(25)
-                // .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 15)
+            new ConeAutonReady()
                 .withTimeout(1.5)
         );
 
@@ -202,8 +205,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new ArmReady()
-                        .withTolerance(10, 20)
+                .alongWith(new AutonReady()
                 .alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
@@ -256,7 +258,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Third Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new ArmReady()
+                .alongWith(new AutonReady()
                 .withTolerance(20, 15).alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
