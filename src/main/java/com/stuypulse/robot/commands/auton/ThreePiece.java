@@ -32,14 +32,17 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            // TODO: check if src and dest are on the same side
-            double wristSafeAngle = 80;
+            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
-                // .addState(
-                //     new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
-                //         .setWristLimp(true)
-                //         .setWristTolerance(360))
+                .addState(
+                    new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                        .setShoulderTolerance(20)
+                        .setWristTolerance(45))
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
+                        .setWristLimp(true)
+                        .setWristTolerance(360))
                 .addState(dest);
         }
     }
@@ -143,7 +146,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 // .setWristVelocityTolerance(25)
                 // .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 15)
-                .withTimeout(1.2)
+                .withTimeout(1.5)
         );
 
         addCommands(
@@ -162,7 +165,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative()
                     .withStop()
-                    .withStallStop(),
+                    .withStallStop()
+                    .until(Intake.getInstance()::hasGamePiece),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
@@ -189,7 +193,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new ArmReady().withTolerance(10, 20)
+                .alongWith(new ArmReady()
+                        .withTolerance(10, 20)
                 .alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
@@ -209,7 +214,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Third Piece"))
                     .fieldRelative()
                     .withStop()
-                    .withStallStop(),
+                    .withStallStop()
+                    .until(Intake.getInstance()::hasGamePiece),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
@@ -217,6 +223,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeSecond()
+                    // .setShoulderVelocityTolerance(10)
                     .withTolerance(4, 10)
             ),
 
