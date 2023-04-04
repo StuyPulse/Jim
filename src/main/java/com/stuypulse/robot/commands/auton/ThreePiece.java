@@ -100,11 +100,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(
                     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
                         .setShoulderTolerance(15)
-                        .setWristTolerance(360))
+                        .setWristTolerance(15))
     
-                .addState(
-                    new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
-                        .setWristTolerance(360))
+                // .addState(
+                //     new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
+                //         .setWristTolerance(360))
     
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
@@ -231,7 +231,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
                 new ArmIntakeSecond()
                     // .setShoulderVelocityTolerance(10)
-                    .withTolerance(4, 10)
+                    // .withTolerance(4, 10)
             ),
 
             new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
