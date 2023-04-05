@@ -192,7 +192,7 @@ public class RobotContainer {
         operator.getLeftBumper()
             .onTrue(new IntakeAcquire()
                 .andThen(new WaitCommand(0.2)
-                    .until(() -> intake.hasCone()))
+                    .until(() -> intake.hasGamePiece()))
                 .andThen(new IntakeStop()))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
