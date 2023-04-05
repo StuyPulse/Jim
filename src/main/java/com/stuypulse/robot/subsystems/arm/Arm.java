@@ -303,7 +303,6 @@ public abstract class Arm extends SubsystemBase {
             setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
         }
 
-
         // Run control loops on validated target angles
         shoulderController.update(
             Angle.fromRotation2d(getShoulderTargetAngle()), 

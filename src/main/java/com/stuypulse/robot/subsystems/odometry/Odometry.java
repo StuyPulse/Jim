@@ -17,7 +17,8 @@ public abstract class Odometry extends SubsystemBase {
         instance = new OdometryImpl();
     }
 
-    public static final SmartBoolean USE_VISION_ANGLE = new SmartBoolean("Odometry/Use Vision Angle Data", true);
+    public static final SmartBoolean USE_VISION_ANGLE = new SmartBoolean("Odometry/Use Vision Angle Data", false);
+    public static final SmartBoolean USE_APRIL_TAGS_AUTON = new SmartBoolean("Odometry/Use April Tags For Auton", false);
 
     public static Odometry getInstance(){
         return instance;

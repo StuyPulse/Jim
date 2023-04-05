@@ -53,6 +53,9 @@ public interface Settings {
         
             SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1.0);
             SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1.0);
+
+            SmartNumber CUBE_FRONT_AUTON = new SmartNumber("Intake/Cube Acquire Front", 0.8);
+            SmartNumber CUBE_BACK_AUTON = new SmartNumber("Intake/Cube Acquire Back", 0.8);
         }
 
         public interface Deacquire {

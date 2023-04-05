@@ -105,11 +105,11 @@ public class OdometryImpl extends Odometry {
         }
         
         for (AprilTagData result : results) {
-            if (Robot.getMatchState() == MatchState.AUTO) {
-                // poseEstimator.addVisionMeasurement(
-                //     new Pose2d(result.pose.getTranslation(), getRotation()),
-                //     Timer.getFPGATimestamp() - result.latency,
-                //     VisionStdDevs.AUTO);
+            if (Robot.getMatchState() == MatchState.AUTO && USE_APRIL_TAGS_AUTON.get()) {
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(result.pose.getTranslation(), getRotation()),
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.AUTO);
             } else {
                 if (USE_VISION_ANGLE.get()) {
                     poseEstimator.addVisionMeasurement(

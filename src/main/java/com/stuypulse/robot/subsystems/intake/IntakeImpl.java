@@ -77,8 +77,13 @@ public class IntakeImpl extends Intake {
         acquiring = true;
         switch (Manager.getInstance().getGamePiece()) {
             case CUBE:
-                frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
-                backMotor.set(Acquire.CUBE_BACK.doubleValue());
+                if (Robot.getMatchState() == MatchState.AUTO) {
+                    frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
+                    backMotor.set(Acquire.CUBE_BACK.doubleValue());
+                } else {
+                    frontMotor.set(Acquire.CUBE_FRONT_AUTON.doubleValue());
+                    backMotor.set(Acquire.CUBE_BACK_AUTON.doubleValue());
+                }
                 break;
             case CONE_TIP_UP: 
                 break;

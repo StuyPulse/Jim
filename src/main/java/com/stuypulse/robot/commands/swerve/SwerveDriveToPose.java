@@ -62,6 +62,7 @@ public class SwerveDriveToPose extends CommandBase{
     @Override
     public void initialize() {
         Odometry.USE_VISION_ANGLE.set(true);
+        Odometry.USE_APRIL_TAGS_AUTON.set(true);
     }
 
     @Override
@@ -106,6 +107,7 @@ public class SwerveDriveToPose extends CommandBase{
 
     public void end(boolean interupted) {
         Odometry.USE_VISION_ANGLE.set(false);
+        Odometry.USE_APRIL_TAGS_AUTON.set(false);
         swerve.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }
