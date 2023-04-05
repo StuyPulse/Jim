@@ -156,7 +156,7 @@ public class RobotContainer {
         driver.getRightButton().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
-        new Trigger(intake::hasCone)
+        new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
             .debounce(0.5, DebounceType.kFalling)
             .onTrue(new LEDSet(LEDColor.RED))
@@ -192,7 +192,7 @@ public class RobotContainer {
         operator.getLeftBumper()
             .onTrue(new IntakeAcquire()
                 .andThen(new WaitCommand(0.2)
-                    .until(() -> intake.hasCone()))
+                    .until(() -> intake.hasGamePiece()))
                 .andThen(new IntakeStop()))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
@@ -233,6 +233,7 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
+        autonChooser.addOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
@@ -240,8 +241,10 @@ public class RobotContainer {
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
         autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
         autonChooser.addOption("One Piece Dock", new OnePieceDock());
-        autonChooser.setDefaultOption("One Piece Mobility Dock", new OnePieceMobilityDock());
-        
+        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
+        autonChooser.setDefaultOption("Three Piece", new ThreePiece());
+        autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
+
         SmartDashboard.putData("Autonomous", autonChooser);
     }
 

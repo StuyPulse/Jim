@@ -28,7 +28,7 @@ public class ArmIntake extends ArmRoutine {
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         if (Robot.getMatchState() == MatchState.AUTO) {
             dest = Acquire.kCubeAuton;
-            double intermediateShoulderDegrees = Acquire.kIntermediateAuton.getShoulderDegrees();
+            double intermediateShoulderDegrees = manager.getIntakeIntermediateTrajectory().getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()

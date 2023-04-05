@@ -29,7 +29,7 @@ public class ArmIntakeBOOM extends ArmRoutine {
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         if (Robot.getMatchState() == MatchState.AUTO) {
             dest = Acquire.kBOOMCubeAuton;
-            double intermediateShoulderDegrees = Acquire.kIntermediateAuton.getShoulderDegrees();
+            double intermediateShoulderDegrees = manager.getIntakeIntermediateTrajectory().getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
     
             return new ArmTrajectory()
@@ -50,7 +50,7 @@ public class ArmIntakeBOOM extends ArmRoutine {
                         .setWristTolerance(4));
         }
 
-        double intermediateShoulderDegrees = Acquire.kIntermediate.getShoulderDegrees();
+        double intermediateShoulderDegrees = manager.getIntakeIntermediateTrajectory().getShoulderDegrees();
         double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
         return new ArmTrajectory()
