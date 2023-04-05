@@ -7,7 +7,7 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 
@@ -86,7 +86,7 @@ public class TwoPieceDockWire extends DebugSequentialCommandGroup {
                     .addEvent("ArmNeutral", new ArmStow())
                     .withEvents(),
 
-            new SwerveDriveBalanceWithPlant().withTimeout(ENGAGE_TIME),
+            new SwerveDriveBalanceBlay().withTimeout(ENGAGE_TIME),
             new PlantEngage()
         );
     }
