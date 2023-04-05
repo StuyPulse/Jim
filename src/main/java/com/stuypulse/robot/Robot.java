@@ -112,8 +112,8 @@ public class Robot extends TimedRobot {
 
         robot.arm.setCoast(false, false);
         robot.arm.setLimp(false, false);
-        robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
-        robot.arm.setShoulderVelocityFeedbackDebounce(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
+        robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+        robot.arm.setShoulderVelocityFeedbackDebounce(Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
 
         new TeleopInit().schedule();
 
