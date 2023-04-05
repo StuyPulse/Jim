@@ -319,8 +319,6 @@ public interface Settings {
         SmartNumber VOLTAGE_DEADBAND = new SmartNumber("Operator Settings/Voltage Deadband", 0.05);
         SmartNumber SHOULDER_DRIVE_VOLTAGE = new SmartNumber("Operator Settings/Shoulder Drive Voltage", 9.0);
         SmartNumber WRIST_DRIVE_VOLTAGE = new SmartNumber("Operator Settings/Wrist Drive Voltage", 9.0);
-
-        SmartNumber READY_BUZZ_TIME = new SmartNumber("Operator Settings/Ready Buzz Time (s)", 0.2);
     }
 
     public interface Driver {
