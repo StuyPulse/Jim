@@ -56,7 +56,7 @@ public class TestArm extends SubsystemBase {
         //     .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD));
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
-            .add(new AngleArmFeedforward(Shoulder.Feedforward.kG))
+            .add(new AngleArmFeedforward(Shoulder.Feedforward.kGEmpty))
             .add(new AnglePIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD));
         //     .setSetpointFilter(new AMotionProfile(Shoulder.VEL_LIMIT, Shoulder.ACCEL_LIMIT));
 

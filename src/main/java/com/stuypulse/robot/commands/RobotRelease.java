@@ -12,10 +12,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import static com.stuypulse.robot.constants.Settings.Score.*;
+
 public class RobotRelease extends CommandBase {
-    
-    private final static SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
-    private final static SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", -16);
 
     private final SwerveDrive swerve;
     private final Arm arm;
@@ -50,7 +49,7 @@ public class RobotRelease extends CommandBase {
             
             swerve.setChassisSpeeds(slowSpeeds);
         } else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT && manager.getNodeLevel() != NodeLevel.LOW) {
-            ChassisSpeeds slowSpeeds = new ChassisSpeeds(Units.inchesToMeters(kBackwardsTipOutSpeed.get()), 0, 0);
+            ChassisSpeeds slowSpeeds = new ChassisSpeeds(-Units.inchesToMeters(kBackwardsTipOutSpeed.get()), 0, 0);
             
             swerve.setChassisSpeeds(slowSpeeds);
         }
