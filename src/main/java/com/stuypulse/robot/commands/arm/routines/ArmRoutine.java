@@ -45,12 +45,6 @@ public abstract class ArmRoutine extends CommandBase {
 
         shoulderVelocityTolerance = 1000000;
         wristVelocityTolerance = 1000000;
-        
-        shoulderMaxVelocity = Shoulder.MAX_VELOCITY;
-        shoulderMaxAcceleration = Shoulder.MAX_ACCELERATION;
-
-        wristMaxVelocity = Wrist.MAX_VELOCITY;
-        wristMaxAcceleration = Wrist.MAX_ACCELERATION;
 
         addRequirements(arm);
     }
@@ -123,11 +117,6 @@ public abstract class ArmRoutine extends CommandBase {
     public boolean isFinished() {
         return trajectory.getEntries() == 0 || currentIndex >= trajectory.getEntries();
     }
-
-    @Override
-    public void end(boolean interrupted) {
-        arm.resetConstraints();
-    }
     
     public ArmRoutine withTolerance(double wristTolerance, double shoulderTolerance) {
         this.wristTolerance = wristTolerance;
@@ -135,15 +124,4 @@ public abstract class ArmRoutine extends CommandBase {
         return this;
     }
 
-    public ArmRoutine withShoulderConstraints(double velocity, double acceleration) {
-        this.shoulderMaxVelocity = velocity;
-        this.shoulderMaxAcceleration = acceleration;
-        return this;
-    }
-
-    public ArmRoutine withWristConstraints(double velocity, double acceleration) {
-        this.wristMaxVelocity = velocity;
-        this.wristMaxAcceleration = acceleration;
-        return this;
-    }
 }
