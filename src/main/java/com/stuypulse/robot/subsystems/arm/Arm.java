@@ -83,6 +83,9 @@ public abstract class Arm extends SubsystemBase {
     
     private BStream wristEnabled;
 
+    private SmartNumber shoulderVelocityFeedbackDebounce;
+    private SmartNumber shoulderVelocityFeedbackCutoff;
+
     private boolean pieceGravityCompensation;
 
     private final SmartNumber shoulderMaxVelocity;
@@ -132,8 +135,16 @@ public abstract class Arm extends SubsystemBase {
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
+        shoulderVelocityFeedbackDebounce = new SmartNumber(
+            "Arm/Wrist/Feedback Enabled Debounce", 
+            Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
+
+        shoulderVelocityFeedbackCutoff = new SmartNumber(
+            "Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)", 
+            Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
-            .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
+            .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce));
 
         shoulderMaxVelocity = new SmartNumber(
             "Arm/Shoulder/Max Velocity", 
@@ -208,7 +219,7 @@ public abstract class Arm extends SubsystemBase {
     }
 
     private final boolean isWristFeedbackEnabled() {
-        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(Wrist.SHOULDER_VELOCITY_FEEDBACK_CUTOFF.get());
+        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(shoulderVelocityFeedbackCutoff.doubleValue());
     }
 
     // Set kinematic constraints
@@ -235,6 +246,14 @@ public abstract class Arm extends SubsystemBase {
 
     public final ArmState getTargetState() {
         return new ArmState(getShoulderTargetAngle(), getWristTargetAngle());
+    }
+
+    public final void setShoulderVelocityFeedbackDebounce(double time) {
+        shoulderVelocityFeedbackDebounce.set(time);
+    }
+
+    public final void setShoulderVelocityFeedbackCutoff(double velocity) {
+        shoulderVelocityFeedbackCutoff.set(velocity);
     }
 
     // Set target states
