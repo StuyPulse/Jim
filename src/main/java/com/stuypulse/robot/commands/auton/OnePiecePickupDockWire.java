@@ -4,8 +4,6 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
-import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.leds.LEDSetRainbow;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
@@ -14,7 +12,6 @@ import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
-import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -32,8 +29,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ENGAGE_TIME = 10.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
-
-    private AddressableLEDBuffer ledsBuffer;
 
     private static final PathConstraints INTAKE_PIECE = new PathConstraints(3, 2);
     private static final PathConstraints DOCK = new PathConstraints(1, 2);
@@ -55,7 +50,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new LEDSet(LEDColor.RED),
             new ArmReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
@@ -64,7 +58,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),  
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -72,8 +65,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-
-            new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
@@ -97,7 +88,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         
         // dock and engage
         addCommands(
-            new LEDSet(LEDColor.PURPLE),
                 new ParallelDeadlineGroup(
                     new SwerveDriveFollowTrajectory(paths.get("Dock"))
                             .fieldRelative().withStop(),
@@ -107,7 +97,6 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSetRainbow(),
 
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(0.5)
