@@ -33,6 +33,8 @@ public class RobotAlignThenScore extends CommandBase {
     private final Arm arm;
     private final Intake intake;
 
+    private final Manager manager;
+
     // Holonomic control
     private final HolonomicController controller;
     private final BStream aligned;
@@ -45,6 +47,7 @@ public class RobotAlignThenScore extends CommandBase {
         this.swerve = SwerveDrive.getInstance();
         this.arm = Arm.getInstance();
         this.intake = Intake.getInstance();
+        manager = Manager.getInstance();
 
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
@@ -89,31 +92,38 @@ public class RobotAlignThenScore extends CommandBase {
         controller.update(targetPose, currentPose);
 
         if (aligned.get() || movingWhileScoring) {
-            // score
-            if (Manager.getInstance().getGamePiece().isCube()) {
-                swerve.stop();
+            // simply outtake when low
+            if (manager.getNodeLevel() == NodeLevel.LOW) {
                 intake.deacquire();
-            } else if (Manager.getInstance().getGamePiece() == GamePiece.CONE_TIP_OUT) {
-                arm.setTargetState(
-                    Manager.getInstance().getNodeLevel() == NodeLevel.MID ?
-                        ArmTrajectories.Score.Mid.kConeTipOutFront :
-                        ArmTrajectories.Score.High.kConeTipOutFront);
+            } 
+    
+            
+            // or do scoring motion based on the game piece
+            else {
 
-                if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
-                    intake.enableCoast();
-                    movingWhileScoring = true;
-                    swerve.setChassisSpeeds(
-                        new ChassisSpeeds(
-                            -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
-                            0,
-                            0));
+                if (manager.getGamePiece().isCube()) {
+                    intake.deacquire();
+                } else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
+                    arm.setTargetState(
+                        Manager.getInstance().getNodeLevel() == NodeLevel.MID ?
+                            ArmTrajectories.Score.Mid.kConeTipOutFront :
+                            ArmTrajectories.Score.High.kConeTipOutFront);
+    
+                    if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
+                        intake.enableCoast();
+                        movingWhileScoring = true;
+                        swerve.setChassisSpeeds(
+                            new ChassisSpeeds(
+                                -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
+                                0,
+                                0));
+                    }
                 } else {
-                    swerve.stop();
+                    // don't automate yet
                 }
-            } else {
-                // tip in (don't automate yet)
-                swerve.stop();
+
             }
+
         } else {
             swerve.setChassisSpeeds(controller.getOutput());
         }
