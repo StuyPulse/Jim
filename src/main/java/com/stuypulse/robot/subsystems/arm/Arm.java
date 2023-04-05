@@ -131,7 +131,7 @@ public abstract class Arm extends SubsystemBase {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
             .add(new ArmEncoderFeedforward(new GamePiecekG()))
-            // .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
+            .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new MotionProfile(
