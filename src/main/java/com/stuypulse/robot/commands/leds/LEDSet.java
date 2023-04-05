@@ -26,6 +26,7 @@ public class LEDSet extends InstantCommand {
     private LEDColor color;
     private double updateTime;
     private LEDController controller;
+    private LEDInstruction instruction;
 
     public LEDSet(LEDColor color, double updateTime) {
         this.controller = LEDController.getInstance();
@@ -33,8 +34,19 @@ public class LEDSet extends InstantCommand {
         this.color = color;
     }
 
+    public LEDSet(LEDInstruction instruction, double updateTime) {
+        this.controller = LEDController.getInstance();
+        this.updateTime = updateTime;
+        this.instruction = instruction;
+    }
+
     public LEDSet(LEDColor color) {
         this(color, Settings.LED.MANUAL_UPDATE_TIME);
+        //System.out.println("LEDSet was called!!!");
+    }
+
+    public LEDSet(LEDInstruction instruction) {
+        this(instruction, Settings.LED.MANUAL_UPDATE_TIME);
         //System.out.println("LEDSet was called!!!");
     }
 
