@@ -76,7 +76,12 @@ public class OdometryImpl extends Odometry {
 
     @Override
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+        if (USE_VISION_ANGLE.get())
+            return poseEstimator.getEstimatedPosition();
+        else
+            return new Pose2d(
+                poseEstimator.getEstimatedPosition().getTranslation(),
+                odometry.getPoseMeters().getRotation());
     }
 
     @Override
