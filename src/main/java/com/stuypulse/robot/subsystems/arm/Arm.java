@@ -133,11 +133,19 @@ public abstract class Arm extends SubsystemBase {
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
             .filtered(new BDebounce.Both(Wrist.SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.get()));
 
-        shoulderMaxVelocity = new SmartNumber("Arm/Shoulder/Current Max Velocity", Shoulder.MAX_VELOCITY.doubleValue());
-        shoulderMaxAcceleration = new SmartNumber("Arm/Shoulder/Current Max Acceleration", Shoulder.MAX_ACCELERATION.doubleValue());
+        shoulderMaxVelocity = new SmartNumber(
+            "Arm/Shoulder/Max Velocity", 
+            Shoulder.TELEOP_MAX_VELOCITY.doubleValue());
+        shoulderMaxAcceleration = new SmartNumber(
+            "Arm/Shoulder/Max Acceleration", 
+            Shoulder.TELEOP_MAX_ACCELERATION.doubleValue());
 
-        wristMaxVelocity = new SmartNumber("Arm/Wrist/Current Max Velocity", Wrist.MAX_VELOCITY.doubleValue());
-        wristMaxAcceleration = new SmartNumber("Arm/Wrist/Current Max Acceleration", Wrist.MAX_ACCELERATION.doubleValue());
+        wristMaxVelocity = new SmartNumber(
+            "Arm/Wrist/Max Velocity", 
+            Wrist.TELEOP_MAX_VELOCITY.doubleValue());
+        wristMaxAcceleration = new SmartNumber(
+            "Arm/Wrist/Max Acceleration", 
+            Wrist.TELEOP_MAX_ACCELERATION.doubleValue());
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(new GamePiecekG()))
@@ -213,13 +221,6 @@ public abstract class Arm extends SubsystemBase {
         wristMaxAcceleration.set(acceleration);
     }
 
-    public final void resetConstraints() {
-        shoulderMaxVelocity.set(Shoulder.MAX_VELOCITY);
-        shoulderMaxAcceleration.set(Shoulder.MAX_ACCELERATION);
-
-        wristMaxVelocity.set(Wrist.MAX_VELOCITY);
-        wristMaxAcceleration.set(Wrist.MAX_ACCELERATION);
-    }
 
     // Read target State
     public final Rotation2d getShoulderTargetAngle() {
