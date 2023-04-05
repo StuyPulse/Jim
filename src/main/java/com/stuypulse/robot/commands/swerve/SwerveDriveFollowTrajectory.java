@@ -38,7 +38,6 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 	private boolean robotRelative;
 	private boolean shouldStop;
-	private boolean stopOnStall;
 	private PathPlannerTrajectory path;
 	private HashMap<String, Command> events;
 
@@ -63,16 +62,10 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		this.path = path;
 		events = new HashMap<String, Command>();
 		shouldStop = false;
-		stopOnStall = false;
 	}
 
 	public SwerveDriveFollowTrajectory withStop() {
 		shouldStop = true;
-		return this;
-	}
-
-	public SwerveDriveFollowTrajectory withStallStop() {
-		stopOnStall = true;
 		return this;
 	}
 
@@ -98,11 +91,6 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			path.getMarkers(),
 			events
 		);
-	}
-
-	@Override
-	public boolean isFinished() {
-		return super.isFinished() || (stopOnStall && Intake.getInstance().hasGamePiece());
 	}
 
 	@Override

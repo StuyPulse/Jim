@@ -180,8 +180,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative()
-                    .withStop()
-                    .withStallStop(),
+                    .withStop(),
                     // .until(Intake.getInstance()::hasGamePiece), // interrupting IntakeScore? idk one time the intake just stopped early
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
@@ -234,7 +233,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Third Piece"))
                     .fieldRelative()
                     .withStop()
-                    .withStallStop()
                     .until(Intake.getInstance()::hasGamePiece),
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
