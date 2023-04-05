@@ -7,11 +7,14 @@ import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -54,6 +57,13 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
                 .withTimeout(4)
+        );
+
+        addCommands( 
+            arm.runOnce(() -> { 
+                arm.setShoulderConstraints(Shoulder.TELEOP_MAX_VELOCITY, Shoulder.TELEOP_MAX_ACCELERATION);
+                arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
+            })
         );
 
         addCommands(

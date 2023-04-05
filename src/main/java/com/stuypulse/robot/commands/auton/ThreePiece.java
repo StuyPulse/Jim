@@ -59,7 +59,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
-                    .setWristTolerance(23).setShoulderTolerance(20));
+                    .setWristTolerance(30).setShoulderTolerance(20));
         }
     }
     static class ArmIntakeFirst extends ArmRoutine {
@@ -127,10 +127,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
     }
 
 
-    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
+    private static final double INTAKE_DEACQUIRE_TIME = 0.3;
     private static final double INTAKE_STOP_WAIT_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 1.0;
-    private static final double ACQUIRE_WAIT_TIME = 0.3;
+    private static final double ACQUIRE_WAIT_TIME = 0.02;
     private static final double WIGGLE_PERIOD = 0.6;
     private static final double WIGGLE_VEL_AMPLITUDE = 0.6;
 
@@ -209,18 +209,28 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
+            new ParallelDeadlineGroup(
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
                     .fieldRelative()
-                .withStop()
-                .alongWith(new AutonReady()
-                .alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
+                .withStop(),
+
+                new AutonReady(),
+                new WaitCommand(0.5).andThen(new IntakeStop())
+            ),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
+        );
+
+        addCommands( 
+            arm.runOnce(() -> { 
+                arm.setShoulderVelocityFeedbackCutoff(20);
+                arm.setShoulderVelocityFeedbackDebounce(0.0);
+            })
         );
 
         // intake third piece
@@ -251,6 +261,13 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
+        );
+
+        addCommands( 
+            arm.runOnce(() -> { 
+                arm.setShoulderVelocityFeedbackCutoff(5);
+                arm.setShoulderVelocityFeedbackDebounce(0.2);
+            })
         );
 
         // drive to grid and score third piece

@@ -49,8 +49,8 @@ public interface Settings {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
         
-            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1.0);
-            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1.0);
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 0.8);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 0.8);
         }
 
         public interface Deacquire {
@@ -279,7 +279,7 @@ public interface Settings {
 
     public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 8);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 12);
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
         SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.8);
