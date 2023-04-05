@@ -1,4 +1,4 @@
-/************************ PROJECT PHIL ************************/
+    /************************ PROJECT PHIL ************************/
 /* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
@@ -153,7 +153,7 @@ public class RobotContainer {
         // plant
         //driver.getRightButton().onTrue(new PlantEngage());
 
-        driver.getRightButton().whileTrue(new LEDSetRainbow());
+        driver.getRightButton().whileTrue(new LEDSet(LEDColor.RAINBOW));
         driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasCone)
