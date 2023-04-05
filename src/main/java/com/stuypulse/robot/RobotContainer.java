@@ -183,15 +183,15 @@ public class RobotContainer {
 
         // intaking from HP
         operator.getLeftTriggerButton()
-        .whileTrue(new ArmIntakeHP())
-        .onTrue(new IntakeAcquire())
-        .onFalse(new IntakeStop())
-        .onFalse(new ArmStow());
+            .whileTrue(new ArmIntakeHP())
+            .onTrue(new IntakeAcquire())
+            .onFalse(new IntakeStop())
+            .onFalse(new ArmStow());
 
         // ready & score
         operator.getLeftBumper()
-            .onTrue(new IntakeAcquire()
-                    .andThen(new WaitCommand(0.2))
+            .whileTrue(new IntakeAcquire()
+                    .andThen(new WaitCommand(Settings.Operator.READY_BUZZ_TIME.get()))
                     .andThen(new IntakeStop()))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
