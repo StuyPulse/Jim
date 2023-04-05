@@ -233,6 +233,7 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
+        autonChooser.addOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Mobility", new MobilityAuton());
         autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
         autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
