@@ -186,14 +186,14 @@ public class Manager extends SubsystemBase {
     public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
-        double gridDistance = getSelectedScoreX();
-        double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double gridDistance = getSelectedScoreX().doubleValue();
+        Number[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         int nearest = 0;
-        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
 
         for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
-            Translation2d current = new Translation2d(gridDistance, positions[i]);
+            Translation2d current = new Translation2d(gridDistance, positions[i].doubleValue());
             double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
@@ -205,7 +205,7 @@ public class Manager extends SubsystemBase {
         return nearest;
     }
 
-    private double getSelectedScoreX() {
+    private Number getSelectedScoreX() {
         if (nodeLevel == NodeLevel.HIGH) {
             switch (gamePiece) {
                 case CUBE:
@@ -240,12 +240,12 @@ public class Manager extends SubsystemBase {
     }
 
     public Translation2d getSelectedScoreTranslation() {
-        double gridDistance = getSelectedScoreX();
-        double positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double gridDistance = getSelectedScoreX().doubleValue();
+        Number positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         return new Translation2d(
             gridDistance,
-            positions[gridNode.intValue()]);
+            positions[gridNode.intValue()].doubleValue());
     }
 
     public Pose2d getScorePose() {
