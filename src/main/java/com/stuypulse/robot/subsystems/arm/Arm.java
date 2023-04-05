@@ -22,6 +22,7 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
+import com.stuypulse.stuylib.streams.filters.Derivative;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 import com.stuypulse.robot.util.ArmDriveFeedforward;
 import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
@@ -130,7 +131,7 @@ public abstract class Arm extends SubsystemBase {
 
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
             .add(new ArmEncoderFeedforward(new GamePiecekG()))
-            .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
+            // .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
             .setSetpointFilter(
                 new MotionProfile(
@@ -312,8 +313,10 @@ public abstract class Arm extends SubsystemBase {
         // Run control loops on validated target angles
         shoulderController.update(
             getWrappedShoulderAngle(getShoulderTargetAngle()), 
-            // getShoulderTargetAngle().getRadians(),
-            getShoulderAngle().getRadians());
+            getWrappedShoulderAngle(getShoulderAngle()));
+        
+        SmartDashboard.putNumber("Arm/Shoulder/Wrapped Angle", getWrappedShoulderAngle(getShoulderAngle()));
+        SmartDashboard.putNumber("Arm/Shoulder/Wrapped Target Angle", getWrappedShoulderAngle(getShoulderTargetAngle()));
 
         wristController.update(
             Angle.fromRotation2d(getWristTargetAngle()), 
