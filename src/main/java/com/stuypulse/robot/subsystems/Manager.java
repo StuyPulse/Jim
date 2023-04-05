@@ -161,6 +161,15 @@ public class Manager extends SubsystemBase {
 
     private final int[] CUBE_INDEXES = {1, 4, 7};
     private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+    private final int[] LOW_INDEXES = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    private int[] getPossibleScoringIndices() {
+        int[] indices = LOW_INDEXES;
+        if (nodeLevel != NodeLevel.LOW) {
+            indices = gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES;
+        }
+        return indices;
+    }
 
     public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
@@ -171,7 +180,8 @@ public class Manager extends SubsystemBase {
         int nearest = 0;
         double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
 
-        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
+
+        for (int i : getPossibleScoringIndices()) {
             Translation2d current = new Translation2d(gridDistance, positions[i].doubleValue());
             double distance = robot.getDistance(current);
 
@@ -185,7 +195,10 @@ public class Manager extends SubsystemBase {
     }
 
     private Number getSelectedScoreX() {
-        if (nodeLevel == NodeLevel.HIGH) {
+        if (nodeLevel == NodeLevel.LOW) {
+            return scoreSide == ScoreSide.FRONT ? ScoreXPoses.Low.FRONT : ScoreXPoses.Low.BACK;
+        }
+        else if (nodeLevel == NodeLevel.HIGH) {
             switch (gamePiece) {
                 case CUBE:
                     if (scoreSide == ScoreSide.FRONT)
