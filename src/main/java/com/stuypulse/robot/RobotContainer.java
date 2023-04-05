@@ -190,10 +190,10 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .whileTrue(new IntakeAcquire()
-                    .andThen(new WaitCommand(0.2)
-                                    .until(() -> intake.hasCone()))
-                    .andThen(new IntakeStop()))
+            .onTrue(new IntakeAcquire()
+                .andThen(new WaitCommand(0.2)
+                    .until(() -> intake.hasCone()))
+                .andThen(new IntakeStop()))
             .whileTrue(
                 new LEDSet(LEDColor.RED)
                     .andThen(new ManagerValidateState())
