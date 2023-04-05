@@ -1,10 +1,9 @@
 package com.stuypulse.robot.util;
 
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.streams.IStream;
 
-public class ArmDriveFeedforward extends AngleController {
+public class ArmDriveFeedforward extends Controller {
 
     private final Number kG;
     private final IStream forwardAccelerationInGs;
@@ -15,8 +14,8 @@ public class ArmDriveFeedforward extends AngleController {
     }
 
     @Override
-    protected double calculate(Angle setpoint, Angle measurement) {
-        return kG.doubleValue() * measurement.sin() * forwardAccelerationInGs.get();
+    protected double calculate(double setpoint, double measurement) {
+        return kG.doubleValue() * Math.sin(measurement) * forwardAccelerationInGs.get();
     }
     
 }

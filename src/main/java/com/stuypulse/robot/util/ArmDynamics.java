@@ -122,12 +122,12 @@ public class ArmDynamics {
     private Matrix<N2, N1> Tg(Vector<N2> position) {
         var Tg = new Matrix<>(N2.instance, N1.instance);
 
-        Tg.set(0, 0,
-            (shoulder.mass * shoulder.radius + wrist.mass * shoulder.length) * g * Math.cos(position.get(0, 0)) + 
-            wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
+        // Tg.set(0, 0,
+        //     (shoulder.mass * shoulder.radius + wrist.mass * shoulder.length) * g * Math.cos(position.get(0, 0)) + 
+        //     wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
 
-        Tg.set(1, 0,
-            wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
+        // Tg.set(1, 0,
+        //     wrist.mass * wrist.radius * g * Math.cos(position.get(0, 0) + position.get(1, 0)));
 
         return Tg;
     }

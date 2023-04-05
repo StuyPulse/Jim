@@ -64,6 +64,11 @@ public interface Field {
             SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433);
         }
 
+        public interface Low {
+            SmartNumber BACK = new SmartNumber("Alignment/X Poses/Low/Back", 1.85);
+            SmartNumber FRONT = new SmartNumber("Alignment/X Poses/Low/Front", 1.85);
+        }
+
         // Low Cube: 1.768088
     }
 
