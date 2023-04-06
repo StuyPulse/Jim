@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import java.util.ArrayDeque;
@@ -198,7 +203,7 @@ public class ArmBFSField {
     private final double mArmDegOffset;
     private final double mWristDegOffset;
     private final Node[] mNodeMap;
-    
+
     private static int instances = 0;
 
     public ArmBFSField(double targetArmDeg, double targetWristDeg, Constraint constraints) {

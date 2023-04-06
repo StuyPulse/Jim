@@ -1,13 +1,15 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -58,8 +60,8 @@ public class ArmVisualizer {
         // Length of arm: 42 inches
         // Length of wrist: 17 inches
         // Width of robot: 24 inches
-        
-        // 1 : 10 inches 
+
+        // 1 : 10 inches
 
         pegMid = new MechanismLigament2d("Peg Mid", 3.4, 90);
         pegTop = new MechanismLigament2d("Peg Top", 4.4, 90);
@@ -97,7 +99,7 @@ public class ArmVisualizer {
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
-        targetWristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
+        targetWristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),
                                         5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
         targetShoulderLigament.setAngle(shoulderAngle);
@@ -107,11 +109,11 @@ public class ArmVisualizer {
     }
 
     public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
-        wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),  
+        wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
         intakeDirectionRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)) +
-                                Units.metersToInches(Wrist.LENGTH / 2)/10*Math.cos(Units.degreesToRadians(wristAngle)),  
+                                Units.metersToInches(Wrist.LENGTH / 2)/10*Math.cos(Units.degreesToRadians(wristAngle)),
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)) +
                                 Units.metersToInches(Wrist.LENGTH / 2)/10*Math.sin(Units.degreesToRadians(wristAngle)));
 
@@ -142,7 +144,7 @@ public class ArmVisualizer {
         intakeDirection.setColor(color);
     }
 
-    public void setFieldArm(Pose2d robotPose, ArmState armState) { 
+    public void setFieldArm(Pose2d robotPose, ArmState armState) {
         fieldArm2d.update(robotPose, armState);
     }
 }

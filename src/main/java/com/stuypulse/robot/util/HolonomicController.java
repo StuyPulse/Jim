@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import com.stuypulse.stuylib.control.Controller;
@@ -33,12 +38,12 @@ public class HolonomicController implements Sendable {
 
     public ChassisSpeeds getOutput() {
         return ChassisSpeeds.fromFieldRelativeSpeeds(
-            xController.getOutput(), 
-            yController.getOutput(), 
-            angleController.getOutput(), 
+            xController.getOutput(),
+            yController.getOutput(),
+            angleController.getOutput(),
             angleController.getMeasurement().getRotation2d());
     }
-    
+
     public boolean isDone(double xToleranceMeters, double yToleranceMeters, double angleToleranceDegrees) {
         return xController.isDone(xToleranceMeters) && yController.isDone(yToleranceMeters) && angleController.isDoneDegrees(angleToleranceDegrees);
     }
@@ -52,9 +57,9 @@ public class HolonomicController implements Sendable {
         builder.addDoubleProperty("X Measurement (meters)", () -> xController.getMeasurement(), null);
         builder.addDoubleProperty("Y Setpoint (meters)", () -> yController.getSetpoint(), null);
         builder.addDoubleProperty("Y Measurement (meters)", () -> yController.getMeasurement(), null);
-        
+
     }
 
-    
+
 
 }

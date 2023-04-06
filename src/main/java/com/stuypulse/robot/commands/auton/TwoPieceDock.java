@@ -1,7 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.auton;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
@@ -25,6 +28,9 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 public class TwoPieceDock extends DebugSequentialCommandGroup {
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
@@ -40,7 +46,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-    
+
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
@@ -56,7 +62,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-    
+
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(30))
@@ -87,7 +93,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
     private static final double INTAKE_WAIT_TIME = 0.2;
     private static final double ACQUIRE_WAIT_TIME = 0.1;
     private static final double ENGAGE_TIME = 10.0;
-    private static final double STOW_WAIT_TIME = 0;  
+    private static final double STOW_WAIT_TIME = 0;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
@@ -118,8 +124,8 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                 .withTimeout(3)
         );
 
-        addCommands( 
-            arm.runOnce(() -> { 
+        addCommands(
+            arm.runOnce(() -> {
                 arm.setShoulderConstraints(Shoulder.TELEOP_MAX_VELOCITY, Shoulder.TELEOP_MAX_ACCELERATION);
                 arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
             })
@@ -157,13 +163,13 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
-        addCommands( 
-            arm.runOnce(() -> { 
+        addCommands(
+            arm.runOnce(() -> {
                 arm.setShoulderConstraints(Shoulder.AUTON_MAX_VELOCITY, Shoulder.AUTON_MAX_ACCELERATION);
                 arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
             })
         );
-        
+
         // drive to grid and score second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
@@ -176,7 +182,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                     paths.get("Score Piece"))
                         .fieldRelative().withStop(),
 
-                new WaitCommand(0.2).andThen(new AutonReady()), 
+                new WaitCommand(0.2).andThen(new AutonReady()),
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.4),
@@ -190,7 +196,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
         );
-        
+
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),

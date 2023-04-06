@@ -1,15 +1,21 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.arm;
 
-import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import static com.stuypulse.robot.constants.Settings.Operator.*;
+
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.util.StopWatch;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 
-import static com.stuypulse.robot.constants.Settings.Operator.*;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmDrive extends CommandBase {
     private final Arm arm;
@@ -45,7 +51,7 @@ public class ArmDrive extends CommandBase {
     public void initialize() {
         timer.reset();
     }
-    
+
     @Override
     public void execute(){
         final double dt = timer.reset();

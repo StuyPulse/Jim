@@ -1,8 +1,12 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class ArmTrajectory {
 
@@ -11,7 +15,7 @@ public class ArmTrajectory {
     public ArmTrajectory() {
         states = new ArrayList<>();
     }
-    
+
     public ArmTrajectory addState(Number shoulderDegrees, Number wristDegrees) {
         return addState(new ArmState(shoulderDegrees, wristDegrees));
     }

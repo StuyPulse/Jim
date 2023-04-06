@@ -96,7 +96,7 @@ spotless {
 
 '''
 
-        googleJavaFormat().aosp()
+        // googleJavaFormat().aosp()
         
         trimTrailingWhitespace()
         endWithNewline()

@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import edu.wpi.first.math.VecBuilder;
@@ -18,7 +23,7 @@ public class TwoJointArmSimulation {
 
     public TwoJointArmSimulation(double shoulderRadians, double wristRadians, double shoulderRadiansPerSecond, double wristRadiansPerSecond, ArmDynamics dynamics) {
         this(VecBuilder.fill(shoulderRadians, wristRadians, shoulderRadiansPerSecond, wristRadiansPerSecond), dynamics);
-    } 
+    }
 
     public TwoJointArmSimulation(double shoulderRadians, double wristRadians, ArmDynamics dynamics) {
         this(shoulderRadians, wristRadians, 0, 0, dynamics);

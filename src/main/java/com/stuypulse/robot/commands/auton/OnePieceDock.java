@@ -1,7 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.auton;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
@@ -17,6 +20,9 @@ import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 
 public class OnePieceDock extends DebugSequentialCommandGroup {
 
@@ -63,7 +69,7 @@ public class OnePieceDock extends DebugSequentialCommandGroup {
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
-        
+
         // dock and engage
         addCommands(
             new LEDSet(LEDColor.PURPLE),
@@ -85,6 +91,6 @@ public class OnePieceDock extends DebugSequentialCommandGroup {
 
             new PlantEngage()
         );
-    
+
     }
 }

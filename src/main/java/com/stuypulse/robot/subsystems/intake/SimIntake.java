@@ -1,10 +1,16 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems.intake;
 
 import static com.stuypulse.robot.constants.Settings.Intake.*;
 
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 public class SimIntake extends Intake {
 
@@ -26,7 +32,7 @@ public class SimIntake extends Intake {
             case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(Acquire.CONE_FRONT.doubleValue());
-                backMotor.set(-Acquire.CONE_BACK.doubleValue());    
+                backMotor.set(-Acquire.CONE_BACK.doubleValue());
                 break;
             default:
                 break;
@@ -41,12 +47,12 @@ public class SimIntake extends Intake {
                 backMotor.set(-Deacquire.CUBE_BACK.doubleValue());
                 break;
             case CONE_TIP_UP:
-                // maybe check if in autonomous 
+                // maybe check if in autonomous
                 frontMotor.set(Deacquire.CONE_UP_FRONT.doubleValue());
-                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
+                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue());
             case CONE_TIP_IN:
                 frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
-                backMotor.set(Deacquire.CONE_BACK.doubleValue());    
+                backMotor.set(Deacquire.CONE_BACK.doubleValue());
                 break;
             default:
                 break;
@@ -62,5 +68,5 @@ public class SimIntake extends Intake {
     @Override
     public void periodic() {
         Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
-    }   
+    }
 }
