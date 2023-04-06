@@ -35,12 +35,12 @@ public class LEDRainbow implements LEDInstruction {
                                         new SLColor(127, 0, 255), 
                                         new SLColor(160, 32, 240), 
                                         new SLColor(255, 192, 203)};
-        SLColor color;
+
         // if(timer.getTime() > 3 * Math.sin(colorCounter * 2.0) + 1) {
         if(timer.getTime() > 1.0) {
             timer.reset();
             for(int i = 0; i < ledsBuffer.getLength(); i++) {
-                color = rainbow[(i + counter) % rainbow.length];
+                SLColor color = rainbow[(i + counter) % rainbow.length];
                 ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
                 ++counter;
                 if(counter == rainbow.length) counter = 0;
