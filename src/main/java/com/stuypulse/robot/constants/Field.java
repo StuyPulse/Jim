@@ -150,9 +150,12 @@ public interface Field {
                 AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
             };
 
-            Translation2d BLUE_HP = new Translation2d(15.56, 7.32);
+            Translation2d WALL_BLUE_HP = new Translation2d(Field.WIDTH - 1.7455, Field.HEIGHT - 0.5005);
+            Translation2d BARRIER_BLUE_HP = new Translation2d(Field.WIDTH - 1.7455, Field.HEIGHT - 1.847);
 
-            Translation2d RED_HP = AllianceUtil.getMirroredTranslation(BLUE_HP);
+
+            Translation2d WALL_RED_HP = AllianceUtil.getMirroredTranslation(WALL_BLUE_HP);
+            Translation2d BARRIER_RED_HP = AllianceUtil.getMirroredTranslation(BARRIER_BLUE_HP);
         }
     }
 

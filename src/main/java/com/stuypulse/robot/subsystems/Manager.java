@@ -267,8 +267,8 @@ public class Manager extends SubsystemBase {
 
     public Pose2d getIntakePose() {
         return new Pose2d(RobotContainer.getCachedAlliance() == Alliance.Red
-            ? Front.RED_HP
-            : Front.BLUE_HP,
+            ? Front.BARRIER_RED_HP
+            : Front.BARRIER_BLUE_HP,
             Rotation2d.fromDegrees(0));
     }
 
