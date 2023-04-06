@@ -177,6 +177,8 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
+            arm.runOnce(() -> arm.setShoulderVelocityFeedbackCutoff(10.0)),
+
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(
                     paths.get("Score Piece"))
