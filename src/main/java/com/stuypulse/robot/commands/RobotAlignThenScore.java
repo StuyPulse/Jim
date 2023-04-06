@@ -12,6 +12,7 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
@@ -23,6 +24,7 @@ import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
+import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -87,6 +89,8 @@ public class RobotAlignThenScore extends CommandBase {
         movingWhileScoring = false;
         intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
+
+        LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
     @Override
@@ -146,6 +150,8 @@ public class RobotAlignThenScore extends CommandBase {
         swerve.stop();
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
+        
+        LEDController.getInstance().setColor(LEDController.getInstance().getDefaultColor(), 0);
     }
 
 }
