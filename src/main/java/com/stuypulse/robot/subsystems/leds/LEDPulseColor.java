@@ -22,8 +22,7 @@ public class LEDPulseColor implements LEDInstruction {
     public StopWatch stopwatch;
 
     public LEDPulseColor(SLColor color) {
-        this.color = color;
-        stopwatch = new StopWatch();
+        this(color, new SLColor(0,0,0));
     }
 
     public LEDPulseColor(SLColor color1, SLColor color2) {
@@ -35,23 +34,20 @@ public class LEDPulseColor implements LEDInstruction {
 
     @Override
     public void setLED(AddressableLEDBuffer ledsBuffer) {
-        if (stopwatch.getTime() < 0.5) {
+        double time = stopwatch.getTime();
+
+        if (time < 0.5) {
             for (int i = 0; i < ledsBuffer.getLength(); i++) {
                 ledsBuffer.setRGB(i, color.getRed(), color.getGreen(), color.getBlue());
             }
         }
-        else if (stopwatch.getTime() < 1){
-            if (altcolor != null) {
-                for (int i = 0; i < ledsBuffer.getLength(); i++) {
-                    ledsBuffer.setRGB(i, altcolor.getRed(), altcolor.getGreen(), altcolor.getBlue());
-                }
+
+        else if (time < 1){
+            for (int i = 0; i < ledsBuffer.getLength(); i++) {
+                ledsBuffer.setRGB(i, altcolor.getRed(), altcolor.getGreen(), altcolor.getBlue());
             }
-            else {
-                for (int i = 0; i < ledsBuffer.getLength(); i++) {
-                    ledsBuffer.setRGB(i, 0, 0, 0);
-                }
-            }
-        }
+        } 
+        
         else {
             stopwatch.reset();
         }
