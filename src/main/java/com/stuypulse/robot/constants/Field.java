@@ -150,9 +150,7 @@ public interface Field {
                 AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
             };
 
-            Translation2d BLUE_HP = new Translation2d(
-                Field.WIDTH - Units.inchesToMeters(14.25) - 0.5, // measure this
-                Units.inchesToMeters(265.74));
+            Translation2d BLUE_HP = new Translation2d(15.56, 7.32);
 
             Translation2d RED_HP = AllianceUtil.getMirroredTranslation(BLUE_HP);
         }
