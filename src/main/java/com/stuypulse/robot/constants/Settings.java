@@ -245,7 +245,7 @@ public interface Settings {
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 15.0);
             SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
