@@ -190,8 +190,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 + 180.0/360.0).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 270);
-            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 360);
+            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 315);
+            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 420);
 
             SmartNumber AUTON_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Auton Max Velocity (deg)", 360);
             SmartNumber AUTON_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Auton Max Acceleration (deg)", 480);
