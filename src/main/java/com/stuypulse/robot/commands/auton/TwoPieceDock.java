@@ -12,6 +12,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
+import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBangBlay;
 import com.stuypulse.robot.constants.ArmTrajectories.Ready;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
@@ -184,7 +185,9 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                     paths.get("Score Piece"))
                         .fieldRelative().withStop(),
 
-                new WaitCommand(0.2).andThen(new AutonReady()),
+                new WaitCommand(0.2)
+                    .andThen(new AutonReady()
+                        .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)),
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.4),
@@ -214,7 +217,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.GREEN),
 
             new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.6)
+                .withMaxSpeed(0.8)
                 .withTimeout(ENGAGE_TIME)
                 .alongWith(new FastStow().withTolerance(15, 10)),
 
