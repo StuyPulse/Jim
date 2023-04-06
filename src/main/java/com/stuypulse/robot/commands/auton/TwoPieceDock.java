@@ -9,7 +9,8 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
-import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceWithPlant;
+import com.stuypulse.robot.constants.ArmTrajectories.Ready;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
@@ -25,7 +26,28 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class TwoPieceDock extends DebugSequentialCommandGroup {
+    static class AutonReady extends ArmRoutine {
+        public AutonReady() {
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH) {
+                    return Ready.High.kCubeAutonBack;
+                } else {
+                    return Ready.Mid.kAutonCubeBack;
+                }
+            });
+        }
 
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
+    
+            return new ArmTrajectory()
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(45))
+                .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
+                    .setWristTolerance(23).setShoulderTolerance(20));
+        }
+    }
     private class ArmReadyBOOM extends ArmRoutine {
         public ArmReadyBOOM() {
             super(Manager.getInstance()::getReadyTrajectory);
@@ -96,6 +118,13 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                 .withTimeout(3)
         );
 
+        addCommands( 
+            arm.runOnce(() -> { 
+                arm.setShoulderConstraints(Shoulder.TELEOP_MAX_VELOCITY, Shoulder.TELEOP_MAX_ACCELERATION);
+                arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
+            })
+        );
+
         addCommands(
             new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
@@ -127,6 +156,13 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
+
+        addCommands( 
+            arm.runOnce(() -> { 
+                arm.setShoulderConstraints(Shoulder.AUTON_MAX_VELOCITY, Shoulder.AUTON_MAX_ACCELERATION);
+                arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
+            })
+        );
         
         // drive to grid and score second piece
         addCommands(
@@ -140,7 +176,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                     paths.get("Score Piece"))
                         .fieldRelative().withStop(),
 
-                new WaitCommand(0.2).andThen(new ArmReadyBOOM()), 
+                new WaitCommand(0.2).andThen(new AutonReady()), 
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.4),

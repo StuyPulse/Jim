@@ -49,8 +49,8 @@ public interface Settings {
             SmartNumber CONE_FRONT = new SmartNumber("Intake/Cone Acquire Front", 1.0);
             SmartNumber CONE_BACK = new SmartNumber("Intake/Cone Acquire Back", 1.0);
         
-            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 1.0);
-            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 1.0);
+            SmartNumber CUBE_FRONT = new SmartNumber("Intake/Cube Acquire Front", 0.8);
+            SmartNumber CUBE_BACK = new SmartNumber("Intake/Cube Acquire Back", 0.8);
         }
 
         public interface Deacquire {
@@ -186,10 +186,17 @@ public interface Settings {
                     MOI, 
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 - 60.0/360.0).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 + 180.0/360.0).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Max Velocity (deg)", 270);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Max Acceleration (deg)", 360);
+            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 270);
+            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 360);
+
+            SmartNumber AUTON_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Auton Max Velocity (deg)", 360);
+            SmartNumber AUTON_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Auton Max Acceleration (deg)", 480);
+
+            SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
+            SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
+            SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
@@ -230,12 +237,14 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.66055).plus(Rotation2d.fromDegrees(180));
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Arm/Wrist/Max Velocity (deg)", 480.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Max Acceleration (deg)", 480.0);
+            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
+            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
 
-            SmartNumber SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)",10.0);
+            SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
+            SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Feedback Enabled Debounce", 0.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
 
@@ -270,7 +279,7 @@ public interface Settings {
 
     public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 8);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 12);
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0); 
         SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.8);
@@ -363,7 +372,7 @@ public interface Settings {
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 1);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }

@@ -1,6 +1,8 @@
 package com.stuypulse.robot.subsystems;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.RobotContainer;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.constants.Field.ScoreYPoses;
@@ -11,6 +13,7 @@ import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -79,14 +82,19 @@ public class Manager extends SubsystemBase {
         gridNode = new SmartNumber("Manager/Grid Node", 0);
     }
 
-    /** Generate Intake Trajectories **/
+    /** Generate Intake Intermediate Trajectories **/
 
+    public ArmState getIntakeIntermediateTrajectory() {
+        return (Robot.getMatchState() == MatchState.AUTO) ? Acquire.kIntermediateAuton : Acquire.kIntermediate;
+    }
+
+    /** Generate Intake Trajectories **/
 
     public ArmState getIntakeTrajectory() {
         if (gamePiece.isCone())
             return Acquire.kCone;
         else
-            return Acquire.kCube;
+            return (Robot.getMatchState() == MatchState.AUTO) ? Acquire.kCubeAuton : Acquire.kCube;
     }
 
     public ArmState getOuttakeTrajectory() {
@@ -101,7 +109,7 @@ public class Manager extends SubsystemBase {
                 return getLowReadyTrajectory();
 
             case MID:
-                return getMidReadyTrajectory();
+                return (Robot.getMatchState() == MatchState.AUTO) ? getAutonMidReadyTrajectory() : getMidReadyTrajectory();
 
             case HIGH:
                 return getHighReadyTrajectory();
@@ -125,6 +133,19 @@ public class Manager extends SubsystemBase {
 
             case CUBE:
                 return scoreSide == ScoreSide.FRONT ? Ready.Mid.kCubeFront : Ready.Mid.kCubeBack;
+
+            default:
+                return getStowTrajectory();
+        }
+    }
+
+    private ArmState getAutonMidReadyTrajectory() {
+        switch (gamePiece) {
+            case CONE_TIP_UP:
+                return Ready.Mid.kConeTipUpBack;
+
+            case CUBE:
+                return scoreSide == ScoreSide.FRONT ? Ready.Mid.kCubeFront : Ready.Mid.kAutonCubeBack;
 
             default:
                 return getStowTrajectory();
@@ -161,6 +182,15 @@ public class Manager extends SubsystemBase {
 
     private final int[] CUBE_INDEXES = {1, 4, 7};
     private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+    private final int[] LOW_INDEXES = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    private int[] getPossibleScoringIndices() {
+        int[] indices = LOW_INDEXES;
+        if (nodeLevel != NodeLevel.LOW) {
+            indices = gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES;
+        }
+        return indices;
+    }
 
     public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
@@ -171,7 +201,8 @@ public class Manager extends SubsystemBase {
         int nearest = 0;
         double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
 
-        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
+
+        for (int i : getPossibleScoringIndices()) {
             Translation2d current = new Translation2d(gridDistance, positions[i].doubleValue());
             double distance = robot.getDistance(current);
 
@@ -185,7 +216,10 @@ public class Manager extends SubsystemBase {
     }
 
     private Number getSelectedScoreX() {
-        if (nodeLevel == NodeLevel.HIGH) {
+        if (nodeLevel == NodeLevel.LOW) {
+            return scoreSide == ScoreSide.FRONT ? ScoreXPoses.Low.FRONT : ScoreXPoses.Low.BACK;
+        }
+        else if (nodeLevel == NodeLevel.HIGH) {
             switch (gamePiece) {
                 case CUBE:
                     if (scoreSide == ScoreSide.FRONT)

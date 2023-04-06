@@ -1,0 +1,74 @@
+{
+  "Docking": {
+    "Data": []
+  },
+  "MainWindow": {
+    "GLOBAL": {
+      "fps": "120",
+      "height": "1046",
+      "maximized": "1",
+      "style": "0",
+      "userScale": "2",
+      "width": "1920",
+      "xpos": "0",
+      "ypos": "34"
+    }
+  },
+  "Window": {
+    "###/SmartDashboard/Arm Mech2d": {
+      "Collapsed": "0",
+      "Pos": "1022,157",
+      "Size": "656,416"
+    },
+    "###/SmartDashboard/Autonomous": {
+      "Collapsed": "0",
+      "Pos": "234,43",
+      "Size": "361,66"
+    },
+    "###/SmartDashboard/Field": {
+      "Collapsed": "0",
+      "Pos": "366,214",
+      "Size": "600,300"
+    },
+    "###FMS": {
+      "Collapsed": "0",
+      "Pos": "7,810",
+      "Size": "388,182"
+    },
+    "###Joysticks": {
+      "Collapsed": "0",
+      "Pos": "375,697",
+      "Size": "1156,91"
+    },
+    "###NetworkTables": {
+      "Collapsed": "0",
+      "Pos": "467,901",
+      "Size": "1125,277"
+    },
+    "###Other Devices": {
+      "Collapsed": "0",
+      "Pos": "1537,30",
+      "Size": "375,1042"
+    },
+    "###System Joysticks": {
+      "Collapsed": "0",
+      "Pos": "7,525",
+      "Size": "273,290"
+    },
+    "###Timing": {
+      "Collapsed": "0",
+      "Pos": "7,225",
+      "Size": "188,157"
+    },
+    "Debug##Default": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "400,400"
+    },
+    "Robot State": {
+      "Collapsed": "0",
+      "Pos": "5,20",
+      "Size": "126,129"
+    }
+  }
+}
