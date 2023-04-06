@@ -256,13 +256,20 @@ public class Manager extends SubsystemBase {
         return ScoreXPoses.Mid.CONE_TIP_IN;
     }
 
-    public Translation2d getSelectedScoreTranslation() {
+    private Translation2d getSelectedScoreTranslation() {
         double gridDistance = getSelectedScoreX().doubleValue();
         Number positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         return new Translation2d(
             gridDistance,
             positions[gridNode.intValue()].doubleValue());
+    }
+
+    public Pose2d getIntakePose() {
+        return new Pose2d(RobotContainer.getCachedAlliance() == Alliance.Red
+            ? Front.RED_HP
+            : Front.BLUE_HP,
+            Rotation2d.fromDegrees(0));
     }
 
     public Pose2d getScorePose() {
@@ -273,13 +280,6 @@ public class Manager extends SubsystemBase {
         Pose2d scorePose = new Pose2d(
             getSelectedScoreTranslation(),
             rotation);
-
-        // if past centerline
-        if (Odometry.getInstance().getPose().getX() > Field.WIDTH / 2.0) {
-            scorePose = new Pose2d(
-                RobotContainer.getCachedAlliance() == Alliance.Red ? Front.RED_HP : Front.BLUE_HP,
-                Rotation2d.fromDegrees(0));
-        }
 
         SmartDashboard.putNumber("Manager/Selected Score X", scorePose.getX());
         SmartDashboard.putNumber("Manager/Selected Score Y", scorePose.getY());

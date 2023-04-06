@@ -11,6 +11,7 @@ import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import com.stuypulse.robot.constants.ArmTrajectories;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
@@ -82,6 +83,10 @@ public class RobotAlignThenScore extends CommandBase {
         }
     }
 
+    private boolean pastCenterLine() {
+        return Odometry.getInstance().getPose().getX() > Field.WIDTH / 2.0;
+    }
+
     @Override
     public void initialize() {
         movingWhileScoring = false;
@@ -92,12 +97,18 @@ public class RobotAlignThenScore extends CommandBase {
     @Override
     public void execute() {
         Pose2d currentPose = Odometry.getInstance().getPose();
+
         Pose2d targetPose = Manager.getInstance().getScorePose();
+        
+        if (pastCenterLine()) {
+            targetPose = Manager.getInstance().getIntakePose();
+        }
+
         targetPose2d.setPose(targetPose);
 
         controller.update(targetPose, currentPose);
 
-        if (aligned.get() || movingWhileScoring) {
+        if (!pastCenterLine() && (aligned.get() || movingWhileScoring)) {
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
                 intake.deacquire();
