@@ -13,6 +13,7 @@ import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Field.ScoreXPoses;
+import com.stuypulse.robot.constants.Field.ScoreYPoses.Front;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
@@ -20,6 +21,7 @@ import com.stuypulse.robot.util.ArmState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -268,10 +270,20 @@ public class Manager extends SubsystemBase {
             Rotation2d.fromDegrees(180) :
             Rotation2d.fromDegrees(0);
 
-        var translation = getSelectedScoreTranslation();
-        SmartDashboard.putNumber("Manager/Selected Score X", translation.getX());
-        SmartDashboard.putNumber("Manager/Selected Score Y", translation.getY());
-        return new Pose2d(translation, rotation);
+        Pose2d scorePose = new Pose2d(
+            getSelectedScoreTranslation(),
+            rotation);
+
+        // if past centerline
+        if (Odometry.getInstance().getPose().getX() > Field.WIDTH / 2.0) {
+            scorePose = new Pose2d(
+                RobotContainer.getCachedAlliance() == Alliance.Red ? Front.RED_HP : Front.BLUE_HP,
+                Rotation2d.fromDegrees(0));
+        }
+
+        SmartDashboard.putNumber("Manager/Selected Score X", scorePose.getX());
+        SmartDashboard.putNumber("Manager/Selected Score Y", scorePose.getY());
+        return scorePose;
     }
 
     /** Change and Read State **/

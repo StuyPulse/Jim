@@ -14,6 +14,7 @@ import com.stuypulse.robot.util.AllianceUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -148,6 +149,12 @@ public interface Field {
                 AllianceUtil.getMirroredYPose(backToFront(Back.TWO)),
                 AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
             };
+
+            Translation2d RED_HP = new Translation2d(
+                Field.WIDTH - Units.inchesToMeters(14.25) - 3, // measure this
+                Units.inchesToMeters(265.74));
+
+            Translation2d BLUE_HP = AllianceUtil.getMirroredTranslation(RED_HP);
         }
     }
 
