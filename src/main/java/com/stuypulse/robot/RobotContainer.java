@@ -17,7 +17,6 @@ import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.leds.LEDSetRainbow;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
@@ -151,9 +150,7 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        //driver.getRightButton().onTrue(new PlantEngage());
-
-        driver.getRightButton().whileTrue(new LEDSet(LEDColor.RAINBOW));
+        driver.getRightButton().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasCone)
@@ -194,11 +191,9 @@ public class RobotContainer {
                     .andThen(new ManagerValidateState())
                     .andThen(new ArmReady()));
 
-        // operator.getRightButton()
-            // .onTrue(new IntakeScore())
-            // .onFalse(new IntakeStop());
-
-        operator.getRightButton().onTrue(new LEDSetRainbow());
+        operator.getRightButton()
+            .onTrue(new IntakeScore())
+            .onFalse(new IntakeStop());
 
         // set level to score at
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));

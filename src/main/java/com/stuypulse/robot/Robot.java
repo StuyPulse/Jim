@@ -6,10 +6,6 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.TeleopInit;
-import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.commands.leds.LEDSetRainbow;
-import com.stuypulse.robot.util.LEDColor;
-
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;

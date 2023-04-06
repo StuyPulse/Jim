@@ -1,6 +1,6 @@
 package com.stuypulse.robot.subsystems.leds;
 
-import com.stuypulse.robot.util.LEDColor;
+import com.stuypulse.robot.util.SLColor;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -21,8 +21,21 @@ public class LEDRainbow implements LEDInstruction {
 
     @Override
     public void setLED(AddressableLEDBuffer ledsBuffer) {
-        LEDColor[] rainbow = new LEDColor[]{LEDColor.RED, LEDColor.RED_ORANGE, LEDColor.ORANGE, LEDColor.YELLOW, LEDColor.LAWN_GREEN, LEDColor.GREEN, LEDColor.DARK_GREEN, LEDColor.BLUE_GREEN, LEDColor.BLUE, LEDColor.DARK_BLUE, LEDColor.BLUE_VIOLET, LEDColor.VIOLET, LEDColor.PURPLE, LEDColor.PINK};
-        LEDColor color;
+        SLColor[] rainbow = new SLColor[]{new SLColor (218,165,32), 
+                                        new SLColor(255, 83, 73), 
+                                        new SLColor(255, 128, 0),
+                                        new SLColor(255, 255, 0), 
+                                        new SLColor(102, 204, 0), 
+                                        new SLColor(0, 255, 0), 
+                                        new SLColor(0, 153, 0), 
+                                        new SLColor(0, 255, 128), 
+                                        new SLColor(0, 128, 255), 
+                                        new SLColor(0, 0, 204), 
+                                        new SLColor(51, 51, 255), 
+                                        new SLColor(127, 0, 255), 
+                                        new SLColor(160, 32, 240), 
+                                        new SLColor(255, 192, 203)};
+        SLColor color;
         // if(timer.getTime() > 3 * Math.sin(colorCounter * 2.0) + 1) {
         if(timer.getTime() > 1.0) {
             timer.reset();

@@ -4,18 +4,12 @@
 /****************************************************************/
 
 package com.stuypulse.robot.util;
-
-import com.stuypulse.robot.commands.leds.LEDSet;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.leds.LEDControllerImpl;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
 import com.stuypulse.robot.subsystems.leds.LEDPulseColor;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.Timer;
-
+  
 /**
  * Class that stores all of the different RGB values for the LED Controller.
  *
