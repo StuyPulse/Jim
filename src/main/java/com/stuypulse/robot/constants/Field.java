@@ -1,16 +1,19 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.constants;
+
+import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
-import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.IStream;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -91,7 +94,7 @@ public interface Field {
             SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.1028);
             SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.557);
             SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 2.89);
-    
+
             Number RED_Y_POSES[] = {
                 Back.ONE,
                 Back.TWO,
@@ -103,7 +106,7 @@ public interface Field {
                 Back.EIGHT,
                 Back.NINE
             };
-    
+
             Number BLUE_Y_POSES[] = {
                 AllianceUtil.getMirroredYPose(Back.NINE),
                 AllianceUtil.getMirroredYPose(Back.EIGHT),
@@ -121,7 +124,7 @@ public interface Field {
             private static Number backToFront(Number backYPose) {
                 return IStream.create(() -> backYPose.doubleValue() - Units.inchesToMeters(3.0)).number();
             }
-    
+
             Number RED_Y_POSES[] = {
                 backToFront(Back.ONE),
                 backToFront(Back.TWO),
@@ -133,7 +136,7 @@ public interface Field {
                 backToFront(Back.EIGHT),
                 backToFront(Back.NINE)
             };
-    
+
             Number BLUE_Y_POSES[] = {
                 AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
                 AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
@@ -149,4 +152,3 @@ public interface Field {
     }
 
 }
-

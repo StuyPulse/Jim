@@ -1,14 +1,19 @@
-package com.stuypulse.robot.util;
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
-import java.util.Optional;
+package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
+import java.util.Optional;
+
 public class ArmState {
- 
-    private final Number shoulder; 
+
+    private final Number shoulder;
     private final Number wrist;
 
     private Optional<Number> shoulderToleranceDegrees;

@@ -1,26 +1,24 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.test;
-
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.util.ArmDynamics;
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
-import com.stuypulse.stuylib.control.feedforward.ArmFeedforward;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 
 import static com.stuypulse.robot.constants.Motors.Arm.*;
 import static com.stuypulse.robot.constants.Ports.Arm.*;
 import static com.stuypulse.robot.constants.Settings.Arm.*;
+
+import com.stuypulse.stuylib.control.angle.AngleController;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.angle.feedforward.AngleArmFeedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartBoolean;
+import com.stuypulse.stuylib.network.SmartNumber;
+
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.ArmDynamics;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
@@ -28,10 +26,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 public class TestArm extends SubsystemBase {
 
     private static final SmartBoolean SETPOINT_CONTROL = new SmartBoolean("Arm/Setpoint Control", false);
-    
+
     private final CANSparkMax shoulderLeft;
     private final CANSparkMax shoulderRight;
     private final CANSparkMax wrist;
@@ -47,7 +51,7 @@ public class TestArm extends SubsystemBase {
 
     private final ArmDynamics dynamics;
 
-    public TestArm() {  
+    public TestArm() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
         wrist = new CANSparkMax(WRIST, MotorType.kBrushless);
@@ -62,7 +66,7 @@ public class TestArm extends SubsystemBase {
 
         // wristController = new AngleArmFeedforward(Wrist.Feedforward.kG)
         //     .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
-        
+
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new AngleArmFeedforward(Wrist.Feedforward.kG))
             .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD));
@@ -134,10 +138,10 @@ public class TestArm extends SubsystemBase {
         SHOULDER_RIGHT_CONFIG.configure(shoulderRight);
         WRIST_CONFIG.configure(wrist);
     }
-    
+
     private Rotation2d lastShoulderAngle;
     private Rotation2d lastWristAngle;
-    
+
     private double lastShoulderVelocity = Double.NaN;
     private double lastWristVelocity = Double.NaN;
 
@@ -145,47 +149,47 @@ public class TestArm extends SubsystemBase {
     public void periodic() {
         if (SETPOINT_CONTROL.get()) {
             var u_ff = VecBuilder.fill(0, 0);
-    
+
             if (lastShoulderAngle != null && lastWristAngle != null) {
                 lastShoulderVelocity = getShoulderTargetAngle().minus(lastShoulderAngle).getRadians() / Settings.DT;
                 lastWristVelocity = getWristTargetAngle().minus(lastWristAngle).getRadians() / Settings.DT;
             }
-    
+
             if (!Double.isNaN(lastShoulderVelocity) && !Double.isNaN(lastWristVelocity)) {
                 double currentShoulderVelocity = getShoulderTargetAngle().minus(lastShoulderAngle).getRadians() / Settings.DT;
                 double currentWristVelocity = getWristTargetAngle().minus(lastWristAngle).getRadians() / Settings.DT;
-                
+
                 u_ff = dynamics.feedforward(
                     VecBuilder.fill(getShoulderTargetAngle().getRadians(), getRelativeWristTargetAngle().getRadians()),
                     VecBuilder.fill(currentShoulderVelocity, currentWristVelocity),
                     VecBuilder.fill(
-                        (currentShoulderVelocity - lastShoulderVelocity)/ Settings.DT, 
+                        (currentShoulderVelocity - lastShoulderVelocity)/ Settings.DT,
                         (currentWristVelocity - lastWristVelocity) / Settings.DT));
-    
+
                 lastShoulderVelocity = currentShoulderVelocity;
                 lastWristVelocity = currentWristVelocity;
             }
-    
+
             lastWristAngle = getWristTargetAngle();
             lastShoulderAngle = getShoulderTargetAngle();
-            
+
             u_ff = VecBuilder.fill(
                 MathUtil.clamp(u_ff.get(0, 0), -12, 12),
                 MathUtil.clamp(u_ff.get(1, 0), -12, 12));
-    
-            double shoulderVolts = 
+
+            double shoulderVolts =
                 // u_ff.get(0, 0) +
                 shoulderController.update(Angle.fromDegrees(targetShoulderAngle.get()), Angle.fromRotation2d(getShoulderAngle()));
-            
+
             double wristVolts =
                 // u_ff.get(1, 0) +
                 wristController.update(Angle.fromDegrees(targetWristAngle.get()), Angle.fromRotation2d(getWristAngle()));
-    
-    
+
+
             runShoulder(shoulderVolts);
             runWrist(wristVolts);
         }
-       
+
         SmartDashboard.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist Encoder", wristEncoder.getPosition());
 

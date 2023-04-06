@@ -1,25 +1,26 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.test;
 
-import com.stuypulse.robot.commands.odometry.OdometryRealign;
-import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.Pump;
-import com.stuypulse.robot.subsystems.intake.Intake;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.util.BootlegXbox;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.IStream;
-import com.stuypulse.stuylib.streams.filters.LowPassFilter;
+
+import com.stuypulse.robot.commands.odometry.OdometryRealign;
+import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.BootlegXbox;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestbotContainer {
@@ -27,14 +28,14 @@ public class TestbotContainer {
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
-    
+
     // // Subsystem
     public final TestIntake intake = new TestIntake();
     public final TestSwerveDrive swerve = new TestSwerveDrive();
     public final TestArm arm = new TestArm();
     public final TestPlant plant = new TestPlant();
     public final TestWing wings = new TestWing();
-    
+
     public final TestPump pump = new TestPump();
 
     public TestbotContainer() {
@@ -60,7 +61,7 @@ public class TestbotContainer {
         // driver.getDPadDown()
         //     .onTrue(swerve.runOnce(swerve::turnMotorBR))
         //     .onFalse(swerve.runOnce(swerve::stop));
-        
+
         // driver.getDPadUp()
         //     .onTrue(swerve.runOnce(swerve::turnMotorBL))
         //     .onFalse(swerve.runOnce(swerve::stop));
@@ -129,14 +130,14 @@ public class TestbotContainer {
                     double shoulderVolts = MathUtil.applyDeadband(operator.getLeftY(), 0.05) * 3;
                     double wristVolts = MathUtil.applyDeadband(operator.getRightY(), 0.05) * 12;
 
-                    
+
                     if (MathUtil.inputModulus(arm.getShoulderAngle().getDegrees(), -180, 180)  > 0) {
                         shoulderVolts = 0;
                     }
-        
+
                     SmartDashboard.putNumber("Arm/Shoulder Voltage", shoulderVolts);
                     SmartDashboard.putNumber("Arm/Wrist Voltage", wristVolts);
-        
+
                     arm.runShoulder(shoulderVolts);
                     arm.runWrist(wristVolts);
                 } else {
@@ -151,5 +152,5 @@ public class TestbotContainer {
             }
         }));
     }
-    
+
 }

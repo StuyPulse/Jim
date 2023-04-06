@@ -1,23 +1,25 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems;
 
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.Robot.MatchState;
+import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
-import com.stuypulse.robot.constants.Field.ScoreXPoses;
-import com.stuypulse.robot.constants.Field.ScoreYPoses;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.network.SmartNumber;
 
-import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -57,8 +59,8 @@ public class Manager extends SubsystemBase {
 
     // level to score at
     public enum NodeLevel {
-        HIGH, 
-        MID, 
+        HIGH,
+        MID,
         LOW
     }
 
@@ -156,13 +158,13 @@ public class Manager extends SubsystemBase {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 return Ready.High.kConeTipInBack;
-            
+
             case CONE_TIP_OUT:
                 return Ready.High.kConeTipOutFront;
 
             case CONE_TIP_UP:
                 return Ready.High.kConeTipUpBack;
-                
+
             case CUBE:
                 return scoreSide == ScoreSide.FRONT ? Ready.High.kCubeFront : Ready.High.kCubeBack;
 

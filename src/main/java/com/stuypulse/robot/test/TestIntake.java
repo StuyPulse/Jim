@@ -1,21 +1,27 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.test;
 import static com.stuypulse.robot.constants.Motors.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.stuypulse.robot.constants.Settings;
+
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public class TestIntake extends SubsystemBase{
 
     private SmartNumber frontDutyCycle;
     private SmartNumber backDutyCycle;
-    
-    private CANSparkMax frontMotor; 
+
+    private CANSparkMax frontMotor;
     private CANSparkMax backMotor;
 
     private DigitalInput frontSensor;
@@ -42,7 +48,7 @@ public class TestIntake extends SubsystemBase{
     public void runBack() {
         backMotor.set(backDutyCycle.get());
     }
-    
+
     public void stop() {
         frontMotor.set(0);
         backMotor.set(0);

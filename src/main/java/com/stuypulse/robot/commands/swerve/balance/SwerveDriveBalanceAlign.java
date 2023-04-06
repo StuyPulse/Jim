@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.swerve.balance;
 
 import com.stuypulse.robot.commands.swerve.SwerveDriveToPose;
@@ -13,7 +18,7 @@ public class SwerveDriveBalanceAlign extends SwerveDriveToPose {
             return new Pose2d(odometry.getTranslation(), getSnappedAngle(odometry.getRotation()));
         });
     }
-    
+
     private static Rotation2d getSnappedAngle(Rotation2d angle) {
         double currentAngle = angle.getDegrees();
         // angle

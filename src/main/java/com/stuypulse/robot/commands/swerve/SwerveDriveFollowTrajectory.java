@@ -1,13 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.swerve;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -19,6 +16,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import java.util.HashMap;
+import java.util.List;
 
 public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
@@ -55,7 +59,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			true,
 			SwerveDrive.getInstance()
 		);
-		
+
 		robotRelative = false;
 		trajectory = Odometry.getInstance().getField().getObject("Trajectory");
 		this.path = path;
@@ -97,7 +101,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		if (robotRelative) {
 			PathPlannerState initialState = PathPlannerTrajectory.transformStateForAlliance(
 				path.getInitialState(), DriverStation.getAlliance());
-			
+
 			Odometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),
 				initialState.holonomicRotation

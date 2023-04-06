@@ -1,6 +1,15 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands;
 
-import com.stuypulse.robot.subsystems.intake.*;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
+
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Alignment;
@@ -10,13 +19,10 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,7 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RobotAlignThenScore extends CommandBase {    
+public class RobotAlignThenScore extends CommandBase {
 
     // Subsystems
     private final SwerveDrive swerve;
@@ -42,7 +48,7 @@ public class RobotAlignThenScore extends CommandBase {
 
     // Logging
     private final FieldObject2d targetPose2d;
-    
+
     public RobotAlignThenScore(){
         this.swerve = SwerveDrive.getInstance();
         this.arm = Arm.getInstance();
@@ -53,7 +59,7 @@ public class RobotAlignThenScore extends CommandBase {
             new PIDController(Translation.P,Translation.I,Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
             new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
-        
+
         SmartDashboard.putData("Alignment/Controller", controller);
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
@@ -65,13 +71,13 @@ public class RobotAlignThenScore extends CommandBase {
     private boolean isAligned() {
         if (Manager.getInstance().getGamePiece().isCone()) {
             return controller.isDone(
-                Alignment.ALIGNED_CONE_THRESHOLD_X.get(), 
-                Alignment.ALIGNED_CONE_THRESHOLD_Y.get(), 
+                Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
+                Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
         } else {
             return controller.isDone(
-                Alignment.ALIGNED_CUBE_THRESHOLD_X.get(), 
-                Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(), 
+                Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
+                Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
         }
     }
@@ -95,9 +101,9 @@ public class RobotAlignThenScore extends CommandBase {
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
                 intake.deacquire();
-            } 
-    
-            
+            }
+
+
             // or do scoring motion based on the game piece
             else {
 
@@ -108,7 +114,7 @@ public class RobotAlignThenScore extends CommandBase {
                         Manager.getInstance().getNodeLevel() == NodeLevel.MID ?
                             ArmTrajectories.Score.Mid.kConeTipOutFront :
                             ArmTrajectories.Score.High.kConeTipOutFront);
-    
+
                     if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
                         intake.enableCoast();
                         movingWhileScoring = true;
@@ -141,5 +147,5 @@ public class RobotAlignThenScore extends CommandBase {
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }
-    
+
 }

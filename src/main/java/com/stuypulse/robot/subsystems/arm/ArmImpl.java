@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems.arm;
 
 import static com.stuypulse.robot.constants.Motors.Arm.SHOULDER_LEFT_CONFIG;
@@ -7,20 +12,22 @@ import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_LEFT;
 import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_RIGHT;
 import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
 
+import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
+
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
+import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.stuypulse.robot.constants.Motors;
-import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
-import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.stuylib.streams.filters.IFilter;
-import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmImpl extends Arm {
 
@@ -112,7 +119,7 @@ public class ArmImpl extends Arm {
     }
 
     // private boolean isShoulderStalling() {
-    //     double appliedShoulderVoltage = 
+    //     double appliedShoulderVoltage =
     //         Math.max(
     //             shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
     //             shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
@@ -124,7 +131,7 @@ public class ArmImpl extends Arm {
 
     // private boolean isWristStalling() {
     //     return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
-    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() || 
+    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() ||
     //             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
     // }
 
@@ -137,7 +144,7 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Left Current (amps)", shoulderLeft.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
-        
+
         // if (wristIsStalling()) {
         //     setWristVoltageImpl(WRIST);
         // }

@@ -1,13 +1,11 @@
-/************************ PROJECT DORCAS ************************/
-/* Copyright (c) 2022 StuyPulse Robotics. All rights reserved.  */
-/* This work is licensed under the terms of the MIT license.    */
-/****************************************************************/
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
 package com.stuypulse.robot.util;
 
-import com.stuypulse.robot.constants.Settings;
 
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Class that stores all of the different RGB values for the LED Controller.
@@ -20,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class LEDColor {
     private final int red;
     private final int green;
-    private final int blue; 
+    private final int blue;
 
     private LEDColor(int red, int green, int blue) {
         this.red = red;
@@ -35,11 +33,11 @@ public class LEDColor {
     public int getGreen() {
         return green;
     }
-    
+
     public int getBlue() {
         return blue;
     }
-    
+
     public LEDColor setColor(int red, int green, int blue) {
         return new LEDColor(red, green, blue);
     }
@@ -76,5 +74,5 @@ public class LEDColor {
     public static final LEDColor OFF = new LEDColor(0, 0, 0);
     public static final LEDColor RAINBOW = OFF;
 
-    
+
 }

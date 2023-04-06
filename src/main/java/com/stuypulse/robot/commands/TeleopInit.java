@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands;
 
 import com.stuypulse.robot.subsystems.arm.Arm;
@@ -21,7 +26,7 @@ public class TeleopInit extends InstantCommand {
     @Override
     public void initialize() {
         plant.disengage();
-        Intake.getInstance().stop(); 
+        Intake.getInstance().stop();
         // arm.setTargetState(arm.getState());
         arm.setWristVoltage(0);
         arm.setShoulderVoltage(0);

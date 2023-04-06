@@ -1,9 +1,13 @@
-package com.stuypulse.robot.subsystems.arm;
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
-import com.stuypulse.robot.constants.Settings;
+package com.stuypulse.robot.subsystems.arm;
 
 import static com.stuypulse.robot.constants.Settings.Arm.*;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.ArmDynamics;
 import com.stuypulse.robot.util.TwoJointArmSimulation;
 
@@ -17,10 +21,10 @@ public class SimArm extends Arm {
     private double shoulderVolts;
     private double wristVolts;
 
-    protected SimArm() { 
+    protected SimArm() {
         dynamics = new ArmDynamics(Shoulder.JOINT, Wrist.JOINT);
         simulation = new TwoJointArmSimulation(-Math.PI/2, Math.PI/2, dynamics);
-        
+
         shoulderVolts = 0;
         wristVolts = 0;
     }

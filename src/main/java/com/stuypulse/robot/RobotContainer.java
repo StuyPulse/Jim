@@ -1,47 +1,41 @@
-/************************ PROJECT PHIL ************************/
+/************************ PROJECT JIM *************************/
 /* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
 package com.stuypulse.robot;
 
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.input.gamepads.*;
+import com.stuypulse.stuylib.network.SmartBoolean;
+
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.intake.*;
+import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
-import com.stuypulse.robot.commands.intake.*;
-import com.stuypulse.robot.commands.leds.LEDSet;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.*;
+import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.*;
+import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.wing.*;
-import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.*;
-
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-import com.stuypulse.stuylib.streams.booleans.filters.BFilter;
 import com.stuypulse.robot.util.BootlegXbox;
-import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.*;
-
-import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -52,8 +46,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -62,7 +54,7 @@ public class RobotContainer {
     // Gamepads
     public final Gamepad driver = new BootlegXbox(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
-    
+
     // Subsystem
     public final SwerveDrive swerve = SwerveDrive.getInstance();
     public final Intake intake = Intake.getInstance();
@@ -71,7 +63,7 @@ public class RobotContainer {
     public final Arm arm = Arm.getInstance();
     public final Plant plant = Plant.getInstance();
     public final Wing wing = Wing.getInstance();
-    
+
     public final Manager manager = Manager.getInstance();
     public final LEDController leds = LEDController.getInstance();
     public final Pump pump = Pump.getInstance();
@@ -118,7 +110,7 @@ public class RobotContainer {
         new Trigger(new SmartBoolean("BOOM/ACQUIRE", false)::get)
             .onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());
-        
+
         new Trigger(new SmartBoolean("BOOM/DEACQUIRE", false)::get)
             .onTrue(new IntakeDeacquire())
             .onFalse(new IntakeStop());
@@ -169,7 +161,7 @@ public class RobotContainer {
         // manual control
         new Trigger(() -> (operator.getLeftStick().magnitude() + operator.getRightStick().magnitude()) > Settings.Operator.DEADBAND.get())
             .onTrue(new ArmVoltageDrive(operator));
-        
+
         // wing
         operator.getSelectButton().onTrue(new WingExtend());
         operator.getStartButton().onTrue(new WingRetract());
@@ -208,7 +200,7 @@ public class RobotContainer {
         operator.getDPadDown().onTrue(new ManagerSetNodeLevel(NodeLevel.LOW));
         operator.getDPadLeft().onTrue(new ManagerSetNodeLevel(NodeLevel.MID));
         operator.getDPadUp().onTrue(new ManagerSetNodeLevel(NodeLevel.HIGH));
-    
+
         // set game piece
         operator.getLeftButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CUBE));

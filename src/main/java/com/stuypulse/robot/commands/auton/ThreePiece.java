@@ -1,7 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.auton;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
@@ -22,6 +25,9 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 public class ThreePiece extends DebugSequentialCommandGroup {
 
     static class ConeAutonReady extends ArmRoutine {
@@ -31,7 +37,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-    
+
             return new ArmTrajectory()
                 .addState(new ArmState(dest.getShoulderState(), src.getWristState())
                             .setShoulderTolerance(20).setWristLimp(true).setWristTolerance(360))
@@ -54,7 +60,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-    
+
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
@@ -73,19 +79,19 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 -70.82,
                 11);
                // 8.37);
-    
+
             return new ArmTrajectory()
                 // .addState(src.getShoulderDegrees(), wristSafeAngle)
-    
+
                 // .addState(
                 //     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
                 //         .setShoulderTolerance(15)
                 //         .setWristTolerance(360))
-    
+
                 // .addState(
                 //     new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
                 //         .setWristTolerance(360))
-    
+
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
                         .setShoulderTolerance(3)
@@ -106,19 +112,19 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                // 8.37);
             double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-    
+
             return new ArmTrajectory()
                 // .addState(src.getShoulderDegrees(), wristSafeAngle)
-    
+
                 .addState(
                     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
                         .setShoulderTolerance(15)
                         .setWristTolerance(15))
-    
+
                 .addState(
                     new ArmState(intermediateShoulderDegrees, dest.getWristDegrees())
                         .setWristTolerance(20))
-    
+
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
                         .setShoulderTolerance(3)
@@ -150,7 +156,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         );
 
         var arm = Arm.getInstance();
-        
+
         // initial setup
         addCommands(
             new ManagerSetNodeLevel(NodeLevel.MID),
@@ -226,8 +232,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new IntakeStop()
         );
 
-        addCommands( 
-            arm.runOnce(() -> { 
+        addCommands(
+            arm.runOnce(() -> {
                 arm.setShoulderVelocityFeedbackCutoff(20);
                 arm.setShoulderVelocityFeedbackDebounce(0.0);
             })
@@ -263,8 +269,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
-        addCommands( 
-            arm.runOnce(() -> { 
+        addCommands(
+            arm.runOnce(() -> {
                 arm.setShoulderVelocityFeedbackCutoff(5);
                 arm.setShoulderVelocityFeedbackDebounce(0.2);
             })

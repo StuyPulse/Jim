@@ -1,8 +1,14 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.util.StopWatch;
+
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -10,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SwerveDriveWiggle extends CommandBase {
 
     private StopWatch timer;
-    
+
     private final IStream rotation;
 
     private final SwerveDrive swerve;

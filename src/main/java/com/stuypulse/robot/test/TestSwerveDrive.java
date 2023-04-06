@@ -1,18 +1,24 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.test;
+import static com.stuypulse.robot.constants.Motors.Swerve.*;
+
+import com.stuypulse.stuylib.network.SmartNumber;
+
+import com.stuypulse.robot.constants.Ports.Swerve.*;
+import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static com.stuypulse.robot.constants.Motors.Swerve.*;
-
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Ports.Swerve.*;
-import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 public class TestSwerveDrive extends SubsystemBase {
 
@@ -43,7 +49,7 @@ public class TestSwerveDrive extends SubsystemBase {
         drivingVoltage = new SmartNumber("Swerve/Drive Voltage", 0.0);
 
         /** turn motors */
-    
+
         turnMotorBL = new CANSparkMax(BackLeft.TURN, MotorType.kBrushless);
         turnMotorBR = new CANSparkMax(BackRight.TURN, MotorType.kBrushless);
         turnMotorFL = new CANSparkMax(FrontLeft.TURN, MotorType.kBrushless);
@@ -77,7 +83,7 @@ public class TestSwerveDrive extends SubsystemBase {
         driveEncoderFR = driveMotorFR.getEncoder();
         driveEncoderFR.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
         driveEncoderFR.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
-        
+
         // configure motors
         TURN.configure(turnMotorBL);
         TURN.configure(turnMotorBR);
@@ -100,7 +106,7 @@ public class TestSwerveDrive extends SubsystemBase {
     public void turnMotorFL() {
         turnMotorFL.setVoltage(turningVoltage.get());
     }
-    
+
     public void turnMotorFR() {
         turnMotorFR.setVoltage(turningVoltage.get());
     }
