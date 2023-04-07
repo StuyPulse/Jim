@@ -92,32 +92,31 @@ public class SwerveDriveDrive extends CommandBase {
     public void execute() {
         double angularVel = turn.get();
 
-        // if left bumper is held, set hold angle to closest multiple of 180 degrees
-        if (driver.getRawLeftBumper()) {
-            var heading = Odometry.getInstance().getRotation();
-
-            if (heading.getDegrees() < 90 && heading.getDegrees() > -90)
-                holdAngle = Optional.of(Rotation2d.fromDegrees(0));
-            else
-                holdAngle = Optional.of(Rotation2d.fromDegrees(180));
-        }
-
-        // if turn in deadband, save the current angle and calculate small adjustments
-        else if (isTurnInDeadband()) {
+        // if turn outside deadband, clear the saved angle
+        if (!isTurnInDeadband()) {
+            holdAngle = Optional.empty();
+        } else {
+            // if left bumper is held, set hold angle to closest multiple of 180 degrees
+            if (driver.getRawLeftBumper()) {
+                var heading = Odometry.getInstance().getRotation();
+    
+                if (heading.getDegrees() < 90 && heading.getDegrees() > -90)
+                    holdAngle = Optional.of(Rotation2d.fromDegrees(0));
+                else
+                    holdAngle = Optional.of(Rotation2d.fromDegrees(180));
+            }
+    
+            // if turn in deadband, save the current angle and calculate small adjustments
             if (holdAngle.isEmpty()) {
                 holdAngle = Optional.of(swerve.getGyroAngle());
             }
+        
 
-            if (GyroFeedback.GYRO_FEEDBACK_ENABLED.get() && !isDriveInDeadband()) {
+            if (GyroFeedback.GYRO_FEEDBACK_ENABLED.get()) {
                 angularVel = -gyroFeedback.update(
                     Angle.fromRotation2d(holdAngle.get()),
                     Angle.fromRotation2d(swerve.getGyroAngle()));
             }
-        }
-
-        // if turn outside deadband, clear the saved angle
-        else {
-            holdAngle = Optional.empty();
         }
 
         // use the angularVelocity for drive
