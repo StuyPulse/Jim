@@ -66,7 +66,7 @@ public class RobotRelease extends CommandBase {
 
     @Override
     public void end(boolean i) {
-        intake.stop();
+        // intake.stop();
         intake.enableBreak();
         swerve.stop();
     }

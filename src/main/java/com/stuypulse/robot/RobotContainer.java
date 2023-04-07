@@ -126,9 +126,11 @@ public class RobotContainer {
         driver.getBottomButton()
             .whileTrue(new RobotScore());
         driver.getLeftBumper()
-            .whileTrue(new RobotRelease());
+            .whileTrue(new RobotRelease())
+            .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
         driver.getRightTriggerButton()
-            .whileTrue(new RobotRelease());
+            .whileTrue(new RobotRelease())
+            .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
 
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
