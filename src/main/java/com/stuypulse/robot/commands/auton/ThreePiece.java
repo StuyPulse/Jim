@@ -134,7 +134,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.3;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
     private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.02;
     private static final double WIGGLE_PERIOD = 0.6;
@@ -179,7 +179,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
         // intake second piece
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
 
             new LEDSet(LEDColor.GREEN),
 
@@ -191,6 +190,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
+                    .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeFirst()

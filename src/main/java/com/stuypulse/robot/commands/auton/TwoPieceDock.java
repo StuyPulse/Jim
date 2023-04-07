@@ -89,7 +89,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.2;
     private static final double CUBE_DEACQUIRE_TIME = 0.2;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.1;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
     private static final double INTAKE_WAIT_TIME = 0.2;
     private static final double ACQUIRE_WAIT_TIME = 0.1;
     private static final double ENGAGE_TIME = 10.0;
@@ -139,7 +139,6 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
         // intake second piece
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
 
             new LEDSet(LEDColor.GREEN),
 
@@ -150,6 +149,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeBOOM()
