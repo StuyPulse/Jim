@@ -110,13 +110,13 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 0.50121;
+            double kP = 0.8;
             double kI = 0.0;
             double kD = 0.0;
 
-            double kS = 0.17475;
-            double kV = 2.5728;
-            double kA = 0.33987;
+            double kS = 0.22304;
+            double kV = 2.4899;
+            double kA = 0.41763;
         }
 
         public interface FrontRight {
