@@ -1,23 +1,25 @@
-package com.stuypulse.robot.subsystems.vision;
-import java.util.*;
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
-import com.stuypulse.robot.RobotContainer;
+package com.stuypulse.robot.subsystems.vision;
+import static com.stuypulse.robot.constants.Settings.Vision.*;
+import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
+
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 
-import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
-import static com.stuypulse.robot.constants.Settings.Vision.*;
-
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.*;
 
 public class VisionImpl extends Vision {
 
@@ -27,7 +29,7 @@ public class VisionImpl extends Vision {
         NONE
     }
 
-    private static final Pose2d kNoPose = 
+    private static final Pose2d kNoPose =
         new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
     private static final AprilTagData kNoData =
@@ -108,7 +110,7 @@ public class VisionImpl extends Vision {
     public void periodic(){
         // - clear results array
         // - update cached data in limelights (nicer to do this once per robot loop)
-        // - update results array 
+        // - update results array
         // - log pose onto field and network
 
         var robotPose = Odometry.getInstance().getPose();
@@ -119,7 +121,7 @@ public class VisionImpl extends Vision {
         for (int i = 0; i < limelights.length; ++i) {
             Limelight ll = limelights[i];
             FieldObject2d ll2d = limelightPoses[i];
-            
+
             ll.updateAprilTagData();
 
             if (ll.hasAprilTagData()) {
@@ -131,7 +133,7 @@ public class VisionImpl extends Vision {
                     if (!Field.isValidAprilTagId(data.id)) continue;
                     putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
                     ll2d.setPose(data.pose);
-                    
+
                     results.add(data);
                 } else {
                     putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
@@ -144,4 +146,4 @@ public class VisionImpl extends Vision {
             }
         }
     }
-} 
+}

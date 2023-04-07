@@ -1,7 +1,7 @@
-/************************ PROJECT DORCAS ************************/
-/* Copyright (c) 2022 StuyPulse Robotics. All rights reserved.  */
-/* This work is licensed under the terms of the MIT license.    */
-/****************************************************************/
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
 package com.stuypulse.robot.util;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 public class LEDColor implements LEDInstruction {
     private final int red;
     private final int green;
-    private final int blue; 
+    private final int blue;
 
     public LEDColor(int red, int green, int blue) {
         this.red = red;
@@ -44,7 +44,7 @@ public class LEDColor implements LEDInstruction {
     public int getGreen() {
         return green;
     }
-    
+
     public int getBlue() {
         return blue;
     }

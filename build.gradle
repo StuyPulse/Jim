@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2023.4.3"
-    id "com.diffplug.spotless" version "6.11.0"
+    id "com.diffplug.spotless" version "6.17.0"
 }
 
 allprojects {
@@ -89,9 +89,14 @@ spotless {
     enforceCheck = false
     java {
         targetExclude("src/main/java/com/stuypulse/robot/commands/autons/*.java")
-        licenseHeaderFile "LICENSE"
+        licenseHeader '''/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
-        googleJavaFormat().aosp()
+'''
+
+        // googleJavaFormat().aosp()
         
         trimTrailingWhitespace()
         endWithNewline()

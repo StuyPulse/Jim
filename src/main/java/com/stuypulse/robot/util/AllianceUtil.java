@@ -1,21 +1,26 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
+
+import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class AllianceUtil {
-    public static double getMirroredYPose(double y) {
-        return Field.HEIGHT - y;
+    public static Number getMirroredYPose(Number y) {
+        return IStream.create(() -> Field.HEIGHT - y.doubleValue()).number();
     }
 
     public static Translation2d getMirroredTranslation(Translation2d translation) {
-        return new Translation2d(translation.getX(), getMirroredYPose(translation.getY()));
+        return new Translation2d(translation.getX(), getMirroredYPose(translation.getY()).doubleValue());
     }
 
     public static Pose2d getMirroredPose(Pose2d pose) {
@@ -34,7 +39,7 @@ public class AllianceUtil {
     public static Pose2d getAlliancePose(Pose2d bluePose, Alliance alliance) {
         if (alliance == Alliance.Blue)
             return bluePose;
-        
+
         return getMirroredPose(bluePose);
     }
 }

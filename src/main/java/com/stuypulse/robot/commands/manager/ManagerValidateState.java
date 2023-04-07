@@ -1,8 +1,12 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.manager;
 
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
-import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
@@ -11,7 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class ManagerValidateState extends InstantCommand {
-    
+
     private static boolean facingAway(Rotation2d angle) {
         return Math.abs(MathUtil.inputModulus(angle.getDegrees(), -180, 180)) < 90;
     }
@@ -19,11 +23,11 @@ public class ManagerValidateState extends InstantCommand {
     private static ScoreSide getCurrentScoringSide(Rotation2d heading) {
         return facingAway(heading) ? ScoreSide.BACK : ScoreSide.FRONT;
     }
-    
+
     public ManagerValidateState() {
         super(() -> {
             var manager = Manager.getInstance();
-            
+
             ScoreSide facingSide = getCurrentScoringSide(Odometry.getInstance().getRotation());
             manager.setScoreSide(facingSide);
 

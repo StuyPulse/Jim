@@ -1,4 +1,4 @@
-/************************ PROJECT PHIL ************************/
+/************************ PROJECT JIM *************************/
 /* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
@@ -7,7 +7,6 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.util.StopWatch;
-import com.stuypulse.robot.Robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 

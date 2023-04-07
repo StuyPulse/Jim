@@ -1,21 +1,25 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems.swerve;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
-import com.stuypulse.robot.subsystems.swerve.modules.MAX_SwerveModule;
+import com.stuypulse.stuylib.math.Vector2D;
+
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Robot;
+import com.stuypulse.robot.constants.Settings.Swerve;
+import com.stuypulse.robot.constants.Settings.Swerve.BackLeft;
+import com.stuypulse.robot.constants.Settings.Swerve.BackRight;
+import com.stuypulse.robot.constants.Settings.Swerve.FrontLeft;
+import com.stuypulse.robot.constants.Settings.Swerve.FrontRight;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.modules.SL_SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SacrodModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.constants.Settings.Robot;
-import com.stuypulse.robot.constants.Settings.Swerve;
-import com.stuypulse.robot.constants.Settings.Swerve.FrontRight;
-import com.stuypulse.robot.constants.Settings.Swerve.FrontLeft;
-import com.stuypulse.robot.constants.Settings.Swerve.BackRight;
-import com.stuypulse.robot.constants.Settings.Swerve.BackLeft;
+import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,9 +36,11 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.kauailabs.navx.frc.AHRS;
+
 public class SwerveDrive extends SubsystemBase {
 
-    private static final SwerveDrive instance; 
+    private static final SwerveDrive instance;
 
     static {
         if (RobotBase.isReal()) {
@@ -75,7 +81,7 @@ public class SwerveDrive extends SubsystemBase {
             );
         }
     }
-    
+
     public static SwerveDrive getInstance() {
         return instance;
     }
@@ -85,7 +91,7 @@ public class SwerveDrive extends SubsystemBase {
 
     /** SENSORS */
     private final AHRS gyro;
-    
+
     private final SwerveDriveKinematics kinematics;
 
     private final FieldObject2d[] module2ds;
@@ -105,17 +111,17 @@ public class SwerveDrive extends SubsystemBase {
             module2ds[i] = field.getObject(modules[i].getID()+"-2d");
         }
     }
-    
+
     private Translation2d[] getModuleOffsets() {
-        Translation2d[] locations = new Translation2d[modules.length];    
-        
+        Translation2d[] locations = new Translation2d[modules.length];
+
         for(int i = 0; i < modules.length; ++i) {
             locations[i] = modules[i].getOffset();
         }
-        
+
         return locations;
     }
-    
+
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for(int i = 0; i < modules.length; i++) {
@@ -133,7 +139,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     private SwerveModule getModule(String id) {
-        for (SwerveModule module : modules) 
+        for (SwerveModule module : modules)
             if (module.getID().equals(id)) {
                 return module;
         }
@@ -143,7 +149,7 @@ public class SwerveDrive extends SubsystemBase {
     public ChassisSpeeds getChassisSpeeds() {
         return getKinematics().toChassisSpeeds(getModuleStates());
     }
-    
+
 
 
     /** MODULE STATES API **/
@@ -165,7 +171,7 @@ public class SwerveDrive extends SubsystemBase {
             twistVel.dtheta / Settings.DT
         ));
     }
-    
+
     public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
@@ -176,14 +182,14 @@ public class SwerveDrive extends SubsystemBase {
 
         return new SwerveModuleState(0, state.angle);
     }
-    
+
     public void setModuleStates(SwerveModuleState... states) {
         if (states.length != modules.length) {
             throw new IllegalArgumentException("Number of desired module states does not match number of modules (" + modules.length + ")");
         }
 
         SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.MAX_MODULE_SPEED.get());
-        
+
         for(int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(filterModuleState(states[i]));
         }
@@ -197,7 +203,7 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getGyroAngle() {
         return gyro.getRotation2d();
     }
-    
+
     public Rotation2d getGyroPitch() {
         if (Settings.ROBOT == Settings.Robot.JIM) {
             return Rotation2d.fromDegrees(gyro.getRoll());
@@ -228,10 +234,10 @@ public class SwerveDrive extends SubsystemBase {
         Rotation2d pitch = getGyroPitch();
         Rotation2d roll = getGyroRoll();
         Rotation2d yaw = Odometry.getInstance().getRotation();
-        
+
         double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
         double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
-        
+
 
         SmartDashboard.putNumber("Swerve/Max Slope", maxSlope);
         SmartDashboard.putNumber("Swerve/Facing Slope", facingSlope);
@@ -272,7 +278,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getWorldLinearAccelY());
         SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getWorldLinearAccelZ());
     }
-    
+
     @Override
     public void simulationPeriodic() {
         // Integrate omega in simulation and store in gyro
@@ -280,5 +286,5 @@ public class SwerveDrive extends SubsystemBase {
 
         gyro.setAngleAdjustment(gyro.getAngle() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
     }
-    
+
 }

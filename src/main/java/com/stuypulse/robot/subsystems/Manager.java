@@ -1,20 +1,25 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems;
 
+import com.stuypulse.stuylib.network.SmartNumber;
+
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.ArmTrajectories.*;
-import com.stuypulse.robot.constants.Field.ScoreXPoses;
-import com.stuypulse.robot.constants.Field.ScoreYPoses;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.ArmState;
-import com.stuypulse.stuylib.network.SmartBoolean;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -54,8 +59,8 @@ public class Manager extends SubsystemBase {
 
     // level to score at
     public enum NodeLevel {
-        HIGH, 
-        MID, 
+        HIGH,
+        MID,
         LOW
     }
 
@@ -79,14 +84,19 @@ public class Manager extends SubsystemBase {
         gridNode = new SmartNumber("Manager/Grid Node", 0);
     }
 
-    /** Generate Intake Trajectories **/
+    /** Generate Intake Intermediate Trajectories **/
 
+    public ArmState getIntakeIntermediateTrajectory() {
+        return (Robot.getMatchState() == MatchState.AUTO) ? Acquire.kIntermediateAuton : Acquire.kIntermediate;
+    }
+
+    /** Generate Intake Trajectories **/
 
     public ArmState getIntakeTrajectory() {
         if (gamePiece.isCone())
             return Acquire.kCone;
         else
-            return Acquire.kCube;
+            return (Robot.getMatchState() == MatchState.AUTO) ? Acquire.kCubeAuton : Acquire.kCube;
     }
 
     public ArmState getOuttakeTrajectory() {
@@ -101,7 +111,7 @@ public class Manager extends SubsystemBase {
                 return getLowReadyTrajectory();
 
             case MID:
-                return getMidReadyTrajectory();
+                return (Robot.getMatchState() == MatchState.AUTO) ? getAutonMidReadyTrajectory() : getMidReadyTrajectory();
 
             case HIGH:
                 return getHighReadyTrajectory();
@@ -131,17 +141,30 @@ public class Manager extends SubsystemBase {
         }
     }
 
+    private ArmState getAutonMidReadyTrajectory() {
+        switch (gamePiece) {
+            case CONE_TIP_UP:
+                return Ready.Mid.kConeTipUpBack;
+
+            case CUBE:
+                return scoreSide == ScoreSide.FRONT ? Ready.Mid.kCubeFront : Ready.Mid.kAutonCubeBack;
+
+            default:
+                return getStowTrajectory();
+        }
+    }
+
     private ArmState getHighReadyTrajectory() {
         switch (gamePiece) {
             case CONE_TIP_IN:
                 return Ready.High.kConeTipInBack;
-            
+
             case CONE_TIP_OUT:
                 return Ready.High.kConeTipOutFront;
 
             case CONE_TIP_UP:
                 return Ready.High.kConeTipUpBack;
-                
+
             case CUBE:
                 return scoreSide == ScoreSide.FRONT ? Ready.High.kCubeFront : Ready.High.kCubeBack;
 
@@ -161,18 +184,28 @@ public class Manager extends SubsystemBase {
 
     private final int[] CUBE_INDEXES = {1, 4, 7};
     private final int[] CONE_INDEXES = {0, 2, 3, 5, 6, 8};
+    private final int[] LOW_INDEXES = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    private int[] getPossibleScoringIndices() {
+        int[] indices = LOW_INDEXES;
+        if (nodeLevel != NodeLevel.LOW) {
+            indices = gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES;
+        }
+        return indices;
+    }
 
     public int getNearestScoreIndex() {
         var robot = Odometry.getInstance().getTranslation();
 
-        double gridDistance = getSelectedScoreX();
-        double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double gridDistance = getSelectedScoreX().doubleValue();
+        Number[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
-        int nearest = 0;
-        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
+        int nearest = getPossibleScoringIndices()[0];
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
 
-        for (int i : gamePiece.isCone() ? CONE_INDEXES : CUBE_INDEXES) {
-            Translation2d current = new Translation2d(gridDistance, positions[i]);
+
+        for (int i : getPossibleScoringIndices()) {
+            Translation2d current = new Translation2d(gridDistance, positions[i].doubleValue());
             double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
@@ -184,8 +217,11 @@ public class Manager extends SubsystemBase {
         return nearest;
     }
 
-    private double getSelectedScoreX() {
-        if (nodeLevel == NodeLevel.HIGH) {
+    private Number getSelectedScoreX() {
+        if (nodeLevel == NodeLevel.LOW) {
+            return scoreSide == ScoreSide.FRONT ? ScoreXPoses.Low.FRONT : ScoreXPoses.Low.BACK;
+        }
+        else if (nodeLevel == NodeLevel.HIGH) {
             switch (gamePiece) {
                 case CUBE:
                     if (scoreSide == ScoreSide.FRONT)
@@ -219,12 +255,12 @@ public class Manager extends SubsystemBase {
     }
 
     public Translation2d getSelectedScoreTranslation() {
-        double gridDistance = getSelectedScoreX();
-        double positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double gridDistance = getSelectedScoreX().doubleValue();
+        Number positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         return new Translation2d(
             gridDistance,
-            positions[gridNode.intValue()]);
+            positions[gridNode.intValue()].doubleValue());
     }
 
     public Pose2d getScorePose() {

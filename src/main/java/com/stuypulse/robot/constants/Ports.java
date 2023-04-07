@@ -1,4 +1,4 @@
-/************************ PROJECT PHIL ************************/
+/************************ PROJECT JIM *************************/
 /* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
@@ -19,7 +19,7 @@ public interface Ports {
         // int FRONT_SENSOR = 0;
         // int BACK_SENSOR = 1;
     }
-    
+
     public interface Swerve {
         public interface FrontRight {
             int DRIVE = 10;
@@ -38,7 +38,7 @@ public interface Ports {
 
         public interface BackRight {
             int DRIVE = 16;
-            int TURN = 17; 
+            int TURN = 17;
         }
     }
 
@@ -51,12 +51,12 @@ public interface Ports {
     public interface LEDController {
         int PORT = 0; // PWM
     }
-    
+
     public interface Plant {
         int FORWARD = 0;
         int REVERSE = 1;
     }
-    
+
     public interface Wings {
         int DEPLOY_FORWARD = 2;
         int DEPLOY_REVERSE = 3;

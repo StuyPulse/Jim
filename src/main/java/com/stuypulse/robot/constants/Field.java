@@ -1,15 +1,19 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.constants;
+
+import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
-import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -50,17 +54,22 @@ public interface Field {
 
     public interface ScoreXPoses {
         public interface High {
-            double CUBE_BACK = 1.98;
-            double CUBE_FRONT = 1.830060;
-            double CONE_TIP_IN = 1.894;
-            double CONE_TIP_OUT = 1.783;
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894 - 0.075);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82 - 0.05);
         }
 
         public interface Mid {
-            double CUBE_BACK = 1.868;
-            double CUBE_FRONT = 2.083577;
-            double CONE_TIP_IN = 2.275;
-            double CONE_TIP_OUT = 2.1433;
+            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.868);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.083577);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275 - 0.075);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433 - 0.1);
+        }
+
+        public interface Low {
+            SmartNumber BACK = new SmartNumber("Alignment/X Poses/Low/Back", 1.85);
+            SmartNumber FRONT = new SmartNumber("Alignment/X Poses/Low/Front", 1.85);
         }
 
         // Low Cube: 1.768088
@@ -68,25 +77,29 @@ public interface Field {
 
     // red left to right
     public interface ScoreYPoses {
-        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
+        public static Number[] getYPoseArray(Alliance alliance, ScoreSide side) {
             if (side == ScoreSide.FRONT)
                 return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
                 return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
         }
 
+        public static Number redToBlueNYC(Number yPose) {
+            return IStream.create(() -> yPose.doubleValue() - Units.inchesToMeters(3.0)).number();
+        }
+
         public interface Back {
-            double ONE =   7.4376;
-            double TWO =   6.905;
-            double THREE = 6.3238;
-            double FOUR =  5.822;
-            double FIVE =  5.2947;
-            double SIX =   4.6;
-            double SEVEN = 4.1028;
-            double EIGHT = 3.557;
-            double NINE =  2.89;
-    
-            double RED_Y_POSES[] = {
+            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", 7.4376);
+            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", 6.905);
+            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", 6.3238);
+            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", 5.822);
+            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", 5.2947);
+            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", 4.6);
+            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.1028);
+            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.557);
+            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 2.89);
+
+            Number RED_Y_POSES[] = {
                 Back.ONE,
                 Back.TWO,
                 Back.THREE,
@@ -97,26 +110,26 @@ public interface Field {
                 Back.EIGHT,
                 Back.NINE
             };
-    
-            double BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(Back.NINE),
-                AllianceUtil.getMirroredYPose(Back.EIGHT),
-                AllianceUtil.getMirroredYPose(Back.SEVEN),
-                AllianceUtil.getMirroredYPose(Back.SIX),
-                AllianceUtil.getMirroredYPose(Back.FIVE),
-                AllianceUtil.getMirroredYPose(Back.FOUR),
-                AllianceUtil.getMirroredYPose(Back.THREE),
-                AllianceUtil.getMirroredYPose(Back.TWO),
-                AllianceUtil.getMirroredYPose(Back.ONE)
+
+            Number BLUE_Y_POSES[] = {
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.NINE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.EIGHT)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.SEVEN)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.SIX)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.FIVE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.FOUR)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.THREE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.TWO)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.ONE))
             };
         }
 
         public interface Front {
-            private static double backToFront(double backYPose) {
-                return backYPose - Units.inchesToMeters(3.0);
+            private static Number backToFront(Number backYPose) {
+                return IStream.create(() -> backYPose.doubleValue() - Units.inchesToMeters(3.0)).number();
             }
-    
-            double RED_Y_POSES[] = {
+
+            Number RED_Y_POSES[] = {
                 backToFront(Back.ONE),
                 backToFront(Back.TWO),
                 backToFront(Back.THREE),
@@ -127,20 +140,19 @@ public interface Field {
                 backToFront(Back.EIGHT),
                 backToFront(Back.NINE)
             };
-    
-            double BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SIX)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FIVE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FOUR)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.THREE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.TWO)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
+
+            Number BLUE_Y_POSES[] = {
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.NINE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.SIX))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.FIVE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.FOUR))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.THREE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.TWO))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.ONE)))
             };
         }
     }
 
 }
-

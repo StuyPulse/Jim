@@ -1,7 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.auton;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
@@ -15,6 +18,9 @@ import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 
 public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
@@ -76,7 +82,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
                 new WaitCommand(STOW_WAIT_TIME).andThen(new IntakeStop()).andThen(new FastStow().withTolerance(15, 10))
             )
         );
-        
+
         // dock and engage
         addCommands(
             new WaitCommand(REF_REACTION_TIME),
@@ -92,6 +98,6 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
             new PlantEngage()
         );
-    
+
     }
 }

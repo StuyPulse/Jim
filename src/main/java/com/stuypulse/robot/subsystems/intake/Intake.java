@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems.intake;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Robot;
@@ -18,7 +23,7 @@ public abstract class Intake extends SubsystemBase {
         else
             instance = new SimIntake();
     }
-    
+
     public static Intake getInstance() {
         return instance;
     }
@@ -31,7 +36,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract void deacquire();
     public abstract void stop();
 
-    public boolean hasCone() {return false;}
+    public boolean hasGamePiece() {return false;}
 
     public void enableCoast() { }
     public void enableBreak() { }

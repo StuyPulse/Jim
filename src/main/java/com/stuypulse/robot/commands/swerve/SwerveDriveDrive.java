@@ -1,13 +1,10 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.swerve;
 
-import java.util.Optional;
-
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Driver.Drive;
-import com.stuypulse.robot.constants.Settings.Driver.Turn;
-import com.stuypulse.robot.constants.Settings.Driver.Turn.GyroFeedback;
-import com.stuypulse.robot.subsystems.plant.*;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -20,12 +17,21 @@ import com.stuypulse.stuylib.streams.vectors.filters.VDeadZone;
 import com.stuypulse.stuylib.streams.vectors.filters.VLowPassFilter;
 import com.stuypulse.stuylib.streams.vectors.filters.VRateLimit;
 
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Driver.Drive;
+import com.stuypulse.robot.constants.Settings.Driver.Turn;
+import com.stuypulse.robot.constants.Settings.Driver.Turn.GyroFeedback;
+import com.stuypulse.robot.subsystems.plant.*;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import java.util.Optional;
+
 public class SwerveDriveDrive extends CommandBase {
-    
+
     private final SwerveDrive swerve;
     private final Plant plant;
 
@@ -61,7 +67,7 @@ public class SwerveDriveDrive extends CommandBase {
                 x -> x * Turn.MAX_TELEOP_TURNING.get(),
                 new LowPassFilter(Turn.RC)
             );
-        
+
         holdAngle = Optional.empty();
         gyroFeedback = new AnglePIDController(GyroFeedback.P, GyroFeedback.I, GyroFeedback.D);
 
@@ -80,7 +86,7 @@ public class SwerveDriveDrive extends CommandBase {
     private boolean isDriveInDeadband() {
         return driver.getLeftStick().magnitude() < Drive.DEADBAND.get();
     }
-    
+
     @Override
     public void execute() {
         double angularVel = turn.get();
@@ -97,7 +103,7 @@ public class SwerveDriveDrive extends CommandBase {
                     Angle.fromRotation2d(swerve.getGyroAngle()));
             }
         }
-        
+
         // if turn outside deadband, clear the saved angle
         else {
             holdAngle = Optional.empty();
@@ -110,7 +116,7 @@ public class SwerveDriveDrive extends CommandBase {
         if (Timer.getMatchTime() < 30) {
             if ((driver.getLeftStick().magnitude() > 0.5) ||
                 (driver.getRightStick().magnitude() > 0.5)) {
-             
+
                 plant.disengage();
             }
         }

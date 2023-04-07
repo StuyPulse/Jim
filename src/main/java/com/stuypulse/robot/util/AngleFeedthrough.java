@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import com.stuypulse.stuylib.control.angle.AngleController;
@@ -16,5 +21,5 @@ public class AngleFeedthrough extends AngleController {
     protected double calculate(Angle setpoint, Angle measurement) {
         return derivative.get(setpoint);
     }
-    
+
 }

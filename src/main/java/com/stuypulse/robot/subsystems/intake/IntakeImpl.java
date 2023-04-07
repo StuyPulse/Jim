@@ -1,27 +1,32 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.subsystems.intake;
 
 import static com.stuypulse.robot.constants.Motors.Intake.*;
-import static com.stuypulse.robot.constants.Settings.Intake.*;
 import static com.stuypulse.robot.constants.Ports.Intake.*;
+import static com.stuypulse.robot.constants.Settings.Intake.*;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.stuylib.streams.booleans.BStream;
-import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class IntakeImpl extends Intake {
 
-    private CANSparkMax frontMotor; 
+    private CANSparkMax frontMotor;
     private CANSparkMax backMotor;
 
     private BStream stalling;
@@ -42,12 +47,12 @@ public class IntakeImpl extends Intake {
             .filtered(new BDebounce.Rising(STALL_TIME));
     }
 
-    public void enableCoast() { 
+    public void enableCoast() {
         frontMotor.setIdleMode(IdleMode.kCoast);
         backMotor.setIdleMode(IdleMode.kCoast);
     }
 
-    public void enableBreak() { 
+    public void enableBreak() {
         frontMotor.setIdleMode(IdleMode.kBrake);
         backMotor.setIdleMode(IdleMode.kBrake);
     }
@@ -68,7 +73,7 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
-    public boolean hasCone() {
+    public boolean hasGamePiece() {
         return isStalling();
     }
 
@@ -80,12 +85,12 @@ public class IntakeImpl extends Intake {
                 frontMotor.set(Acquire.CUBE_FRONT.doubleValue());
                 backMotor.set(Acquire.CUBE_BACK.doubleValue());
                 break;
-            case CONE_TIP_UP: 
+            case CONE_TIP_UP:
                 break;
             case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(Acquire.CONE_FRONT.doubleValue());
-                backMotor.set(-Acquire.CONE_BACK.doubleValue());    
+                backMotor.set(-Acquire.CONE_BACK.doubleValue());
                 break;
             default:
                 break;
@@ -102,12 +107,12 @@ public class IntakeImpl extends Intake {
                 break;
             case CONE_TIP_UP:
                 frontMotor.set(+Deacquire.CONE_UP_FRONT.doubleValue());
-                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue()); 
+                backMotor.set(-Deacquire.CONE_UP_BACK.doubleValue());
                 break;
             case CONE_TIP_OUT:
             case CONE_TIP_IN:
                 frontMotor.set(-Deacquire.CONE_FRONT.doubleValue());
-                backMotor.set(Deacquire.CONE_BACK.doubleValue());    
+                backMotor.set(Deacquire.CONE_BACK.doubleValue());
                 break;
             default:
                 break;
@@ -123,18 +128,18 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void periodic() {
-        // acquiring 
+        // acquiring
         if (Robot.getMatchState() == MatchState.TELEOP && acquiring) {
             acquire();
         }
 
         // forward and stalling
-        if (Robot.getMatchState() == MatchState.TELEOP && frontMotor.get() > 0 && hasCone()) {
+        if (frontMotor.get() > 0 && hasGamePiece()) {
             stop();
         }
 
         Arm.getInstance().getVisualizer().setIntakingDirection(frontMotor.get(), backMotor.get());
-    
+
         SmartDashboard.putNumber("Intake/Front Roller Speed", frontMotor.get());
         SmartDashboard.putNumber("Intake/Back Roller Speed", backMotor.get());
         SmartDashboard.putNumber("Intake/Front Roller Current", frontMotor.getOutputCurrent());

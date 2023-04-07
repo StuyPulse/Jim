@@ -1,8 +1,11 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
 package com.stuypulse.robot.util;
+
+import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,8 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.stuypulse.stuylib.util.StopWatch;
 
 /**
  * A command composition that runs a list of commands in sequence.

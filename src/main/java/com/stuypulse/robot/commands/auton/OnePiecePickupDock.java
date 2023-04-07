@@ -1,23 +1,25 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.auton;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
-import com.stuypulse.robot.commands.swerve.balance.SwerveDriveAlignThenBalance;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 
 public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
@@ -34,7 +36,7 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1.5 Piece + Dock", INTAKE_PIECE, DOCK),
-            "Intake Piece", "Dock" 
+            "Intake Piece", "Dock"
         );
 
         var arm = Arm.getInstance();
@@ -83,7 +85,7 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
-        
+
         // dock and engage
         addCommands(
             new ParallelDeadlineGroup(
@@ -102,6 +104,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
             new PlantEngage()
         );
-    
+
     }
 }

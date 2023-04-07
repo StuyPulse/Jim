@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.commands.arm.routines;
 
 import com.stuypulse.robot.Robot;
@@ -7,17 +12,22 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
-import com.stuypulse.robot.subsystems.Manager.ScoreSide;
-import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class ArmReady extends ArmRoutine {
-    
+
     public ArmReady() {
         super(Manager.getInstance()::getReadyTrajectory);
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+
+
+        arm.enableGamePieceGravityCompensation();
     }
 
     @Override
@@ -28,20 +38,20 @@ public class ArmReady extends ArmRoutine {
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
                         .setWristLimp(true))
-                
+
                 .addState(
-                    dest.getShoulderDegrees(), 
-                    (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
-            
+                    dest.getShoulderDegrees(),
+                    (Manager.getInstance().getNodeLevel() == NodeLevel.MID) ? dest.getWristDegrees() : (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+
                 .addState(dest);
         }
 
         if (Robot.getMatchState() == MatchState.AUTO) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-    
+
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(10))
+                    .setWristTolerance(45))
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristLimp(true).setWristTolerance(360))
                 .addState(dest);
@@ -55,7 +65,7 @@ public class ArmReady extends ArmRoutine {
                     .setWristTolerance(3));
         }
 
-        // if (Manager.getInstance().getNodeLevel() == NodeLevel.LOW && 
+        // if (Manager.getInstance().getNodeLevel() == NodeLevel.LOW &&
         //     Manager.getInstance().getScoreSide() == ScoreSide.BACK) {
         // }
 
@@ -64,7 +74,7 @@ public class ArmReady extends ArmRoutine {
         return new ArmTrajectory()
             .addState(
                 new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(12))
+                    .setWristTolerance(12 /* TODO CHANGE ME */))
 
             .addState(
                 new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
@@ -75,12 +85,5 @@ public class ArmReady extends ArmRoutine {
                 .setWristTolerance(3));
     }
 
-    @Override
-    public boolean isFinished() {
-        if (Robot.getMatchState() == MatchState.AUTO) {
-            return super.isFinished(); // Math.abs(Arm.getInstance().getWristVelocityRadiansPerSecond()) < Math.toRadians(5);
-        } else {
-            return super.isFinished();
-        }
-    }
+
 }

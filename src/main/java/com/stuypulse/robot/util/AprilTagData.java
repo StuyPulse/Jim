@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Field;
@@ -29,13 +34,13 @@ public class AprilTagData {
     public double getDistanceToTag() {
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.getAprilTagFromId(id).getTranslation();
-        
+
         return robot.getDistance(tag);
     }
 
     /**
      * Record april tag data, usually from a vision system
-     * 
+     *
      * @param robotPose robot pose information, in meters with blue/red corner as origin
      * @param latency total latency, in seconds
      * @param id tag id

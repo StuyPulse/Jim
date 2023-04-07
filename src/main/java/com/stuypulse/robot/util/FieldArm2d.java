@@ -1,3 +1,8 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
@@ -19,7 +24,7 @@ public class FieldArm2d {
         double distanceFromSwerveCenter = state.getShoulderState().getCos() * Shoulder.LENGTH + state.getWristState().getCos() * Wrist.LENGTH;
 
         Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, robot.getRotation());
-        
+
         object.setPose(new Pose2d(
             topDownTranslation.plus(robot.getTranslation()),
             robot.getRotation()

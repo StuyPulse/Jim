@@ -1,6 +1,9 @@
-package com.stuypulse.robot.util;
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
-import java.util.Optional;
+package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
@@ -15,6 +18,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+import java.util.Optional;
+
 public class Limelight {
 
     private String tableName;
@@ -22,7 +27,7 @@ public class Limelight {
     private final IntegerEntry idEntry;
     private final DoubleArrayEntry blueBotposeEntry;
     private final DoubleArrayEntry redBotposeEntry;
-    
+
     private Optional<AprilTagData> data;
 
     private final Pose3d robotRelativePose;

@@ -1,11 +1,12 @@
-/************************ PROJECT DORCAS ************************/
-/* Copyright (c) 2022 StuyPulse Robotics. All rights reserved.  */
-/* This work is licensed under the terms of the MIT license.    */
-/****************************************************************/
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
 package com.stuypulse.robot.subsystems.leds;
 
 import com.stuypulse.stuylib.util.StopWatch;
+
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.Manager;
@@ -40,13 +41,13 @@ public abstract class LEDController extends SubsystemBase {
     private double manualTime;
 
     // The current color to set the LEDs to
-    private LEDColor manualColor;
+    private LEDInstruction manualColor;
 
     public LEDController() {
         this.lastUpdate = new StopWatch();
     }
 
-    public void setColor(LEDColor color, double time) {
+    public void setColor(LEDInstruction color, double time) {
         manualColor = color;
         manualTime = time;
         lastUpdate.reset();
