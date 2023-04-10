@@ -55,7 +55,7 @@ public interface Field {
     public interface ScoreXPoses {
         public interface High {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
-            SmartNumber CUBE_FR`ONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
+            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
             SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
             SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82);
         }
