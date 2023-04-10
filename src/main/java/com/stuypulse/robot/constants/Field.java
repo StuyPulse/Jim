@@ -56,15 +56,15 @@ public interface Field {
         public interface High {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
             SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894 - 0.075);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82 - 0.05);
         }
 
         public interface Mid {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.868);
             SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.083577);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275 - 0.075);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433 - 0.1);
         }
 
         public interface Low {
@@ -82,6 +82,10 @@ public interface Field {
                 return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
                 return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
+        }
+
+        public static Number redToBlueNYC(Number yPose) {
+            return IStream.create(() -> yPose.doubleValue() - Units.inchesToMeters(3.0)).number();
         }
 
         public interface Back {
@@ -108,15 +112,15 @@ public interface Field {
             };
 
             Number BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(Back.NINE),
-                AllianceUtil.getMirroredYPose(Back.EIGHT),
-                AllianceUtil.getMirroredYPose(Back.SEVEN),
-                AllianceUtil.getMirroredYPose(Back.SIX),
-                AllianceUtil.getMirroredYPose(Back.FIVE),
-                AllianceUtil.getMirroredYPose(Back.FOUR),
-                AllianceUtil.getMirroredYPose(Back.THREE),
-                AllianceUtil.getMirroredYPose(Back.TWO),
-                AllianceUtil.getMirroredYPose(Back.ONE)
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.NINE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.EIGHT)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.SEVEN)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.SIX)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.FIVE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.FOUR)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.THREE)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.TWO)),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(Back.ONE))
             };
         }
 
@@ -138,15 +142,15 @@ public interface Field {
             };
 
             Number BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SIX)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FIVE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FOUR)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.THREE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.TWO)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.NINE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.SIX))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.FIVE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.FOUR))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.THREE))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.TWO))),
+                redToBlueNYC(AllianceUtil.getMirroredYPose(backToFront(Back.ONE)))
             };
         }
     }

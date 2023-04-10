@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RobotAlignThenScore extends CommandBase {
+public class RobotAlignThenScoreCubes extends CommandBase {
 
     // Subsystems
     private final SwerveDrive swerve;
@@ -51,7 +51,7 @@ public class RobotAlignThenScore extends CommandBase {
     // Logging
     private final FieldObject2d targetPose2d;
 
-    public RobotAlignThenScore(){
+    public RobotAlignThenScoreCubes(){
         this.swerve = SwerveDrive.getInstance();
         this.arm = Arm.getInstance();
         this.intake = Intake.getInstance();
@@ -111,27 +111,10 @@ public class RobotAlignThenScore extends CommandBase {
             // or do scoring motion based on the game piece
             else {
 
+                // only score for cubes
                 if (manager.getGamePiece().isCube()) {
                     intake.deacquire();
-                } else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
-                    arm.setTargetState(
-                        Manager.getInstance().getNodeLevel() == NodeLevel.MID ?
-                            ArmTrajectories.Score.Mid.kConeTipOutFront :
-                            ArmTrajectories.Score.High.kConeTipOutFront);
-
-                    if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
-                        intake.enableCoast();
-                        movingWhileScoring = true;
-                        swerve.setChassisSpeeds(
-                            new ChassisSpeeds(
-                                -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
-                                0,
-                                0));
-                    }
-                } else {
-                    // don't automate yet
                 }
-
             }
 
         } else {

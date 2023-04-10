@@ -56,7 +56,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 }
             });
         }
-
+ 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
@@ -65,7 +65,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
-                    .setWristTolerance(30).setShoulderTolerance(20));
+                    .setWristTolerance(7).setShoulderTolerance(25));
         }
     }
     static class ArmIntakeFirst extends ArmRoutine {
@@ -134,7 +134,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.3;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
     private static final double INTAKE_WAIT_TIME = 1.0;
     private static final double ACQUIRE_WAIT_TIME = 0.02;
     private static final double WIGGLE_PERIOD = 0.6;
@@ -174,12 +174,11 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
+            new WaitCommand(0.8)
         );
 
         // intake second piece
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
 
             new LEDSet(LEDColor.GREEN),
 
@@ -189,8 +188,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .withStop(),
                     // .until(Intake.getInstance()::hasGamePiece), // interrupting IntakeScore? idk one time the intake just stopped early
 
-                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                new IntakeScore()
+                    .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
+                    .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeFirst()

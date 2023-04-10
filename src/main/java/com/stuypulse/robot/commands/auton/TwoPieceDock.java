@@ -89,7 +89,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.2;
     private static final double CUBE_DEACQUIRE_TIME = 0.2;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.1;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
     private static final double INTAKE_WAIT_TIME = 0.2;
     private static final double ACQUIRE_WAIT_TIME = 0.1;
     private static final double ENGAGE_TIME = 10.0;
@@ -139,7 +139,6 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
         // intake second piece
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
 
             new LEDSet(LEDColor.GREEN),
 
@@ -150,6 +149,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeBOOM()
@@ -177,12 +177,16 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
+            arm.runOnce(() -> arm.setShoulderVelocityFeedbackCutoff(10.0)),
+
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(
                     paths.get("Score Piece"))
                         .fieldRelative().withStop(),
 
-                new WaitCommand(0.2).andThen(new AutonReady()),
+                new WaitCommand(0.2)
+                    .andThen(new AutonReady()
+                        .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)),
 
                 new SequentialCommandGroup(
                     new WaitCommand(0.4),
@@ -212,7 +216,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             new LEDSet(LEDColor.GREEN),
 
             new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.6)
+                .withMaxSpeed(0.75)
                 .withTimeout(ENGAGE_TIME)
                 .alongWith(new FastStow().withTolerance(15, 10)),
 

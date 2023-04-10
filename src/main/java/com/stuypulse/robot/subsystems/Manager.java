@@ -200,7 +200,7 @@ public class Manager extends SubsystemBase {
         double gridDistance = getSelectedScoreX().doubleValue();
         Number[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
-        int nearest = 0;
+        int nearest = getPossibleScoringIndices()[0];
         double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
 
 

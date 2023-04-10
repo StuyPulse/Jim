@@ -110,13 +110,13 @@ public interface Settings {
         }
 
         public interface Drive {
-            double kP = 0.50121;
+            double kP = 0.8;
             double kI = 0.0;
             double kD = 0.0;
 
-            double kS = 0.17475;
-            double kV = 2.5728;
-            double kA = 0.33987;
+            double kS = 0.22304;
+            double kV = 2.4899;
+            double kA = 0.41763;
         }
 
         public interface FrontRight {
@@ -135,7 +135,7 @@ public interface Settings {
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(118.741436) // recalibrated 3/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(125.371964) // recalibrated 4/6
                 .plus(Rotation2d.fromDegrees(180));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
@@ -170,7 +170,7 @@ public interface Settings {
     public interface Arm {
 
         public interface Shoulder {
-            SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 10.0);
+            SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 15.0);
             SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
 
             int MOTORS = 2;
@@ -190,8 +190,8 @@ public interface Settings {
 
             Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 + 180.0/360.0).plus(Rotation2d.fromDegrees(+90));
 
-            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 270);
-            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 360);
+            SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 315);
+            SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 420);
 
             SmartNumber AUTON_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Auton Max Velocity (deg)", 360);
             SmartNumber AUTON_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Auton Max Acceleration (deg)", 480);
@@ -237,7 +237,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.66055).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.66055).plus(Rotation2d.fromDegrees(60));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -245,7 +245,7 @@ public interface Settings {
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 10.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 15.0);
             SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
@@ -323,7 +323,7 @@ public interface Settings {
 
     public interface Driver {
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.10);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);

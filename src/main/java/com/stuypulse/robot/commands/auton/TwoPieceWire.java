@@ -26,7 +26,7 @@ import com.pathplanner.lib.PathPlanner;
 public class TwoPieceWire extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
     private static final double INTAKE_ACQUIRE_TIME = 0.5;
     private static final double INTAKE_WAIT_TIME = 2.0;
     private static final double ACQUIRE_WAIT_TIME = 0.4;
@@ -77,8 +77,6 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
         // intake second piece
         addCommands(
-            new ManagerSetGamePiece(GamePiece.CUBE),
-
             new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
@@ -88,6 +86,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                 new WaitCommand(INTAKE_STOP_WAIT_TIME)
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
+                    .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
 
                 new ArmIntakeBOOM()
