@@ -33,4 +33,8 @@ public class Derivative implements IFilter {
     public double getOutput() {
         return mOutput;
     }
+
+    public void reset() {
+        mOutput = Double.POSITIVE_INFINITY;
+    }
 }

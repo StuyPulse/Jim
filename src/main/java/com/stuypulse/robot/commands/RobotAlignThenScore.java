@@ -90,7 +90,7 @@ public class RobotAlignThenScore extends CommandBase {
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
         } else {
-            return controller.isDone(
+            return stoppedByGrid.get() || controller.isDone(
                 Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
@@ -102,6 +102,8 @@ public class RobotAlignThenScore extends CommandBase {
         movingWhileScoring = false;
         intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
+
+        xErrorChange.reset();
         
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
