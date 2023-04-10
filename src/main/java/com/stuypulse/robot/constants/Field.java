@@ -55,16 +55,16 @@ public interface Field {
     public interface ScoreXPoses {
         public interface High {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894 - 0.075);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82 - 0.05);
+            SmartNumber CUBE_FR`ONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82);
         }
 
         public interface Mid {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.868);
             SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.083577);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275 - 0.075);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433 - 0.1);
+            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275);
+            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433);
         }
 
         public interface Low {
