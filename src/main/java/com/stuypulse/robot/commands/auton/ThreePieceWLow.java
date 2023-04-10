@@ -32,22 +32,6 @@ import com.pathplanner.lib.PathPlanner;
 
 public class ThreePieceWLow extends DebugSequentialCommandGroup {
 
-    static class ConeAutonReady extends ArmRoutine {
-        public ConeAutonReady() {
-            super(Manager.getInstance()::getReadyTrajectory);
-        }
-
-        @Override
-        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-
-            return new ArmTrajectory()
-                .addState(new ArmState(dest.getShoulderState(), src.getWristState())
-                            .setShoulderTolerance(20).setWristLimp(true).setWristTolerance(360))
-                .addState(new ArmState(dest.getShoulderState(), dest.getWristState()).setWristTolerance(7)
-                            .setShoulderTolerance(15));
-        }
-    }
-
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
             super(() -> Ready.Mid.kAutonCubeBack);
