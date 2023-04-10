@@ -188,7 +188,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.695582 + 180.0/360.0).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.025333).plus(Rotation2d.fromDegrees(+90));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 315);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 420);
@@ -237,7 +237,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.66055).plus(Rotation2d.fromDegrees(60));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(180));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -245,7 +245,7 @@ public interface Settings {
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 15.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 20.0);
             SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
@@ -358,7 +358,7 @@ public interface Settings {
 
     public interface Alignment {
 
-        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.3);
+        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.15);
 
         SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
@@ -387,7 +387,7 @@ public interface Settings {
 
         // Tip in scoring
         SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4);
-        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
+        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 3);
 
         // Tip in release
         SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
