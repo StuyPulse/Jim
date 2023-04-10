@@ -23,6 +23,7 @@ import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -178,18 +179,8 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
-        // score first piece
+        // score first piece + intake second piece
         addCommands(
-            new LEDSet(LEDColor.BLUE),
-            // new ConeAutonReady()
-            //     .withTimeout(1.5)
-            new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
-        );
-
-        // intake second piece
-        addCommands(
-
             new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
@@ -201,11 +192,11 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 new IntakeScore()
                     .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
+                    .andThen(new ArmIntakeFirst()
+                        .withTolerance(4, 10))
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
-                    .andThen(new IntakeAcquire()),
+                    .andThen(new IntakeAcquire())
 
-                new ArmIntakeFirst()
-                    .withTolerance(4, 10)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
@@ -226,14 +217,16 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
-            new ParallelDeadlineGroup(
-            new SwerveDriveFollowTrajectory(
-                paths.get("Score Piece"))
-                    .fieldRelative()
-                .withStop(),
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(
+                    paths.get("Score Piece"))
+                        .fieldRelative()
+                    .withStop(),
 
-                new AutonMidCubeReady(),
-                new WaitCommand(0.5).andThen(new IntakeStop())
+                new WaitCommand(0.5).andThen(new IntakeStop()),
+
+                new AutonMidCubeReady()
+                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)
             ),
 
             new ManagerSetGridNode(1),
