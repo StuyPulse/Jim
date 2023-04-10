@@ -200,6 +200,9 @@ public interface Settings {
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
             SmartNumber STALLING_CURRENT = new SmartNumber("Arm/Shoulder/Stalling Current", 100.0);
 
+            SmartNumber STOPPED_ERROR_VELOCITY = new SmartNumber("Arm/Shoulder/Stopped Velocity", Units.degreesToRadians(1.0));
+            SmartNumber STOPPED_VEL_DEBOUNCE = new SmartNumber("Arm/Shoulder/Stopped Debounce", 0.3);
+
             SmartNumber TOLERANCE = new SmartNumber("Arm/Shoulder/Tolerance (deg)", 10.0);
 
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);

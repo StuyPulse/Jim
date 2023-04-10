@@ -16,6 +16,8 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
+import com.stuypulse.stuylib.streams.filters.IFilter;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import com.stuypulse.robot.constants.Settings;
@@ -30,6 +32,7 @@ import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
 import com.stuypulse.robot.util.ArmEncoderFeedforward;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.robot.util.Derivative;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -98,6 +101,10 @@ public abstract class Arm extends SubsystemBase {
 
     private final SmartNumber wristMaxVelocity;
     private final SmartNumber wristMaxAcceleration;
+
+    // reschedule arm profile
+    private final Derivative shoulderErrorChange;
+    private final BStream shoulderStopped;
 
     private class GamePiecekG extends Number {
         @Override
@@ -198,12 +205,21 @@ public abstract class Arm extends SubsystemBase {
         wristVoltageOverride = Optional.empty();
         shoulderVoltageOverride = Optional.empty();
 
+        shoulderErrorChange = new Derivative();
+        shoulderStopped = BStream.create(this::isShoulderStopped).filtered(new BDebounceRC.Both(Shoulder.STOPPED_VEL_DEBOUNCE));
+
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
     }
 
-    //
+    // Shoulder Stopped
+
+    private boolean isShoulderStopped() {
+        return shoulderErrorChange.getOutput() < Shoulder.STOPPED_ERROR_VELOCITY.get();
+    }
+
+    // Gamepiece Gravity Compensation
 
     public void enableGamePieceGravityCompensation() {
         pieceGravityCompensation = true;
@@ -366,11 +382,16 @@ public abstract class Arm extends SubsystemBase {
             setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
         }
 
-
         // Run control loops on validated target angles
         shoulderController.update(
             getWrappedShoulderAngle(getShoulderTargetAngle()),
             getWrappedShoulderAngle(getShoulderAngle()));
+
+        shoulderErrorChange.get(shoulderController.getError());
+
+        if (shoulderStopped.get()) {
+            // RESCHEDULE MOTION PROFILE HERE
+        }
 
         SmartDashboard.putNumber("Arm/Shoulder/Wrapped Angle", getWrappedShoulderAngle(getShoulderAngle()));
         SmartDashboard.putNumber("Arm/Shoulder/Wrapped Target Angle", getWrappedShoulderAngle(getShoulderTargetAngle()));
