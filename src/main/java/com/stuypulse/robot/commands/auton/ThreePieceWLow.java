@@ -124,11 +124,14 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 -70.82,
                 10);
                // 8.37);
-            double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
+            // double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
+            double intermediateShoulderDegrees = -60;
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
             return new ArmTrajectory()
-                // .addState(src.getShoulderDegrees(), wristSafeAngle)
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setShoulderTolerance(694)
+                    .setWristTolerance(15))
 
                 .addState(
                     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
@@ -175,7 +178,7 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
         addCommands(
             new InstantCommand( () -> Arm.getInstance().setShoulderVelocityFeedbackCutoff(15)),
             new ManagerSetNodeLevel(NodeLevel.LOW),
-            new ManagerSetGamePiece(GamePiece.CONE_TIP_IN),
+            new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
@@ -192,10 +195,10 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 new IntakeScore()
                     .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
-                    .andThen(new ArmIntakeFirst()
-                        .withTolerance(4, 10))
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire())
+                    .andThen(new ArmIntakeFirst()
+                        .withTolerance(4, 10))
 
             ),
 
@@ -208,6 +211,13 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
             //     .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
+        );
+
+        addCommands(
+            arm.runOnce(() -> {
+                arm.setShoulderVelocityFeedbackCutoff(20);
+                arm.setShoulderVelocityFeedbackDebounce(0.0);
+            })
         );
 
         // drive to grid and score second piece :: TODO: make custom arm setpoint for this
@@ -226,7 +236,7 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 new WaitCommand(0.5).andThen(new IntakeStop()),
 
                 new AutonMidCubeReady()
-                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 1)
+                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)
             ),
 
             new ManagerSetGridNode(1),
@@ -234,13 +244,6 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
-        );
-
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(20);
-                arm.setShoulderVelocityFeedbackDebounce(0.0);
-            })
         );
 
         // intake third piece
