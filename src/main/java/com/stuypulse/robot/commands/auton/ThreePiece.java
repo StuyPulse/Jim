@@ -56,7 +56,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 }
             });
         }
-
+ 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
@@ -65,7 +65,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
-                    .setWristTolerance(30).setShoulderTolerance(20));
+                    .setWristTolerance(7).setShoulderTolerance(25));
         }
     }
     static class ArmIntakeFirst extends ArmRoutine {
@@ -174,7 +174,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME)
+            new WaitCommand(0.8)
         );
 
         // intake second piece
@@ -188,7 +188,8 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .withStop(),
                     // .until(Intake.getInstance()::hasGamePiece), // interrupting IntakeScore? idk one time the intake just stopped early
 
-                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                new IntakeScore()
+                    .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
                     .andThen(new IntakeAcquire()),
