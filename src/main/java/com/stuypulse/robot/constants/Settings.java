@@ -170,7 +170,7 @@ public interface Settings {
     public interface Arm {
 
         public interface Shoulder {
-            SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 10.0);
+            SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 15.0);
             SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
 
             int MOTORS = 2;
@@ -323,7 +323,7 @@ public interface Settings {
 
     public interface Driver {
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.08);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.10);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
