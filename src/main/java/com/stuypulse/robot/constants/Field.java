@@ -85,15 +85,15 @@ public interface Field {
         }
 
         public interface Back {
-            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", 7.4376);
-            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", 6.905);
-            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", 6.3238);
-            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", 5.822);
-            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", 5.2947);
-            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", 4.6);
-            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.1028);
-            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.557);
-            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 2.89);
+            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", 7.494778);
+            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", 6.935978);
+            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", 6.377178);
+            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", 5.843778);
+            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", 5.259578);
+            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", 4.700778);
+            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.14197);
+            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.583178);
+            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 3.024378);
 
             /*
              * Theoretical values:
