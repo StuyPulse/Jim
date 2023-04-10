@@ -188,7 +188,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(AAAA).plus(Rotation2d.fromDegrees()).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.025333).plus(Rotation2d.fromDegrees(+90));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 315);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 420);
@@ -237,7 +237,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.66055).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(180));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
