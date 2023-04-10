@@ -226,7 +226,7 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 new WaitCommand(0.5).andThen(new IntakeStop()),
 
                 new AutonMidCubeReady()
-                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)
+                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 1)
             ),
 
             new ManagerSetGridNode(1),
