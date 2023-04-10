@@ -368,6 +368,9 @@ public interface Settings {
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
         SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
 
+        SmartNumber AGAINST_GRID_VEL_X = new SmartNumber("Alignment/Against Grid X Velocity (m per s)", 0.02);
+        SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
+
         public interface Translation {
             SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);

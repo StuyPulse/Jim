@@ -9,7 +9,7 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-
+import com.stuypulse.stuylib.streams.filters.IFilter;
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.LEDController;
@@ -23,6 +23,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.util.Derivative;
 import com.stuypulse.robot.util.HolonomicController;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -48,10 +49,14 @@ public class RobotAlignThenScore extends CommandBase {
     private final BStream aligned;
     private boolean movingWhileScoring; // when we have aligned and ready to score and move back
 
+    // Against grid debounce
+    private final Derivative xErrorChange;
+    private final BStream stoppedByGrid;
+
     // Logging
     private final FieldObject2d targetPose2d;
 
-    public RobotAlignThenScore(){
+    public RobotAlignThenScore() {
         this.swerve = SwerveDrive.getInstance();
         this.arm = Arm.getInstance();
         this.intake = Intake.getInstance();
@@ -66,18 +71,26 @@ public class RobotAlignThenScore extends CommandBase {
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
+        xErrorChange = new Derivative();
+        stoppedByGrid = BStream.create(this::isAgainstGrid).filtered(new BDebounceRC.Both(Alignment.AGAINST_GRID_DEBOUNCE));
+
         targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
+
         addRequirements(swerve, arm, intake);
+    }
+
+    private boolean isAgainstGrid() {
+        return xErrorChange.getOutput() < Alignment.AGAINST_GRID_VEL_X.get();
     }
 
     private boolean isAligned() {
         if (Manager.getInstance().getGamePiece().isCone()) {
-            return controller.isDone(
+            return stoppedByGrid.get() || controller.isDone(
                 Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
         } else {
-            return controller.isDone(
+            return stoppedByGrid.get() || controller.isDone(
                 Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
@@ -90,6 +103,8 @@ public class RobotAlignThenScore extends CommandBase {
         intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
 
+        xErrorChange.reset();
+        
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
@@ -98,6 +113,8 @@ public class RobotAlignThenScore extends CommandBase {
         Pose2d currentPose = Odometry.getInstance().getPose();
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
+
+        xErrorChange.get(targetPose.getX() - currentPose.getX());
 
         controller.update(targetPose, currentPose);
 
