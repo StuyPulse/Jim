@@ -384,7 +384,7 @@ public interface Settings {
 
         // Tip in scoring
         SmartNumber kForwardSpeed = new SmartNumber("Robot Score/Forward Speed (in per s)", 4);
-        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 2);
+        SmartNumber kWristVoltage = new SmartNumber("Robot Score/Wrist Voltage", 3);
 
         // Tip in release
         SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
