@@ -9,9 +9,10 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.IFilter;
+
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
@@ -20,10 +21,8 @@ import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.*;
-import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.util.Derivative;
 import com.stuypulse.robot.util.HolonomicController;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -35,7 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RobotAlignThenScore extends CommandBase {
+public class RobotAlignThenScoreCubes extends CommandBase {
 
     // Subsystems
     private final SwerveDrive swerve;
@@ -49,14 +48,10 @@ public class RobotAlignThenScore extends CommandBase {
     private final BStream aligned;
     private boolean movingWhileScoring; // when we have aligned and ready to score and move back
 
-    // Against grid debounce
-    private final Derivative xErrorChange;
-    private final BStream stoppedByGrid;
-
     // Logging
     private final FieldObject2d targetPose2d;
 
-    public RobotAlignThenScore() {
+    public RobotAlignThenScoreCubes(){
         this.swerve = SwerveDrive.getInstance();
         this.arm = Arm.getInstance();
         this.intake = Intake.getInstance();
@@ -71,26 +66,18 @@ public class RobotAlignThenScore extends CommandBase {
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
-        xErrorChange = new Derivative();
-        stoppedByGrid = BStream.create(this::isAgainstGrid).filtered(new BDebounceRC.Both(Alignment.AGAINST_GRID_DEBOUNCE));
-
         targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
-
         addRequirements(swerve, arm, intake);
-    }
-
-    private boolean isAgainstGrid() {
-        return xErrorChange.getOutput() < Alignment.AGAINST_GRID_VEL_X.get();
     }
 
     private boolean isAligned() {
         if (Manager.getInstance().getGamePiece().isCone()) {
-            return stoppedByGrid.get() || controller.isDone(
+            return controller.isDone(
                 Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
         } else {
-            return stoppedByGrid.get() || controller.isDone(
+            return controller.isDone(
                 Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
@@ -103,8 +90,6 @@ public class RobotAlignThenScore extends CommandBase {
         intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
 
-        xErrorChange.reset();
-        
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
@@ -113,8 +98,6 @@ public class RobotAlignThenScore extends CommandBase {
         Pose2d currentPose = Odometry.getInstance().getPose();
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
-
-        xErrorChange.get(targetPose.getX() - currentPose.getX());
 
         controller.update(targetPose, currentPose);
 
@@ -128,27 +111,10 @@ public class RobotAlignThenScore extends CommandBase {
             // or do scoring motion based on the game piece
             else {
 
+                // only score for cubes
                 if (manager.getGamePiece().isCube()) {
                     intake.deacquire();
-                } else if (manager.getGamePiece() == GamePiece.CONE_TIP_OUT) {
-                    arm.setTargetState(
-                        Manager.getInstance().getNodeLevel() == NodeLevel.MID ?
-                            ArmTrajectories.Score.Mid.kConeTipOutFront :
-                            ArmTrajectories.Score.High.kConeTipOutFront);
-
-                    if (arm.isAtTargetState(Settings.Score.kShoulderTipOutTolerance.get(), 360)) {
-                        intake.enableCoast();
-                        movingWhileScoring = true;
-                        swerve.setChassisSpeeds(
-                            new ChassisSpeeds(
-                                -Units.inchesToMeters(Settings.Score.kBackwardsTipOutSpeed.get()),
-                                0,
-                                0));
-                    }
-                } else {
-                    // don't automate yet
                 }
-
             }
 
         } else {
