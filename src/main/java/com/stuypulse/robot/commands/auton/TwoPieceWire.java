@@ -100,6 +100,13 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
+        addCommands(
+            arm.runOnce(() -> {
+                arm.setShoulderVelocityFeedbackCutoff(20);
+                arm.setShoulderVelocityFeedbackDebounce(0.0);
+            })
+        );
+
         // drive to grid and score second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),

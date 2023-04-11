@@ -67,7 +67,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
-                .withTimeout(6)
+                .withTimeout(3)
         );
 
         addCommands(

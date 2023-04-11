@@ -13,6 +13,7 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.ArmTrajectories.Ready;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;
@@ -29,7 +30,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class ThreePieceWire extends DebugSequentialCommandGroup {
+public class ThreePieceWLow extends DebugSequentialCommandGroup {
+
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
             super(() -> Ready.Mid.kAutonCubeBack);
@@ -131,20 +133,26 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
         }
     }
 
-    private static final double INTAKE_DEACQUIRE_TIME = 0.5;
-    private static final double INTAKE_STOP_WAIT_TIME = 0.5;
-    private static final double INTAKE_WAIT_TIME = 2.0;
-    private static final double ACQUIRE_WAIT_TIME = 0.4;
+
+    private static final double INTAKE_DEACQUIRE_TIME = 0.3;
+    private static final double INTAKE_STOP_WAIT_TIME = 1;
+    private static final double INTAKE_WAIT_TIME = 1.0;
+    private static final double ACQUIRE_WAIT_TIME = 0.02;
+    private static final double WIGGLE_PERIOD = 0.6;
+    private static final double WIGGLE_VEL_AMPLITUDE = 0.6;
 
     private static final PathConstraints INTAKE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.5, 2);
-    private static final PathConstraints SCORE_SECOND_PIECE_CONSTRAINTS = new PathConstraints(2.2, 1.2);
-    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(4, 3.5);
-    private static final PathConstraints SCORE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+    private static final PathConstraints INTAKE_THIRD_PIECE_CONSTRAINTS = new PathConstraints(2.2, 1.2);
 
-    public ThreePieceWire() {
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.5, 3.5);
+    private static final PathConstraints THIRD_SCORE_PIECE_CONSTRAINTS = new PathConstraints(3, 2);
+
+    private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
+
+    public ThreePieceWLow() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece Wire", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_SECOND_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, SCORE_THIRD_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece W Low", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 
@@ -175,12 +183,18 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                     .andThen(new IntakeAcquire())
                     .andThen(new ArmIntakeFirst()
                         .withTolerance(4, 10))
-            )
 
-            // new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
-            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
+            ),
 
-            // arm.runOnce(() -> arm.setWristVoltage(0))
+            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3))),
+
+            // new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+            //     .until(Intake.getInstance()::hasGamePiece)
+            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+            //     .withTimeout(ACQUIRE_WAIT_TIME),
+
+            arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
         addCommands(
@@ -238,8 +252,10 @@ public class ThreePieceWire extends DebugSequentialCommandGroup {
                     // .withTolerance(4, 10)
             ),
 
-            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
-                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
+            new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+                .until(Intake.getInstance()::hasGamePiece)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+                .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
