@@ -5,8 +5,6 @@
 
 package com.stuypulse.robot.subsystems.leds;
 
-import com.stuypulse.stuylib.util.StopWatch;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.Manager;
@@ -36,27 +34,7 @@ public abstract class LEDController extends SubsystemBase {
         return instance;
     }
 
-    // Stopwatch to check when to start overriding manual updates
-    private final StopWatch lastUpdate;
-    private double manualTime;
-
-    // The current color to set the LEDs to
-    private LEDInstruction manualColor;
-
-    public LEDController() {
-        this.lastUpdate = new StopWatch();
-    }
-
-    public void setColor(LEDInstruction color, double time) {
-        manualColor = color;
-        manualTime = time;
-        lastUpdate.reset();
-    }
-
     public abstract void forceSetLED(LEDInstruction instruction);
-
-    public void setLEDConditions() {
-    }
 
     public LEDInstruction getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
@@ -70,13 +48,7 @@ public abstract class LEDController extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // If we called .setColor() recently, use that value
-        if (Robot.getMatchState() == MatchState.AUTO || lastUpdate.getTime() < manualTime) {
-            forceSetLED(manualColor);
-        }
-
-        // Otherwise use the default color
-        else {
+        if (Robot.getMatchState() == MatchState.TELEOP) {
             forceSetLED(getDefaultColor());
         }
     }

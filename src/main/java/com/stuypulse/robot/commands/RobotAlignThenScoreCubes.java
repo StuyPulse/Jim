@@ -12,7 +12,7 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.LEDController;
+import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;

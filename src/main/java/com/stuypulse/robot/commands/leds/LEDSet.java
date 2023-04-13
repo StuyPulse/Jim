@@ -8,6 +8,7 @@
  *      - commands for LEDs
  * @author Richie Xue
  * @author Jo Walkup
+ * @author Naowal Rahman
  */
 
 package com.stuypulse.robot.commands.leds;
@@ -19,18 +20,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class LEDSet extends InstantCommand {
 
-    private double updateTime;
     private LEDController controller;
     private LEDInstruction instruction;
 
-    public LEDSet(LEDInstruction instruction, double updateTime) {
-        this.controller = LEDController.getInstance();
-        this.updateTime = updateTime;
-        this.instruction = instruction;
-    }
-
     public LEDSet(LEDInstruction instruction) {
-        this(instruction, Settings.LED.MANUAL_UPDATE_TIME);
+        this.controller = LEDController.getInstance();
+        this.instruction = instruction;
     }
 
     @Override
