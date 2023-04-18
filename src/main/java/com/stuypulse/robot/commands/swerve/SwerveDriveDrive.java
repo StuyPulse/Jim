@@ -109,9 +109,6 @@ public class SwerveDriveDrive extends CommandBase {
             holdAngle = Optional.empty();
         }
 
-        // use the angularVelocity for drive
-        swerve.drive(speed.get(), angularVel);
-
         // unplant if driving in endgame
         if (Timer.getMatchTime() < 30) {
             if ((driver.getLeftStick().magnitude() > 0.5) ||
@@ -119,6 +116,16 @@ public class SwerveDriveDrive extends CommandBase {
 
                 plant.disengage();
             }
+        }
+
+        // if planted then X
+        if (plant.isEngaged()) {
+            swerve.setXMode();
+        }
+        
+        // use the angularVelocity for drive otherwise
+        else {
+            swerve.drive(speed.get(), angularVel);
         }
     }
 }
