@@ -12,9 +12,12 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -25,6 +28,27 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 public class TwoPieceWire extends DebugSequentialCommandGroup {
+
+    private static class ConeReady extends ArmRoutine {
+        public ConeReady() {
+            super(Manager.getInstance()::getReadyTrajectory);
+        }
+
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            return new ArmTrajectory()
+
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+
+                // .addState(
+                //     dest.getShoulderDegrees(),
+                //     (Manager.getInstance().getNodeLevel() == NodeLevel.MID) ? dest.getWristDegrees() : (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
+
+                .addState(dest);
+        }    
+    }
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 1;
@@ -56,7 +80,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady()
+            new ConeReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
