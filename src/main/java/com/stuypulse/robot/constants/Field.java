@@ -6,7 +6,6 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
@@ -55,6 +54,32 @@ public interface Field {
         }
     }
 
+    public interface Pegs {
+        double RED_Y[] = {
+            7.494778,
+            6.935978,
+            6.377178,
+            5.843778,
+            5.259578,
+            4.700778,
+            4.141978,
+            3.583178,
+            3.024378
+        };
+
+        double BLUE_Y[] = {
+            4.9784,
+            4.4196,
+            3.8608,
+            3.3020,
+            2.7432,
+            2.1844,
+            1.6256,
+            1.0668,
+            0.5080
+        };
+    }
+
     public interface ScoreXPoses {
         public interface High {
             SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.846);
@@ -85,105 +110,63 @@ public interface Field {
                 return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
         }
 
-        public static double middleToFront(double midYPose) {
-            return midYPose - Field.INTAKE_OFFSET_RIGHT; 
-        }
-
         public static double middleToBack(double midYPose) {
             return midYPose + Field.INTAKE_OFFSET_RIGHT;
         }
 
-        public static Number redToBlue(Number redXPose) {
-            return IStream.create(() -> redXPose.doubleValue() + 2 * INTAKE_OFFSET_RIGHT).number();
-        }
-
         public interface Back {
-            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", middleToBack(7.494778));
-            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", middleToBack(6.935978));
-            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", middleToBack(6.377178));
-            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", middleToBack(5.843778));
-            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", middleToBack(5.259578));
-            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", middleToBack(4.700778));
-            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", middleToBack(4.14197));
-            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", middleToBack(3.583178));
-            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", middleToBack(3.024378));
-
-            /*
-             * Theoretical values:
-             * 295.07in | 7.494778m
-             * 273.07in | 6.935978m
-             * 251.07in | 6.377178m
-             * 230.07in | 5.843778m
-             * 207.07in | 5.259578m
-             * 185.07in | 4.700778m
-             * 163.07in | 4.141978m
-             * 141.07in | 3.583178m
-             * 119.07in | 3.024378m
-             */
             Number RED_Y_POSES[] = {
-                Back.ONE,
-                Back.TWO,
-                Back.THREE,
-                Back.FOUR,
-                Back.FIVE,
-                Back.SIX,
-                Back.SEVEN,
-                Back.EIGHT,
-                Back.NINE
+                middleToBack(Pegs.RED_Y[0]),
+                middleToBack(Pegs.RED_Y[1]),
+                middleToBack(Pegs.RED_Y[2]),
+                middleToBack(Pegs.RED_Y[3]),
+                middleToBack(Pegs.RED_Y[4]),
+                middleToBack(Pegs.RED_Y[5]),
+                middleToBack(Pegs.RED_Y[6]),
+                middleToBack(Pegs.RED_Y[7]),
+                middleToBack(Pegs.RED_Y[8])
             };
 
-            /*
-             * Theoretical values:
-             * 196in | 4.9784m
-             * 174in | 4.4196m
-             * 152in | 3.8608m
-             * 130in | 3.3020m
-             * 108in | 2.7432m
-             * 86in  | 2.1844m
-             * 64in  | 1.6256m
-             * 42in  | 1.0668m
-             * 20in  | 0.5080m
-             */
             Number BLUE_Y_POSES[] = {
-                redToBlue(Back.NINE),
-                redToBlue(Back.EIGHT),
-                redToBlue(Back.SEVEN),
-                redToBlue(Back.SIX),
-                redToBlue(Back.FIVE),
-                redToBlue(Back.FOUR),
-                redToBlue(Back.THREE),
-                redToBlue(Back.TWO),
-                redToBlue(Back.ONE)
+                middleToBack(Pegs.BLUE_Y[0]),
+                middleToBack(Pegs.BLUE_Y[1]),
+                middleToBack(Pegs.BLUE_Y[2]),
+                middleToBack(Pegs.BLUE_Y[3]),
+                middleToBack(Pegs.BLUE_Y[4]),
+                middleToBack(Pegs.BLUE_Y[5]),
+                middleToBack(Pegs.BLUE_Y[6]),
+                middleToBack(Pegs.BLUE_Y[7]),
+                middleToBack(Pegs.BLUE_Y[8])
             };
         }
 
         public interface Front {
-            private static Number backToFront(Number backYPose) {
-                return IStream.create(() -> backYPose.doubleValue() - 2 * INTAKE_OFFSET_RIGHT).number();
+            public static double middleToFront(double midYPose) {
+                return midYPose - Field.INTAKE_OFFSET_RIGHT; 
             }
 
             Number RED_Y_POSES[] = {
-                backToFront(Back.ONE),
-                backToFront(Back.TWO),
-                backToFront(Back.THREE),
-                backToFront(Back.FOUR),
-                backToFront(Back.FIVE),
-                backToFront(Back.SIX),
-                backToFront(Back.SEVEN),
-                backToFront(Back.EIGHT),
-                backToFront(Back.NINE)
+                middleToFront(Pegs.RED_Y[0]),
+                middleToFront(Pegs.RED_Y[1]),
+                middleToFront(Pegs.RED_Y[2]),
+                middleToFront(Pegs.RED_Y[3]),
+                middleToFront(Pegs.RED_Y[4]),
+                middleToFront(Pegs.RED_Y[5]),
+                middleToFront(Pegs.RED_Y[6]),
+                middleToFront(Pegs.RED_Y[7]),
+                middleToFront(Pegs.RED_Y[8])
             };
 
             Number BLUE_Y_POSES[] = {
-                redToBlue(backToFront(Back.NINE)),
-                redToBlue(backToFront(Back.EIGHT)),
-                redToBlue(backToFront(Back.SEVEN)),
-                redToBlue(backToFront(Back.SIX)),
-                redToBlue(backToFront(Back.FIVE)),
-                redToBlue(backToFront(Back.FOUR)),
-                redToBlue(backToFront(Back.THREE)),
-                redToBlue(backToFront(Back.TWO)),
-                redToBlue(backToFront(Back.ONE))
+                middleToFront(Pegs.BLUE_Y[0]),
+                middleToFront(Pegs.BLUE_Y[1]),
+                middleToFront(Pegs.BLUE_Y[2]),
+                middleToFront(Pegs.BLUE_Y[3]),
+                middleToFront(Pegs.BLUE_Y[4]),
+                middleToFront(Pegs.BLUE_Y[5]),
+                middleToFront(Pegs.BLUE_Y[6]),
+                middleToFront(Pegs.BLUE_Y[7]),
+                middleToFront(Pegs.BLUE_Y[8])
             };
         }
     }
