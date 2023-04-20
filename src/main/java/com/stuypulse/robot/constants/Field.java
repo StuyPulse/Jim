@@ -80,30 +80,32 @@ public interface Field {
         };
     }
 
+    static class RedBlueNumber extends Number { private double red, blue; public RedBlueNumber(double red, double blue) { this.red = red; this.blue = blue; } public double doubleValue() { if (RobotContainer.getCachedAlliance() == Alliance.Red) return red; return blue; } public int intValue() { return (int) doubleValue(); } public float floatValue() { return (float) doubleValue(); } public long longValue() { return (long) doubleValue(); } }
+
     public interface ScoreXPoses {
         public interface High {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.846);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.825);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.881);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.822);
+            Number CUBE_BACK = 1.846;
+            Number CUBE_FRONT = 1.825;
+            Number CONE_TIP_IN = new RedBlueNumber(1.881, 1.8556);
+            Number CONE_TIP_OUT = 1.822;
         }
 
         public interface Mid {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.881);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.106);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.281);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.102);
+            Number CUBE_BACK = 1.881;
+            Number CUBE_FRONT = 2.106;
+            Number CONE_TIP_IN = 2.281;
+            Number CONE_TIP_OUT = 2.102;
         }
 
         public interface Low {
-            SmartNumber BACK = new SmartNumber("Alignment/X Poses/Low/Back", 1.825);
-            SmartNumber FRONT = new SmartNumber("Alignment/X Poses/Low/Front", 1.825);
-        }
+            Number BACK = 1.825;
+            Number FRONT = 1.825;
+        } 
     }
 
     // red left to right
     public interface ScoreYPoses {
-        public static Number[] getYPoseArray(Alliance alliance, ScoreSide side) {
+        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
             if (side == ScoreSide.FRONT)
                 return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
@@ -115,7 +117,7 @@ public interface Field {
         }
 
         public interface Back {
-            Number RED_Y_POSES[] = {
+            double RED_Y_POSES[] = {
                 middleToBack(Pegs.RED_Y[0]),
                 middleToBack(Pegs.RED_Y[1]),
                 middleToBack(Pegs.RED_Y[2]),
@@ -127,7 +129,7 @@ public interface Field {
                 middleToBack(Pegs.RED_Y[8])
             };
 
-            Number BLUE_Y_POSES[] = {
+            double BLUE_Y_POSES[] = {
                 middleToBack(Pegs.BLUE_Y[0]),
                 middleToBack(Pegs.BLUE_Y[1]),
                 middleToBack(Pegs.BLUE_Y[2]),
@@ -145,7 +147,7 @@ public interface Field {
                 return midYPose - Field.INTAKE_OFFSET_RIGHT; 
             }
 
-            Number RED_Y_POSES[] = {
+            double RED_Y_POSES[] = {
                 middleToFront(Pegs.RED_Y[0]),
                 middleToFront(Pegs.RED_Y[1]),
                 middleToFront(Pegs.RED_Y[2]),
@@ -157,7 +159,7 @@ public interface Field {
                 middleToFront(Pegs.RED_Y[8])
             };
 
-            Number BLUE_Y_POSES[] = {
+            double BLUE_Y_POSES[] = {
                 middleToFront(Pegs.BLUE_Y[0]),
                 middleToFront(Pegs.BLUE_Y[1]),
                 middleToFront(Pegs.BLUE_Y[2]),
