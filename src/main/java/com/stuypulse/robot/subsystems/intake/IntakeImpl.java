@@ -134,7 +134,7 @@ public class IntakeImpl extends Intake {
         }
 
         // forward and stalling
-        if (frontMotor.get() > 0 && hasGamePiece()) {
+        if (acquiring && hasGamePiece()) {
             stop();
         }
 
