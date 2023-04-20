@@ -108,7 +108,8 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative().withStop(),
 
-                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                new IntakeScore()
+                    .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
