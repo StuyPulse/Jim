@@ -252,10 +252,10 @@ public class ThreePieceWLowBlue extends DebugSequentialCommandGroup {
                     // .withTolerance(4, 10)
             ),
 
-            new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
-                .until(Intake.getInstance()::hasGamePiece)
-                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
-                .withTimeout(ACQUIRE_WAIT_TIME),
+            // new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+            //     .until(Intake.getInstance()::hasGamePiece)
+            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+            //     .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
