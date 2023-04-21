@@ -237,7 +237,9 @@ public class RobotContainer {
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
         // autonChooser.addOption("Three Piece", new ThreePiece());
-        autonChooser.setDefaultOption("Three Piece W Low", new ThreePieceWLow());
+        autonChooser.setDefaultOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
+        autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
+        autonChooser.setDefaultOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 
         SmartDashboard.putData("Autonomous", autonChooser);
