@@ -7,15 +7,25 @@ package com.stuypulse.robot.subsystems.plant;
 
 public class NoPlant extends Plant {
 
+    private boolean isEngaged;
+
     protected NoPlant() {
+        isEngaged = false;
     }
 
     @Override
     public void engage() {
+        isEngaged = true;
     }
 
     @Override
     public void disengage() {
+        isEngaged = false;
+    }
+
+    @Override
+    public boolean isEngaged() {
+        return isEngaged;
     }
 
 }

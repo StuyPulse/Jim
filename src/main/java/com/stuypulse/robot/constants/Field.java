@@ -6,7 +6,6 @@
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
@@ -25,6 +24,9 @@ public interface Field {
 
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
+
+    // intake offset from center to the right
+    double INTAKE_OFFSET_RIGHT = Units.inchesToMeters(1.625);
 
     Pose2d BLUE_APRIL_TAGS[] = {
         // 1-4
@@ -52,125 +54,121 @@ public interface Field {
         }
     }
 
+    public interface Pegs {
+        double RED_Y[] = {
+            7.494778,
+            6.935978,
+            6.377178,
+            5.843778,
+            5.259578,
+            4.700778,
+            4.141978,
+            3.583178,
+            3.024378
+        };
+
+        double BLUE_Y[] = {
+            4.9784,
+            4.4196,
+            3.8608,
+            3.3020,
+            2.7432,
+            2.1844,
+            1.6256,
+            1.0668,
+            0.5080
+        };
+    }
+
+    static class RedBlueNumber extends Number { private double red, blue; public RedBlueNumber(double red, double blue) { this.red = red; this.blue = blue; } public double doubleValue() { if (RobotContainer.getCachedAlliance() == Alliance.Red) return red; return blue; } public int intValue() { return (int) doubleValue(); } public float floatValue() { return (float) doubleValue(); } public long longValue() { return (long) doubleValue(); } }
+
     public interface ScoreXPoses {
         public interface High {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/High/Cube Back", 1.98);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/High/Cube Front", 1.830060);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/High/Cone Tip In", 1.894);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/High/Cone Tip Out", 1.82);
+            Number CUBE_BACK = 1.846;
+            Number CUBE_FRONT = 1.825;
+            Number CONE_TIP_IN = new RedBlueNumber(1.881, 1.8556);
+            Number CONE_TIP_OUT = 1.772;
         }
 
         public interface Mid {
-            SmartNumber CUBE_BACK = new SmartNumber("Alignment/X Poses/Mid/Cube Back", 1.868);
-            SmartNumber CUBE_FRONT = new SmartNumber("Alignment/X Poses/Mid/Cube Front", 2.083577);
-            SmartNumber CONE_TIP_IN = new SmartNumber("Alignment/X Poses/Mid/Cone Tip In", 2.275);
-            SmartNumber CONE_TIP_OUT = new SmartNumber("Alignment/X Poses/Mid/Cone Tip Out", 2.1433);
+            Number CUBE_BACK = 1.881;
+            Number CUBE_FRONT = 2.106;
+            Number CONE_TIP_IN = 2.231;
+            Number CONE_TIP_OUT = 2.052;
         }
 
         public interface Low {
-            SmartNumber BACK = new SmartNumber("Alignment/X Poses/Low/Back", 1.85);
-            SmartNumber FRONT = new SmartNumber("Alignment/X Poses/Low/Front", 1.85);
-        }
-
-        // Low Cube: 1.768088
+            Number BACK = 1.825;
+            Number FRONT = 1.825;
+        } 
     }
 
     // red left to right
     public interface ScoreYPoses {
-        public static Number[] getYPoseArray(Alliance alliance, ScoreSide side) {
+        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
             if (side == ScoreSide.FRONT)
                 return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
                 return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
         }
 
-        public interface Back {
-            SmartNumber ONE =   new SmartNumber("Alignment/Y Poses/Red 1", 7.494778);
-            SmartNumber TWO =   new SmartNumber("Alignment/Y Poses/Red 2", 6.935978);
-            SmartNumber THREE = new SmartNumber("Alignment/Y Poses/Red 3", 6.377178);
-            SmartNumber FOUR =  new SmartNumber("Alignment/Y Poses/Red 4", 5.843778);
-            SmartNumber FIVE =  new SmartNumber("Alignment/Y Poses/Red 5", 5.259578);
-            SmartNumber SIX =   new SmartNumber("Alignment/Y Poses/Red 6", 4.700778);
-            SmartNumber SEVEN = new SmartNumber("Alignment/Y Poses/Red 7", 4.14197);
-            SmartNumber EIGHT = new SmartNumber("Alignment/Y Poses/Red 8", 3.583178);
-            SmartNumber NINE =  new SmartNumber("Alignment/Y Poses/Red 9", 3.024378);
+        public static double middleToBack(double midYPose) {
+            return midYPose + Field.INTAKE_OFFSET_RIGHT;
+        }
 
-            /*
-             * Theoretical values:
-             * 295.07in | 7.494778m
-             * 273.07in | 6.935978m
-             * 251.07in | 6.377178m
-             * 230.07in | 5.843778m
-             * 207.07in | 5.259578m
-             * 185.07in | 4.700778m
-             * 163.07in | 4.141978m
-             * 141.07in | 3.583178m
-             * 119.07in | 3.024378m
-             */
-            Number RED_Y_POSES[] = {
-                Back.ONE,
-                Back.TWO,
-                Back.THREE,
-                Back.FOUR,
-                Back.FIVE,
-                Back.SIX,
-                Back.SEVEN,
-                Back.EIGHT,
-                Back.NINE
+        public interface Back {
+            double RED_Y_POSES[] = {
+                middleToBack(Pegs.RED_Y[0]),
+                middleToBack(Pegs.RED_Y[1]),
+                middleToBack(Pegs.RED_Y[2]),
+                middleToBack(Pegs.RED_Y[3]),
+                middleToBack(Pegs.RED_Y[4]),
+                middleToBack(Pegs.RED_Y[5]),
+                middleToBack(Pegs.RED_Y[6]),
+                middleToBack(Pegs.RED_Y[7]),
+                middleToBack(Pegs.RED_Y[8])
             };
 
-            /*
-             * Theoretical values:
-             * 196in | 4.9784m
-             * 174in | 4.4196m
-             * 152in | 3.8608m
-             * 130in | 3.3020m
-             * 108in | 2.7432m
-             * 86in  | 2.1844m
-             * 64in  | 1.6256m
-             * 42in  | 1.0668m
-             * 20in  | 0.5080m
-             */
-            Number BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(Back.NINE),
-                AllianceUtil.getMirroredYPose(Back.EIGHT),
-                AllianceUtil.getMirroredYPose(Back.SEVEN),
-                AllianceUtil.getMirroredYPose(Back.SIX),
-                AllianceUtil.getMirroredYPose(Back.FIVE),
-                AllianceUtil.getMirroredYPose(Back.FOUR),
-                AllianceUtil.getMirroredYPose(Back.THREE),
-                AllianceUtil.getMirroredYPose(Back.TWO),
-                AllianceUtil.getMirroredYPose(Back.ONE)
+            double BLUE_Y_POSES[] = {
+                middleToBack(Pegs.BLUE_Y[0]),
+                middleToBack(Pegs.BLUE_Y[1]),
+                middleToBack(Pegs.BLUE_Y[2]),
+                middleToBack(Pegs.BLUE_Y[3]),
+                middleToBack(Pegs.BLUE_Y[4]),
+                middleToBack(Pegs.BLUE_Y[5]),
+                middleToBack(Pegs.BLUE_Y[6]),
+                middleToBack(Pegs.BLUE_Y[7]),
+                middleToBack(Pegs.BLUE_Y[8])
             };
         }
 
         public interface Front {
-            private static Number backToFront(Number backYPose) {
-                return IStream.create(() -> backYPose.doubleValue() - Units.inchesToMeters(3.0)).number();
+            public static double middleToFront(double midYPose) {
+                return midYPose - Field.INTAKE_OFFSET_RIGHT; 
             }
 
-            Number RED_Y_POSES[] = {
-                backToFront(Back.ONE),
-                backToFront(Back.TWO),
-                backToFront(Back.THREE),
-                backToFront(Back.FOUR),
-                backToFront(Back.FIVE),
-                backToFront(Back.SIX),
-                backToFront(Back.SEVEN),
-                backToFront(Back.EIGHT),
-                backToFront(Back.NINE)
+            double RED_Y_POSES[] = {
+                middleToFront(Pegs.RED_Y[0]),
+                middleToFront(Pegs.RED_Y[1]),
+                middleToFront(Pegs.RED_Y[2]),
+                middleToFront(Pegs.RED_Y[3]),
+                middleToFront(Pegs.RED_Y[4]),
+                middleToFront(Pegs.RED_Y[5]),
+                middleToFront(Pegs.RED_Y[6]),
+                middleToFront(Pegs.RED_Y[7]),
+                middleToFront(Pegs.RED_Y[8])
             };
 
-            Number BLUE_Y_POSES[] = {
-                AllianceUtil.getMirroredYPose(backToFront(Back.NINE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.EIGHT)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SEVEN)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.SIX)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FIVE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.FOUR)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.THREE)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.TWO)),
-                AllianceUtil.getMirroredYPose(backToFront(Back.ONE))
+            double BLUE_Y_POSES[] = {
+                middleToFront(Pegs.BLUE_Y[0]),
+                middleToFront(Pegs.BLUE_Y[1]),
+                middleToFront(Pegs.BLUE_Y[2]),
+                middleToFront(Pegs.BLUE_Y[3]),
+                middleToFront(Pegs.BLUE_Y[4]),
+                middleToFront(Pegs.BLUE_Y[5]),
+                middleToFront(Pegs.BLUE_Y[6]),
+                middleToFront(Pegs.BLUE_Y[7]),
+                middleToFront(Pegs.BLUE_Y[8])
             };
         }
     }

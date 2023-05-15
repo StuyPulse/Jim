@@ -30,6 +30,7 @@ import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
 import com.stuypulse.robot.util.ArmEncoderFeedforward;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.robot.util.BenMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -99,6 +100,8 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber wristMaxVelocity;
     private final SmartNumber wristMaxAcceleration;
 
+    private final BenMotionProfile shoulderMotionProfile;
+
     private class GamePiecekG extends Number {
         @Override
         public double doubleValue() {
@@ -165,14 +168,15 @@ public abstract class Arm extends SubsystemBase {
             "Arm/Wrist/Max Acceleration",
             Wrist.TELEOP_MAX_ACCELERATION.doubleValue());
 
+        shoulderMotionProfile = new BenMotionProfile(
+            shoulderMaxVelocity.filtered(Math::toRadians).number(),
+            shoulderMaxAcceleration.filtered(Math::toRadians).number());
+
         shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
             .add(new ArmEncoderFeedforward(new GamePiecekG()))
             .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
             .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-            .setSetpointFilter(
-                new MotionProfile(
-                    shoulderMaxVelocity.filtered(Math::toRadians).number(),
-                    shoulderMaxAcceleration.filtered(Math::toRadians).number()))
+            .setSetpointFilter(shoulderMotionProfile)
             .setOutputFilter(x -> {
                 if (isShoulderLimp()) return 0;
                 return shoulderVoltageOverride.orElse(x);
@@ -201,6 +205,10 @@ public abstract class Arm extends SubsystemBase {
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
+    }
+
+    public void resetMotionProfile() {
+        shoulderMotionProfile.reset(getShoulderAngle().getRadians());
     }
 
     //
