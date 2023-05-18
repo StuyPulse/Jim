@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
 
 
         robot.arm.setCoast(false, false);
+        robot.arm.setWristVoltage(0);
+        robot.arm.setShoulderVoltage(0);
         robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
         robot.arm.setShoulderConstraints(Shoulder.AUTON_MAX_VELOCITY, Shoulder.AUTON_MAX_ACCELERATION);
         robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
