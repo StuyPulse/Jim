@@ -286,6 +286,7 @@ public abstract class Arm extends SubsystemBase {
     // Arm Visualizer
     public final ArmVisualizer getVisualizer() {
         return armVisualizer;
+    }
     
 
     @Override
