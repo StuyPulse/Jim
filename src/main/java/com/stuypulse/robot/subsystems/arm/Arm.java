@@ -11,6 +11,7 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
@@ -68,6 +69,10 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
 
+    // Limp mode (forces a joint to receive zero voltage)
+    private SmartBoolean wristLimp;
+    private SmartBoolean shoulderLimp;
+    
     // Voltage overrides (used when present)
     private Optional<Double> wristVoltageOverride;
     private Optional<Double> shoulderVoltageOverride;
@@ -178,6 +183,9 @@ public abstract class Arm extends SubsystemBase {
         wristVoltageOverride = Optional.empty();
         shoulderVoltageOverride = Optional.empty();
 
+        wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
+        shoulderLimp = new SmartBoolean("Arm/Shoulder/Is Limp?", false);
+
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
@@ -198,6 +206,16 @@ public abstract class Arm extends SubsystemBase {
         return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units
                 .degreesToRadians(shoulderVelocityFeedbackCutoff.doubleValue());
     }
+
+
+    private final boolean isWristLimp() {
+        return wristLimp.get();
+    }
+
+    private final boolean isShoulderLimp() {
+        return shoulderLimp.get();
+    }
+
 
     // Set kinematic constraints
 
@@ -307,6 +325,20 @@ public abstract class Arm extends SubsystemBase {
 
     // set coast / brake mode
     public void setCoast(boolean wristCoast, boolean shoulderCoast) {}
+
+    // set if the ligaments are "limp" (zero voltage)
+    public final void setLimp(boolean wristLimp, boolean shoulderLimp) {
+        this.wristLimp.set(wristLimp);
+        this.shoulderLimp.set(shoulderLimp);
+    }
+
+    public final void enableLimp() {
+        setLimp(true, true);
+    }
+
+    public final void disableLimp() {
+        setLimp(false, false);
+    }
 
     // Arm Visualizer
     public final ArmVisualizer getVisualizer() {
