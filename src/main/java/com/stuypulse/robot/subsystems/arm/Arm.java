@@ -306,7 +306,7 @@ public abstract class Arm extends SubsystemBase {
     protected abstract void setWristVoltageImpl(double voltage);
 
     // set coast / brake mode
-    public abstract void setCoast(boolean wristCoast, boolean shoulderCoast);
+    public void setCoast(boolean wristCoast, boolean shoulderCoast) {}
 
     // Arm Visualizer
     public final ArmVisualizer getVisualizer() {
