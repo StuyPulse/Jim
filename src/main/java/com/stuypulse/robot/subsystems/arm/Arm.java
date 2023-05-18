@@ -15,6 +15,8 @@ import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
@@ -65,6 +67,10 @@ public abstract class Arm extends SubsystemBase {
     // represents a goal for the arm (separate from the profiled setpoints)
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
+
+    // Voltage overrides (used when present)
+    private Optional<Double> wristVoltageOverride;
+    private Optional<Double> shoulderVoltageOverride;
 
     // controllers for each joint
     private final Controller shoulderController;
@@ -169,6 +175,9 @@ public abstract class Arm extends SubsystemBase {
                                         wristMaxVelocity.filtered(Math::toRadians).number(),
                                         wristMaxAcceleration.filtered(Math::toRadians).number())));
 
+        wristVoltageOverride = Optional.empty();
+        shoulderVoltageOverride = Optional.empty();
+
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
@@ -229,10 +238,12 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final void setShoulderTargetAngle(Rotation2d angle) {
+        shoulderVoltageOverride = Optional.empty();
         shoulderTargetDegrees.set(angle.getDegrees());
     }
 
     public final void setWristTargetAngle(Rotation2d angle) {
+        wristVoltageOverride = Optional.empty();
         wristTargetDegrees.set(angle.getDegrees());
     }
 
@@ -280,6 +291,20 @@ public abstract class Arm extends SubsystemBase {
 
     public abstract double getWristVelocityRadiansPerSecond();
 
+    // Set a voltage override
+    public void setShoulderVoltage(double voltage) {
+        shoulderVoltageOverride = Optional.of(voltage);
+    }
+
+    public void setWristVoltage(double voltage) {
+        wristVoltageOverride = Optional.of(voltage);
+    }
+
+    // Feed a voltage to the hardware layer
+    protected abstract void setShoulderVoltageImpl(double voltage);
+
+    protected abstract void setWristVoltageImpl(double voltage);
+
     // set coast / brake mode
     public abstract void setCoast(boolean wristCoast, boolean shoulderCoast);
 
@@ -315,6 +340,9 @@ public abstract class Arm extends SubsystemBase {
         wristController.update(
                 Angle.fromRotation2d(getWristTargetAngle()),
                 Angle.fromRotation2d(getWristAngle()));
+
+        setWristVoltageImpl(wristController.getOutput());
+        setShoulderVoltageImpl(shoulderController.getOutput());
 
         armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()),
                 wristController.getSetpoint().toDegrees());

@@ -91,6 +91,17 @@ public class ArmImpl extends Arm {
     }
 
     @Override
+    protected void setShoulderVoltageImpl(double voltage) {
+        shoulderLeft.setVoltage(voltage);
+        shoulderRight.setVoltage(voltage);
+    }
+
+    @Override
+    protected void setWristVoltageImpl(double voltage) {
+        wrist.setVoltage(voltage);
+    }
+
+    @Override
     public void setCoast(boolean wristCoast, boolean shoulderCoast) {
         shoulderLeft.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
         shoulderRight.setIdleMode(shoulderCoast ? CANSparkMax.IdleMode.kCoast : CANSparkMax.IdleMode.kBrake);
