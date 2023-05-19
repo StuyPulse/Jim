@@ -213,6 +213,10 @@ public class RobotContainer {
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
 
+        operator.getRightBumper()
+            .onTrue(arm.runOnce(arm::enableLimp))
+            .onFalse(arm.runOnce(arm::disableLimp));
+
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());

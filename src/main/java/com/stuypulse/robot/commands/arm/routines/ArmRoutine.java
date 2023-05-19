@@ -86,6 +86,8 @@ public abstract class ArmRoutine extends CommandBase {
         var targetState = trajectory.getStates().get(currentIndex);
         arm.setTargetState(targetState);
 
+        arm.setLimp(targetState.isWristLimp(), false);
+
         double currentShoulderTolerance = (targetState.getShoulderTolerance().orElse(shoulderTolerance)).doubleValue();
         double currentWristTolerance = (targetState.getWristTolerance().orElse(wristTolerance)).doubleValue();
 
