@@ -255,16 +255,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 4.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.2);
             }
 
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.04);
                 SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.0);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.7);
             }
         }
     }

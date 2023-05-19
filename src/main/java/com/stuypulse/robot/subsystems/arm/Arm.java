@@ -185,8 +185,8 @@ public abstract class Arm extends SubsystemBase {
 
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
-                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))  
+                // .setOutputFilter(x -> wristEnabled.get() ? x : 0))
             .setSetpointFilter(
                 new AMotionProfile(
                     wristMaxVelocity.filtered(Math::toRadians).number(),
