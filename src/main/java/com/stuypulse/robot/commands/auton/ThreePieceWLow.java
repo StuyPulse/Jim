@@ -160,7 +160,6 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
 
         // initial setup
         addCommands(
-            new InstantCommand( () -> Arm.getInstance().setShoulderVelocityFeedbackCutoff(15)),
             new ManagerSetNodeLevel(NodeLevel.LOW),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
@@ -195,13 +194,6 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
             //     .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
-        );
-
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(20);
-                arm.setShoulderVelocityFeedbackDebounce(0.0);
-            })
         );
 
         // drive to grid and score second piece :: TODO: make custom arm setpoint for this
@@ -258,13 +250,6 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
                 .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
-        );
-
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(5);
-                arm.setShoulderVelocityFeedbackDebounce(0.2);
-            })
         );
 
         // drive to grid and score third piece

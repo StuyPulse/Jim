@@ -233,13 +233,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new IntakeStop()
         );
 
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(20);
-                arm.setShoulderVelocityFeedbackDebounce(0.0);
-            })
-        );
-
         // intake third piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
@@ -268,13 +261,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
-        );
-
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(5);
-                arm.setShoulderVelocityFeedbackDebounce(0.2);
-            })
         );
 
         // drive to grid and score third piece

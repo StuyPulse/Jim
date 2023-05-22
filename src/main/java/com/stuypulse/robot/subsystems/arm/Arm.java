@@ -79,9 +79,6 @@ public abstract class Arm extends SubsystemBase {
     private Optional<Double> wristVoltageOverride;
     private Optional<Double> shoulderVoltageOverride;
 
-    private SmartNumber shoulderVelocityFeedbackDebounce;
-    private SmartNumber shoulderVelocityFeedbackCutoff;
-
     private boolean pieceGravityCompensation;
 
     private final SmartNumber shoulderMaxVelocity;
@@ -208,14 +205,6 @@ public abstract class Arm extends SubsystemBase {
 
     public final ArmState getTargetState() {
         return new ArmState(getShoulderTargetAngle(), getWristTargetAngle());
-    }
-
-    public final void setShoulderVelocityFeedbackDebounce(double time) {
-        shoulderVelocityFeedbackDebounce.set(time);
-    }
-
-    public final void setShoulderVelocityFeedbackCutoff(double velocity) {
-        shoulderVelocityFeedbackCutoff.set(velocity);
     }
 
     // Set target states
