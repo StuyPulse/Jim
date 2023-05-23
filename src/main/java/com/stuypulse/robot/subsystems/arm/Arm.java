@@ -128,7 +128,7 @@ public abstract class Arm extends SubsystemBase {
         // These are the setpoints for the joints relative to the "horizontal" (like the
         // unit circle) -- keep both
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
-        wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
+        wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +180);
 
         shoulderMaxVelocity = new SmartNumber(
             "Arm/Shoulder/Max Velocity",

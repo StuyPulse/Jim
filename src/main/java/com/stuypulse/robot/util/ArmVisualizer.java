@@ -99,6 +99,9 @@ public class ArmVisualizer {
     }
 
     public void setTargetAngles(double shoulderAngle, double wristAngle) {
+        // convert from relative angle to horizontal angle
+        wristAngle = shoulderAngle + wristAngle;
+
         targetWristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),
                                         5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
@@ -109,6 +112,9 @@ public class ArmVisualizer {
     }
 
     public void setMeasuredAngles(double shoulderAngle, double wristAngle) {
+        // convert from relative angle to horizontal angle
+        wristAngle = shoulderAngle + wristAngle;
+
         wristRoot.setPosition(8 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.cos(Units.degreesToRadians(shoulderAngle)),
                                 5.2 + (Units.metersToInches(Shoulder.LENGTH)/10)*Math.sin(Units.degreesToRadians(shoulderAngle)));
 
