@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.IntegerEntry;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -27,6 +28,8 @@ public class Limelight {
     private final IntegerEntry idEntry;
     private final DoubleArrayEntry blueBotposeEntry;
     private final DoubleArrayEntry redBotposeEntry;
+    private final NetworkTableEntry txEntry;
+
 
     private Optional<AprilTagData> data;
 
@@ -42,6 +45,7 @@ public class Limelight {
         blueBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
         redBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
+        txEntry = limelight.getEntry("tx");
 
         data = Optional.empty();
     }
@@ -64,6 +68,10 @@ public class Limelight {
             redBotposeEntry.get();
     }
 
+    public double getXAngle() {
+        return txEntry.getDouble(0);
+    }
+    
     public void updateAprilTagData() {
         double[] botposeData = getPoseData();
 

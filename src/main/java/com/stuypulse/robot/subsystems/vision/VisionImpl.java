@@ -8,6 +8,7 @@ import static com.stuypulse.robot.constants.Settings.Vision.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
@@ -15,6 +16,7 @@ import com.stuypulse.robot.util.Limelight;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -116,33 +118,38 @@ public class VisionImpl extends Vision {
         var robotPose = Odometry.getInstance().getPose();
         // TODO: log all vision measurements, but also indicate which ones were actually used
 
-
         results.clear();
         for (int i = 0; i < limelights.length; ++i) {
             Limelight ll = limelights[i];
             FieldObject2d ll2d = limelightPoses[i];
 
             ll.updateAprilTagData();
+            
+            if (Manager.getInstance().getGamePiece().isCone()) {
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+            }
+            else {
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+                if (ll.hasAprilTagData()) {
+                    var data = ll.getAprilTagData().get();
 
-            if (ll.hasAprilTagData()) {
-                var data = ll.getAprilTagData().get();
+                    Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
 
-                Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
+                    if (isAcceptable(robotPose, data)) {
+                        if (!Field.isValidAprilTagId(data.id)) continue;
+                        putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
+                        ll2d.setPose(data.pose);
 
-                if (isAcceptable(robotPose, data)) {
-                    if (!Field.isValidAprilTagId(data.id)) continue;
-                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
-                    ll2d.setPose(data.pose);
+                        results.add(data);
+                    } else {
+                        putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
+                        ll2d.setPose(kNoPose);
+                    }
 
-                    results.add(data);
                 } else {
-                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
+                    putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
                     ll2d.setPose(kNoPose);
                 }
-
-            } else {
-                putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
-                ll2d.setPose(kNoPose);
             }
         }
     }
