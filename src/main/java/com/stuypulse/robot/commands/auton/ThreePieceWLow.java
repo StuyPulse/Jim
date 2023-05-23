@@ -73,7 +73,7 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            dest = new ArmState(
+            dest = ArmState.fromWristHorizontal(
                 -70.82,
                 11);
                // 8.37);
@@ -104,7 +104,7 @@ public class ThreePieceWLow extends DebugSequentialCommandGroup {
 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            dest = new ArmState(
+            dest = ArmState.fromWristHorizontal(
                 -70.82,
                 10);
                // 8.37);

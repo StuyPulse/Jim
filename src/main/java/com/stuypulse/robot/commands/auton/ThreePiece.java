@@ -106,10 +106,9 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            dest = new ArmState(
+            dest = ArmState.fromWristHorizontal(
                 -70.82,
                 10);
-               // 8.37);
             double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 

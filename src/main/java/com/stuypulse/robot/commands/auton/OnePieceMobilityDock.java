@@ -13,6 +13,7 @@ import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
@@ -28,7 +29,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
     private class FastStow extends ArmRoutine {
         public FastStow() {
-            super(() -> new ArmState(-90, 90)
+            super(() -> new ArmState(-90, Settings.Arm.Wrist.WRIST_SAFE_ANGLE)
                             .setWristTolerance(360));
         }
 

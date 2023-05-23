@@ -254,7 +254,7 @@ public abstract class Arm extends SubsystemBase {
     protected abstract Rotation2d getRelativeWristAngle();
 
     public final Rotation2d getWristAngle() {
-        return getShoulderAngle().plus(getRelativeWristAngle());
+        return getRelativeWristAngle();
     }
 
     public final ArmState getState() {

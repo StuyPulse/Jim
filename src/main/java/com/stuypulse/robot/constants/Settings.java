@@ -242,7 +242,7 @@ public interface Settings {
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
 
-            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 0);
 
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 

@@ -21,9 +21,14 @@ public class ArmState {
 
     private boolean wristLimp;
 
-    public ArmState(Number shoulderDegrees, Number wristDegrees) {
+    // breaks smartnumber usage
+    public static ArmState fromWristHorizontal(Number shoulderDegrees, Number wristDegreesHorizontal) {
+        return new ArmState(shoulderDegrees, wristDegreesHorizontal.doubleValue() - shoulderDegrees.doubleValue());
+    }
+
+    public ArmState(Number shoulderDegrees, Number wristDegreesRelative) {
         this.shoulder = shoulderDegrees;
-        this.wrist = wristDegrees;
+        this.wrist = wristDegreesRelative;
 
         shoulderToleranceDegrees = Optional.empty();
         wristToleranceDegrees = Optional.empty();
