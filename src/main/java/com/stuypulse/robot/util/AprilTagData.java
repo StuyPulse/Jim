@@ -12,26 +12,19 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
-public class AprilTagData {
-    public final Pose2d pose;
-    public final double latency;
-    public final int id;
-    public final Pose3d cameraPose;
-
-    private static double getDegreesBetween(Rotation2d a, Rotation2d b) {
-        double c = a.getCos() * b.getCos() + a.getSin() * b.getSin();
-        double d = (1 - c) * 180;
-
-        return d;
-    }
-
-    public double getDegreesToTag() {
+public class AprilTagData extends VisionData{
+    @Override
+    public double getDegrees() {
         Rotation2d tag = Field.getAprilTagFromId(id).getRotation();
 
-        return getDegreesBetween(tag.plus(Rotation2d.fromDegrees(180)), pose.getRotation().minus(cameraPose.getRotation().toRotation2d()));
+        return getDegreesBetween(
+            tag.plus(Rotation2d.fromDegrees(180)),
+            pose.getRotation().minus(cameraPose.getRotation().toRotation2d())
+        );
     }
 
-    public double getDistanceToTag() {
+    @Override
+    public double getDistance() {
         Translation2d robot = pose.getTranslation();
         Translation2d tag = Field.getAprilTagFromId(id).getTranslation();
 
@@ -47,9 +40,6 @@ public class AprilTagData {
      * @param cameraPose associated camera's robot relative pose
      */
     public AprilTagData(Pose2d robotPose, double latency, int id, Pose3d cameraPose) {
-        this.pose = robotPose;
-        this.latency = latency;
-        this.id = id;
-        this.cameraPose = cameraPose;
+        super(robotPose, latency, id, cameraPose);
     }
 }

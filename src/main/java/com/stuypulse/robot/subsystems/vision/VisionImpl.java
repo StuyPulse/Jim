@@ -12,6 +12,8 @@ import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
+import com.stuypulse.robot.util.ReflectiveTapeData;
+import com.stuypulse.robot.util.VisionData;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +36,7 @@ public class VisionImpl extends Vision {
     private static final Pose2d kNoPose =
         new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
-    private static final AprilTagData kNoData =
+    private static final VisionData kNoData =
         new AprilTagData(kNoPose, Double.NaN, -1, null);
 
     // store limelight network tables
@@ -44,7 +46,7 @@ public class VisionImpl extends Vision {
     private final FieldObject2d[] limelightPoses;
 
     // cache results every loop in a list
-    private final List<AprilTagData> results;
+    private final List<VisionData> results;
 
     protected VisionImpl() {
         // reference to all limelights on robot
@@ -70,20 +72,22 @@ public class VisionImpl extends Vision {
     }
 
     @Override
-    public List<AprilTagData> getResults() {
+    public List<VisionData> getResults() {
         return results;
     }
 
-    private static void putAprilTagData(String prefix, AprilTagData data, DataStatus accepted) {
+    /**
+     * @see ReflectiveTapeData#getDistance(), id = -1 for reflective tape
+     */
+    private static void putVisionData(String prefix, VisionData data, DataStatus accepted) {
         SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
         SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
         SmartDashboard.putNumber(prefix + "/Pose Rotation (Deg)" , data.pose.getRotation().getDegrees());
-        SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
+        SmartDashboard.putNumber(prefix + "/Tag ID", data.id); 
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
-
         if (accepted != DataStatus.NONE) {
-            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistanceToTag());
-            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegreesToTag());
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistance());
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegrees());
         } else {
             SmartDashboard.putNumber(prefix + "/Distance to Tag", Double.NaN);
             SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
@@ -92,16 +96,17 @@ public class VisionImpl extends Vision {
         SmartDashboard.putString(prefix + "/Accepted", accepted.name());
     }
 
-    private static boolean isAcceptable(Pose2d robot, AprilTagData data) {
+
+    private static boolean isAcceptable(Pose2d robot, VisionData data) {
         // reject invalid apriltag ids
         if (!Field.isValidAprilTagId(data.id)) return false;
 
         // check if distance to tag is greater than cutoff
-        double distanceToTag = data.getDistanceToTag();
+        double distanceToTag = data.getDistance();
         if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
-        double angleToTag = Math.abs(data.getDegreesToTag());
+        double angleToTag = Math.abs(data.getDegrees());
         if (angleToTag < MIN_USE_ANGLE || angleToTag > MAX_USE_ANGLE) return false;
 
         // OK
@@ -127,29 +132,29 @@ public class VisionImpl extends Vision {
             
             if (Manager.getInstance().getGamePiece().isCone()) {
                 NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-            }
-            else {
+            }   else {
                 NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-                if (ll.hasAprilTagData()) {
-                    var data = ll.getAprilTagData().get();
+            }
 
-                    Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
+            if (ll.hasAprilTagData()) {
+                var data = ll.getAprilTagData().get();
 
-                    if (isAcceptable(robotPose, data)) {
-                        if (!Field.isValidAprilTagId(data.id)) continue;
-                        putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
-                        ll2d.setPose(data.pose);
+                Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
 
-                        results.add(data);
-                    } else {
-                        putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
-                        ll2d.setPose(kNoPose);
-                    }
+                if (isAcceptable(robotPose, data)) {
+                    if (!Field.isValidAprilTagId(data.id)) continue;
+                    putVisionData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
+                    ll2d.setPose(data.pose);
 
+                    results.add(data);
                 } else {
-                    putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
+                    putVisionData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
                     ll2d.setPose(kNoPose);
                 }
+
+            } else {
+                putVisionData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
+                ll2d.setPose(kNoPose);
             }
         }
     }

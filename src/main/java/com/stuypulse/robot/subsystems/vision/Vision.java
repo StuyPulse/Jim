@@ -6,7 +6,7 @@
 package com.stuypulse.robot.subsystems.vision;
 
 
-import com.stuypulse.robot.util.AprilTagData;
+import com.stuypulse.robot.util.VisionData;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,5 +31,5 @@ public abstract class Vision extends SubsystemBase {
     /** VISION TYPES **/
 
     /** ABSTRACT METHODS **/
-    public abstract List<AprilTagData> getResults();
+    public abstract List<VisionData> getResults();
 }

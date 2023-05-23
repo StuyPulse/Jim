@@ -12,6 +12,7 @@ import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.util.AprilTagData;
+import com.stuypulse.robot.util.VisionData;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -109,12 +110,12 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
-    private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){
+    private void processResults(List<VisionData> results, SwerveDrive drive, Vision vision){
         if (DISABLE_APRIL_TAGS.get()) {
             return;
         }
 
-        for (AprilTagData result : results) {
+        for (VisionData result : results) {
             if (Robot.getMatchState() == MatchState.AUTO) {
                 // poseEstimator.addVisionMeasurement(
                 //     new Pose2d(result.pose.getTranslation(), getRotation()),
@@ -138,7 +139,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
-        List<AprilTagData> results = Vision.getInstance().getResults();
+        List<VisionData> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
         odometryPose2d.setPose(odometry.getPoseMeters());
