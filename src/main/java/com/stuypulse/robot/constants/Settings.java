@@ -142,7 +142,7 @@ public interface Settings {
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(125.385847) // recalibrated 3/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(7.748473) // recalibrated 5/24
                 .plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
@@ -172,6 +172,7 @@ public interface Settings {
         public interface Shoulder {
             SmartNumber MAX_SHOULDER_ANGLE = new SmartNumber("Arm/Shoulder/Max Angle (deg)", 15.0);
             SmartNumber OVER_BUMPER_ANGLE = new SmartNumber("Arm/Shoulder/Over Bumper Angle (deg)", 25.0);
+            SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Shoulder/Wrist Safe Angle (deg)", 10.0);
 
             int MOTORS = 2;
             double REDUCTION = 63.0;
@@ -237,7 +238,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(120));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -249,9 +250,9 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 4.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 3.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.2);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.1);
             }
 
             public interface Feedforward {

@@ -98,7 +98,7 @@ public abstract class ArmRoutine extends CommandBase {
             currentWristTolerance = 360;
         }
 
-        if (arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance) &&
+        if ((arm.isAtTargetState(currentShoulderTolerance, currentWristTolerance) || (arm.isShoulderAtTarget(currentShoulderTolerance) && !arm.isWristMoveSafe())) &&
             Math.abs(Units.radiansToDegrees(arm.getWristVelocityRadiansPerSecond())) < wristVelocityTolerance.doubleValue() &&
             Math.abs(Units.radiansToDegrees(arm.getShoulderVelocityRadiansPerSecond())) < shoulderVelocityTolerance.doubleValue()) {
             // var targetState = trajectory.getStates().get(currentIndex);

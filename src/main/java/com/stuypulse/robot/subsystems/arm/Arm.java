@@ -157,11 +157,11 @@ public abstract class Arm extends SubsystemBase {
 
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
                 .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-                .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
+                .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
                 .setSetpointFilter(
                     new AMotionProfile(
                         wristMaxVelocity.filtered(Math::toRadians).number(),
-                        wristMaxAcceleration.filtered(Math::toRadians).number())))
+                        wristMaxAcceleration.filtered(Math::toRadians).number()))
                 .setOutputFilter(x -> { return wristVoltageOverride.orElse(x); });
 
         wristVoltageOverride = Optional.empty();
@@ -307,6 +307,10 @@ public abstract class Arm extends SubsystemBase {
         return armVisualizer;
     }
 
+    public final boolean isWristMoveSafe() {
+        return Math.abs(getShoulderAngle().getDegrees() + 90) > Shoulder.WRIST_SAFE_ANGLE.get();
+    }
+
     @Override
     public final void periodic() {
         // Validate shoulder and wrist target states
@@ -333,7 +337,7 @@ public abstract class Arm extends SubsystemBase {
             Angle.fromRotation2d(getWristTargetAngle()),
             Angle.fromRotation2d(getWristAngle()));
 
-        setWristVoltageImpl(wristController.getOutput());
+        setWristVoltageImpl(isWristMoveSafe() ? wristController.getOutput() : 0);
         setShoulderVoltageImpl(shoulderController.getOutput());
 
         armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()), wristController.getSetpoint().toDegrees());

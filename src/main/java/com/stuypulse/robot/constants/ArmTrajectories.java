@@ -52,9 +52,9 @@ public interface ArmTrajectories {
     }
 
     public interface Stow {
-        ArmState kTrajectory = ArmState.fromWristHorizontal(
+        ArmState kTrajectory = new ArmState(
 			new SmartNumber("Arm Trajectories/Stowed Front Shoulder", -85),
-			new SmartNumber("Arm Trajectories/Stowed Front Wrist", 165));
+			new SmartNumber("Arm Trajectories/Stowed Front Wrist", 180 /*165*/));
     }
 
 
