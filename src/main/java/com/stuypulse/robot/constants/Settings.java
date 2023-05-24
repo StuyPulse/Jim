@@ -121,7 +121,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(2.419310) // recalibrated 3/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(357.213206) // recalibrated 4/21                
                 .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
@@ -255,16 +255,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 3.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.1);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1);
             }
 
             public interface Feedforward {
                 SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.04);
+                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
                 SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.7);
+                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.0);
             }
         }
     }
