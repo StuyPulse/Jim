@@ -157,11 +157,11 @@ public abstract class Arm extends SubsystemBase {
 
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
                 .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-                .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
+                .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD))
                 .setSetpointFilter(
                     new AMotionProfile(
                         wristMaxVelocity.filtered(Math::toRadians).number(),
-                        wristMaxAcceleration.filtered(Math::toRadians).number())))
+                        wristMaxAcceleration.filtered(Math::toRadians).number()))
                 .setOutputFilter(x -> { return wristVoltageOverride.orElse(x); });
 
         wristVoltageOverride = Optional.empty();
