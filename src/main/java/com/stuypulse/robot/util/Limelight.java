@@ -5,30 +5,59 @@
 
 package com.stuypulse.robot.util;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.subsystems.Manager.NodeLevel;
+
+import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayEntry;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.IntegerEntry;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Optional;
 
 public class Limelight {
+    
+    public enum DataType {
+        APRIL_TAG(0),
+        TAPE(1);
+
+        public int type;
+        private DataType(int type) {
+            this.type = type;
+        }
+
+        public boolean isAprilTag() {
+            return type == 0;
+        }
+
+        public boolean isReflectiveTape() {
+            return !isAprilTag();
+        }
+    }
 
     private String tableName;
+    private int limelightId;
 
     private final IntegerEntry idEntry;
     private final DoubleArrayEntry blueBotposeEntry;
     private final DoubleArrayEntry redBotposeEntry;
-    private final NetworkTableEntry txEntry;
+
+    private final DoubleEntry txEntry;
+    private final DoubleEntry tyEntry;
+    private final IntegerEntry tvEntry;
+    
+    private final IntegerEntry pipelineEntry;
 
 
     private Optional<AprilTagData> data;
@@ -37,15 +66,20 @@ public class Limelight {
 
     public Limelight(String tableName, Pose3d robotRelativePose) {
         this.tableName = tableName;
+        limelightId = tableName == "limelight-front" ? 0 : 1;
         this.robotRelativePose = robotRelativePose;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
 
-
         blueBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
         redBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
-        txEntry = limelight.getEntry("tx");
+        
+        txEntry = limelight.getDoubleTopic("tx").getEntry(0.0);
+        tyEntry = limelight.getDoubleTopic("ty").getEntry(0.0);
+        tvEntry = limelight.getIntegerTopic("tv").getEntry(0);
+        
+        pipelineEntry = limelight.getIntegerTopic("getpipe").getEntry(0);
 
         data = Optional.empty();
     }
@@ -59,7 +93,15 @@ public class Limelight {
     }
 
     public boolean hasAprilTagData() {
-        return getAprilTagData().isPresent();
+        return getAprilTagData().isPresent() && getPipeline().isAprilTag();
+    }
+
+    public Optional<ReflectiveTapeData> getReflectiveTapeData() {
+        return Optional.of(new ReflectiveTapeData(data.get().pose, getPoseData()[6], -1, robotRelativePose)
+    }
+
+    public boolean hasReflectiveTapeData() {
+        return tvEntry.get() == 1 && getPipeline().isReflectiveTape();
     }
 
     private double[] getPoseData() {
@@ -69,7 +111,37 @@ public class Limelight {
     }
 
     public double getXAngle() {
-        return txEntry.getDouble(0);
+        if(hasAprilTagData()) {
+            return Double.NaN;
+        }
+        return txEntry.get() + POSITIONS[limelightId].getRotation().getZ();
+    }
+
+    public double getYAngle() {
+        if(hasAprilTagData()) {
+            return Double.NaN;
+        }
+        return tyEntry.get() + POSITIONS[limelightId].getRotation().getY();
+    }
+
+    public double getDistance() {
+        if(hasAprilTagData()) {
+            return Double.NaN;
+        }
+
+        double heightDiff = Math.abs(POSITIONS[limelightId].getZ() - 
+                        (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH ? Field.HIGH_PEG_HEIGHT : Field.MID_PEG_HEIGHT));
+
+        return heightDiff / Math.tan(getYAngle()) + POSITIONS[limelightId].getX();
+
+    }
+
+    public DataType getPipeline() {
+        return pipelineEntry.get() == 0 ? DataType.APRIL_TAG : DataType.TAPE;
+    }
+
+    public void setPipeline(DataType type) {
+        NetworkTableInstance.getDefault().getTable(tableName).getEntry("pipeline").setNumber(type.type);
     }
     
     public void updateAprilTagData() {

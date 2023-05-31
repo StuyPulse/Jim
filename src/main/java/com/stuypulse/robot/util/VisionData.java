@@ -8,6 +8,8 @@ public abstract class VisionData {
     public final Pose2d pose; 
     public final double latency;
     public final Pose3d cameraPose;
+    public double distance;
+    public double xAngle;
     public final int id; 
     
     protected static double getDegreesBetween(Rotation2d a, Rotation2d b) {
@@ -17,8 +19,12 @@ public abstract class VisionData {
         return d;
     }
 
-    public abstract double getDegrees();
-    public abstract double getDistance();
+    public double getXDegrees() {
+        return xAngle;
+    }
+    public double getDistance() {
+        return distance;
+    }
 
     /**
      * Record vision data, usually from a vision system

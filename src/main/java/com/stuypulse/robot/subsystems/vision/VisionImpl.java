@@ -8,17 +8,14 @@ import static com.stuypulse.robot.constants.Settings.Vision.*;
 import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
-import com.stuypulse.robot.util.ReflectiveTapeData;
 import com.stuypulse.robot.util.VisionData;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -87,7 +84,7 @@ public class VisionImpl extends Vision {
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
         if (accepted != DataStatus.NONE) {
             SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistance());
-            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegrees());
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getXDegrees());
         } else {
             SmartDashboard.putNumber(prefix + "/Distance to Tag", Double.NaN);
             SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
@@ -106,7 +103,7 @@ public class VisionImpl extends Vision {
         if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
-        double angleToTag = Math.abs(data.getDegrees());
+        double angleToTag = Math.abs(data.getXDegrees());
         if (angleToTag < MIN_USE_ANGLE || angleToTag > MAX_USE_ANGLE) return false;
 
         // OK
@@ -130,12 +127,6 @@ public class VisionImpl extends Vision {
 
             ll.updateAprilTagData();
             
-            if (Manager.getInstance().getGamePiece().isCone()) {
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-            }   else {
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-            }
-
             if (ll.hasAprilTagData()) {
                 var data = ll.getAprilTagData().get();
 
@@ -152,6 +143,8 @@ public class VisionImpl extends Vision {
                     ll2d.setPose(kNoPose);
                 }
 
+            } else if(ll.hasReflectiveTapeData()) {
+                
             } else {
                 putVisionData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
                 ll2d.setPose(kNoPose);

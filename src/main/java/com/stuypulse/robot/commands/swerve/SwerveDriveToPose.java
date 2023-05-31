@@ -41,7 +41,7 @@ public class SwerveDriveToPose extends CommandBase{
         this.targetPoses = targetPoses;
 
         controller = new HolonomicController(
-            new PIDController(Translation.P,Translation.I,Translation.D),
+            new PIDController(Translation.P, Translation.I, Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
             new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
 

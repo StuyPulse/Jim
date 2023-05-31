@@ -26,6 +26,9 @@ public interface Field {
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
 
+    double MID_PEG_HEIGHT = -1;
+    double HIGH_PEG_HEIGHT = -1;
+
     Pose2d BLUE_APRIL_TAGS[] = {
         // 1-4
         new Pose2d(WIDTH - Units.inchesToMeters(40.45), Units.inchesToMeters(42.19), Rotation2d.fromDegrees(180)),
