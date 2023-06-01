@@ -61,6 +61,8 @@ public class BCThreePieceWLowWireBlue extends DebugSequentialCommandGroup {
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
+                .addState(new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(30).setShoulderTolerance(20))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
                     .setWristTolerance(30).setShoulderTolerance(20));
         }
