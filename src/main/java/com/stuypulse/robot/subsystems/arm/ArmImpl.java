@@ -12,6 +12,8 @@ import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_LEFT;
 import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_RIGHT;
 import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
 
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.stuylib.streams.filters.IFilter;
 import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
 
@@ -41,6 +43,10 @@ public class ArmImpl extends Arm {
     private final IFilter wristVelocityFilter;
     private final IFilter shoulderVelocityFilter;
 
+    private final BStream wristStalling;
+
+    private double wristVolts;
+
     protected ArmImpl() {
         shoulderLeft = new CANSparkMax(SHOULDER_LEFT, MotorType.kBrushless);
         shoulderRight = new CANSparkMax(SHOULDER_RIGHT, MotorType.kBrushless);
@@ -53,6 +59,9 @@ public class ArmImpl extends Arm {
         // Probably helps?
         wristVelocityFilter = new TimedMovingAverage(0.1);
         shoulderVelocityFilter = new TimedMovingAverage(0.1);
+
+        wristStalling = BStream.create(this::isWristStalling)
+            .filtered(new BDebounce.Rising(Wrist.STALL_TIME));
 
         configureMotors();
     }
@@ -98,6 +107,7 @@ public class ArmImpl extends Arm {
 
     @Override
     protected void setWristVoltageImpl(double voltage) {
+        wristVolts = voltage;
         wrist.setVoltage(voltage);
     }
 
@@ -118,22 +128,11 @@ public class ArmImpl extends Arm {
         return wristVelocityFilter.get(wristEncoder.getVelocity());
     }
 
-    // private boolean isShoulderStalling() {
-    //     double appliedShoulderVoltage =
-    //         Math.max(
-    //             shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
-    //             shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
-    //         );
-
-    //     return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts > Shoulder.STALLING_VOLTAGE.doubleValue() ||
-    //             wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
-    // }
-
-    // private boolean isWristStalling() {
-    //     return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
-    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() ||
-    //             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
-    // }
+    private boolean isWristStalling() {
+        return wrist.getOutputCurrent() > Wrist.STALL_CURRENT.get()
+            && wristEncoder.getVelocity() < Wrist.STALL_VELOCITY.doubleValue()
+            && wristVolts > Wrist.STALL_VOLTAGE.doubleValue();
+    }
 
     @Override
     public void periodicallyCalled() {
@@ -145,16 +144,10 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Right Current (amps)", shoulderRight.getOutputCurrent());
         SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
 
-        // if (wristIsStalling()) {
-        //     setWristVoltageImpl(WRIST);
-        // }
-
-        // if (armIsStalling()) {
-        //     shoulderVolts = 0;
-        // }
-
-        // runShoulder(shoulderVolts);
-        // runWrist(wristVolts);
+        if (wristStalling.get()) {
+            wrist.setVoltage(0);
+            wristVolts = 0;
+        }
 
         SmartDashboard.putNumber("Arm/Shoulder/Raw Encoder Angle (rot)", shoulderEncoder.getPosition());
         SmartDashboard.putNumber("Arm/Wrist/Raw Encoder Angle (rot)", wristEncoder.getPosition());
@@ -162,5 +155,7 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Shoulder/Left Duty Cycle", shoulderLeft.get());
         SmartDashboard.putNumber("Arm/Shoulder/Right Duty Cycle", shoulderRight.get());
         SmartDashboard.putNumber("Arm/Wrist/Duty Cycle", wrist.get());
+
+        SmartDashboard.putBoolean("Arm/Wrist/Stalling", wristStalling.get());
     }
 }

@@ -252,6 +252,11 @@ public interface Settings {
             SmartNumber TOLERANCE = new SmartNumber("Arm/Wrist/Tolerance (deg)", 7.0);
 
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
+            
+            SmartNumber STALL_CURRENT = new SmartNumber("Arm/Wrist/Stall Current (amps)", 60.0);
+            SmartNumber STALL_TIME = new SmartNumber("Arm/Wrist/Stall Time (Rising)", 0.05);
+            SmartNumber STALL_VELOCITY = new SmartNumber("Arm/Wrist/Stall Velocity (deg per s)", 5.0);
+            SmartNumber STALL_VOLTAGE = new SmartNumber("Arm/Wrist/Stall Voltage", 2.0);
 
             public interface PID {
                 SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
