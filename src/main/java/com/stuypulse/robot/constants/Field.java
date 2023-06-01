@@ -25,8 +25,8 @@ public interface Field {
     double WIDTH = 16.54;
     double HEIGHT = 8.02;
 
-    double MID_PEG_HEIGHT = -1;
-    double HIGH_PEG_HEIGHT = -1;
+    double MID_PEG_HEIGHT = Units.inchesToMeters(34);
+    double HIGH_PEG_HEIGHT = Units.inchesToMeters(46);
     // intake offset from center to the right
     double INTAKE_OFFSET_RIGHT = Units.inchesToMeters(1.625);
 

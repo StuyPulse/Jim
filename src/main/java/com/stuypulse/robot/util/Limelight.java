@@ -65,7 +65,7 @@ public class Limelight {
 
     public Limelight(String tableName, Pose3d robotRelativePose) {
         this.tableName = tableName;
-        limelightId = tableName == "limelight-front" ? 0 : 1;
+        limelightId = tableName == "limelight" ? 0 : 1;
         this.robotRelativePose = robotRelativePose;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
