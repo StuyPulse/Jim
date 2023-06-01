@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.battlecry;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class BCThreePieceWLowWireBlue extends DebugSequentialCommandGroup {
+public class BCThreePieceWLowWireRed extends DebugSequentialCommandGroup {
 
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
@@ -151,10 +151,10 @@ public class BCThreePieceWLowWireBlue extends DebugSequentialCommandGroup {
 
     private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
 
-    public BCThreePieceWLowWireBlue() {
+    public BCThreePieceWLowWireRed() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump Blue", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump Red", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 

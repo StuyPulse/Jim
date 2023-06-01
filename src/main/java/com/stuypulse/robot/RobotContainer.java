@@ -13,6 +13,10 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireRed;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireRed;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -241,8 +245,8 @@ public class RobotContainer {
         autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
         autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
-        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
+        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
         autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());  
         
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());

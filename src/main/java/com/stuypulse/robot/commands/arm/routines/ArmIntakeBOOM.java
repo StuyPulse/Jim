@@ -32,7 +32,7 @@ public class ArmIntakeBOOM extends ArmRoutine {
 	protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
         if (Robot.getMatchState() == MatchState.AUTO) {
             dest = Acquire.kBOOMCubeAuton;
-            double intermediateShoulderDegrees = manager.getIntakeIntermediateTrajectory().getShoulderDegrees();
+            double intermediateShoulderDegrees = -60; // manager.getIntakeIntermediateTrajectory().getShoulderDegrees();
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
             return new ArmTrajectory()
