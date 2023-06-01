@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
-package com.stuypulse.robot.commands.auton.battlecry;
+package com.stuypulse.robot.commands.auton;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
+public class TwoPieceDockRed extends DebugSequentialCommandGroup {
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
             super(() -> {
@@ -100,9 +100,9 @@ public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.25);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
 
-    public BCTwoPieceDockWireBlue() {
+    public TwoPieceDockRed() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("BC 2 Piece Dock Bump Blue", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece + Dock Red", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
         );
 
@@ -199,8 +199,7 @@ public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
             // new ManagerSetScoreIndex(1),
             new IntakeDeacquire(),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),
-            new WaitCommand(INTAKE_DEACQUIRE_TIME),
-            new IntakeStop()
+            new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
         // dock and engage
@@ -211,6 +210,7 @@ public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
                         .fieldRelative().withStop(),
 
                 new WaitCommand(STOW_WAIT_TIME)
+                    .andThen(new IntakeStop())
                     .andThen(new ArmStow())
             )
         );

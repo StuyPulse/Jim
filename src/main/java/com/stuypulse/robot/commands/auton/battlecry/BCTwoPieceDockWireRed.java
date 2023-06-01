@@ -18,6 +18,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
@@ -49,7 +50,7 @@ public class BCTwoPieceDockWireRed extends DebugSequentialCommandGroup {
 
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(45))
+                    .setWristTolerance(20))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
                     .setWristTolerance(23).setShoulderTolerance(20));
         }
@@ -158,6 +159,7 @@ public class BCTwoPieceDockWireRed extends DebugSequentialCommandGroup {
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
+                .until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
