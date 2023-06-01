@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class BCThreePieceWLowWire extends DebugSequentialCommandGroup {
+public class BCThreePieceWLowWireRed extends DebugSequentialCommandGroup {
 
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
@@ -149,10 +149,10 @@ public class BCThreePieceWLowWire extends DebugSequentialCommandGroup {
 
     private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
 
-    public BCThreePieceWLowWire() {
+    public BCThreePieceWLowWireRed() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump Red", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 

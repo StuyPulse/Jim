@@ -240,6 +240,11 @@ public class RobotContainer {
         autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
         autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
         autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
+        autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
+        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
+        autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
+        autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());  
+        
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 
         SmartDashboard.putData("Autonomous", autonChooser);
