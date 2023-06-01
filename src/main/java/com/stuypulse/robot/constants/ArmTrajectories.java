@@ -72,8 +72,8 @@ public interface ArmTrajectories {
 
                 // -4, 0
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Shoulder", -14),
-                new SmartNumber("Arm Trajectories/Ready Mid Tip Out/Wrist", 42));
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out Front/Shoulder", -14),
+                new SmartNumber("Arm Trajectories/Ready Mid Tip Out Front/Wrist", 42));
 
             ArmState kAutonCubeBack = new ArmState(
                 new SmartNumber("Arm Trajectories/Ready Auton Mid Cube Back/Shoulder", -165),
@@ -119,13 +119,13 @@ public interface ArmTrajectories {
     public interface Score {
         public interface High {
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -5),
+                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -13), // 16 lower
                 new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 37));
         }
 
         public interface Mid {
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Score Mid Tip Out Front Shoulder", -28 - 5),
+                new SmartNumber("Arm Trajectories/Score Mid Tip Out Front Shoulder", -30), // 16 lower
                 new SmartNumber("Arm Trajectories/Score Mid Tip Out Front Wrist", 44));
         }
     }

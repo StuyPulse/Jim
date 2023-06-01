@@ -198,14 +198,14 @@ public class Manager extends SubsystemBase {
         var robot = Odometry.getInstance().getTranslation();
 
         double gridDistance = getSelectedScoreX().doubleValue();
-        Number[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         int nearest = getPossibleScoringIndices()[0];
-        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest].doubleValue()));
+        double nearestDistance = robot.getDistance(new Translation2d(gridDistance, positions[nearest]));
 
 
         for (int i : getPossibleScoringIndices()) {
-            Translation2d current = new Translation2d(gridDistance, positions[i].doubleValue());
+            Translation2d current = new Translation2d(gridDistance, positions[i]);
             double distance = robot.getDistance(current);
 
             if (distance < nearestDistance) {
@@ -255,12 +255,12 @@ public class Manager extends SubsystemBase {
     }
 
     public Translation2d getSelectedScoreTranslation() {
-        double gridDistance = getSelectedScoreX().doubleValue();
-        Number positions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
+        double xPosition = getSelectedScoreX().doubleValue();
+        double yPositions[] = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);
 
         return new Translation2d(
-            gridDistance,
-            positions[gridNode.intValue()].doubleValue());
+            xPosition,
+            yPositions[gridNode.intValue()]);
     }
 
     public Pose2d getScorePose() {

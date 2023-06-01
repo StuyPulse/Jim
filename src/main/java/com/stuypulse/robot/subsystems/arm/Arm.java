@@ -11,11 +11,12 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 import com.stuypulse.stuylib.streams.filters.MotionProfile;
-
-import java.util.Optional;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
@@ -29,6 +30,7 @@ import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
 import com.stuypulse.robot.util.ArmEncoderFeedforward;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
+import com.stuypulse.robot.util.BenMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,15 +39,17 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.Optional;
+
+
 /**
- * Double jointed arm controlled by two motion profiled PID controllers.
- *
- * Available control "modes":
- * - setpoint control (PID+FF controllers are used) (shoulder is not allowed
- * above maximum shoulder angle)
- * - limp mode (controller output is overriden to be zero)
- * - voltage override ("force" feeds a voltage to the motor)
- */
+  * Double jointed arm controlled by two motion profiled PID controllers.
+  *
+  * Available control "modes":
+  * - setpoint control (PID+FF controllers are used) (shoulder is not allowed above maximum shoulder angle)
+  * - limp mode (controller output is overriden to be zero)
+  * - voltage override ("force" feeds a voltage to the motor)
+  */
 public abstract class Arm extends SubsystemBase {
 
     // Singleton
@@ -68,16 +72,22 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
 
-    // Voltage overrides (used when present)
-    private Optional<Double> wristVoltageOverride;
-    private Optional<Double> shoulderVoltageOverride;
-
     // controllers for each joint
     private final Controller shoulderController;
     private final AngleController wristController;
 
     // Mechanism2d visualizer
     private final ArmVisualizer armVisualizer;
+
+    // Limp mode (forces a joint to receive zero voltage)
+    private SmartBoolean wristLimp;
+    private SmartBoolean shoulderLimp;
+
+    // Voltage overrides (used when present)
+    private Optional<Double> wristVoltageOverride;
+    private Optional<Double> shoulderVoltageOverride;
+
+    private BStream wristEnabled;
 
     private SmartNumber shoulderVelocityFeedbackDebounce;
     private SmartNumber shoulderVelocityFeedbackCutoff;
@@ -89,6 +99,8 @@ public abstract class Arm extends SubsystemBase {
 
     private final SmartNumber wristMaxVelocity;
     private final SmartNumber wristMaxAcceleration;
+
+    private final BenMotionProfile shoulderMotionProfile;
 
     private class GamePiecekG extends Number {
         @Override
@@ -113,67 +125,79 @@ public abstract class Arm extends SubsystemBase {
 
         @Override
         public float floatValue() {
-            return (float) doubleValue();
+            return (float)doubleValue();
         }
 
         @Override
         public int intValue() {
-            return (int) doubleValue();
+            return (int)doubleValue();
         }
 
         @Override
         public long longValue() {
-            return (long) doubleValue();
+            return (long)doubleValue();
         }
     }
 
     protected Arm() {
-        // These are the setpoints for the joints relative to the "horizontal" (like the
-        // unit circle) -- keep both
         shoulderTargetDegrees = new SmartNumber("Arm/Shoulder/Target Angle (deg)", -90);
         wristTargetDegrees = new SmartNumber("Arm/Wrist/Target Angle (deg)", +90);
 
-        // These numbers are used for disabling/enabling wrist control while the
-        // shoulder is moving -- they are no longer necessary. Remove them
         shoulderVelocityFeedbackDebounce = new SmartNumber(
-                "Arm/Wrist/Feedback Enabled Debounce",
-                Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
+            "Arm/Wrist/Feedback Enabled Debounce",
+            Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());
 
         shoulderVelocityFeedbackCutoff = new SmartNumber(
-                "Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)",
-                Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+            "Arm/Wrist/Shoulder Velocity Feedback Cutoff (deg per s)",
+            Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
+
+        wristEnabled = BStream.create(this::isWristFeedbackEnabled)
+            .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce));
 
         shoulderMaxVelocity = new SmartNumber(
-                "Arm/Shoulder/Max Velocity",
-                Shoulder.TELEOP_MAX_VELOCITY.doubleValue());
+            "Arm/Shoulder/Max Velocity",
+            Shoulder.TELEOP_MAX_VELOCITY.doubleValue());
         shoulderMaxAcceleration = new SmartNumber(
-                "Arm/Shoulder/Max Acceleration",
-                Shoulder.TELEOP_MAX_ACCELERATION.doubleValue());
+            "Arm/Shoulder/Max Acceleration",
+            Shoulder.TELEOP_MAX_ACCELERATION.doubleValue());
 
         wristMaxVelocity = new SmartNumber(
-                "Arm/Wrist/Max Velocity",
-                Wrist.TELEOP_MAX_VELOCITY.doubleValue());
+            "Arm/Wrist/Max Velocity",
+            Wrist.TELEOP_MAX_VELOCITY.doubleValue());
         wristMaxAcceleration = new SmartNumber(
-                "Arm/Wrist/Max Acceleration",
-                Wrist.TELEOP_MAX_ACCELERATION.doubleValue());
+            "Arm/Wrist/Max Acceleration",
+            Wrist.TELEOP_MAX_ACCELERATION.doubleValue());
 
-        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV,
-                Shoulder.Feedforward.kA).position()
-                .add(new ArmEncoderFeedforward(new GamePiecekG()))
-                .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
-                .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-                .setSetpointFilter(
-                        new MotionProfile(
-                                shoulderMaxVelocity.filtered(Math::toRadians).number(),
-                                shoulderMaxAcceleration.filtered(Math::toRadians).number()));
+        shoulderMotionProfile = new BenMotionProfile(
+            shoulderMaxVelocity.filtered(Math::toRadians).number(),
+            shoulderMaxAcceleration.filtered(Math::toRadians).number());
+
+        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
+            .add(new ArmEncoderFeedforward(new GamePiecekG()))
+            .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
+            .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
+            .setSetpointFilter(shoulderMotionProfile)
+            .setOutputFilter(x -> {
+                if (isShoulderLimp()) return 0;
+                return shoulderVoltageOverride.orElse(x);
+            })
+            ;
 
         wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
-                .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
-                .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
-                        .setSetpointFilter(
-                                new AMotionProfile(
-                                        wristMaxVelocity.filtered(Math::toRadians).number(),
-                                        wristMaxAcceleration.filtered(Math::toRadians).number())));
+            .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
+            .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
+                .setOutputFilter(x -> wristEnabled.get() ? x : 0))
+            .setSetpointFilter(
+                new AMotionProfile(
+                    wristMaxVelocity.filtered(Math::toRadians).number(),
+                    wristMaxAcceleration.filtered(Math::toRadians).number()))
+            .setOutputFilter(x -> {
+                if (isWristLimp()) return 0;
+                return wristVoltageOverride.orElse(x);
+            });
+
+        wristLimp = new SmartBoolean("Arm/Wrist/Is Limp?", false);
+        shoulderLimp = new SmartBoolean("Arm/Shoulder/Is Limp?", false);
 
         wristVoltageOverride = Optional.empty();
         shoulderVoltageOverride = Optional.empty();
@@ -181,6 +205,10 @@ public abstract class Arm extends SubsystemBase {
         armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
+    }
+
+    public void resetMotionProfile() {
+        shoulderMotionProfile.reset(getShoulderAngle().getRadians());
     }
 
     //
@@ -194,9 +222,17 @@ public abstract class Arm extends SubsystemBase {
     }
 
     // Arm Control Overrides
+
+    private final boolean isWristLimp() {
+        return wristLimp.get();
+    }
+
+    private final boolean isShoulderLimp() {
+        return shoulderLimp.get();
+    }
+
     private final boolean isWristFeedbackEnabled() {
-        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units
-                .degreesToRadians(shoulderVelocityFeedbackCutoff.doubleValue());
+        return Math.abs(getShoulderVelocityRadiansPerSecond()) < Units.degreesToRadians(shoulderVelocityFeedbackCutoff.doubleValue());
     }
 
     // Set kinematic constraints
@@ -210,6 +246,7 @@ public abstract class Arm extends SubsystemBase {
         wristMaxVelocity.set(velocity);
         wristMaxAcceleration.set(acceleration);
     }
+
 
     // Read target State
     public final Rotation2d getShoulderTargetAngle() {
@@ -276,7 +313,6 @@ public abstract class Arm extends SubsystemBase {
 
     // Read angle measurements
     public abstract Rotation2d getShoulderAngle();
-
     protected abstract Rotation2d getRelativeWristAngle();
 
     public final Rotation2d getWristAngle() {
@@ -288,7 +324,6 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public abstract double getShoulderVelocityRadiansPerSecond();
-
     public abstract double getWristVelocityRadiansPerSecond();
 
     // Set a voltage override
@@ -302,23 +337,34 @@ public abstract class Arm extends SubsystemBase {
 
     // Feed a voltage to the hardware layer
     protected abstract void setShoulderVoltageImpl(double voltage);
-
     protected abstract void setWristVoltageImpl(double voltage);
 
     // set coast / brake mode
     public void setCoast(boolean wristCoast, boolean shoulderCoast) {}
 
+    // set if the ligaments are "limp" (zero voltage)
+    public final void setLimp(boolean wristLimp, boolean shoulderLimp) {
+        this.wristLimp.set(wristLimp);
+        this.shoulderLimp.set(shoulderLimp);
+    }
+
+    public final void enableLimp() {
+        setLimp(true, true);
+    }
+    public final void disableLimp() {
+        setLimp(false, false);
+    }
+
     // Arm Visualizer
     public final ArmVisualizer getVisualizer() {
         return armVisualizer;
     }
-    
 
     @Override
     public final void periodic() {
         // Validate shoulder and wrist target states
         Rotation2d shoulderTarget = getShoulderTargetAngle();
-        // Rotation2d wristTarget = getWristTargetAngle();
+        Rotation2d wristTarget = getWristTargetAngle();
 
         double normalizedDeg = shoulderTarget.minus(Rotation2d.fromDegrees(-90)).getDegrees();
 
@@ -328,43 +374,40 @@ public abstract class Arm extends SubsystemBase {
             setShoulderTargetAngle(Rotation2d.fromDegrees(180 - Shoulder.MAX_SHOULDER_ANGLE.get()));
         }
 
+
         // Run control loops on validated target angles
         shoulderController.update(
-                getWrappedShoulderAngle(getShoulderTargetAngle()),
-                getWrappedShoulderAngle(getShoulderAngle()));
+            getWrappedShoulderAngle(getShoulderTargetAngle()),
+            getWrappedShoulderAngle(getShoulderAngle()));
 
         SmartDashboard.putNumber("Arm/Shoulder/Wrapped Angle", getWrappedShoulderAngle(getShoulderAngle()));
-        SmartDashboard.putNumber("Arm/Shoulder/Wrapped Target Angle",
-                getWrappedShoulderAngle(getShoulderTargetAngle()));
+        SmartDashboard.putNumber("Arm/Shoulder/Wrapped Target Angle", getWrappedShoulderAngle(getShoulderTargetAngle()));
 
         wristController.update(
-                Angle.fromRotation2d(getWristTargetAngle()),
-                Angle.fromRotation2d(getWristAngle()));
+            Angle.fromRotation2d(getWristTargetAngle()),
+            Angle.fromRotation2d(getWristAngle()));
 
         setWristVoltageImpl(wristController.getOutput());
         setShoulderVoltageImpl(shoulderController.getOutput());
 
-        armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()),
-                wristController.getSetpoint().toDegrees());
+        armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()), wristController.getSetpoint().toDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
-        SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)",
-                Units.radiansToDegrees(shoulderController.getSetpoint()));
+        SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", Units.radiansToDegrees(shoulderController.getSetpoint()));
         SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", Units.radiansToDegrees(shoulderController.getError()));
         SmartDashboard.putNumber("Arm/Shoulder/Output (V)", shoulderController.getOutput());
-        SmartDashboard.putNumber("Arm/Shoulder/Velocity (deg per s)",
-                Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond()));
+        SmartDashboard.putNumber("Arm/Shoulder/Velocity (deg per s)", Units.radiansToDegrees(getShoulderVelocityRadiansPerSecond()));
 
         SmartDashboard.putNumber("Arm/Wrist/Angle (deg)", getWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Relative Angle (deg)", getRelativeWristAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Setpoint (deg)", wristController.getSetpoint().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Error (deg)", wristController.getError().toDegrees());
         SmartDashboard.putNumber("Arm/Wrist/Output (V)", wristController.getOutput());
-        SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)",
-                Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
+        SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled Raw", isWristFeedbackEnabled());
+        SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", wristEnabled.get());
         SmartDashboard.putNumber("Arm/Shoulder/kG", new GamePiecekG().doubleValue());
 
         SmartDashboard.putBoolean("Arm/Shoulder/Game Piece Compensation", pieceGravityCompensation);
@@ -372,6 +415,5 @@ public abstract class Arm extends SubsystemBase {
         periodicallyCalled();
     }
 
-    public void periodicallyCalled() {
-    }
+    public void periodicallyCalled() {}
 }

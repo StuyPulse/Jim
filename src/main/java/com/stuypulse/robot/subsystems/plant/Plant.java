@@ -28,4 +28,5 @@ public abstract class Plant extends SubsystemBase {
 
     public abstract void engage();
     public abstract void disengage();
+    public abstract boolean isEngaged();
 }

@@ -114,6 +114,7 @@ public class RobotAlignThenScore extends CommandBase {
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
 
+        // TODO: add getError methods to controller
         xErrorChange.get(targetPose.getX() - currentPose.getX());
 
         controller.update(targetPose, currentPose);

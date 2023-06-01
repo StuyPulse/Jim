@@ -36,7 +36,7 @@ public class OdometryImpl extends Odometry {
 
     private interface VisionStdDevs {
         Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
-        Vector<N3> TELEOP = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(30));
+    Vector<N3> TELEOP = VecBuilder.fill(0.3 - Units.inchesToMeters(5.0), 0.3 - Units.inchesToMeters(5.0), Units.degreesToRadians(30));
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
