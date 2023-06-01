@@ -12,7 +12,7 @@ import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.util.AprilTagData;
-import com.stuypulse.robot.util.VisionData;
+import com.stuypulse.robot.util.Limelight.DataType;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -36,7 +36,7 @@ public class OdometryImpl extends Odometry {
 
     private interface VisionStdDevs {
         Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
-    Vector<N3> TELEOP = VecBuilder.fill(0.3 - Units.inchesToMeters(5.0), 0.3 - Units.inchesToMeters(5.0), Units.degreesToRadians(30));
+        Vector<N3> TELEOP = VecBuilder.fill(0.3 - Units.inchesToMeters(5.0), 0.3 - Units.inchesToMeters(5.0), Units.degreesToRadians(30));
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -110,18 +110,13 @@ public class OdometryImpl extends Odometry {
         return field;
     }
 
-    private void processResults(List<VisionData> results, SwerveDrive drive, Vision vision){
+    private void processResults(List<AprilTagData> results, SwerveDrive drive, Vision vision){
         if (DISABLE_APRIL_TAGS.get()) {
             return;
         }
 
-        for (VisionData result : results) {
-            if (Robot.getMatchState() == MatchState.AUTO) {
-                // poseEstimator.addVisionMeasurement(
-                //     new Pose2d(result.pose.getTranslation(), getRotation()),
-                //     Timer.getFPGATimestamp() - result.latency,
-                //     VisionStdDevs.AUTO);
-            } else {
+        for (AprilTagData result : results) {
+            if (Robot.getMatchState() != MatchState.AUTO && Vision.getInstance().getPipeline() == DataType.APRIL_TAG) {
                 poseEstimator.addVisionMeasurement(
                     result.pose,
                     Timer.getFPGATimestamp() - result.latency,
@@ -139,7 +134,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
-        List<VisionData> results = Vision.getInstance().getResults();
+        List<AprilTagData> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
         odometryPose2d.setPose(odometry.getPoseMeters());

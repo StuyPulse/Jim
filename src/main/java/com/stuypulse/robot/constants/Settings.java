@@ -74,6 +74,8 @@ public interface Settings {
         double MAX_USE_ANGLE = 50;
 
         public interface Limelight {
+            String FIRST_LIMELIGHT = "limelight-back";
+            
             String [] LIMELIGHTS = {
                 "limelight-back",
                 "limelight-front"

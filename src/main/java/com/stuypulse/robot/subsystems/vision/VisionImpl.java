@@ -11,10 +11,8 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
-import com.stuypulse.robot.util.VisionData;
 import com.stuypulse.robot.util.Limelight.DataType;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
@@ -35,7 +33,7 @@ public class VisionImpl extends Vision {
     private static final Pose2d kNoPose =
         new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
-    private static final VisionData kNoData =
+    private static final AprilTagData kNoData =
         new AprilTagData(kNoPose, Double.NaN, -1, null);
 
     // store limelight network tables
@@ -71,6 +69,18 @@ public class VisionImpl extends Vision {
     }
 
     @Override
+    public void setPipeline(DataType type) {
+        for (Limelight limelight : limelights) {
+            limelight.setPipeline(type);
+        }
+    }
+
+    @Override
+    public DataType getPipeline() {
+        return limelights[0].getPipeline();
+    }
+
+    @Override
     public double getDistance() {
         for (Limelight limelight : limelights) {
             if (limelight.hasReflectiveTapeData()) {
@@ -95,25 +105,16 @@ public class VisionImpl extends Vision {
         return results;
     }
 
-    @Override
-    public void setPipeline(DataType type) {
-        for (Limelight limelight : limelights) {
-            limelight.setPipeline(type);
-        }
-    }
-
-    /**
-     * @see ReflectiveTapeData#getDistance(), id = -1 for reflective tape
-     */
-    private static void putVisionData(String prefix, VisionData data, DataStatus accepted) {
+    private static void putAprilTagData(String prefix, AprilTagData data, DataStatus accepted) {
         SmartDashboard.putNumber(prefix + "/Pose X" , data.pose.getX());
         SmartDashboard.putNumber(prefix + "/Pose Y" , data.pose.getY());
         SmartDashboard.putNumber(prefix + "/Pose Rotation (Deg)" , data.pose.getRotation().getDegrees());
-        SmartDashboard.putNumber(prefix + "/Tag ID", data.id); 
+        SmartDashboard.putNumber(prefix + "/Tag ID", data.id);
         SmartDashboard.putNumber(prefix + "/Latencty (s)", data.latency);
+
         if (accepted != DataStatus.NONE) {
-            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistance());
-            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getXDegrees());
+            SmartDashboard.putNumber(prefix + "/Distance to Tag", data.getDistanceToTag());
+            SmartDashboard.putNumber(prefix + "/Angle to Tag", data.getDegreesToTag());
         } else {
             SmartDashboard.putNumber(prefix + "/Distance to Tag", Double.NaN);
             SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
@@ -122,17 +123,16 @@ public class VisionImpl extends Vision {
         SmartDashboard.putString(prefix + "/Accepted", accepted.name());
     }
 
-
-    private static boolean isAcceptable(Pose2d robot, VisionData data) {
+    private static boolean isAcceptable(Pose2d robot, AprilTagData data) {
         // reject invalid apriltag ids
         if (!Field.isValidAprilTagId(data.id)) return false;
 
         // check if distance to tag is greater than cutoff
-        double distanceToTag = data.getDistance();
+        double distanceToTag = data.getDistanceToTag();
         if (distanceToTag < MIN_USE_DISTANCE || distanceToTag > MAX_USE_DISTANCE) return false;
 
         // check if angle to tag is greater than cutoff
-        double angleToTag = Math.abs(data.getXDegrees());
+        double angleToTag = Math.abs(data.getDegreesToTag());
         if (angleToTag < MIN_USE_ANGLE || angleToTag > MAX_USE_ANGLE) return false;
 
         // OK
@@ -149,13 +149,14 @@ public class VisionImpl extends Vision {
         var robotPose = Odometry.getInstance().getPose();
         // TODO: log all vision measurements, but also indicate which ones were actually used
 
+
         results.clear();
         for (int i = 0; i < limelights.length; ++i) {
             Limelight ll = limelights[i];
             FieldObject2d ll2d = limelightPoses[i];
 
             ll.updateAprilTagData();
-            
+
             if (ll.hasAprilTagData()) {
                 var data = ll.getAprilTagData().get();
 
@@ -163,19 +164,17 @@ public class VisionImpl extends Vision {
 
                 if (isAcceptable(robotPose, data)) {
                     if (!Field.isValidAprilTagId(data.id)) continue;
-                    putVisionData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
+                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.ACCEPTED);
                     ll2d.setPose(data.pose);
 
                     results.add(data);
                 } else {
-                    putVisionData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
+                    putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
                     ll2d.setPose(kNoPose);
                 }
 
-            } else if(ll.hasReflectiveTapeData()) {
-                
             } else {
-                putVisionData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
+                putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
                 ll2d.setPose(kNoPose);
             }
         }

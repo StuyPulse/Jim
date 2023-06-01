@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.Optional;
 
 public class Limelight {
-    
+
     public enum DataType {
         APRIL_TAG(0),
         TAPE(1);
@@ -51,13 +51,12 @@ public class Limelight {
     private final IntegerEntry idEntry;
     private final DoubleArrayEntry blueBotposeEntry;
     private final DoubleArrayEntry redBotposeEntry;
-
+    
     private final DoubleEntry txEntry;
     private final DoubleEntry tyEntry;
     private final IntegerEntry tvEntry;
     
     private final IntegerEntry pipelineEntry;
-
 
     private Optional<AprilTagData> data;
 
@@ -65,15 +64,16 @@ public class Limelight {
 
     public Limelight(String tableName, Pose3d robotRelativePose) {
         this.tableName = tableName;
-        limelightId = tableName == "limelight" ? 0 : 1;
         this.robotRelativePose = robotRelativePose;
+
+        limelightId = tableName == FIRST_LIMELIGHT ? 0 : 1;
 
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
 
         blueBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
         redBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
         idEntry = limelight.getIntegerTopic("tid").getEntry(0);
-        
+
         txEntry = limelight.getDoubleTopic("tx").getEntry(0.0);
         tyEntry = limelight.getDoubleTopic("ty").getEntry(0.0);
         tvEntry = limelight.getIntegerTopic("tv").getEntry(0);
@@ -95,8 +95,12 @@ public class Limelight {
         NetworkTableInstance.getDefault().getTable(tableName).getEntry("pipeline").setNumber(type.type);
     }
 
+    public Optional<AprilTagData> getAprilTagData() {
+        return data;
+    }
+
     public boolean hasAprilTagData() {
-        return getAprilTagData().isPresent() && getPipeline().isAprilTag();
+        return getAprilTagData().isPresent();
     }
 
     public boolean hasReflectiveTapeData() {
@@ -107,10 +111,6 @@ public class Limelight {
         return RobotContainer.getCachedAlliance() == Alliance.Blue ?
             blueBotposeEntry.get() :
             redBotposeEntry.get();
-    }
-
-    public Optional<AprilTagData> getAprilTagData() {
-        return data;
     }
 
     public double getXAngle() {
@@ -139,13 +139,6 @@ public class Limelight {
 
     }
 
-    public double getLatency() {
-        if (getPipeline().isAprilTag()) {
-            return Units.millisecondsToSeconds(getPoseData()[6]);
-        }
-        return 0;
-    }
-    
     public void updateAprilTagData() {
         double[] botposeData = getPoseData();
 
