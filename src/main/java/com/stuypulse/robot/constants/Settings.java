@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-
 import com.pathplanner.lib.auto.PIDConstants;
 
 /*-
@@ -214,10 +213,10 @@ public interface Settings {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.7);
 
-                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
-                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
+                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.7);
+                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.81);
             }
         }
 
