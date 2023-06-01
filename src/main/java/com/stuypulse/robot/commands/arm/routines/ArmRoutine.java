@@ -11,6 +11,7 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -68,6 +69,16 @@ public abstract class ArmRoutine extends CommandBase {
             .addState(dest);
     }
 
+    public ArmTrajectory getLongTrajectory(ArmState src, ArmState dest){
+        double pivotAngle = Rotation2d.fromDegrees(5).getDegrees();
+        return new ArmTrajectory()
+            .addState(src.getShoulderDegrees(), pivotAngle)
+            .addState(
+                new ArmState(dest.getShoulderDegrees(), pivotAngle).setWristLimp(true).setWristTolerance(360)
+            )
+            .addState(dest);
+    }
+
     @Override
     public void initialize() {
         trajectory = getTrajectory(Arm.getInstance().getState(), endState.get());
@@ -80,6 +91,7 @@ public abstract class ArmRoutine extends CommandBase {
 
         currentIndex = 0;
     }
+
 
     @Override
     public void execute() {
@@ -119,3 +131,4 @@ public abstract class ArmRoutine extends CommandBase {
         return this;
     }
 }
+
