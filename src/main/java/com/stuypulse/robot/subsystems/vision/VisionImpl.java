@@ -12,7 +12,9 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
 import com.stuypulse.robot.util.VisionData;
+import com.stuypulse.robot.util.Limelight.DataType;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
@@ -43,7 +45,7 @@ public class VisionImpl extends Vision {
     private final FieldObject2d[] limelightPoses;
 
     // cache results every loop in a list
-    private final List<VisionData> results;
+    private final List<AprilTagData> results;
 
     protected VisionImpl() {
         // reference to all limelights on robot
@@ -69,8 +71,35 @@ public class VisionImpl extends Vision {
     }
 
     @Override
-    public List<VisionData> getResults() {
+    public double getDistance() {
+        for (Limelight limelight : limelights) {
+            if (limelight.hasReflectiveTapeData()) {
+                return limelight.getDistance();
+            }
+        }
+        return Double.NaN;
+    }
+
+    @Override
+    public double getAngle() {
+        for (Limelight limelight : limelights) {
+            if (limelight.hasReflectiveTapeData()) {
+                return limelight.getXAngle();
+            }
+        }
+        return Double.NaN;
+    }
+
+    @Override
+    public List<AprilTagData> getResults() {
         return results;
+    }
+
+    @Override
+    public void setPipeline(DataType type) {
+        for (Limelight limelight : limelights) {
+            limelight.setPipeline(type);
+        }
     }
 
     /**

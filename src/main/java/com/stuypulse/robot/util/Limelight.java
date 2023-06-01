@@ -5,7 +5,6 @@
 
 package com.stuypulse.robot.util;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy;
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.Manager;
@@ -88,16 +87,16 @@ public class Limelight {
         return tableName;
     }
 
-    public Optional<AprilTagData> getAprilTagData() {
-        return data;
+    public DataType getPipeline() {
+        return pipelineEntry.get() == 0 ? DataType.APRIL_TAG : DataType.TAPE;
+    }
+
+    public void setPipeline(DataType type) {
+        NetworkTableInstance.getDefault().getTable(tableName).getEntry("pipeline").setNumber(type.type);
     }
 
     public boolean hasAprilTagData() {
         return getAprilTagData().isPresent() && getPipeline().isAprilTag();
-    }
-
-    public Optional<ReflectiveTapeData> getReflectiveTapeData() {
-        return Optional.of(new ReflectiveTapeData(data.get().pose, getPoseData()[6], -1, robotRelativePose)
     }
 
     public boolean hasReflectiveTapeData() {
@@ -108,6 +107,10 @@ public class Limelight {
         return RobotContainer.getCachedAlliance() == Alliance.Blue ?
             blueBotposeEntry.get() :
             redBotposeEntry.get();
+    }
+
+    public Optional<AprilTagData> getAprilTagData() {
+        return data;
     }
 
     public double getXAngle() {
@@ -136,12 +139,11 @@ public class Limelight {
 
     }
 
-    public DataType getPipeline() {
-        return pipelineEntry.get() == 0 ? DataType.APRIL_TAG : DataType.TAPE;
-    }
-
-    public void setPipeline(DataType type) {
-        NetworkTableInstance.getDefault().getTable(tableName).getEntry("pipeline").setNumber(type.type);
+    public double getLatency() {
+        if (getPipeline().isAprilTag()) {
+            return Units.millisecondsToSeconds(getPoseData()[6]);
+        }
+        return 0;
     }
     
     public void updateAprilTagData() {

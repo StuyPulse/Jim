@@ -7,12 +7,12 @@ package com.stuypulse.robot.util;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ReflectiveTapeData extends VisionData {
-    double distance = 
 
-    public ReflectiveTapeData(Pose2d robotPose, double distance, double xAngle, double latency, int id, Pose3d cameraPose) {
-        super(robotPose, latency, cameraPose);
+    public ReflectiveTapeData(double distance, double xAngle, double latency, Pose3d cameraPose) {
+        super(new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN)), latency, cameraPose);
         this.distance = distance;
         this.xAngle = xAngle;
     }
