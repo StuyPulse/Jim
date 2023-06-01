@@ -39,7 +39,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.SACROD;
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -75,14 +75,14 @@ public interface Settings {
 
         public interface Limelight {
             String [] LIMELIGHTS = {
-                "limelight"
-                // "limelight-front"
+                "limelight-back",
+                "limelight-front"
             };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
-                new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
-                // new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
-                // new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+                // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
             };
         }
     }
