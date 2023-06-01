@@ -15,7 +15,9 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.vision.Vision;
 import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.Limelight;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -310,6 +312,7 @@ public class Manager extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         Arm.getInstance().getVisualizer().setIntakingPiece(gamePiece);
 
         SmartDashboard.putString("Manager/Game Piece", gamePiece.name());

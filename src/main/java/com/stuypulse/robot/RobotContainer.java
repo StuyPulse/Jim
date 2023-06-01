@@ -34,6 +34,7 @@ import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.util.*;
 import com.stuypulse.robot.util.BootlegXbox;
+import com.stuypulse.robot.util.Limelight.DataType;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
@@ -135,10 +136,13 @@ public class RobotContainer {
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
             .onTrue(new ManagerChooseScoreNode())
-            .whileTrue(new RobotAlignThenScoreCubes());
+            .whileTrue(Manager.getInstance().getGamePiece().isCube() ? new RobotAlignThenScoreCubes() : new RobotAlignThenScoreCones());
 
         // swerve
-        driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+        // driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+
+        driver.getLeftButton().onTrue(new InstantCommand( () -> Vision.getInstance().setPipeline(DataType.TAPE)));
+        driver.getRightButton().onTrue(new InstantCommand( () -> Vision.getInstance().setPipeline(DataType.APRIL_TAG)));
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
@@ -147,7 +151,7 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        driver.getRightButton().onTrue(new PlantEngage());
+        // driver.getRightButton().onTrue(new PlantEngage());
         driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasGamePiece)
@@ -212,10 +216,6 @@ public class RobotContainer {
 
         operator.getBottomButton()
             .onTrue(new ManagerSetGamePiece(GamePiece.CONE_TIP_OUT));
-
-        operator.getRightBumper()
-            .onTrue(arm.runOnce(arm::enableLimp))
-            .onFalse(arm.runOnce(arm::disableLimp));
 
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())

@@ -74,12 +74,15 @@ public interface Settings {
         double MAX_USE_ANGLE = 50;
 
         public interface Limelight {
+            String FIRST_LIMELIGHT = "limelight-back";
+            
             String [] LIMELIGHTS = {
                 "limelight-back",
                 "limelight-front"
             };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
+                // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
                 new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
                 new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
             };
@@ -237,7 +240,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(120));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(0));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);

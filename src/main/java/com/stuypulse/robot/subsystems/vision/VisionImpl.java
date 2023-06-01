@@ -11,6 +11,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight;
+import com.stuypulse.robot.util.Limelight.DataType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,6 +66,38 @@ public class VisionImpl extends Vision {
 
         // constantly store results in array
         results = new ArrayList<>();
+    }
+
+    @Override
+    public void setPipeline(DataType type) {
+        for (Limelight limelight : limelights) {
+            limelight.setPipeline(type);
+        }
+    }
+
+    @Override
+    public DataType getPipeline() {
+        return limelights[0].getPipeline();
+    }
+
+    @Override
+    public double getDistance() {
+        for (Limelight limelight : limelights) {
+            if (limelight.hasReflectiveTapeData()) {
+                return limelight.getDistance();
+            }
+        }
+        return Double.NaN;
+    }
+
+    @Override
+    public double getAngle() {
+        for (Limelight limelight : limelights) {
+            if (limelight.hasReflectiveTapeData()) {
+                return limelight.getXAngle();
+            }
+        }
+        return Double.NaN;
     }
 
     @Override

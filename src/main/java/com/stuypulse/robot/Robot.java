@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
 
 
         robot.arm.setCoast(false, false);
-        robot.arm.setLimp(true, true);
         robot.arm.setTargetState(robot.arm.getState()); // TODO: ArmHold in auton?
         robot.arm.resetMotionProfile();
         robot.arm.setShoulderConstraints(Shoulder.AUTON_MAX_VELOCITY, Shoulder.AUTON_MAX_ACCELERATION);
@@ -114,7 +113,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("Match State", state.name());
 
         robot.arm.setCoast(false, false);
-        robot.arm.setLimp(false, false);
         robot.arm.setShoulderConstraints(Shoulder.TELEOP_MAX_VELOCITY, Shoulder.TELEOP_MAX_ACCELERATION);
         robot.arm.setShoulderVelocityFeedbackCutoff(Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF.doubleValue());
         robot.arm.setShoulderVelocityFeedbackDebounce(Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE.doubleValue());

@@ -119,20 +119,23 @@ public class ArmImpl extends Arm {
     }
 
     // private boolean isShoulderStalling() {
-    //     double appliedShoulderVoltage =
-    //         Math.max(
-    //             shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
-    //             shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
-    //         );
+    // double appliedShoulderVoltage =
+    // Math.max(
+    // shoulderRight.getAppliedOutput() * shoulderRight.getBusVoltage(),
+    // shoulderLeft.getAppliedOutput() * shoulderLeft.getBusVoltage(),
+    // );
 
-    //     return shoulderEncoder.getVelocity() < Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts > Shoulder.STALLING_VOLTAGE.doubleValue() ||
-    //             wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
+    // return shoulderEncoder.getVelocity() <
+    // Shoulder.STALLING_VELOCITY.doubleValue() && shoulderVolts >
+    // Shoulder.STALLING_VOLTAGE.doubleValue() ||
+    // wrist.getOutputCurrent() > Shoulder.STALLING_CURRENT.doubleValue();
     // }
 
     // private boolean isWristStalling() {
-    //     return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() && wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
-    //             shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() ||
-    //             shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
+    // return wristEncoder.getVelocity() < Wrist.STALLING_VELOCITY.doubleValue() &&
+    // wristVolts > Wrist.STALLING_VOLTAGE.doubleValue() ||
+    // shoulderLeft.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue() ||
+    // shoulderRight.getOutputCurrent() > Wrist.STALLING_CURRENT.doubleValue();
     // }
 
     @Override
@@ -146,11 +149,11 @@ public class ArmImpl extends Arm {
         SmartDashboard.putNumber("Arm/Wrist/Current (amps)", wrist.getOutputCurrent());
 
         // if (wristIsStalling()) {
-        //     setWristVoltageImpl(WRIST);
+        // setWristVoltageImpl(WRIST);
         // }
 
         // if (armIsStalling()) {
-        //     shoulderVolts = 0;
+        // shoulderVolts = 0;
         // }
 
         // runShoulder(shoulderVolts);
