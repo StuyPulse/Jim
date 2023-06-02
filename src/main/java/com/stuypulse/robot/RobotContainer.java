@@ -13,6 +13,10 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireRed;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireRed;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -233,13 +237,19 @@ public class RobotContainer {
         // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.addOption("Two Piece Dock", new TwoPieceDock());
+        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
+        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
         // autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
         autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
         autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
+        autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
+        autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
+        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
+        autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());  
+        
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 
         SmartDashboard.putData("Autonomous", autonChooser);

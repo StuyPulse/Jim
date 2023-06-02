@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.battlecry;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -18,6 +18,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
@@ -31,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class TwoPieceDock extends DebugSequentialCommandGroup {
+public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
             super(() -> {
@@ -49,7 +50,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
 
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(45))
+                    .setWristTolerance(20))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
                     .setWristTolerance(23).setShoulderTolerance(20));
         }
@@ -96,12 +97,12 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
     private static final double STOW_WAIT_TIME = 0;
 
     private static final PathConstraints INTAKE_PIECE_CONSTRAINTS = new PathConstraints(2.2, 2);
-    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.5);
+    private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.25);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
 
-    public TwoPieceDock() {
+    public BCTwoPieceDockWireBlue() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece + Dock", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
+            PathPlanner.loadPathGroup("BC 2 Piece Dock Bump Blue", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
         );
 
@@ -158,6 +159,7 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME)
+                .until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
@@ -208,7 +210,8 @@ public class TwoPieceDock extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Dock"))
                         .fieldRelative().withStop(),
 
-                new WaitCommand(STOW_WAIT_TIME).andThen(new ArmStow())
+                new WaitCommand(STOW_WAIT_TIME)
+                    .andThen(new ArmStow())
             )
         );
 
