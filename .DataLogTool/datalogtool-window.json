@@ -2,13 +2,13 @@
   "MainWindow": {
     "GLOBAL": {
       "fps": "120",
-      "height": "637",
-      "maximized": "0",
+      "height": "1001",
+      "maximized": "1",
       "style": "0",
       "userScale": "2",
-      "width": "1156",
-      "xpos": "208",
-      "ypos": "69"
+      "width": "1920",
+      "xpos": "0",
+      "ypos": "29"
     }
   },
   "Window": {
@@ -19,7 +19,7 @@
     },
     "Download": {
       "Collapsed": "0",
-      "Pos": "0,312",
+      "Pos": "2,313",
       "Size": "468,325"
     },
     "Entries": {
