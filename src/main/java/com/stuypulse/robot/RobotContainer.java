@@ -122,7 +122,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingToggle());
+        // driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getLeftTriggerButton()
@@ -243,8 +243,8 @@ public class RobotContainer {
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
         // autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
-        autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
-        autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
+        autonChooser.addOption("Three Piece W Low Red", new ThreePieceWLowRed());
+        autonChooser.setDefaultOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
         autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
