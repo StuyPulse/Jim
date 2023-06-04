@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands.intake;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
+import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.subsystems.intake.*;
 
@@ -18,9 +19,9 @@ public class IntakeAcquireColyi extends InstantCommand {
 
     @Override
     public void initialize(){
-        boolean isCubeMid = manager.getScoreSide() == ScoreSide.BACK && manager.getGamePiece().isCube();
+        boolean isCubeMidOppositeBackConditionBooleanExpressionStoredInAVariable = manager.getScoreSide() == ScoreSide.BACK && manager.getGamePiece().isCube() && manager.getNodeLevel() == NodeLevel.MID;
 
-        if (manager.getGamePiece().isCone() || isCubeMid) {
+        if (manager.getGamePiece().isCone() || isCubeMidOppositeBackConditionBooleanExpressionStoredInAVariable) {
             intake.acquire();
         }
     }
