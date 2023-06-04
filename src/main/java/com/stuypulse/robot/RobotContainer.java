@@ -238,17 +238,17 @@ public class RobotContainer {
         // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
-        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());                      // q70 - terrible - fixed pickup
+        autonChooser.setDefaultOption("Two Piece Dock Red", new TwoPieceDockRed());
+        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());                    // q70 - terrible - fixed pickup
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
         // autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
-        autonChooser.addOption("Three Piece W Low Red", new ThreePieceWLowRed());                   // q13 - move cubes, q43 - mid score too far in grid, q63 - worked
-        autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());                 // q3  - move cubes
-        autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());   // q28 - worked, move cube
+        autonChooser.addOption("Three Piece W Low Red", new ThreePieceWLowRed());                 // q13 - move cubes, q43 - mid score too far in grid, q63 - worked
+        autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());               // q3  - move cubes
+        autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue()); // q28 - worked, move cube
         autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
-        autonChooser.setDefaultOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue()); // q53 - fixed pickup
+        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());      // q53 - fixed pickup
         autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());
         
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
