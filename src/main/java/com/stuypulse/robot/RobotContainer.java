@@ -188,7 +188,8 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .onTrue(new IntakeAcquire()
+            .onTrue(new ManagerValidateState()
+                .andThen(new IntakeAcquireColyi())
                 .andThen(new WaitCommand(0.2)
                     .until(() -> intake.hasGamePiece()))
                 .andThen(new IntakeStop()))
