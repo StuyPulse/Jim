@@ -122,7 +122,7 @@ public class RobotContainer {
 
     private void configureDriverBindings() {
         // wing
-        driver.getSelectButton().onTrue(new WingToggle());
+        // driver.getSelectButton().onTrue(new WingToggle());
 
         // arm
         driver.getLeftTriggerButton()
@@ -188,7 +188,8 @@ public class RobotContainer {
 
         // ready & score
         operator.getLeftBumper()
-            .onTrue(new IntakeAcquire()
+            .onTrue(new ManagerValidateState()
+                .andThen(new IntakeAcquireColyi())
                 .andThen(new WaitCommand(0.2)
                     .until(() -> intake.hasGamePiece()))
                 .andThen(new IntakeStop()))
@@ -237,18 +238,18 @@ public class RobotContainer {
         // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
+        autonChooser.setDefaultOption("Two Piece Dock Red", new TwoPieceDockRed());
         autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
         // autonChooser.addOption("Three Piece", new ThreePiece());
         autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
-        autonChooser.setDefaultOption("Three Piece W Low Red", new ThreePieceWLowRed());
+        autonChooser.addOption("Three Piece W Low Red", new ThreePieceWLowRed());
         autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
         autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
         autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
-        autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());  
+        autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());
         
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 

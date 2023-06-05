@@ -19,6 +19,15 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Arm": {
+          "Shoulder": {
+            "open": true
+          },
+          "Wrist": {
+            "open": true
+          },
+          "open": true
+        },
         "Arm Trajectories": {
           "open": true
         },
@@ -65,8 +74,7 @@
           },
           "Front Right": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Vision": {
           "com.stuypulse.robot.util.Limelight@19d31f3": {
@@ -127,14 +135,14 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT3)",
+    "mode": "Disabled",
     "serverTeam": "10.6.94.2"
   },
   "Plots": {
     "Plot <0>": {
       "plots": [
         {
-          "height": 972,
+          "height": 416,
           "series": [
             {
               "color": [
@@ -178,7 +186,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -213,7 +221,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -243,7 +251,7 @@
     "Plot <12>": {
       "plots": [
         {
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -278,7 +286,7 @@
               "autoFit": true
             }
           ],
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -308,7 +316,7 @@
     "Plot <14>": {
       "plots": [
         {
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -378,7 +386,7 @@
     "Plot <16>": {
       "plots": [
         {
-          "height": 972,
+          "height": 416,
           "series": [
             {
               "color": [
@@ -402,7 +410,8 @@
         }
       ],
       "window": {
-        "name": "Arm Velocities"
+        "name": "Arm Velocities",
+        "visible": false
       }
     },
     "Plot <17>": {
@@ -413,7 +422,7 @@
               "autoFit": true
             }
           ],
-          "height": 419,
+          "height": 425,
           "series": [
             {
               "color": [
@@ -461,7 +470,7 @@
     "Plot <18>": {
       "plots": [
         {
-          "height": 438,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -491,7 +500,7 @@
     "Plot <19>": {
       "plots": [
         {
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -521,13 +530,13 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": -42,
+          "height": 416,
           "series": [
             {
               "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
+                0.3333333432674408,
+                0.3827749192714691,
+                0.658823549747467,
                 1.0
               ],
               "id": "NT:/SmartDashboard/Arm/Wrist/Angle (deg)"
@@ -539,7 +548,7 @@
                 0.32156863808631897,
                 1.0
               ],
-              "id": "NT:SmartDashboard/Arm/Wrist/Target Angle (deg)"
+              "id": "NT:/SmartDashboard/Arm/Wrist/Setpoint (deg)"
             },
             {
               "color": [
@@ -548,7 +557,34 @@
                 0.4078431725502014,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm/Wrist/Setpoint (deg)"
+              "id": "NT:SmartDashboard/Arm/Wrist/Target Angle (deg)"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Feedback Enabled Raw"
+            },
+            {
+              "color": [
+                0.5764706134796143,
+                0.4705882668495178,
+                0.3764706254005432,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm/Wrist/Output (V)"
             }
           ]
         }
@@ -560,7 +596,7 @@
     "Plot <20>": {
       "plots": [
         {
-          "height": 433,
+          "height": 418,
           "series": [
             {
               "color": [
@@ -590,7 +626,7 @@
     "Plot <21>": {
       "plots": [
         {
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -683,7 +719,7 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": -33,
+          "height": -30,
           "series": [
             {
               "color": [
@@ -794,7 +830,7 @@
               "autoFit": true
             }
           ],
-          "height": 438,
+          "height": 423,
           "series": [
             {
               "color": [
@@ -829,7 +865,7 @@
               "autoFit": true
             }
           ],
-          "height": 433,
+          "height": 418,
           "series": [
             {
               "color": [
