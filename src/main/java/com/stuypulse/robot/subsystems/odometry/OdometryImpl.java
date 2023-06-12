@@ -34,8 +34,8 @@ public class OdometryImpl extends Odometry {
     public static final SmartBoolean DISABLE_APRIL_TAGS = new SmartBoolean("Odometry/Disable April Tags", false);
 
     private interface VisionStdDevs {
-        Vector<N3> AUTO = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
-    Vector<N3> TELEOP = VecBuilder.fill(0.3 - Units.inchesToMeters(5.0), 0.3 - Units.inchesToMeters(5.0), Units.degreesToRadians(30));
+        Vector<N3> AUTON = VecBuilder.fill(0.3 - Units.inchesToMeters(2.0), 0.3 - Units.inchesToMeters(2.0), Units.degreesToRadians(30));
+        Vector<N3> TELEOP = VecBuilder.fill(0.3 - Units.inchesToMeters(5.0), 0.3 - Units.inchesToMeters(5.0), Units.degreesToRadians(30));
     }
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -61,7 +61,7 @@ public class OdometryImpl extends Odometry {
                     0.1,
                     0.1),
 
-                VisionStdDevs.TELEOP);
+                VisionStdDevs.AUTON);
 
         odometry =
             new SwerveDriveOdometry(
@@ -116,10 +116,11 @@ public class OdometryImpl extends Odometry {
 
         for (AprilTagData result : results) {
             if (Robot.getMatchState() == MatchState.AUTO) {
-                // poseEstimator.addVisionMeasurement(
-                //     new Pose2d(result.pose.getTranslation(), getRotation()),
-                //     Timer.getFPGATimestamp() - result.latency,
-                //     VisionStdDevs.AUTO);
+                poseEstimator.addVisionMeasurement(
+                    // new Pose2d(result.pose.getTranslation(), getRotation()),
+                    result.pose,
+                    Timer.getFPGATimestamp() - result.latency,
+                    VisionStdDevs.AUTON);
             } else {
                 poseEstimator.addVisionMeasurement(
                     result.pose,

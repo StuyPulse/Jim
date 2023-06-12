@@ -238,7 +238,7 @@ public class RobotContainer {
         // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.setDefaultOption("Two Piece Dock Red", new TwoPieceDockRed());
+        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
         autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
         // autonChooser.addOption("One Piece Dock", new OnePieceDock());
         autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
@@ -250,7 +250,9 @@ public class RobotContainer {
         autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
         autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
         autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());
-        
+        autonChooser.addOption("Straight", new Straight());
+        autonChooser.setDefaultOption("Straight the toher way", new StraightTheOtherWay());
+
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 
         SmartDashboard.putData("Autonomous", autonChooser);

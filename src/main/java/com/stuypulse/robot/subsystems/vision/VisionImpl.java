@@ -87,6 +87,7 @@ public class VisionImpl extends Vision {
             SmartDashboard.putNumber(prefix + "/Angle to Tag", Double.NaN);
         }
 
+        SmartDashboard.putBoolean(prefix + "/Accepted Boolean", accepted == DataStatus.ACCEPTED);
         SmartDashboard.putString(prefix + "/Accepted", accepted.name());
     }
 
