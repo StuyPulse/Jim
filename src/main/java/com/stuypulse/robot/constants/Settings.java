@@ -204,19 +204,19 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Shoulder/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Shoulder/kP", 1.3);
-                SmartNumber kI = new SmartNumber("Arm/Shoulder/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Shoulder/kD", 0.25);
+                double kP = 1.3;
+                double kI = 0;
+                double kD = 0.25;
             }
 
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
-                SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
-                SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.7);
+                double kS = 0.061;
+                double kV = 1.2;
+                double kA = 0.038097;
 
-                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.7);
-                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.81);
+                double kGEmpty = 0.7;
+                double kGCube = 0.7;
+                double kGCone = 0.81;
             }
         }
 
@@ -254,16 +254,16 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.5);
-                SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
+                double kP = 5.5;
+                double kI = 0;
+                double kD = 0.5;
             }
 
             public interface Feedforward {
-                SmartNumber kS = new SmartNumber("Arm/Wrist/kS", 0.0);
-                SmartNumber kA = new SmartNumber("Arm/Wrist/kA", 0.01);
-                SmartNumber kG = new SmartNumber("Arm/Wrist/kG", 0.0);
-                SmartNumber kV = new SmartNumber("Arm/Wrist/kV", 1.0);
+                double kS = 0.0;
+                double kA = 0.01;
+                double kG = 0.0;
+                double kV = 1.0;
             }
         }
     }

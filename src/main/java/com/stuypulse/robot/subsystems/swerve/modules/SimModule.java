@@ -5,14 +5,6 @@
 
 package com.stuypulse.robot.subsystems.swerve.modules;
 
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.angles.filters.ARateLimit;
-
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Settings;
@@ -22,6 +14,9 @@ import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -66,8 +61,13 @@ public class SimModule extends SwerveModule {
     private final LinearSystemSim<N2, N1, N2> driveSim;
 
     // controllers
-    private Controller driveController;
-    private AngleController turnController;
+    private final PIDController turnPID;
+    private final SlewRateLimiter turnRateLimit;
+    private double turnVoltage;
+
+    private final PIDController drivePID;
+    private final SimpleMotorFeedforward driveFF;
+    private double driveVoltage;
 
     public SimModule(String id, Translation2d location) {
 
@@ -78,15 +78,16 @@ public class SimModule extends SwerveModule {
         // turn
         turnSim = new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(Turn.kV.get(), Turn.kA.get()));
 
-        turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
-            .setSetpointFilter(new ARateLimit(Swerve.MAX_TURNING));
+        turnPID = new PIDController(Turn.kP.get(), Turn.kI, Turn.kD.get());
+        turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
+        turnRateLimit = new SlewRateLimiter(Swerve.MAX_TURNING.get());
+    
         // drive
         driveSim = new LinearSystemSim<>(identifyVelocityPositionSystem(Drive.kV, Drive.kA));
 
-        driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-                .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
-            .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
+        drivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
+        driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
 
         targetState = new SwerveModuleState();
     }
@@ -130,36 +131,40 @@ public class SimModule extends SwerveModule {
 
     @Override
     public void periodic() {
+        
         // turn
-        turnController.update(
-            Angle.fromRotation2d(targetState.angle),
-            Angle.fromRotation2d(getAngle()));
+        turnVoltage = turnPID.calculate(
+            getAngle().getRadians(),
+            turnRateLimit.calculate(targetState.angle.getRadians()));
 
         // drive
-        driveController.update(
-            targetState.speedMetersPerSecond,
-            getVelocity());
+        driveVoltage = drivePID.calculate(getVelocity(), targetState.speedMetersPerSecond);
+        if (Robot.getMatchState() == MatchState.TELEOP) {
+            driveVoltage = 0;
+        }
+
+        driveVoltage += driveFF.calculate(targetState.speedMetersPerSecond);
 
         SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getAngle().getDegrees());
-        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", targetState.angle.minus(getAngle()).getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnVoltage);
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnSim.getCurrentDrawAmps());
         SmartDashboard.putNumber("Swerve/" + id + "/Target Velocity", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getVelocity());
-        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
-        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", targetState.speedMetersPerSecond - getVelocity());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveVoltage);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveSim.getCurrentDrawAmps());
     }
 
     @Override
     public void simulationPeriodic() {
         // drive
-        driveSim.setInput(driveController.getOutput());
+        driveSim.setInput(driveVoltage);
         driveSim.update(Settings.DT);
 
         // turn
-        turnSim.setInput(turnController.getOutput());
+        turnSim.setInput(turnVoltage);
         turnSim.update(Settings.DT);
 
        // turn simulation

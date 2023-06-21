@@ -5,10 +5,7 @@
 
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.streams.filters.LowPassFilter;
@@ -24,6 +21,7 @@ import com.stuypulse.robot.constants.Settings.Driver.Turn.GyroFeedback;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -40,7 +38,7 @@ public class SwerveDriveDrive extends CommandBase {
 
     private final Gamepad driver;
 
-    private final AngleController gyroFeedback;
+    private final PIDController gyroFeedback;
     private Optional<Rotation2d> holdAngle;
 
     public SwerveDriveDrive(Gamepad driver) {
@@ -69,7 +67,8 @@ public class SwerveDriveDrive extends CommandBase {
             );
 
         holdAngle = Optional.empty();
-        gyroFeedback = new AnglePIDController(GyroFeedback.P, GyroFeedback.I, GyroFeedback.D);
+        gyroFeedback = new PIDController(GyroFeedback.P.get(), GyroFeedback.I.get(), GyroFeedback.D.get());
+        gyroFeedback.enableContinuousInput(-Math.PI, Math.PI);
 
         addRequirements(swerve, plant);
     }
@@ -98,9 +97,9 @@ public class SwerveDriveDrive extends CommandBase {
             }
 
             if (GyroFeedback.GYRO_FEEDBACK_ENABLED.get() && !isDriveInDeadband()) {
-                angularVel = -gyroFeedback.update(
-                    Angle.fromRotation2d(holdAngle.get()),
-                    Angle.fromRotation2d(swerve.getGyroAngle()));
+                angularVel = -gyroFeedback.calculate(
+                    swerve.getGyroAngle().getRadians(),
+                    holdAngle.get().getRadians());
             }
         }
 

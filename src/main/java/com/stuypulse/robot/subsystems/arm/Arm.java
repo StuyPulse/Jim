@@ -5,11 +5,6 @@
 
 package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
@@ -25,17 +20,22 @@ import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.util.ArmDriveFeedforward;
-import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
-import com.stuypulse.robot.util.ArmEncoderFeedforward;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
 import com.stuypulse.robot.util.BenMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -72,9 +72,18 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber shoulderTargetDegrees;
     private final SmartNumber wristTargetDegrees;
 
-    // controllers for each joint
-    private final Controller shoulderController;
-    private final AngleController wristController;
+    // shoulder controllers
+    private final SimpleMotorFeedforward shoulderFF;
+    private final PIDController shoulderPID;
+    private final GamePiecekG shoulderkG;
+    private TrapezoidProfile shoulderMotionProfile;
+    private final Timer shoulderProfileTimer;
+
+    // wrist controllers
+    private final SimpleMotorFeedforward wristFF;
+    private final PIDController wristPID;
+    // private final TrapezoidProfile wristMotionProfile;
+    // private final Timer wristProfileTimer;
 
     // Mechanism2d visualizer
     private final ArmVisualizer armVisualizer;
@@ -100,42 +109,45 @@ public abstract class Arm extends SubsystemBase {
     private final SmartNumber wristMaxVelocity;
     private final SmartNumber wristMaxAcceleration;
 
-    private final BenMotionProfile shoulderMotionProfile;
-
-    private class GamePiecekG extends Number {
-        @Override
-        public double doubleValue() {
+    private class GamePiecekG implements Sendable {
+        private double kGEmpty;
+        private double kGCube;
+        private double kGCone;
+    
+        public double calculate(double positionRadians) {
+            return getkG() * Math.cos(positionRadians);
+        }
+    
+        public double getkG() {
             if (!pieceGravityCompensation) {
-                return Shoulder.Feedforward.kGEmpty.doubleValue();
+                return Shoulder.Feedforward.kGEmpty;
             }
-
+    
             switch (Manager.getInstance().getGamePiece()) {
                 case CONE_TIP_IN:
-                    return Shoulder.Feedforward.kGCone.doubleValue();
                 case CONE_TIP_OUT:
-                    return Shoulder.Feedforward.kGCone.doubleValue();
                 case CONE_TIP_UP:
-                    return Shoulder.Feedforward.kGCone.doubleValue();
+                    return kGCone;
                 case CUBE:
-                    return Shoulder.Feedforward.kGCube.doubleValue();
+                    return kGCube;
                 default:
-                    return Shoulder.Feedforward.kGEmpty.doubleValue();
+                    return kGEmpty;
             }
         }
-
-        @Override
-        public float floatValue() {
-            return (float)doubleValue();
+    
+        public GamePiecekG(double kGEmpty, double kGCube, double kGCone) {
+            this.kGEmpty = kGEmpty;
+            this.kGCube = kGCube;
+            this.kGCone = kGCone;
         }
-
+    
         @Override
-        public int intValue() {
-            return (int)doubleValue();
-        }
+        public void initSendable(SendableBuilder builder) {
+            builder.setSmartDashboardType("Gamepiece kG Switcher");
 
-        @Override
-        public long longValue() {
-            return (long)doubleValue();
+            builder.addDoubleProperty("kGEmpty", () -> kGEmpty, (double kG) -> { kGEmpty = kG; });
+            builder.addDoubleProperty("kGCube", () -> kGCube, (double kG) -> { kGCube = kG; });
+            builder.addDoubleProperty("kGCone", () -> kGCone, (double kG) -> { kGCone = kG; });
         }
     }
 
@@ -168,22 +180,16 @@ public abstract class Arm extends SubsystemBase {
             "Arm/Wrist/Max Acceleration",
             Wrist.TELEOP_MAX_ACCELERATION.doubleValue());
 
-        shoulderMotionProfile = new BenMotionProfile(
-            shoulderMaxVelocity.filtered(Math::toRadians).number(),
-            shoulderMaxAcceleration.filtered(Math::toRadians).number());
+        shoulderFF = new SimpleMotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA);
+        shoulderPID = new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD);
+        shoulderkG = new GamePiecekG(Shoulder.Feedforward.kGEmpty, Shoulder.Feedforward.kGCube, Shoulder.Feedforward.kGCone);
+        shoulderMotionProfile = new TrapezoidProfile(
+            new Constraints(
+                Math.toRadians(shoulderMaxVelocity.get()),
+                Math.toRadians(shoulderMaxAcceleration.get())),
+            new State(shoulderTargetDegrees.get(), 0));
 
-        shoulderController = new MotorFeedforward(Shoulder.Feedforward.kS, Shoulder.Feedforward.kV, Shoulder.Feedforward.kA).position()
-            .add(new ArmEncoderFeedforward(new GamePiecekG()))
-            .add(new ArmDriveFeedforward(new GamePiecekG(), SwerveDrive.getInstance()::getForwardAccelerationGs))
-            .add(new PIDController(Shoulder.PID.kP, Shoulder.PID.kI, Shoulder.PID.kD))
-            .setSetpointFilter(shoulderMotionProfile)
-            .setOutputFilter(x -> {
-                if (isShoulderLimp()) return 0;
-                return shoulderVoltageOverride.orElse(x);
-            })
-            ;
-
-        wristController = new MotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA).angle()
+        wristFF = new SimpleMotorFeedforward(Wrist.Feedforward.kS, Wrist.Feedforward.kV, Wrist.Feedforward.kA);
             .add(new ArmEncoderAngleFeedforward(Wrist.Feedforward.kG))
             .add(new AnglePIDController(Wrist.PID.kP, Wrist.PID.kI, Wrist.PID.kD)
                 .setOutputFilter(x -> wristEnabled.get() ? x : 0))
@@ -209,6 +215,24 @@ public abstract class Arm extends SubsystemBase {
 
     public void resetMotionProfile() {
         shoulderMotionProfile.reset(getShoulderAngle().getRadians());
+    }
+
+    // Arm Control
+
+    private double calculateShoulder() {
+        State setpoint = shoulderMotionProfile.calculate(shoulderProfileTimer.get());
+
+        double output = shoulderFF.calculate(setpoint.velocity)
+            + shoulderPID.calculate(getShoulderAngle().getRadians(), setpoint.position)
+            + shoulderkG.calculate(getShoulderAngle().getRadians());
+
+        if (isShoulderLimp()) return 0;
+
+        return shoulderVoltageOverride.orElse(output);
+    }
+
+    private double calculateWrist() {
+
     }
 
     //
@@ -275,6 +299,15 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final void setShoulderTargetAngle(Rotation2d angle) {
+        shoulderMotionProfile = new TrapezoidProfile(
+            new Constraints(
+                Math.toRadians(shoulderMaxVelocity.get()),
+                Math.toRadians(shoulderMaxAcceleration.get())),
+            new State(shoulderTargetDegrees.get(), 0),
+            new State(getShoulderAngle().getRadians(), getShoulderVelocityRadiansPerSecond()));
+
+        shoulderProfileTimer.restart();
+
         shoulderVoltageOverride = Optional.empty();
         shoulderTargetDegrees.set(angle.getDegrees());
     }
@@ -376,9 +409,7 @@ public abstract class Arm extends SubsystemBase {
 
 
         // Run control loops on validated target angles
-        shoulderController.update(
-            getWrappedShoulderAngle(getShoulderTargetAngle()),
-            getWrappedShoulderAngle(getShoulderAngle()));
+        double shoulderVoltage = calculateShoulder();
 
         SmartDashboard.putNumber("Arm/Shoulder/Wrapped Angle", getWrappedShoulderAngle(getShoulderAngle()));
         SmartDashboard.putNumber("Arm/Shoulder/Wrapped Target Angle", getWrappedShoulderAngle(getShoulderTargetAngle()));
@@ -394,6 +425,10 @@ public abstract class Arm extends SubsystemBase {
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
+        SmartDashboard.putData("Arm/Shoulder/PID", shoulderPID);
+        SmartDashboard.putData("Arm/Shoulder/Feedforward", shoulderFF);
+        SmartDashboard.putData("Arm/Shoulder/GamePiecekG", shoulderkG);
+
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", Units.radiansToDegrees(shoulderController.getSetpoint()));
         SmartDashboard.putNumber("Arm/Shoulder/Error (deg)", Units.radiansToDegrees(shoulderController.getError()));
@@ -408,7 +443,7 @@ public abstract class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Wrist/Velocity (deg per s)", Units.radiansToDegrees(getWristVelocityRadiansPerSecond()));
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled Raw", isWristFeedbackEnabled());
         SmartDashboard.putBoolean("Arm/Wrist/Feedback Enabled", wristEnabled.get());
-        SmartDashboard.putNumber("Arm/Shoulder/kG", new GamePiecekG().doubleValue());
+        SmartDashboard.putNumber("Arm/Shoulder/kG", shoulderkG.getkG());
 
         SmartDashboard.putBoolean("Arm/Shoulder/Game Piece Compensation", pieceGravityCompensation);
 

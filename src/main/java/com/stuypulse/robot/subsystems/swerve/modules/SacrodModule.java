@@ -5,11 +5,6 @@
 
 package com.stuypulse.robot.subsystems.swerve.modules;
 
-import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.control.angle.AngleController;
-import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 
 import com.stuypulse.robot.Robot;
@@ -17,6 +12,8 @@ import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Motors;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -118,13 +115,14 @@ public class SacrodModule extends SwerveModule {
     private final DutyCycleEncoder absoluteEncoder;
     private final Angle angleOffset;
 
-    private final AngleController turnController;
+    private final PIDController turnPID;
 
     // drive
     private final CANSparkMax driveMotor;
     private final RelativeEncoder driveEncoder;
 
-    private final Controller driveController;
+    private final PIDController drivePID;
+    private final SimpleMotorFeedforward driveFF;
 
     public SacrodModule(String id, Translation2d location, int turnCANId, int absoluteEncoderChannel,
             Angle angleOffset, int driveCANId) {
@@ -142,7 +140,8 @@ public class SacrodModule extends SwerveModule {
 
         absoluteEncoder = new DutyCycleEncoder(absoluteEncoderChannel);
         this.angleOffset = angleOffset;
-        turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
+        turnPID = new PIDController(Turn.kP, Turn.kI, Turn.kD);
+        turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
         // drive
 
@@ -152,9 +151,8 @@ public class SacrodModule extends SwerveModule {
         driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
         Motors.Swerve.DRIVE.configure(driveMotor);
 
-        driveController = new PIDController(Drive.kP, Drive.kI, Drive.kD)
-                    .setOutputFilter(x -> Robot.getMatchState() == MatchState.TELEOP ? 0 : x)
-                .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
+        drivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
+        driveFF = new SimpleMotorFeedforward(Drive.kS, Drive.kV, Drive.kA);
     }
 
     @Override
@@ -200,22 +198,33 @@ public class SacrodModule extends SwerveModule {
 
     @Override
     public void periodic() {
-        turnMotor.setVoltage(turnController.update(
-                Angle.fromRotation2d(targetState.angle),
-                Angle.fromRotation2d(getRotation2d())));
-        driveMotor.setVoltage(driveController.update(targetState.speedMetersPerSecond, getSpeed()));
+        double turnVoltage = turnPID.calculate(
+            getRotation2d().getRadians(),
+            targetState.angle.getRadians());
+
+        turnMotor.setVoltage(turnVoltage);
+
+
+        double driveVoltage = drivePID.calculate(getSpeed(), targetState.speedMetersPerSecond);
+        if (Robot.getMatchState() == MatchState.TELEOP) {
+            driveVoltage = 0;
+        }
+        
+        driveVoltage += driveFF.calculate(targetState.speedMetersPerSecond);
+
+        driveMotor.setVoltage(driveVoltage);
 
         SmartDashboard.putNumber("Swerve/" + id + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle", getRotation2d().getDegrees());
-        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Error", targetState.angle.minus(getRotation2d()).getDegrees());
+        SmartDashboard.putNumber("Swerve/" + id + "/Angle Voltage", turnVoltage);
         SmartDashboard.putNumber("Swerve/" + id + "/Absolute Angle", getAbsolutePosition().getDegrees());
         SmartDashboard.putNumber("Swerve/" + id + "/Angle Current", turnMotor.getOutputCurrent());
 
         SmartDashboard.putNumber("Swerve/" + id + "/Target Speed", targetState.speedMetersPerSecond);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity", getSpeed());
-        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", driveController.getError());
-        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveController.getOutput());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Error", targetState.speedMetersPerSecond - getSpeed());
+        SmartDashboard.putNumber("Swerve/" + id + "/Velocity Voltage", driveVoltage);
         SmartDashboard.putNumber("Swerve/" + id + "/Velocity Current", driveMotor.getOutputCurrent());
 
     }
