@@ -5,12 +5,12 @@
 
 package com.stuypulse.robot.util;
 
+import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
+
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
-
-import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -29,7 +29,8 @@ public class Limelight {
 
     public enum DataType {
         APRIL_TAG(0),
-        TAPE(1);
+        TAPE(1),
+        CUBE_DETECTION(2);
 
         public int type;
         private DataType(int type) {
@@ -41,13 +42,16 @@ public class Limelight {
         }
 
         public boolean isReflectiveTape() {
-            return !isAprilTag();
+            return type == 1;
+        }
+
+        public boolean isCubeDetection() {
+            return type == 2;
         }
     }
 
-    private String tableName;
-    private int limelightId;
 
+    private final String tableName;
     private final IntegerEntry idEntry;
     private final DoubleArrayEntry blueBotposeEntry;
     private final DoubleArrayEntry redBotposeEntry;
@@ -55,8 +59,9 @@ public class Limelight {
     private final DoubleEntry txEntry;
     private final DoubleEntry tyEntry;
     private final IntegerEntry tvEntry;
-    
     private final IntegerEntry pipelineEntry;
+
+    private final int limelightId;
 
     private Optional<AprilTagData> data;
 
@@ -77,8 +82,8 @@ public class Limelight {
         txEntry = limelight.getDoubleTopic("tx").getEntry(0.0);
         tyEntry = limelight.getDoubleTopic("ty").getEntry(0.0);
         tvEntry = limelight.getIntegerTopic("tv").getEntry(0);
-        
-        pipelineEntry = limelight.getIntegerTopic("getpipe").getEntry(0);
+
+        pipelineEntry = limelight.getIntegerTopic("pipeline").getEntry(0);
 
         data = Optional.empty();
     }
@@ -88,7 +93,12 @@ public class Limelight {
     }
 
     public DataType getPipeline() {
-        return pipelineEntry.get() == 0 ? DataType.APRIL_TAG : DataType.TAPE;
+        switch((int)pipelineEntry.get()) {
+            case 0: return DataType.APRIL_TAG;
+            case 1: return DataType.TAPE;
+            case 2: return DataType.CUBE_DETECTION;
+            default: return DataType.APRIL_TAG;
+        }
     }
 
     public void setPipeline(DataType type) {
@@ -104,7 +114,8 @@ public class Limelight {
     }
 
     public boolean hasReflectiveTapeData() {
-        return tvEntry.get() == 1 && getPipeline().isReflectiveTape();
+        return (tvEntry.get() == 1 && getPipeline().isReflectiveTape())
+            || (tvEntry.get() == 2 && getPipeline().isCubeDetection());
     }
 
     private double[] getPoseData() {
