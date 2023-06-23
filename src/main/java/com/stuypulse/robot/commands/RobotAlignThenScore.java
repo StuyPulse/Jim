@@ -25,6 +25,7 @@ import com.stuypulse.robot.util.Derivative;
 import com.stuypulse.robot.util.HolonomicController;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -63,7 +64,7 @@ public class RobotAlignThenScore extends CommandBase {
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
-            new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
+            new PIDController(Rotation.P, Rotation.I, Rotation.D));
 
         SmartDashboard.putData("Alignment/Controller", controller);
 
@@ -115,7 +116,7 @@ public class RobotAlignThenScore extends CommandBase {
         // TODO: add getError methods to controller
         xErrorChange.get(targetPose.getX() - currentPose.getX());
 
-        controller.update(targetPose, currentPose);
+        ChassisSpeeds output = controller.calculate(targetPose, currentPose);
 
         if (aligned.get() || movingWhileScoring) {
             // simply outtake when low
@@ -151,7 +152,7 @@ public class RobotAlignThenScore extends CommandBase {
             }
 
         } else {
-            swerve.setChassisSpeeds(controller.getOutput());
+            swerve.setChassisSpeeds(output);
         }
     }
 

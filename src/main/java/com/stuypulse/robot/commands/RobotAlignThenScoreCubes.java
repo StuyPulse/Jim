@@ -20,8 +20,10 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -50,7 +52,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
-            new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
+            new PIDController(Rotation.P, Rotation.I, Rotation.D));
 
         SmartDashboard.putData("Alignment/Controller", controller);
 
@@ -89,7 +91,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
 
-        controller.update(targetPose, currentPose);
+        ChassisSpeeds output = controller.calculate(targetPose, currentPose);
 
         if (aligned.get() || movingWhileScoring) {
             // simply outtake when low
@@ -108,7 +110,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
             }
 
         } else {
-            swerve.setChassisSpeeds(controller.getOutput());
+            swerve.setChassisSpeeds(output);
         }
     }
 

@@ -5,6 +5,8 @@
 
 package com.stuypulse.robot.commands.swerve.balance;
 
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.Robot;
@@ -54,7 +56,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
 
     @Override
     public void execute() {
-        control.update(0, swerve.getBalanceAngle().getDegrees());
+        control.update(swerve.getBalanceAngle().getDegrees(), 0);
 
         swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             control.getOutput(), 0, 0, odometry.getRotation()));

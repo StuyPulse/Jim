@@ -16,6 +16,7 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -41,7 +42,7 @@ public class SwerveDriveToPose extends CommandBase{
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
-            new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
+            new PIDController(Rotation.P, Rotation.I, Rotation.D));
 
         SmartDashboard.putData("Alignment/Controller", controller);
 
@@ -77,8 +78,7 @@ public class SwerveDriveToPose extends CommandBase{
 
         targetPose2d.setPose(targetPose);
 
-        controller.update(targetPose, currentPose);
-        swerve.setChassisSpeeds(controller.getOutput());
+        swerve.setChassisSpeeds(controller.calculate(targetPose, currentPose));
     }
 
     @Override

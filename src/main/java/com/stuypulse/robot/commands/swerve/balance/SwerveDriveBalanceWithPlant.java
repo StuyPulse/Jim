@@ -7,6 +7,8 @@ package com.stuypulse.robot.commands.swerve.balance;
 
 import static com.stuypulse.robot.constants.Field.*;
 
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;

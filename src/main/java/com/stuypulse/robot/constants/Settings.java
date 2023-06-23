@@ -192,8 +192,8 @@ public interface Settings {
             double TELEOP_MAX_VELOCITY = 315;
             double TELEOP_MAX_ACCELERATION = 420;
 
-            SmartNumber AUTON_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Auton Max Velocity (deg)", 360);
-            SmartNumber AUTON_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Auton Max Acceleration (deg)", 480);
+            double AUTON_MAX_VELOCITY = 360;
+            double AUTON_MAX_ACCELERATION = 480;
 
             SmartNumber STALLING_VOLTAGE = new SmartNumber("Arm/Shoulder/Stalling Voltage", 12.0);
             SmartNumber STALLING_VELOCITY = new SmartNumber("Arm/Shoulder/Stalling Velocity", 0.2);
@@ -371,14 +371,14 @@ public interface Settings {
         SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
-            SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
-            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
+            double P = 2;
+            double I = 0;
+            double D = 0.0;
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
-            SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
-            SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
+            double P = 2;
+            double I = 0;
+            double D = 0;
         }
     }
 

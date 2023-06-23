@@ -5,13 +5,9 @@
 
 package com.stuypulse.robot.subsystems.arm;
 
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.angles.filters.AMotionProfile;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
-import com.stuypulse.stuylib.streams.filters.MotionProfile;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
@@ -19,26 +15,19 @@ import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmVisualizer;
-import com.stuypulse.robot.util.BenMotionProfile;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -64,7 +53,7 @@ public abstract class Arm extends SubsystemBase {
         else
             instance = new SimArm();
 
-        SmartDashboard.putData(instance);
+        SmartDashboard.putData("Arm", instance);
     }
 
     public static Arm getInstance() {
@@ -99,7 +88,7 @@ public abstract class Arm extends SubsystemBase {
 
     private BStream wristEnabled;
 
-    private double shoulderVelocityFeedbackDebounce;
+    private final SmartNumber shoulderVelocityFeedbackDebounce;
     private double shoulderVelocityFeedbackCutoff;
 
     private boolean pieceGravityCompensation;
@@ -156,11 +145,11 @@ public abstract class Arm extends SubsystemBase {
         shoulderTargetDegrees = -90;
         wristTargetDegrees = +90;
 
-        shoulderVelocityFeedbackDebounce = Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE;
+        shoulderVelocityFeedbackDebounce = new SmartNumber("Arm/Wrist/Velocity Feedback Debounce", Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE);
         shoulderVelocityFeedbackCutoff = Wrist.TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF;
 
         wristEnabled = BStream.create(this::isWristFeedbackEnabled)
-            .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce.get()));
+            .filtered(new BDebounce.Both(shoulderVelocityFeedbackDebounce));
 
         shoulderMaxVelocity = Shoulder.TELEOP_MAX_VELOCITY;
         shoulderMaxAcceleration = Shoulder.TELEOP_MAX_ACCELERATION;
@@ -198,14 +187,15 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public void resetMotionProfile() {
-        shoulderProfilePID.reset(getShoulderAngle().getRadians());
+        // resets profile on calculate call and resets pid controller
+        shoulderProfilePID.reset(getShoulderAngle().getRadians(), getShoulderVelocityRadiansPerSecond());
     }
 
     // Arm Control
 
     private double calculateShoulder() {
         // goes first to update motion profile
-        double output = shoulderProfilePID.calculate(getShoulderAngle().getRadians());
+        double output = shoulderProfilePID.calculate(getShoulderAngle().getRadians(), Math.toRadians(shoulderTargetDegrees));
 
         State setpoint = shoulderProfilePID.getSetpoint();
 
@@ -219,7 +209,7 @@ public abstract class Arm extends SubsystemBase {
 
     private double calculateWrist() {
         // goes first to update motion profile
-        double output = wristProfilePID.calculate(getWristAngle().getRadians());
+        double output = wristProfilePID.calculate(getWristAngle().getRadians(), Math.toRadians(wristTargetDegrees));
 
         if (!wristEnabled.get()) output = 0;
 
@@ -282,7 +272,7 @@ public abstract class Arm extends SubsystemBase {
     }
 
     public final void setShoulderVelocityFeedbackDebounce(double time) {
-        shoulderVelocityFeedbackDebounce = time;
+        shoulderVelocityFeedbackDebounce.set(time);
     }
 
     public final void setShoulderVelocityFeedbackCutoff(double velocity) {
@@ -297,9 +287,6 @@ public abstract class Arm extends SubsystemBase {
     public final void setShoulderTargetAngle(Rotation2d angle) {
         shoulderVoltageOverride = Optional.empty();
         shoulderTargetDegrees = angle.getDegrees();
-
-        shoulderProfilePID.reset(getShoulderAngle().getRadians());
-        shoulderProfilePID.setGoal(angle.getRadians());
     }
 
     public final void setWristTargetAngle(Rotation2d angle) {
@@ -414,7 +401,7 @@ public abstract class Arm extends SubsystemBase {
         armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
 
         SmartDashboard.putData("Arm/Shoulder/PID", shoulderProfilePID);
-        SmartDashboard.putData("Arm/Shoulder/Feedforward", shoulderFF);
+        // SmartDashboard.putData("Arm/Shoulder/Feedforward", shoulderFF);
         SmartDashboard.putData("Arm/Shoulder/GamePiecekG", shoulderkG);
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
@@ -453,7 +440,7 @@ public abstract class Arm extends SubsystemBase {
         builder.addDoubleProperty("Shoulder Max Acceleration", () -> shoulderMaxAcceleration, (double accel) -> shoulderMaxAcceleration = accel);
         builder.addDoubleProperty("Wrist Max Acceleration", () -> wristMaxAcceleration, (double accel) -> wristMaxAcceleration = accel);
         
-        builder.addDoubleProperty("Shoulder Velocity Feedback Debounce", () -> shoulderVelocityFeedbackDebounce, (double debounce) -> shoulderVelocityFeedbackDebounce = debounce);
+        // builder.addDoubleProperty("Shoulder Velocity Feedback Debounce", () -> shoulderVelocityFeedbackDebounce, (double debounce) -> shoulderVelocityFeedbackDebounce = debounce);
         builder.addDoubleProperty("Shoulder Velocity Feedback Cutoff", () -> shoulderVelocityFeedbackCutoff, (double vel) -> shoulderVelocityFeedbackCutoff = vel);
     }
 }

@@ -5,57 +5,55 @@
 
 package com.stuypulse.robot.util;
 
-import com.stuypulse.stuylib.math.Angle;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class HolonomicController implements Sendable {
-    private final Controller xController;
-    private final Controller yController;
-    private final AngleController angleController;
 
-    public HolonomicController(Controller xController, Controller yController, AngleController angleController) {
+    private final PIDController xController;
+    private final PIDController yController;
+    private final PIDController angleController;
+
+    public HolonomicController(PIDController xController, PIDController yController, PIDController angleController) {
         this.xController = xController;
         this.yController = yController;
         this.angleController = angleController;
+
+        angleController.enableContinuousInput(-Math.PI, +Math.PI);
     }
 
-    public ChassisSpeeds update(Pose2d setpoint, Pose2d measurement) {
-        xController.update(setpoint.getX(), measurement.getX());
-        yController.update(setpoint.getY(), measurement.getY());
-        angleController.update(
-            Angle.fromRotation2d(setpoint.getRotation()),
-            Angle.fromRotation2d(measurement.getRotation()));
+    public ChassisSpeeds calculate(Pose2d setpoint, Pose2d measurement) {
+        double xOutput = xController.calculate(measurement.getX(), setpoint.getX());
+        double yOutput = yController.calculate(measurement.getY(), setpoint.getY());
+        double angleOutput = angleController.calculate(
+            measurement.getRotation().getRadians(),
+            setpoint.getRotation().getRadians());
 
-
-        return getOutput();
-    }
-
-    public ChassisSpeeds getOutput() {
         return ChassisSpeeds.fromFieldRelativeSpeeds(
-            xController.getOutput(),
-            yController.getOutput(),
-            angleController.getOutput(),
-            angleController.getMeasurement().getRotation2d());
+            xOutput,
+            yOutput,
+            angleOutput,
+            measurement.getRotation());
     }
 
     public boolean isDone(double xToleranceMeters, double yToleranceMeters, double angleToleranceDegrees) {
-        return xController.isDone(xToleranceMeters) && yController.isDone(yToleranceMeters) && angleController.isDoneDegrees(angleToleranceDegrees);
+        xController.setTolerance(xToleranceMeters);
+        yController.setTolerance(yToleranceMeters);
+        angleController.setTolerance(Math.toRadians(angleToleranceDegrees));
+
+        return xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Holonomic Controller");
-        builder.addDoubleProperty("Angle Setpoint (degrees)", () -> angleController.getSetpoint().toDegrees(), null);
-        builder.addDoubleProperty("Angle Measurement (degrees)", () -> angleController.getMeasurement().toDegrees(), null);
-        builder.addDoubleProperty("X Setpoint (meters)", () -> xController.getSetpoint(), null);
-        builder.addDoubleProperty("X Measurement (meters)", () -> xController.getMeasurement(), null);
-        builder.addDoubleProperty("Y Setpoint (meters)", () -> yController.getSetpoint(), null);
-        builder.addDoubleProperty("Y Measurement (meters)", () -> yController.getMeasurement(), null);
 
+        builder.addCloseable(xController);
+        builder.addCloseable(yController);
+        builder.addCloseable(angleController);
     }
 
 
