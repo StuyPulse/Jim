@@ -119,7 +119,7 @@ public class SwerveDriveDrive extends CommandBase {
         }
 
         // if planted then X
-        if (plant.isEngaged()) {
+        if (plant.isEngaged() || driver.getRawStartButton() || driver.getRawSelectButton()) {
             swerve.setXMode();
         }
         

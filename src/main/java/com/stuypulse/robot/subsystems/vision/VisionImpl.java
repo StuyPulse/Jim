@@ -60,7 +60,7 @@ public class VisionImpl extends Vision {
             limelightPoses[i] = field.getObject(hostNames[i] + " pose");
 
             for (int port : PORTS) {
-                PortForwarder.add(port, hostNames[i] + ".local", port + i * 10);
+                PortForwarder.add(port + i * 10, hostNames[i] + ".local", port);
             }
         }
 

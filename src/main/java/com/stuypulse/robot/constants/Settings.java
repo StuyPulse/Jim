@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-
 import com.pathplanner.lib.auto.PIDConstants;
 
 /*-
@@ -217,10 +216,10 @@ public interface Settings {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.7);
 
-                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
-                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
+                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.7);
+                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.81);
             }
         }
 
@@ -240,7 +239,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(0));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.322017).plus(Rotation2d.fromDegrees(180));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -248,7 +247,7 @@ public interface Settings {
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 17.5);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 13.0);
             SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
@@ -258,9 +257,9 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.5);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
             }
 
             public interface Feedforward {
