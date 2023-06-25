@@ -179,7 +179,7 @@ public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
-            arm.runOnce(() -> arm.setShoulderVelocityFeedbackCutoff(15.0)),
+            arm.runOnce(() -> arm.setShoulderVelocityFeedbackCutoff(10.0)),
 
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(

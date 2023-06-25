@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -140,7 +141,10 @@ public class RobotContainer {
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
             .onTrue(new ManagerChooseScoreNode())
-            .whileTrue(Manager.getInstance().getGamePiece().isCube() ? new RobotAlignThenScoreCubes() : new RobotAlignThenScoreCones());
+            .whileTrue(new ConditionalCommand(
+                new RobotAlignThenScoreCubes(),
+                new RobotAlignThenScoreCones(),
+                () -> Manager.getInstance().getGamePiece().isCube()));
 
         // swerve
         // driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
