@@ -81,19 +81,30 @@ public class VisionImpl extends Vision {
     }
 
     @Override
-    public double getDistance() {
+    public double getDistanceToPeg() {
         for (Limelight limelight : limelights) {
             if (limelight.hasReflectiveTapeData()) {
-                return limelight.getDistance();
+                return limelight.getDistanceToPeg();
             }
         }
         return Double.NaN;
     }
 
     @Override
+    public double getDistanceToCube() {
+        for (Limelight limelight : limelights) {
+            if(limelight.hasCubeDetectionData()) {
+                return limelight.getDistanceToCube();
+            }
+        }
+
+        return Double.NaN;
+    }
+
+    @Override
     public double getAngle() {
         for (Limelight limelight : limelights) {
-            if (limelight.hasReflectiveTapeData()) {
+            if (limelight.hasReflectiveTapeData() || limelight.hasCubeDetectionData()) {
                 return limelight.getXAngle();
             }
         }

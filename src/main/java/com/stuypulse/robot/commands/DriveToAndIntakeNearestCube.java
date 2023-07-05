@@ -11,10 +11,9 @@ import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
 import com.stuypulse.robot.subsystems.LEDController;
-import com.stuypulse.robot.constants.Settings.Alignment;
-import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
-import com.stuypulse.robot.constants.Settings.Alignment.Translation;
-import com.stuypulse.robot.subsystems.Manager;
+import com.stuypulse.robot.constants.Settings.CubeDetection;
+import com.stuypulse.robot.constants.Settings.CubeDetection.Rotation;
+import com.stuypulse.robot.constants.Settings.CubeDetection.Translation;
 import com.stuypulse.robot.subsystems.intake.*;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
@@ -25,7 +24,6 @@ import com.stuypulse.robot.util.Limelight.DataType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -41,9 +39,6 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
     private final HolonomicController controller;
     private final BStream aligned;
 
-    // Logging
-    private final FieldObject2d targetPose2d;
-
     public DriveToAndIntakeNearestCube(){
         this.swerve = SwerveDrive.getInstance();
         this.intake = Intake.getInstance();
@@ -52,21 +47,22 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
             new PIDController(Translation.P, Translation.I, Translation.D),
-            new AnglePIDController(Rotation.P, Rotation.I, Rotation.D));
+            new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
+        );
 
         SmartDashboard.putData("Alignment/Controller", controller);
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
-        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
         addRequirements(swerve, intake);
     }
 
     private boolean isAligned() {
+        // these thresholds probably need to be modified
         return controller.isDone(
-            Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
-            Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
-            Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
+            CubeDetection.THRESHOLD_X.get(),
+            CubeDetection.THRESHOLD_Y.get(),
+            CubeDetection.THRESHOLD_ANGLE.get());
     }
 
     @Override
@@ -81,18 +77,8 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d currentPose = Odometry.getInstance().getPose();
-        // Pose2d targetPose = new Pose2d(
-        //     currentPose.getTranslation().getX() + vision.getDistance() * Math.cos(vision.getAngle()),
-        //     currentPose.getTranslation().getY() + vision.getDistance() * Math.sin(vision.getAngle()),
-        //     Rotation2d.fromDegrees(0)
-        // );
-        Pose2d targetPose = new Pose2d(
-            currentPose.getTranslation().getX(),
-            currentPose.getTranslation().getY(),
-            Rotation2d.fromDegrees(vision.getAngle())
-        );
-        targetPose2d.setPose(targetPose);
+        Pose2d currentPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
+        Pose2d targetPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle());
 
         controller.update(targetPose, currentPose);
     }
@@ -107,7 +93,6 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
         Odometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         intake.stop();
-        targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
 
         vision.setPipeline(DataType.APRIL_TAG);
         

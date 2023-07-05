@@ -114,8 +114,11 @@ public class Limelight {
     }
 
     public boolean hasReflectiveTapeData() {
-        return (tvEntry.get() == 1 && getPipeline().isReflectiveTape())
-            || (tvEntry.get() == 2 && getPipeline().isCubeDetection());
+        return tvEntry.get() == 1 && getPipeline().isReflectiveTape();
+    }
+
+    public boolean hasCubeDetectionData() {
+        return tvEntry.get() == 1 && getPipeline().isCubeDetection();
     }
 
     private double[] getPoseData() {
@@ -138,7 +141,7 @@ public class Limelight {
         return tyEntry.get() + POSITIONS[limelightId].getRotation().getY();
     }
 
-    public double getDistance() {
+    public double getDistanceToPeg() {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
@@ -147,7 +150,14 @@ public class Limelight {
                         (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH ? Field.HIGH_PEG_HEIGHT : Field.MID_PEG_HEIGHT));
 
         return heightDiff / Math.tan(getYAngle()) + POSITIONS[limelightId].getX();
+    }
 
+    public double getDistanceToCube() {
+        // assuming cube Z = 0
+        if(hasCubeDetectionData()) {
+            return POSITIONS[limelightId].getZ() / Math.tan(getYAngle()) + POSITIONS[limelightId].getX();
+        }
+        return Double.NaN;
     }
 
     public void updateAprilTagData() {

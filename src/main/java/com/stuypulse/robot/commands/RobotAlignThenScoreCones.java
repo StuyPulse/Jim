@@ -90,8 +90,8 @@ public class RobotAlignThenScoreCones extends CommandBase {
     public void execute() {
         Pose2d currentPose = Odometry.getInstance().getPose();
         Pose2d targetPose = new Pose2d(
-            currentPose.getTranslation().getX() + vision.getDistance() * Math.cos(vision.getAngle()),
-            currentPose.getTranslation().getY() + vision.getDistance() * Math.sin(vision.getAngle()),
+            currentPose.getTranslation().getX() + vision.getDistanceToPeg() * Math.cos(vision.getAngle()),
+            currentPose.getTranslation().getY() + vision.getDistanceToPeg() * Math.sin(vision.getAngle()),
             Rotation2d.fromDegrees(0)
         );
         targetPose2d.setPose(targetPose);

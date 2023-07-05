@@ -34,7 +34,8 @@ public abstract class Vision extends SubsystemBase {
     /** ABSTRACT METHODS **/
     public abstract List<AprilTagData> getResults();
 
-    public abstract double getDistance();
+    public abstract double getDistanceToPeg();
+    public abstract double getDistanceToCube();
     public abstract double getAngle();
 
     public abstract DataType getPipeline();

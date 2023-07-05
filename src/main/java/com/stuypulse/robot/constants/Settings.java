@@ -399,4 +399,23 @@ public interface Settings {
 
         SmartNumber kShoulderTipOutTolerance = new SmartNumber("Robot Score/Tip Out Shoulder Tolerance (degrees)", 5);
     }
+
+    public interface CubeDetection {
+        // temporary values, copied from Alignment interface 
+
+        SmartNumber THRESHOLD_X = new SmartNumber("Cube Detection/Angle Threshold", 0.08);
+        SmartNumber THRESHOLD_Y = new SmartNumber("Cube Detection/Angle Threshold", 0.1);
+        SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 05);
+
+        public interface Translation {
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
+            SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
+            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
+        }
+        public interface Rotation {
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
+            SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
+        }
+    }
 }
