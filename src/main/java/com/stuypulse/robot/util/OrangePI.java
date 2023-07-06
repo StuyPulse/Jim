@@ -52,7 +52,7 @@ public class OrangePI implements Camera {
 
     public void updateAprilTagData() {
         double[] botposeData = getPoseData();
-
+        
         if (botposeData.length != 7) {
             data = Optional.empty();
             return;
