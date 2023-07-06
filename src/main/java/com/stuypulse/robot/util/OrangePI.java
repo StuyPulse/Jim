@@ -32,6 +32,15 @@ public class OrangePI implements Camera {
 
         robotPose = table.getDoubleArrayTopic("robot_pose").getEntry(new double[0]);
         idEntry = table.getIntegerTopic("tid").getEntry(0);
+
+        table.getIntegerTopic("camera_id").getEntry(0);
+        table.getIntegerTopic("camera_resolution_width").getEntry(1600);
+        table.getIntegerTopic("camera_resolution_height").getEntry(1200);
+        table.getIntegerTopic("camera_auto_exposure").getEntry(1);
+        table.getIntegerTopic("camera_exposure").getEntry(50);
+        table.getDoubleTopic("camera_gain").getEntry(0);
+        table.getDoubleTopic("camera_brightness").getEntry(0);
+        table.getDoubleArrayTopic("fiducial_layout").getEntry(new double[] {});
     }
 
     public String getTableName() {
