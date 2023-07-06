@@ -53,11 +53,13 @@ public class HolonomicController implements Sendable {
         builder.setSmartDashboardType("Holonomic Controller");
         builder.addDoubleProperty("Angle Setpoint (degrees)", () -> angleController.getSetpoint().toDegrees(), null);
         builder.addDoubleProperty("Angle Measurement (degrees)", () -> angleController.getMeasurement().toDegrees(), null);
+        builder.addDoubleProperty("Angle Output (radians per second)", () -> angleController.getOutput(), null);
         builder.addDoubleProperty("X Setpoint (meters)", () -> xController.getSetpoint(), null);
         builder.addDoubleProperty("X Measurement (meters)", () -> xController.getMeasurement(), null);
+        builder.addDoubleProperty("X Output (meters per second)", () -> xController.getOutput(), null);
         builder.addDoubleProperty("Y Setpoint (meters)", () -> yController.getSetpoint(), null);
         builder.addDoubleProperty("Y Measurement (meters)", () -> yController.getMeasurement(), null);
-
+        builder.addDoubleProperty("Y Output (meters per second)", () -> yController.getOutput(), null);
     }
 
 
