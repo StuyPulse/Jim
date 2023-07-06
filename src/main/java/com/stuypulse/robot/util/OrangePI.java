@@ -1,11 +1,5 @@
-/************************ PROJECT JIM *************************/
-/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
 package com.stuypulse.robot.util;
 
-import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,37 +10,32 @@ import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.IntegerEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Optional;
 
-public class Limelight implements Camera {
+public class OrangePI implements Camera {
 
-    private String tableName;
+    private String deviceID;
 
     private final IntegerEntry idEntry;
-    private final DoubleArrayEntry blueBotposeEntry;
-    private final DoubleArrayEntry redBotposeEntry;
-
-    private Optional<AprilTagData> data;
+    private final DoubleArrayEntry robotPose;
 
     private final Pose3d robotRelativePose;
 
-    public Limelight(String tableName, Pose3d robotRelativePose) {
-        this.tableName = tableName;
+    private Optional<AprilTagData> data;
+
+    public OrangePI(String deviceID, Pose3d robotRelativePose) {
+        this.deviceID = deviceID;
         this.robotRelativePose = robotRelativePose;
 
-        NetworkTable limelight = NetworkTableInstance.getDefault().getTable(tableName);
+        NetworkTable table = NetworkTableInstance.getDefault().getTable(deviceID);
 
-        blueBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpiblue").getEntry(new double[0]);
-        redBotposeEntry = limelight.getDoubleArrayTopic("botpose_wpired").getEntry(new double[0]);
-        idEntry = limelight.getIntegerTopic("tid").getEntry(0);
-
-        data = Optional.empty();
+        robotPose = table.getDoubleArrayTopic("robot_pose").getEntry(new double[0]);
+        idEntry = table.getIntegerTopic("tid").getEntry(0);
     }
 
     public String getTableName() {
-        return tableName;
+        return deviceID;
     }
 
     public Optional<AprilTagData> getAprilTagData() {
@@ -58,9 +47,7 @@ public class Limelight implements Camera {
     }
 
     private double[] getPoseData() {
-        return RobotContainer.getCachedAlliance() == Alliance.Blue ?
-            blueBotposeEntry.get() :
-            redBotposeEntry.get();
+        return robotPose.get();
     }
 
     public void updateAprilTagData() {
@@ -82,4 +69,5 @@ public class Limelight implements Camera {
 
         data = Optional.of(new AprilTagData(botpose, latency, id, robotRelativePose));
     }
+
 }
