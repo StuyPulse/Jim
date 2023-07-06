@@ -45,14 +45,17 @@ public class Limelight implements Camera {
         data = Optional.empty();
     }
 
+    @Override
     public String getTableName() {
         return tableName;
     }
 
+    @Override
     public Optional<AprilTagData> getAprilTagData() {
         return data;
     }
 
+    @Override
     public boolean hasAprilTagData() {
         return getAprilTagData().isPresent();
     }
@@ -63,6 +66,7 @@ public class Limelight implements Camera {
             redBotposeEntry.get();
     }
 
+    @Override
     public void updateAprilTagData() {
         double[] botposeData = getPoseData();
 
