@@ -158,8 +158,6 @@ public class VisionImpl extends Vision {
         // - log pose onto field and network
 
         var robotPose = Odometry.getInstance().getPose();
-        // TODO: log all vision measurements, but also indicate which ones were actually used
-
 
         results.clear();
         for (int i = 0; i < limelights.length; ++i) {

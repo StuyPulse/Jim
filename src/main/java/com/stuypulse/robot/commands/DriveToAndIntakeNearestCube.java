@@ -31,7 +31,7 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     // Subsystems
     private final SwerveDrive swerve;
-    private final Intake intake;
+    // private final Intake intake;
 
     private final Vision vision;
 
@@ -41,7 +41,7 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     public DriveToAndIntakeNearestCube(){
         this.swerve = SwerveDrive.getInstance();
-        this.intake = Intake.getInstance();
+        // this.intake = Intake.getInstance();
         this.vision = Vision.getInstance();
  
         controller = new HolonomicController(
@@ -50,11 +50,12 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
             new AnglePIDController(Rotation.P, Rotation.I, Rotation.D)
         );
 
-        SmartDashboard.putData("Alignment/Controller", controller);
+        SmartDashboard.putData("Vision/Controller", controller);
 
         // aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
-        addRequirements(swerve, intake);
+        // addRequirements(swerve, intake);
+        addRequirements(swerve);
     }
 
     private boolean isAligned() {
@@ -64,19 +65,14 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
             CubeDetection.THRESHOLD_Y.get(),
             CubeDetection.THRESHOLD_ANGLE.get());
 
-        SmartDashboard.putString("Cube Detection/Controller Output", controller.getOutput().toString());
-        SmartDashboard.putBoolean("Cube Detection/Is Aligned ", aligned);
-        // return aligned;
-        return false;
+        SmartDashboard.putBoolean("Vision/Is Aligned ", aligned);
+        return aligned;
+        // return false;
     }
 
     @Override
     public void initialize() {
-        intake.acquire();
-        Odometry.USE_VISION_ANGLE.set(true);
-
-        vision.setPipeline(DataType.CUBE_DETECTION);
-
+        // intake.acquire();
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
@@ -96,13 +92,9 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
     }
 
     public void end(boolean interupted) {
-        intake.enableBreak();
-        Odometry.USE_VISION_ANGLE.set(false);
+        // intake.enableBreak();
         swerve.stop();
-        intake.stop();
-
-        vision.setPipeline(DataType.APRIL_TAG);
-        
+        // intake.stop();
         LEDController.getInstance().setColor(LEDController.getInstance().getDefaultColor(), 0);
     }
 

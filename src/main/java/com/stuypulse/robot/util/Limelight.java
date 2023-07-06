@@ -131,14 +131,14 @@ public class Limelight {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
-        return txEntry.get() + POSITIONS[limelightId].getRotation().getZ();
+        return txEntry.get() + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getZ());
     }
 
     public double getYAngle() {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
-        return tyEntry.get() + POSITIONS[limelightId].getRotation().getY();
+        return tyEntry.get() + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getY());
     }
 
     public double getDistanceToPeg() {
@@ -155,7 +155,7 @@ public class Limelight {
     public double getDistanceToCube() {
         // assuming cube Z = 0
         if(hasCubeDetectionData()) {
-            return POSITIONS[limelightId].getZ() / Math.tan(getYAngle()) + POSITIONS[limelightId].getX();
+            return POSITIONS[limelightId].getZ() / Math.abs(Rotation2d.fromDegrees(getYAngle()).getTan()) + POSITIONS[limelightId].getX();
         }
         return Double.NaN;
     }

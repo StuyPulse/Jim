@@ -147,6 +147,7 @@ public class RobotContainer {
         //         () -> Manager.getInstance().getGamePiece().isCube()));
 
         driver.getTopButton()
+            .onTrue(new InstantCommand(() -> Vision.getInstance().setPipeline(DataType.CUBE_DETECTION)))
             .whileTrue(new DriveToAndIntakeNearestCube());
 
         // swerve
