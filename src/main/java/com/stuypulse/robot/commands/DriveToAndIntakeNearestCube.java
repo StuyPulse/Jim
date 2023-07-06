@@ -66,7 +66,8 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
         SmartDashboard.putString("Cube Detection/Controller Output", controller.getOutput().toString());
         SmartDashboard.putBoolean("Cube Detection/Is Aligned ", aligned);
-        return aligned;
+        // return aligned;
+        return false;
     }
 
     @Override
@@ -81,19 +82,18 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     @Override
     public void execute() {
-        // Pose2d targetPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
-        // Pose2d currentPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle()));
-        Pose2d targetPose = new Pose2d();
-        Pose2d currentPose = new Pose2d(0, 0, Rotation2d.fromDegrees(vision.getAngle()));
-        // controller.getOutput()
-        controller.update(targetPose, currentPose);
-        swerve.setChassisSpeeds(controller.getOutput());
+        Pose2d targetPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
+        Pose2d currentPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle()));
+        // Pose2d targetPose = new Pose2d();
+        // Pose2d currentPose = new Pose2d(0, 0, Rotation2d.fromDegrees(vision.getAngle()));
+
+        swerve.setChassisSpeeds(controller.update(targetPose, currentPose));
     }
 
-    // @Override
-    // public boolean isFinished(){
-    //     return isAligned();
-    // }
+    @Override
+    public boolean isFinished() {
+        return isAligned();
+    }
 
     public void end(boolean interupted) {
         intake.enableBreak();
