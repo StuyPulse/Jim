@@ -37,7 +37,7 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     // Holonomic control
     private final HolonomicController controller;
-    private final BStream aligned;
+    // private final BStream aligned;
 
     public DriveToAndIntakeNearestCube(){
         this.swerve = SwerveDrive.getInstance();
@@ -52,17 +52,21 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
         SmartDashboard.putData("Alignment/Controller", controller);
 
-        aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
+        // aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
         addRequirements(swerve, intake);
     }
 
     private boolean isAligned() {
         // these thresholds probably need to be modified
-        return controller.isDone(
+        boolean aligned = controller.isDone(
             CubeDetection.THRESHOLD_X.get(),
             CubeDetection.THRESHOLD_Y.get(),
             CubeDetection.THRESHOLD_ANGLE.get());
+
+        SmartDashboard.putString("Cube Detection/Controller Output", controller.getOutput().toString());
+        SmartDashboard.putBoolean("Cube Detection/Is Aligned ", aligned);
+        return aligned;
     }
 
     @Override
@@ -77,16 +81,19 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d currentPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
-        Pose2d targetPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle());
-
+        // Pose2d targetPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
+        // Pose2d currentPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle()));
+        Pose2d targetPose = new Pose2d();
+        Pose2d currentPose = new Pose2d(0, 0, Rotation2d.fromDegrees(vision.getAngle()));
+        // controller.getOutput()
         controller.update(targetPose, currentPose);
+        swerve.setChassisSpeeds(controller.getOutput());
     }
 
-    @Override
-    public boolean isFinished(){
-        return isAligned();
-    }
+    // @Override
+    // public boolean isFinished(){
+    //     return isAligned();
+    // }
 
     public void end(boolean interupted) {
         intake.enableBreak();

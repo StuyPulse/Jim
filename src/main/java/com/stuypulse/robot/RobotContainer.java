@@ -138,13 +138,16 @@ public class RobotContainer {
             .whileTrue(new RobotRelease())
             .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
 
+        // driver.getTopButton()
+        //     .onTrue(new ManagerValidateState())
+        //     .onTrue(new ManagerChooseScoreNode())
+        //     .whileTrue(new ConditionalCommand(
+        //         new RobotAlignThenScoreCubes(),
+        //         new RobotAlignThenScoreCones(),
+        //         () -> Manager.getInstance().getGamePiece().isCube()));
+
         driver.getTopButton()
-            .onTrue(new ManagerValidateState())
-            .onTrue(new ManagerChooseScoreNode())
-            .whileTrue(new ConditionalCommand(
-                new RobotAlignThenScoreCubes(),
-                new RobotAlignThenScoreCones(),
-                () -> Manager.getInstance().getGamePiece().isCube()));
+            .whileTrue(new DriveToAndIntakeNearestCube());
 
         // swerve
         // driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());

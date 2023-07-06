@@ -169,6 +169,7 @@ public class VisionImpl extends Vision {
             ll.updateAprilTagData();
 
             if (ll.hasAprilTagData()) {
+                SmartDashboard.putString("Vision/Pipeline", "April Tag");
                 var data = ll.getAprilTagData().get();
 
                 Odometry.getInstance().getField().getObject("April Tag").setPose(Field.getAprilTagFromId(data.id));
@@ -183,10 +184,15 @@ public class VisionImpl extends Vision {
                     putAprilTagData("Vision/" + ll.getTableName(), data, DataStatus.REJECTED);
                     ll2d.setPose(kNoPose);
                 }
-
-            } else {
-                putAprilTagData("Vision/" + ll.getTableName(), kNoData, DataStatus.NONE);
-                ll2d.setPose(kNoPose);
+            } else if(ll.hasCubeDetectionData()) {
+                SmartDashboard.putString("Vision/Pipeline", "Cube Detection");
+                SmartDashboard.putNumber("Vision/X Angle", getAngle());
+                SmartDashboard.putNumber("Vision/Y Angle", ll.getYAngle());
+                SmartDashboard.putNumber("Vision/Cube Distance", getDistanceToCube());
+            } else if(ll.hasReflectiveTapeData()) {
+                SmartDashboard.putString("Vision/Pipeline", "Reflective Tape");
+                SmartDashboard.putNumber("Vision/X Angle", getAngle());
+                SmartDashboard.putNumber("Vision/Peg Distance", getDistanceToPeg());
             }
         }
     }

@@ -79,6 +79,9 @@ public interface Settings {
                 "limelight-back",
                 "limelight-front"
             };
+            // String [] LIMELIGHTS = {
+            //     "limelight"
+            // };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
                 // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
@@ -403,17 +406,17 @@ public interface Settings {
     public interface CubeDetection {
         // temporary values, copied from Alignment interface 
 
-        SmartNumber THRESHOLD_X = new SmartNumber("Cube Detection/Angle Threshold", 0.08);
-        SmartNumber THRESHOLD_Y = new SmartNumber("Cube Detection/Angle Threshold", 0.1);
-        SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 05);
+        SmartNumber THRESHOLD_X = new SmartNumber("Cube Detection/X Threshold", 0.08);
+        SmartNumber THRESHOLD_Y = new SmartNumber("Cube Detection/Y Threshold", 0.1);
+        SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 1);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 0.1);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
-            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
+            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 1);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
