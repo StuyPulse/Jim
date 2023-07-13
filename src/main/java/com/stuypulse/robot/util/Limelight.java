@@ -9,6 +9,7 @@ import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 
@@ -24,6 +25,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Optional;
+import java.util.function.DoubleUnaryOperator;
 
 public class Limelight {
 
@@ -142,22 +144,24 @@ public class Limelight {
     }
 
     public double getDistanceToPeg() {
-        if(hasAprilTagData()) {
+        if(!hasReflectiveTapeData()) {
             return Double.NaN;
         }
 
-        double heightDiff = Math.abs(POSITIONS[limelightId].getZ() - 
-                        (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH ? Field.HIGH_PEG_HEIGHT : Field.MID_PEG_HEIGHT));
+        double pegHeight = Manager.getInstance().getNodeLevel() == NodeLevel.HIGH ? Field.HIGH_PEG_HEIGHT : Field.MID_PEG_HEIGHT;
+        double heightDiff = Math.abs(POSITIONS[limelightId].getZ() - pegHeight);
+        Rotation2d yRotation = Rotation2d.fromDegrees(getYAngle());
 
-        return heightDiff / Math.tan(getYAngle()) + POSITIONS[limelightId].getX();
+        return heightDiff / yRotation.getTan() + POSITIONS[limelightId].getX();
     }
 
     public double getDistanceToCube() {
-        // assuming cube Z = 0
-        if(hasCubeDetectionData()) {
-            return POSITIONS[limelightId].getZ() / Math.abs(Rotation2d.fromDegrees(getYAngle()).getTan()) + POSITIONS[limelightId].getX();
+        if(!hasCubeDetectionData()) {
+            return Double.NaN;
         }
-        return Double.NaN;
+
+        Rotation2d yRotation =  Rotation2d.fromDegrees(getYAngle());
+        return POSITIONS[limelightId].getZ() / yRotation.getTan() + POSITIONS[limelightId].getX(); // assuming cube Z = 0
     }
 
     public void updateAprilTagData() {

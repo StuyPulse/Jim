@@ -38,7 +38,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.SACROD;
+    Robot ROBOT = Robot.JIM;
 
     double DT = 0.02;
 
@@ -75,25 +75,25 @@ public interface Settings {
         public interface Limelight {
             String FIRST_LIMELIGHT = "limelight-back";
             
-            // String [] LIMELIGHTS = {
-            //     "limelight-back",
-            //     "limelight-front"
-            // };
             String [] LIMELIGHTS = {
-                "limelight"
+                "limelight-back",
+                "limelight-front"
             };
-            int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
-            // Pose3d [] POSITIONS = new Pose3d[] {
-            //     // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
-            //     new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
-            //     new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+            // String [] LIMELIGHTS = {
+            //     "limelight"
             // };
+            int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
+            Pose3d [] POSITIONS = new Pose3d[] {
+                // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+            };
 
             // Sacrod positions
-            Pose3d [] POSITIONS = new Pose3d[] {
-                new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0)),
-                new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0))
-            };
+            // Pose3d [] POSITIONS = new Pose3d[] {
+            //     new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0)),
+            //     new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0))
+            // };
         }
     }
 
@@ -410,21 +410,22 @@ public interface Settings {
     }
 
     public interface CubeDetection {
-        // temporary values, copied from Alignment interface 
+        SmartNumber DEBOUNCE_TIME = new SmartNumber("Cube Detection/Debounce Time", 0.15);
+        SmartNumber TARGET_CUBE_DISTANCE = new SmartNumber("Cube Detection/Target Cube Distance", 0.5); // change for Jim
 
         SmartNumber THRESHOLD_X = new SmartNumber("Cube Detection/X Threshold", 0.08);
         SmartNumber THRESHOLD_Y = new SmartNumber("Cube Detection/Y Threshold", 0.1);
         SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 0.1);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 1);
-            SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
-            SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0);
+            SmartNumber P = new SmartNumber("Cube Detection/Translation/kP", 1);
+            SmartNumber I = new SmartNumber("Cube Detection/Translation/kI", 0);
+            SmartNumber D = new SmartNumber("Cube Detection/Translation/kD", 0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 1);
-            SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
-            SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
+            SmartNumber P = new SmartNumber("Cube Detection/Rotation/kP", 1);
+            SmartNumber I = new SmartNumber("Cube Detection/Rotation/kI", 0);
+            SmartNumber D = new SmartNumber("Cube Detection/Rotation/kD", 0);
         }
     }
 }

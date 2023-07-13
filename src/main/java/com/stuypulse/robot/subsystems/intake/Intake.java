@@ -37,6 +37,7 @@ public abstract class Intake extends SubsystemBase {
     public abstract void stop();
 
     public boolean hasGamePiece() {return false;}
+    public boolean isAcquiring() {return false;}
 
     public void enableCoast() { }
     public void enableBreak() { }

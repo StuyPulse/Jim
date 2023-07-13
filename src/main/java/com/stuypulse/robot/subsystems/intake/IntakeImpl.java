@@ -73,6 +73,11 @@ public class IntakeImpl extends Intake {
     }
 
     @Override
+    public boolean isAcquiring() {
+        return acquiring;
+    }
+
+    @Override
     public boolean hasGamePiece() {
         return isStalling();
     }
