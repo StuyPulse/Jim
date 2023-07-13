@@ -38,7 +38,7 @@ public interface Settings {
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.JIM;
+    Robot ROBOT = Robot.SACROD;
 
     double DT = 0.02;
 
@@ -75,18 +75,24 @@ public interface Settings {
         public interface Limelight {
             String FIRST_LIMELIGHT = "limelight-back";
             
-            String [] LIMELIGHTS = {
-                "limelight-back",
-                "limelight-front"
-            };
             // String [] LIMELIGHTS = {
-            //     "limelight"
+            //     "limelight-back",
+            //     "limelight-front"
             // };
+            String [] LIMELIGHTS = {
+                "limelight"
+            };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
+            // Pose3d [] POSITIONS = new Pose3d[] {
+            //     // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
+            //     new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
+            //     new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+            // };
+
+            // Sacrod positions
             Pose3d [] POSITIONS = new Pose3d[] {
-                // new Pose3d(new Translation3d(0,0,28.5), new Rotation3d(0, 0, 0))
-                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
-                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+                new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0)),
+                new Pose3d(new Translation3d(0.1, 0, Units.inchesToMeters(31.5)), new Rotation3d(0, Math.toRadians(-30), 0))
             };
         }
     }
@@ -408,10 +414,10 @@ public interface Settings {
 
         SmartNumber THRESHOLD_X = new SmartNumber("Cube Detection/X Threshold", 0.08);
         SmartNumber THRESHOLD_Y = new SmartNumber("Cube Detection/Y Threshold", 0.1);
-        SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 1);
+        SmartNumber THRESHOLD_ANGLE = new SmartNumber("Cube Detection/Angle Threshold", 0.1);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 0.1);
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 1);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0);
         }

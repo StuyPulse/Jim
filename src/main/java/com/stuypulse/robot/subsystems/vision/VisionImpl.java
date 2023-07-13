@@ -102,13 +102,13 @@ public class VisionImpl extends Vision {
     }
 
     @Override
-    public double getAngle() {
+    public Rotation2d getRotationToObject() {
         for (Limelight limelight : limelights) {
             if (limelight.hasReflectiveTapeData() || limelight.hasCubeDetectionData()) {
-                return limelight.getXAngle();
+                return Rotation2d.fromDegrees(limelight.getXAngle());
             }
         }
-        return Double.NaN;
+        return Rotation2d.fromDegrees(Double.NaN);
     }
 
     @Override
@@ -184,12 +184,12 @@ public class VisionImpl extends Vision {
                 }
             } else if(ll.hasCubeDetectionData()) {
                 SmartDashboard.putString("Vision/Pipeline", "Cube Detection");
-                SmartDashboard.putNumber("Vision/X Angle", getAngle());
+                SmartDashboard.putNumber("Vision/X Angle", getRotationToObject().getDegrees());
                 SmartDashboard.putNumber("Vision/Y Angle", ll.getYAngle());
                 SmartDashboard.putNumber("Vision/Cube Distance", getDistanceToCube());
             } else if(ll.hasReflectiveTapeData()) {
                 SmartDashboard.putString("Vision/Pipeline", "Reflective Tape");
-                SmartDashboard.putNumber("Vision/X Angle", getAngle());
+                SmartDashboard.putNumber("Vision/X Angle", getRotationToObject().getDegrees());
                 SmartDashboard.putNumber("Vision/Peg Distance", getDistanceToPeg());
             }
         }

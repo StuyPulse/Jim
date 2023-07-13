@@ -138,7 +138,7 @@ public class Limelight {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
-        return tyEntry.get() + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getY());
+        return -tyEntry.get() - Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getY());
     }
 
     public double getDistanceToPeg() {

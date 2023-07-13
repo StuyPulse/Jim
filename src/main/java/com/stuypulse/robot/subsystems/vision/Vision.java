@@ -9,6 +9,7 @@ package com.stuypulse.robot.subsystems.vision;
 import com.stuypulse.robot.util.AprilTagData;
 import com.stuypulse.robot.util.Limelight.DataType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public abstract class Vision extends SubsystemBase {
 
     public abstract double getDistanceToPeg();
     public abstract double getDistanceToCube();
-    public abstract double getAngle();
+    public abstract Rotation2d getRotationToObject();
 
     public abstract DataType getPipeline();
     public abstract void setPipeline(DataType type);

@@ -78,8 +78,10 @@ public class DriveToAndIntakeNearestCube extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d targetPose = new Pose2d(0.2, 0, new Rotation2d()); // modify x as const distance from cube
-        Pose2d currentPose = new Pose2d(vision.getDistanceToCube(), 0, Rotation2d.fromDegrees(vision.getAngle()));
+        double cubeDistance  = vision.getDistanceToCube();
+        Rotation2d cubeRotation = vision.getRotationToObject();
+        Pose2d targetPose = new Pose2d(0.5, 0, new Rotation2d()); // modify x as const distance from cube
+        Pose2d currentPose = new Pose2d(cubeDistance * cubeRotation.getCos(), cubeDistance * cubeRotation.getSin(), cubeRotation);
         // Pose2d targetPose = new Pose2d();
         // Pose2d currentPose = new Pose2d(0, 0, Rotation2d.fromDegrees(vision.getAngle()));
 
