@@ -9,7 +9,6 @@ import static com.stuypulse.robot.constants.Settings.Vision.Limelight.*;
 
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 
@@ -25,7 +24,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Optional;
-import java.util.function.DoubleUnaryOperator;
 
 public class Limelight {
 
@@ -133,14 +131,44 @@ public class Limelight {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
-        return txEntry.get() + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getZ());
+
+        String limelightName = LIMELIGHTS[limelightId];
+        double xAngle;
+        switch(limelightName) {
+            case "limelight-left":
+                xAngle = -tyEntry.get();
+                break;
+            case "limelight-right":
+                xAngle = tyEntry.get();
+                break;
+            default:
+                xAngle = txEntry.get();
+                break;
+        }
+
+        return xAngle + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getZ());
     }
 
     public double getYAngle() {
         if(hasAprilTagData()) {
             return Double.NaN;
         }
-        return -tyEntry.get() - Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getY());
+
+        String limelightName = LIMELIGHTS[limelightId];
+        double yAngle;
+        switch(limelightName) {
+            case "limelight-left": 
+                yAngle = txEntry.get();
+                break;
+            case "limelight-right":
+                yAngle = -txEntry.get();
+                break;
+            default:
+                yAngle = tyEntry.get();
+                break;
+        }
+
+        return yAngle + Units.radiansToDegrees(POSITIONS[limelightId].getRotation().getY());
     }
 
     public double getDistanceToPeg() {
