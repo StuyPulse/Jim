@@ -79,9 +79,8 @@ public interface Settings {
             };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
-                // maybe switch -30 and 30?
-                new Pose3d(new Translation3d(0.0635, -0.3429, 0.4699), new Rotation3d(Math.toRadians(-90), 0, Math.toRadians(-30))),
-                new Pose3d(new Translation3d(0.0635, 0.3429, 0.4699), new Rotation3d(Math.toRadians(90), 0, Math.toRadians(30)))
+                new Pose3d(new Translation3d(0.0635, -0.3429, 0.4699), new Rotation3d(Math.toRadians(90), 0, Math.toRadians(-30))),
+                new Pose3d(new Translation3d(0.0635, 0.3429, 0.4699), new Rotation3d(Math.toRadians(-90), 0, Math.toRadians(30)))
             };
         }
     }
