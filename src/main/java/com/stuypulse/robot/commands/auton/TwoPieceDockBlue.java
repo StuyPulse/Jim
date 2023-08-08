@@ -218,8 +218,7 @@ public class TwoPieceDockBlue extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.GREEN),
 
-            new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.75)
+            new SwerveDriveBalanceBlay(0.75)
                 .withTimeout(ENGAGE_TIME)
                 .alongWith(new FastStow().withTolerance(15, 10)),
 

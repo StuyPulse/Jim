@@ -106,8 +106,7 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
 
-            new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.7)
+            new SwerveDriveBalanceBlay(0.7)
                 .withTimeout(ENGAGE_TIME),
 
             new PlantEngage()

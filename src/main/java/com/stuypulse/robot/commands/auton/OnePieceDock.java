@@ -84,8 +84,7 @@ public class OnePieceDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RAINBOW),
 
-            new SwerveDriveBalanceBlay()
-                .withMaxSpeed(0.6)
+            new SwerveDriveBalanceBlay(0.6)
                 .withTimeout(ENGAGE_TIME)
                 .alongWith(new FastStow().withTolerance(15, 10)),
 
