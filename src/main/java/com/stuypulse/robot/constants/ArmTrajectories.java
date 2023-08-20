@@ -119,7 +119,7 @@ public interface ArmTrajectories {
     public interface Score {
         public interface High {
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -13), // 16 lower
+                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -11), // 16 lower
                 new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 37));
         }
 
