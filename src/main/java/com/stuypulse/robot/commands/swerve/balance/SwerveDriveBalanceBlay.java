@@ -7,6 +7,7 @@ package com.stuypulse.robot.commands.swerve.balance;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.streams.IStream;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
@@ -24,22 +25,22 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SwerveDriveBalanceBlay extends CommandBase {
 
-    private final Controller control;
+    private Number maxSpeed;
 
-    private double angleThreshold;
+    private Number kK_u = IStream.create(() -> maxSpeed.doubleValue() / AutoBalance.MAX_TILT.doubleValue()).number();  // from Zieger-Nichols tuning method
+    private Number kP = IStream.create(() -> 0.8 * kK_u.doubleValue()).number();  // from Zieger-Nichols tuning method
+    private Number kD = IStream.create(() -> 0.1 * kK_u.doubleValue() * AutoBalance.kT_u.doubleValue()).number(); // from Zieger-Nichols tuning method
 
-    private final SwerveDrive swerve;
-    private final Odometry odometry;
-    private final Plant plant;
+    private Number angleThreshold;
+
+    private Controller control;
+
+    private SwerveDrive swerve;
+    private Odometry odometry;
+    private Plant plant;
 
     public SwerveDriveBalanceBlay() {
-        this(AutoBalance.MAX_SPEED.doubleValue());
-    }
-
-    public SwerveDriveBalanceBlay(double maxSpeed) {
-        double kK_u = maxSpeed / AutoBalance.MAX_TILT.doubleValue();
-        double kP = 0.8 * kK_u;
-        double kD = 0.1 * kK_u * AutoBalance.kT_u.doubleValue();
+        maxSpeed = AutoBalance.MAX_SPEED;
 
         angleThreshold = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
@@ -51,6 +52,8 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         addRequirements(swerve, plant);
     }
 
+    // private SmartBoolean enabled = new SmartBoolean("Auto Balance/Enabled", false);
+
     @Override
     public void execute() {
         control.update(0, swerve.getBalanceAngle().getDegrees());
@@ -61,7 +64,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         SmartDashboard.putNumber("Auto Balance/Speed", control.getOutput());
     }
 
-    private boolean timedOut = false;
+private boolean timedOut = false;
 
     @Override
     public boolean isFinished() {
@@ -69,7 +72,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
             timedOut = true;
             return true;
         }
-        return control.isDone(angleThreshold);
+        return control.isDone(angleThreshold.doubleValue());
     }
 
     @Override
@@ -81,6 +84,11 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         if (timedOut) {
             LEDController.getInstance().setColor(LEDColor.YELLOW, 1);
         }
+    }
+
+    public SwerveDriveBalanceBlay withMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+        return this;
     }
 
     public SwerveDriveBalanceBlay withAngleThreshold(double degreesThreshold) {

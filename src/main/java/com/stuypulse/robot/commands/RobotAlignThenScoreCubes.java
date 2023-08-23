@@ -63,7 +63,13 @@ public class RobotAlignThenScoreCubes extends CommandBase {
     }
 
     private boolean isAligned() {
-        if (Manager.getInstance().getGamePiece().isCone()) {
+        if(Manager.getInstance().getNodeLevel() == Manager.NodeLevel.LOW) {
+            return controller.isDone(
+                Alignment.ALIGNED_LOW_THRESHOLD_X.get(),
+                Alignment.ALIGNED_LOW_THRESHOLD_Y.get(),
+                Alignment.ALIGNED_LOW_THRESHOLD_ANGLE.get());
+        }
+        else if (Manager.getInstance().getGamePiece().isCone()) {
             return controller.isDone(
                 Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
