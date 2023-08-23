@@ -80,7 +80,7 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/Ready Auton Mid Cube Back/Wrist", -133));
 
             ArmState kCubeFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Mid Cube Front/Shoulder", -21),
+                new SmartNumber("Arm Trajectories/Mid Cube Front/Shoulder", -27),
                 new SmartNumber("Arm Trajectories/Mid Cube Front/Wrist", 49));
 
             ArmState kCubeBack = new ArmState( 
