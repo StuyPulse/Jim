@@ -326,17 +326,17 @@ public interface Settings {
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.10);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.2); //was 0.125
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.2);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.MAX_MODULE_SPEED.get());
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 18); //was 20
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 18);
         }
 
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15); //was 0.05
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
             SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
@@ -363,15 +363,15 @@ public interface Settings {
 
         SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
-        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 90);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 8);
 
         SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.08);
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
-        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 90);
+        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 3);
 
         SmartNumber ALIGNED_LOW_THRESHOLD_X = new SmartNumber("Alignment/X Low Threshold", 0.16);
         SmartNumber ALIGNED_LOW_THRESHOLD_Y = new SmartNumber("Alignment/Y Low Threshold", 0.2);
-        SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 90);
+        SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 8);
 
 
         SmartNumber AGAINST_GRID_VEL_X = new SmartNumber("Alignment/Against Grid X Velocity (m per s)", 0.02);
