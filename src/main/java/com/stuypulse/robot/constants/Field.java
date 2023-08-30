@@ -94,7 +94,7 @@ public interface Field {
             Number CUBE_BACK = 1.881;
             Number CUBE_FRONT = 2.106;
             Number CONE_TIP_IN = 2.231;
-            Number CONE_TIP_OUT = 2.052;
+            Number CONE_TIP_OUT = 2.18;
         }
 
         public interface Low {

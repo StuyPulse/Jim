@@ -100,6 +100,10 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         controller.update(targetPose, currentPose);
 
         if (aligned.get() || movingWhileScoring) {
+            if (!movingWhileScoring) {
+                swerve.stop();
+            }
+
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
                 intake.deacquire();
