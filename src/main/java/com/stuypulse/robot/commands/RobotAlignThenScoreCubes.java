@@ -64,17 +64,20 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
     private boolean isAligned() {
         if(Manager.getInstance().getNodeLevel() == Manager.NodeLevel.LOW) {
+            SmartDashboard.putString("Alignment/Mode", "LOW");
             return controller.isDone(
                 Alignment.ALIGNED_LOW_THRESHOLD_X.get(),
                 Alignment.ALIGNED_LOW_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_LOW_THRESHOLD_ANGLE.get());
         }
         else if (Manager.getInstance().getGamePiece().isCone()) {
+            SmartDashboard.putString("Alignment/Mode", "CONE");
             return controller.isDone(
                 Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
         } else {
+            SmartDashboard.putString("Alignment/Mode", "CUBE");
             return controller.isDone(
                 Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
@@ -122,6 +125,9 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         } else {
             swerve.setChassisSpeeds(controller.getOutput());
         }
+
+        SmartDashboard.putBoolean("Alignment/Aligned", isAligned());
+        SmartDashboard.putBoolean("Alignment/Aligned Debounced", aligned.get());
     }
 
     @Override
