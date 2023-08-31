@@ -109,6 +109,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
+                LEDController.getInstance().setColor(LEDColor.GREEN, 694000000);
                 intake.deacquire();
             }
 
@@ -118,6 +119,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
                 // only score for cubes
                 if (manager.getGamePiece().isCube()) {
+                    LEDController.getInstance().setColor(LEDColor.GREEN, 694000000);
                     intake.deacquire();
                 }
             }
