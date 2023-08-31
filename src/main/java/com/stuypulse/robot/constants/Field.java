@@ -86,19 +86,19 @@ public interface Field {
         public interface High {
             Number CUBE_BACK = 1.846;
             Number CUBE_FRONT = 1.825;
-            Number CONE_TIP_IN = new RedBlueNumber(1.881, 1.8556);
+            Number CONE_TIP_IN = 1.75;
             Number CONE_TIP_OUT = 1.772;
         }
 
         public interface Mid {
             Number CUBE_BACK = 1.881;
             Number CUBE_FRONT = 2.106;
-            Number CONE_TIP_IN = 2.231;
+            Number CONE_TIP_IN = 2.21;
             Number CONE_TIP_OUT = 2.18;
         }
 
         public interface Low {
-            Number BACK = 1.825;
+            Number BACK = 1.9;
             Number FRONT = 1.825;
         } 
     }
