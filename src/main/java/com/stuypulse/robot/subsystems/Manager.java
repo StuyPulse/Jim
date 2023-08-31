@@ -122,7 +122,12 @@ public class Manager extends SubsystemBase {
     }
 
     private ArmState getLowReadyTrajectory() {
-        return scoreSide == ScoreSide.FRONT ? Deacquire.kFrontTrajectory : Deacquire.kBackTrajectory;
+        if (scoreSide == ScoreSide.FRONT)
+            return Deacquire.kFrontTrajectory;
+        else if (gamePiece.isCone())
+            return Deacquire.kBackConeTrajectory;
+        else
+            return Deacquire.kBackCubeTrajectory;
     }
 
     private ArmState getMidReadyTrajectory() {
