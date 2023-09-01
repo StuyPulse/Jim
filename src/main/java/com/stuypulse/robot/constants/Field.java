@@ -55,28 +55,29 @@ public interface Field {
     }
 
     public interface Pegs {
+        // LAB VALUES
         double RED_Y[] = {
-            7.494778,
-            6.935978,
-            6.377178,
-            5.843778,
-            5.259578,
-            4.700778,
-            4.141978,
-            3.583178,
-            3.024378
+            7.494778 - 0.075,
+            6.935978 - 0.075,
+            6.377178 - 0.075,
+            5.843778 - 0.075,
+            5.259578 - 0.075,
+            4.700778 - 0.075,
+            4.141978 - 0.075,
+            3.583178 - 0.075,
+            3.024378 - 0.075
         };
 
         double BLUE_Y[] = {
-            4.9784,
-            4.4196,
-            3.8608,
-            3.3020,
-            2.7432,
-            2.1844,
-            1.6256,
-            1.0668,
-            0.5080
+            4.9784 - 0.06,
+            4.4196 - 0.06,
+            3.8608 - 0.06,
+            3.3020 - 0.06,
+            2.7432 - 0.06,
+            2.1844 - 0.06,
+            1.6256 - 0.06,
+            1.0668 - 0.06,
+            0.5080 - 0.06
         };
     }
 
@@ -86,19 +87,19 @@ public interface Field {
         public interface High {
             Number CUBE_BACK = 1.846;
             Number CUBE_FRONT = 1.825;
-            Number CONE_TIP_IN = new RedBlueNumber(1.881, 1.8556);
+            Number CONE_TIP_IN = 1.75;
             Number CONE_TIP_OUT = 1.772;
         }
 
         public interface Mid {
             Number CUBE_BACK = 1.881;
             Number CUBE_FRONT = 2.106;
-            Number CONE_TIP_IN = 2.231;
-            Number CONE_TIP_OUT = 2.052;
+            Number CONE_TIP_IN = 2.21;
+            Number CONE_TIP_OUT = 2.18;
         }
 
         public interface Low {
-            Number BACK = 1.825;
+            Number BACK = 1.9;
             Number FRONT = 1.825;
         } 
     }

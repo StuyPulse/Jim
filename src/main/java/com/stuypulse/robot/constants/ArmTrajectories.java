@@ -46,9 +46,13 @@ public interface ArmTrajectories {
 			    new SmartNumber("Arm Trajectories/Deacquire Front Shoulder", -77),
 			    new SmartNumber("Arm Trajectories/Deacquire Front Wrist", 90));
 
-        ArmState kBackTrajectory = new ArmState(
-            new SmartNumber("Arm Trajectories/Deacquire Back Shoulder", -134),
-            new SmartNumber("Arm Trajectories/Deacquire Back Wrist", -22.9));
+        ArmState kBackConeTrajectory = new ArmState(
+            new SmartNumber("Arm Trajectories/Deacquire Cone Back Shoulder", -110),
+            new SmartNumber("Arm Trajectories/Deacquire Cone Back Wrist", 177));
+
+        ArmState kBackCubeTrajectory = new ArmState(
+            new SmartNumber("Arm Trajectories/Deacquire Cube Back Shoulder", -134),
+            new SmartNumber("Arm Trajectories/Deacquire Cube Back Wrist", -22.9));
     }
 
     public interface Stow {

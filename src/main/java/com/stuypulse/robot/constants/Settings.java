@@ -75,12 +75,14 @@ public interface Settings {
         public interface Limelight {
             String [] LIMELIGHTS = {
                 "limelight-left",
-                "limelight-right"
+                "limelight-right",
+                "limelight-back"
             };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
                 new Pose3d(new Translation3d(0.0635, -0.3429, 0.4699), new Rotation3d(Math.toRadians(90), 0, Math.toRadians(-30))),
-                new Pose3d(new Translation3d(0.0635, 0.3429, 0.4699), new Rotation3d(Math.toRadians(-90), 0, Math.toRadians(30)))
+                new Pose3d(new Translation3d(0.0635, 0.3429, 0.4699), new Rotation3d(Math.toRadians(-90), 0, Math.toRadians(30))),
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI))
             };
         }
     }
@@ -322,22 +324,22 @@ public interface Settings {
 
     public interface Driver {
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.10);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.03);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.2);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 1.5);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.MAX_MODULE_SPEED.get());
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 20);
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 15);
         }
 
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
-            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
+            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 6.0);
 
             public interface GyroFeedback {
                 SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
@@ -361,15 +363,15 @@ public interface Settings {
 
         SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
-        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 5);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 8);
 
         SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.08);
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
-        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
+        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1.5);
 
         SmartNumber ALIGNED_LOW_THRESHOLD_X = new SmartNumber("Alignment/X Low Threshold", 0.16);
         SmartNumber ALIGNED_LOW_THRESHOLD_Y = new SmartNumber("Alignment/Y Low Threshold", 0.2);
-        SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 10);
+        SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 8);
 
 
         SmartNumber AGAINST_GRID_VEL_X = new SmartNumber("Alignment/Against Grid X Velocity (m per s)", 0.02);
@@ -381,7 +383,7 @@ public interface Settings {
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 3);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
