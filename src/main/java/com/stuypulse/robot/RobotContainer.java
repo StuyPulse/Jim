@@ -121,17 +121,11 @@ public class RobotContainer {
     }
 
     private void configureDriverBindings() {
-        // wing
-        // driver.getSelectButton().onTrue(new WingToggle());
-
         // arm
         driver.getLeftTriggerButton()
             .whileTrue(new RobotScore());
         driver.getBottomButton()
             .whileTrue(new RobotScore());
-        driver.getLeftBumper()
-            .whileTrue(new RobotRelease())
-            .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
         driver.getRightTriggerButton()
             .whileTrue(new RobotRelease())
             .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
@@ -143,6 +137,7 @@ public class RobotContainer {
 
         // swerve
         driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+        // left bumper -> robot relative
 
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
