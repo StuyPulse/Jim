@@ -25,6 +25,7 @@ import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -121,6 +122,11 @@ public class SwerveDriveDrive extends CommandBase {
         // if planted then X
         if (plant.isEngaged() || driver.getRawStartButton() || driver.getRawSelectButton()) {
             swerve.setXMode();
+        }
+
+        // if in robot relative mode, set raw chassis speed
+        else if (driver.getRawLeftBumper()) {
+            swerve.setChassisSpeeds(new ChassisSpeeds(speed.get().y, -speed.get().x, -angularVel));
         }
         
         // use the angularVelocity for drive otherwise
