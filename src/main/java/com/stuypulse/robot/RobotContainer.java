@@ -232,8 +232,8 @@ public class RobotContainer {
 
         // One Piece
 
-        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
-        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
+        // autonChooser.addOption("One Dock", new OnePieceDock());
+        autonChooser.addOption("One Mobility Dock", new OnePieceMobilityDock());
 
         // One Piece Dock
 
@@ -242,21 +242,20 @@ public class RobotContainer {
 
         // Two Piece
 
-        autonChooser.addOption("Two Piece", new TwoPiece());
-        // autonChooser.addOption("Two Piece Wire", new TwoPieceWire());
-        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
-        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
-        autonChooser.addOption("BC Two Piece Dock Wire Blue", new BCTwoPieceDockWireBlue());
-        autonChooser.addOption("BC Two Piece Dock Wire Red", new BCTwoPieceDockWireRed());
+        autonChooser.addOption("Two", new TwoPiece());
+        // autonChooser.addOption("Bump Two", new TwoPieceWire());
+        autonChooser.addOption("Two Dock Red", new TwoPieceDockRed());
+        autonChooser.addOption("Two Dock Blue", new TwoPieceDockBlue());
+        autonChooser.addOption("Bumpless Two Dock Blue", new BCTwoPieceDockWireBlue());
+        autonChooser.addOption("Bumpless Two Dock Red", new BCTwoPieceDockWireRed());
 
         // Three Piece
 
-        // autonChooser.addOption("Three Piece", new ThreePiece());
-        autonChooser.addOption("Three Piece W Low", new ThreePieceWLow()); // basically blue
-        autonChooser.addOption("Three Piece W Low Red", new ThreePieceWLowRed());
-        autonChooser.addOption("Three Piece W Low Blue", new ThreePieceWLowBlue());
-        autonChooser.setDefaultOption("BC Three Piece W Low Wire Blue", new BCThreePieceWLowWireBlue());
-        autonChooser.addOption("BC Three Piece W Low Wire Red", new BCThreePieceWLowWireRed());
+        autonChooser.addOption("Three", new ThreePieceWLow()); // basically blue
+        autonChooser.addOption("Three Red", new ThreePieceWLowRed());
+        autonChooser.addOption("Three Blue", new ThreePieceWLowBlue());
+        autonChooser.setDefaultOption("Bumpless Three Blue", new BCThreePieceWLowWireBlue());
+        autonChooser.addOption("Bumpless Three Red", new BCThreePieceWLowWireRed());
         // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
 
         SmartDashboard.putData("Autonomous", autonChooser);
