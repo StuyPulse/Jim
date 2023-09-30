@@ -13,8 +13,8 @@
         "tiles": {
           "0,0": {
             "size": [
-              4,
-              4
+              8,
+              5
             ],
             "content": {
               "_type": "Camera Stream",
@@ -32,28 +32,7 @@
               "imageHeight": 180
             }
           },
-          "6,0": {
-            "size": [
-              4,
-              4
-            ],
-            "content": {
-              "_type": "Camera Stream",
-              "_source0": "camera_server://USB Camera 1",
-              "_title": "Front Camera",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Crosshair/Show crosshair": true,
-              "Crosshair/Crosshair color": "#FFFFFFFF",
-              "Controls/Show controls": true,
-              "Controls/Rotation": "NONE",
-              "compression": 100.0,
-              "fps": 5,
-              "imageWidth": 160,
-              "imageHeight": 120
-            }
-          },
-          "4,2": {
+          "8,2": {
             "size": [
               1,
               1
@@ -66,7 +45,7 @@
               "_showGlyph": false
             }
           },
-          "4,3": {
+          "8,3": {
             "size": [
               1,
               1
@@ -79,7 +58,7 @@
               "_showGlyph": false
             }
           },
-          "5,2": {
+          "9,2": {
             "size": [
               1,
               1
@@ -92,7 +71,7 @@
               "_showGlyph": false
             }
           },
-          "4,0": {
+          "8,0": {
             "size": [
               2,
               1
@@ -105,7 +84,7 @@
               "_showGlyph": false
             }
           },
-          "4,1": {
+          "8,1": {
             "size": [
               2,
               1
@@ -120,7 +99,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "5,3": {
+          "9,3": {
             "size": [
               1,
               1
@@ -609,9 +588,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.199999809265137,
+    "x": -1543.199951171875,
     "y": -7.199999809265137,
     "width": 1550.4000244140625,
-    "height": 838.4000244140625
+    "height": 878.4000244140625
   }
 }
