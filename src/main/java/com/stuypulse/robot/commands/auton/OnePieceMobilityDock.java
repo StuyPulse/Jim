@@ -12,6 +12,7 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -25,6 +26,21 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
+
+    static class ConeAutonReady extends ArmRoutine {
+        public ConeAutonReady() {
+            super(() -> new ArmState(-179, 136 - 5));
+        }
+
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            return new ArmTrajectory()
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+                .addState(dest);        
+            }
+    }
 
     private class FastStow extends ArmRoutine {
         public FastStow() {
@@ -63,7 +79,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady()
+            new ConeAutonReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
                 .withTolerance(7, 9)
