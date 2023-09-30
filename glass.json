@@ -4,14 +4,35 @@
       "open": false
     },
     "retained": {
+      "CameraPublisher": {
+        "limelight-back": {
+          "open": false
+        }
+      },
       "limelight": {
         "open": true
       }
     },
     "transitory": {
+      "LiveWindow": {
+        ".status": {
+          "open": false
+        }
+      },
+      "Shuffleboard": {
+        "open": false
+      },
       "SmartDashboard": {
         "Arm": {
           "open": true
+        },
+        "Arm Mech2d": {
+          "Target Wrist Root": {
+            "open": false
+          },
+          "Wrist Root": {
+            "open": false
+          }
         },
         "Auto Balance": {
           "Translation": {
@@ -27,6 +48,17 @@
         "Back Left": {
           "open": true
         },
+        "Color Sensor": {
+          "open": false
+        },
+        "Debug": {
+          "Intake": {
+            "open": false
+          },
+          "Shooter": {
+            "open": false
+          }
+        },
         "DriPver Settings": {
           "open": true
         },
@@ -38,7 +70,16 @@
             "open": true
           }
         },
+        "Shooter": {
+          "Shooter": {
+            "open": false
+          },
+          "open": false
+        },
         "Swerve": {
+          "Back Right": {
+            "open": false
+          },
           "Drive": {
             "open": true
           },
@@ -50,6 +91,18 @@
           },
           "limelight": {
             "open": true
+          },
+          "limelight-back": {
+            "open": false
+          },
+          "limelight-front": {
+            "open": false
+          },
+          "limelight-left": {
+            "open": false
+          },
+          "limelight-right": {
+            "open": false
           }
         },
         "Wrist": {
@@ -107,7 +160,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 493,
+          "height": 419,
           "series": [
             {
               "color": [
@@ -151,7 +204,7 @@
               "autoFit": true
             }
           ],
-          "height": 213,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -175,7 +228,8 @@
         }
       ],
       "window": {
-        "name": "Front Left Velocity vs Target"
+        "name": "Front Left Velocity vs Target",
+        "visible": false
       }
     },
     "Plot <11>": {
@@ -186,7 +240,7 @@
               "autoFit": true
             }
           ],
-          "height": 210,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -210,7 +264,8 @@
         }
       ],
       "window": {
-        "name": "Back Left Velocity vs Target"
+        "name": "Back Left Velocity vs Target",
+        "visible": false
       }
     },
     "Plot <12>": {
@@ -221,7 +276,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -245,7 +300,8 @@
         }
       ],
       "window": {
-        "name": "Front Right Angle vs Target"
+        "name": "Front Right Angle vs Target",
+        "visible": false
       }
     },
     "Plot <13>": {
@@ -256,7 +312,7 @@
               "autoFit": true
             }
           ],
-          "height": 423,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -280,7 +336,8 @@
         }
       ],
       "window": {
-        "name": "Front Left Angle vs Target"
+        "name": "Front Left Angle vs Target",
+        "visible": false
       }
     },
     "Plot <14>": {
@@ -291,7 +348,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -315,13 +372,14 @@
         }
       ],
       "window": {
-        "name": "Back Left Angle vs Target"
+        "name": "Back Left Angle vs Target",
+        "visible": false
       }
     },
     "Plot <1>": {
       "plots": [
         {
-          "height": 911,
+          "height": 419,
           "series": [
             {
               "color": [
@@ -428,7 +486,7 @@
               "autoFit": true
             }
           ],
-          "height": 418,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -452,7 +510,8 @@
         }
       ],
       "window": {
-        "name": "Back Right Angle vs Target"
+        "name": "Back Right Angle vs Target",
+        "visible": false
       }
     },
     "Plot <5>": {
@@ -539,7 +598,7 @@
               "autoFit": true
             }
           ],
-          "height": 213,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -563,7 +622,8 @@
         }
       ],
       "window": {
-        "name": "Front Right Velocity vs Target"
+        "name": "Front Right Velocity vs Target",
+        "visible": false
       }
     },
     "Plot <8>": {
@@ -574,7 +634,7 @@
               "autoFit": true
             }
           ],
-          "height": 210,
+          "height": 184,
           "series": [
             {
               "color": [
@@ -598,7 +658,8 @@
         }
       ],
       "window": {
-        "name": "Back Right Velocity vs Target"
+        "name": "Back Right Velocity vs Target",
+        "visible": false
       }
     },
     "Plot <9>": {
