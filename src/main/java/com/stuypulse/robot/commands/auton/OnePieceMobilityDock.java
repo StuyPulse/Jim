@@ -29,7 +29,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
     static class ConeAutonReady extends ArmRoutine {
         public ConeAutonReady() {
-            super(() -> new ArmState(-179, 136 - 5));
+            super(() -> new ArmState(-179, 136 - 8));
         }
 
         @Override
