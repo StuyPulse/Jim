@@ -88,7 +88,7 @@ public interface Field {
             Number CUBE_BACK = 1.846;
             Number CUBE_FRONT = 1.825;
             Number CONE_TIP_IN = 1.75;
-            Number CONE_TIP_OUT = 1.772;
+            Number CONE_TIP_OUT = 1.772 - Units.inchesToMeters(2);
         }
 
         public interface Mid {
