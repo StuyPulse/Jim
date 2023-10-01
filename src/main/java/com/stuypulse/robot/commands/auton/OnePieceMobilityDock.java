@@ -29,11 +29,20 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
     static class ConeAutonReady extends ArmRoutine {
         public ConeAutonReady() {
-            super(() -> new ArmState(-179, 136 - 8));
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH)
+                    return new ArmState(-179, 136 - 8);
+                else
+                    return new ArmState(-161.7, 133.9);
+            });
         }
 
-        @Override
+        @Override   
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            // return new ArmTrajectory()
+            //     .addState(new ArmState(dest.getShoulderState(), src.getWristState())
+            //         .setShoulderTolerance(20).setWristTolerance(360))
+            //     .addState(new)
             return new ArmTrajectory()
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
@@ -71,7 +80,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
@@ -80,9 +89,9 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ConeAutonReady()
-                .setWristVelocityTolerance(25)
-                .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 9)
+                // .setWristVelocityTolerance(25)
+                // .setShoulderVelocityTolerance(45)
+                // .withTolerance(7, 9)
                 .withTimeout(3)
         );
 
