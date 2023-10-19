@@ -122,7 +122,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(357.213206) // recalibrated 4/21                
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.605534) // recalibrated 10/1              
                 .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
@@ -143,7 +143,7 @@ public interface Settings {
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(7.748473) // recalibrated 5/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(117.311604) // recalibrated 10/1
                 .plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
@@ -238,7 +238,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.322017).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.322017).plus(Rotation2d.fromDegrees(180+120));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -378,7 +378,7 @@ public interface Settings {
         SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
