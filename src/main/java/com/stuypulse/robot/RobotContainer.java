@@ -228,17 +228,17 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.addOption("Do Nothing", new DoNothing());
-        // autonChooser.addOption("Mobility", new Mobility());
+        autonChooser.addOption("Mobility", new Mobility());
 
         // One Piece
 
-        autonChooser.addOption("One Piece + Dock", new OnePieceDock());
-        autonChooser.addOption("One Piece Mobility + Dock", new OnePieceMobilityDock());
+        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
 
         // One Piece Dock
 
         // autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockBump());
+        // autonChooser.addOption("1.5 Piece Dock Bump", new OnePiecePickupDockBump());
 
         // Two Piece
 
