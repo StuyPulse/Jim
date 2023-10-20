@@ -63,7 +63,7 @@ public class TwoPieceBump extends DebugSequentialCommandGroup {
 
     public TwoPieceBump() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece Bump", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Back Away"
         );
 

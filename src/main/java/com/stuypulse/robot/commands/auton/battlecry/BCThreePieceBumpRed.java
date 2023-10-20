@@ -154,7 +154,7 @@ public class BCThreePieceBumpRed extends DebugSequentialCommandGroup {
     public BCThreePieceBumpRed() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump Red", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("BC 3 Piece Bump Red", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 

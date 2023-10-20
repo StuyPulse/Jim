@@ -152,7 +152,7 @@ public class ThreePieceBlue extends DebugSequentialCommandGroup {
     public ThreePieceBlue() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece W Low - Blue", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece Blue", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 

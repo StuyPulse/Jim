@@ -144,7 +144,7 @@ public class ThreePieceBump extends DebugSequentialCommandGroup {
     public ThreePieceBump() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece Wire", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_SECOND_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, SCORE_THIRD_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece Bump", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_SECOND_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, SCORE_THIRD_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 

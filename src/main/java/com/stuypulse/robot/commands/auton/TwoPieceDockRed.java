@@ -102,7 +102,7 @@ public class TwoPieceDockRed extends DebugSequentialCommandGroup {
 
     public TwoPieceDockRed() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece + Dock Red", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece Dock Red", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
         );
 

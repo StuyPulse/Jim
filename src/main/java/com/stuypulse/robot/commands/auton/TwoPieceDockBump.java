@@ -32,7 +32,7 @@ public class TwoPieceDockBump extends DebugSequentialCommandGroup {
 
     public TwoPieceDockBump(){
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece + Dock Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece Dock Bump", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece" , "Score Piece", "Dock"
         );
 

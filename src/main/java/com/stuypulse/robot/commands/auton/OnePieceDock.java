@@ -74,7 +74,7 @@ public class OnePieceDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.PURPLE),
             new ParallelDeadlineGroup(
-                new SwerveDriveFollowTrajectory(PathPlanner.loadPath("1 Piece + Dock", DOCK))
+                new SwerveDriveFollowTrajectory(PathPlanner.loadPath("1 Piece Dock", DOCK))
                         .robotRelative().withStop(),
 
                 new WaitCommand(INTAKE_ACQUIRE_TIME).andThen(new IntakeStop()).andThen(new ArmStow())
