@@ -29,25 +29,24 @@ import com.pathplanner.lib.PathPlanner;
 
 public class TwoPieceBump extends DebugSequentialCommandGroup {
 
-    private static class ConeReady extends ArmRoutine {
-        public ConeReady() {
-            super(Manager.getInstance()::getReadyTrajectory);
+    static class ConeAutonReady extends ArmRoutine {
+        public ConeAutonReady() {
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH)
+                    return new ArmState(-179, 136 - 8);
+                else
+                    return new ArmState(-161.7, 133.9);
+            });
         }
 
-        @Override
+        @Override   
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             return new ArmTrajectory()
-
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
                         .setWristLimp(true))
-
-                // .addState(
-                //     dest.getShoulderDegrees(),
-                //     (Manager.getInstance().getNodeLevel() == NodeLevel.MID) ? dest.getWristDegrees() : (src.getWristDegrees() + dest.getWristDegrees()) / 2.0)
-
                 .addState(dest);
-        }    
+        }
     }
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
@@ -80,11 +79,8 @@ public class TwoPieceBump extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ConeReady()
-                .setWristVelocityTolerance(25)
-                .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 9)
-                .withTimeout(4)
+            new ConeAutonReady()
+                .withTimeout(3)
         );
 
         addCommands(
