@@ -3,7 +3,7 @@
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.battlecry;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class ThreePieceWLowRed extends DebugSequentialCommandGroup {
+public class BCThreePieceBlue extends DebugSequentialCommandGroup {
 
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
@@ -61,6 +61,8 @@ public class ThreePieceWLowRed extends DebugSequentialCommandGroup {
             return new ArmTrajectory()
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
+                .addState(new ArmState(dest.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(30).setShoulderTolerance(20))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
                     .setWristTolerance(30).setShoulderTolerance(20));
         }
@@ -149,10 +151,10 @@ public class ThreePieceWLowRed extends DebugSequentialCommandGroup {
 
     private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
 
-    public ThreePieceWLowRed() {
+    public BCThreePieceBlue() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece W Low - Red", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("BC 3 Piece W Low Bump Blue", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 
@@ -252,10 +254,10 @@ public class ThreePieceWLowRed extends DebugSequentialCommandGroup {
                     // .withTolerance(4, 10)
             ),
 
-            // new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
-            //     .until(Intake.getInstance()::hasGamePiece)
-            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
-            //     .withTimeout(ACQUIRE_WAIT_TIME),
+            new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+                .until(Intake.getInstance()::hasGamePiece)
+                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+                .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );

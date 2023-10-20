@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class TwoPieceDockWire extends DebugSequentialCommandGroup {
+public class TwoPieceDockBump extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_ACQUIRE_TIME = 0.2;
     private static final double INTAKE_DEACQUIRE_TIME = 1.0;
@@ -30,7 +30,7 @@ public class TwoPieceDockWire extends DebugSequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 0.5);
 
-    public TwoPieceDockWire(){
+    public TwoPieceDockBump(){
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece + Dock Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece" , "Score Piece", "Dock"

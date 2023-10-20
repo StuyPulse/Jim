@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /*-
  * This auton does nothing... it is used as a placeholder
  */
-public class DoNothingAuton extends SequentialCommandGroup {
+public class DoNothing extends SequentialCommandGroup {
 
-    public DoNothingAuton() {
+    public DoNothing() {
         addCommands(
                 /** Do a whole lot of nothing */
                 );

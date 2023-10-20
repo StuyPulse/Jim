@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class TwoPieceWire extends DebugSequentialCommandGroup {
+public class TwoPieceBump extends DebugSequentialCommandGroup {
 
     private static class ConeReady extends ArmRoutine {
         public ConeReady() {
@@ -61,7 +61,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
 
 
-    public TwoPieceWire() {
+    public TwoPieceBump() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("2 Piece Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Back Away"

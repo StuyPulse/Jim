@@ -24,7 +24,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 // The best
-public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
+public class OnePiecePickupDockBump extends DebugSequentialCommandGroup {
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_ACQUIRE_TIME = 0.5;
@@ -36,7 +36,7 @@ public class OnePiecePickupDockWire extends DebugSequentialCommandGroup {
     private static final PathConstraints INTAKE_PIECE = new PathConstraints(3, 2);
     private static final PathConstraints DOCK = new PathConstraints(1, 2);
 
-    public OnePiecePickupDockWire() {
+    public OnePiecePickupDockBump() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("1.5 Piece + Dock Wire", INTAKE_PIECE, DOCK),
             "Intake Piece", "Dock"
