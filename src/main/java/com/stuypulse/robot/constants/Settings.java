@@ -282,7 +282,7 @@ public interface Settings {
 
     public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 6); // 12 originally
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 8); // 6 originally
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0);
         SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.8);
