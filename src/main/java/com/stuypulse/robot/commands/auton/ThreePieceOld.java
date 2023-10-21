@@ -29,7 +29,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 /**
- * Old three piece -- scores cone high first
+ * Old three piece -- scores cone mid first
  */
 public class ThreePieceOld extends DebugSequentialCommandGroup {
 
