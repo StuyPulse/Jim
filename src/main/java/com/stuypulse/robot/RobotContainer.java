@@ -13,10 +13,10 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceWLowWireRed;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockWireRed;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpRed;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpBlue;
+import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpRed;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -227,36 +227,36 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
-        autonChooser.addOption("Do Nothing", new DoNothingAuton());
-        // autonChooser.addOption("Mobility", new MobilityAuton());
+        autonChooser.addOption("Do Nothing", new DoNothing());
+        autonChooser.addOption("Mobility", new Mobility());
 
         // One Piece
 
-        // autonChooser.addOption("One Dock", new OnePieceDock());
-        autonChooser.addOption("One Mobility Dock", new OnePieceMobilityDock());
+        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
 
         // One Piece Dock
 
         // autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        // autonChooser.addOption("1.5 Piece Dock + Wire", new OnePiecePickupDockWire());
+        // autonChooser.addOption("1.5 Piece Dock Bump", new OnePiecePickupDockBump());
 
         // Two Piece
 
-        autonChooser.addOption("Two", new TwoPiece());
-        // autonChooser.addOption("Bump Two", new TwoPieceWire());
-        autonChooser.addOption("Two Dock Red", new TwoPieceDockRed());
-        autonChooser.addOption("Two Dock Blue", new TwoPieceDockBlue());
-        autonChooser.addOption("Bumpless Two Dock Blue", new BCTwoPieceDockWireBlue());
-        autonChooser.addOption("Bumpless Two Dock Red", new BCTwoPieceDockWireRed());
+        autonChooser.addOption("Two Piece", new TwoPiece());
+        autonChooser.addOption("Two Piece Bump", new TwoPieceBump());
+        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
+        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
+        // autonChooser.addOption("Two Piece Dock Bump Removed Blue", new BCTwoPieceDockBumpBlue());
+        // autonChooser.addOption("Two Piece Dock Bump Removed Red", new BCTwoPieceDockBumpRed());
 
         // Three Piece
 
-        autonChooser.addOption("Three", new ThreePieceWLow()); // basically blue
-        autonChooser.addOption("Three Red", new ThreePieceWLowRed());
-        autonChooser.addOption("Three Blue", new ThreePieceWLowBlue());
-        autonChooser.setDefaultOption("Bumpless Three Blue", new BCThreePieceWLowWireBlue());
-        autonChooser.addOption("Bumpless Three Red", new BCThreePieceWLowWireRed());
-        // autonChooser.addOption("Three Piece Wire", new ThreePieceWire());
+        autonChooser.setDefaultOption("Three Piece", new ThreePiece()); // basically blue
+        autonChooser.addOption("Three Piece Red", new ThreePieceRed());
+        autonChooser.addOption("Three Piece Blue", new ThreePieceBlue());
+        // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
+        // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
+        autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

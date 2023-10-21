@@ -55,23 +55,24 @@ public class TwoPieceDockRed extends DebugSequentialCommandGroup {
                     .setWristTolerance(23).setShoulderTolerance(20));
         }
     }
-    private class ArmReadyBOOM extends ArmRoutine {
-        public ArmReadyBOOM() {
-            super(Manager.getInstance()::getReadyTrajectory);
+
+    static class ConeAutonReady extends ArmRoutine {
+        public ConeAutonReady() {
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH)
+                    return new ArmState(-179, 136 - 8);
+                else
+                    return new ArmState(-161.7, 133.9);
+            });
         }
 
-        @Override
+        @Override   
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
-
             return new ArmTrajectory()
-                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
-                    .setWristTolerance(30))
                 .addState(
-                    new ArmState(dest.getShoulderDegrees(), wristSafeAngle).setWristLimp(true).setWristTolerance(360))
-                .addState(dest);
-
-            // return new ArmTrajectory().addState(dest);
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+                .addState(dest);        
         }
     }
 
@@ -102,7 +103,7 @@ public class TwoPieceDockRed extends DebugSequentialCommandGroup {
 
     public TwoPieceDockRed() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece + Dock Red", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece Dock Red", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
         );
 
@@ -118,10 +119,7 @@ public class TwoPieceDockRed extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ArmReady()
-                .withTolerance(7, 9)
-                .setShoulderVelocityTolerance(25)
-                .setWristVelocityTolerance(45)
+            new ConeAutonReady()
                 .withTimeout(3)
         );
 

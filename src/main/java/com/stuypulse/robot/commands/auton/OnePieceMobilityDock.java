@@ -39,16 +39,12 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
         @Override   
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            // return new ArmTrajectory()
-            //     .addState(new ArmState(dest.getShoulderState(), src.getWristState())
-            //         .setShoulderTolerance(20).setWristTolerance(360))
-            //     .addState(new)
             return new ArmTrajectory()
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
                         .setWristLimp(true))
                 .addState(dest);        
-            }
+        }
     }
 
     private class FastStow extends ArmRoutine {
@@ -74,7 +70,7 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
     public OnePieceMobilityDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1 Piece + Mobility Dock", OVER_CHARGE, DOCK),
+            PathPlanner.loadPathGroup("1 Piece Mobility Dock", OVER_CHARGE, DOCK),
             "Over Charge", "Dock"
         );
 
@@ -89,9 +85,6 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
         addCommands(
             new LEDSet(LEDColor.RED),
             new ConeAutonReady()
-                // .setWristVelocityTolerance(25)
-                // .setShoulderVelocityTolerance(45)
-                // .withTolerance(7, 9)
                 .withTimeout(3)
         );
 

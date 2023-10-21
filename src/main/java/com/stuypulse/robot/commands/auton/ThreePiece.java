@@ -22,6 +22,8 @@ import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -30,33 +32,11 @@ import com.pathplanner.lib.PathPlanner;
 
 public class ThreePiece extends DebugSequentialCommandGroup {
 
-    static class ConeAutonReady extends ArmRoutine {
-        public ConeAutonReady() {
-            super(Manager.getInstance()::getReadyTrajectory);
+    static class AutonMidCubeReady extends ArmRoutine {
+        public AutonMidCubeReady() {
+            super(() -> Ready.Mid.kAutonCubeBack);
         }
 
-        @Override
-        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-
-            return new ArmTrajectory()
-                .addState(new ArmState(dest.getShoulderState(), src.getWristState())
-                            .setShoulderTolerance(20).setWristLimp(true).setWristTolerance(360))
-                .addState(new ArmState(dest.getShoulderState(), dest.getWristState()).setWristTolerance(7)
-                            .setShoulderTolerance(15));
-        }
-    }
-
-    static class AutonReady extends ArmRoutine {
-        public AutonReady() {
-            super(() -> {
-                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH) {
-                    return Ready.High.kCubeAutonBack;
-                } else {
-                    return Ready.Mid.kAutonCubeBack;
-                }
-            });
-        }
- 
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
@@ -65,9 +45,27 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
                     .setWristTolerance(45))
                 .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
-                    .setWristTolerance(7).setShoulderTolerance(25));
+                    .setWristTolerance(7).setShoulderTolerance(20));
         }
     }
+
+    static class AutonHighCubeReady extends ArmRoutine {
+        public AutonHighCubeReady() {
+            super(() -> Ready.High.kCubeAutonBack);
+        }
+
+        @Override
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
+
+            return new ArmTrajectory()
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setWristTolerance(45))
+                .addState(new ArmState(dest.getShoulderState(), dest.getWristState())
+                    .setWristTolerance(30).setShoulderTolerance(20));
+        }
+    }
+
     static class ArmIntakeFirst extends ArmRoutine {
         public ArmIntakeFirst() {
             super(() -> ArmTrajectories.Acquire.kBOOMCubeAuton);
@@ -110,11 +108,14 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 -70.82,
                 10);
                // 8.37);
-            double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
+            // double intermediateShoulderDegrees = Manager.getInstance().getIntakeIntermediateTrajectory().getShoulderDegrees();
+            double intermediateShoulderDegrees = -60;
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();
 
             return new ArmTrajectory()
-                // .addState(src.getShoulderDegrees(), wristSafeAngle)
+                .addState(new ArmState(src.getShoulderDegrees(), wristSafeAngle)
+                    .setShoulderTolerance(694)
+                    .setWristTolerance(15))
 
                 .addState(
                     new ArmState(intermediateShoulderDegrees, wristSafeAngle)
@@ -159,27 +160,14 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new InstantCommand( () -> Arm.getInstance().setShoulderVelocityFeedbackCutoff(15)),
+            new ManagerSetNodeLevel(NodeLevel.LOW),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
-        // score first piece
+        // score first piece + intake second piece
         addCommands(
-            new LEDSet(LEDColor.RED),
-            new ConeAutonReady()
-                .withTimeout(1.5)
-        );
-
-        addCommands(
-            new LEDSet(LEDColor.BLUE),
-            new IntakeScore(),
-            new WaitCommand(0.8)
-        );
-
-        // intake second piece
-        addCommands(
-
             new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
@@ -192,10 +180,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
-                    .andThen(new IntakeAcquire()),
+                    .andThen(new IntakeAcquire())
+                    .andThen(new ArmIntakeFirst()
+                        .withTolerance(4, 10))
 
-                new ArmIntakeFirst()
-                    .withTolerance(4, 10)
             ),
 
             new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
@@ -209,6 +197,13 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             arm.runOnce(() -> arm.setWristVoltage(0))
         );
 
+        addCommands(
+            arm.runOnce(() -> {
+                arm.setShoulderVelocityFeedbackCutoff(20);
+                arm.setShoulderVelocityFeedbackDebounce(0.0);
+            })
+        );
+
         // drive to grid and score second piece :: TODO: make custom arm setpoint for this
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
@@ -216,14 +211,16 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
             new LEDSet(LEDColor.RED),
 
-            new ParallelDeadlineGroup(
-            new SwerveDriveFollowTrajectory(
-                paths.get("Score Piece"))
-                    .fieldRelative()
-                .withStop(),
+            new ParallelCommandGroup(
+                new SwerveDriveFollowTrajectory(
+                    paths.get("Score Piece"))
+                        .fieldRelative()
+                    .withStop(),
 
-                new AutonReady(),
-                new WaitCommand(0.5).andThen(new IntakeStop())
+                new WaitCommand(0.5).andThen(new IntakeStop()),
+
+                new AutonMidCubeReady()
+                    .withTimeout(paths.get("Score Piece").getTotalTimeSeconds() + 0.5)
             ),
 
             new ManagerSetGridNode(1),
@@ -231,13 +228,6 @@ public class ThreePiece extends DebugSequentialCommandGroup {
             new IntakeDeacquire(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME),
             new IntakeStop()
-        );
-
-        addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderVelocityFeedbackCutoff(20);
-                arm.setShoulderVelocityFeedbackDebounce(0.0);
-            })
         );
 
         // intake third piece
@@ -289,7 +279,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                 paths.get("Score Third Piece"))
                     .fieldRelative()
                 .withStop()
-                .alongWith(new AutonReady().alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
+                .alongWith(new AutonHighCubeReady().alongWith(new WaitCommand(0.5).andThen(new IntakeStop()))),
 
             new ManagerSetGridNode(1),
             // new SwerveDriveToScorePose().withTimeout(ALIGNMENT_TIME),

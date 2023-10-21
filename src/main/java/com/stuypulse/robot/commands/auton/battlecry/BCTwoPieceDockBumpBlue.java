@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
+public class BCTwoPieceDockBumpBlue extends DebugSequentialCommandGroup {
     static class AutonReady extends ArmRoutine {
         public AutonReady() {
             super(() -> {
@@ -100,7 +100,7 @@ public class BCTwoPieceDockWireBlue extends DebugSequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(4.2, 3.25);
     private static final PathConstraints DOCK_CONSTRAINTS = new PathConstraints(1, 2);
 
-    public BCTwoPieceDockWireBlue() {
+    public BCTwoPieceDockBumpBlue() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
             PathPlanner.loadPathGroup("BC 2 Piece Dock Bump Blue", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, DOCK_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Dock"
