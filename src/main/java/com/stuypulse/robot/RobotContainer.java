@@ -245,13 +245,13 @@ public class RobotContainer {
         autonChooser.addOption("Two Piece", new TwoPiece());
         autonChooser.addOption("Two Piece Bump", new TwoPieceBump());
         autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
-        autonChooser.addOption("Two Piece Dock Blue", new TwoPieceDockBlue());
+        autonChooser.setDefaultOption("Two Piece Dock Blue", new TwoPieceDockBlue());
         // autonChooser.addOption("Two Piece Dock Bump Removed Blue", new BCTwoPieceDockBumpBlue());
         // autonChooser.addOption("Two Piece Dock Bump Removed Red", new BCTwoPieceDockBumpRed());
 
         // Three Piece
 
-        autonChooser.setDefaultOption("Three Piece", new ThreePiece()); // basically blue
+        autonChooser.addOption("Three Piece", new ThreePiece()); // basically blue
         autonChooser.addOption("Three Piece Red", new ThreePieceRed());
         autonChooser.addOption("Three Piece Blue", new ThreePieceBlue());
         // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
