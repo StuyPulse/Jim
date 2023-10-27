@@ -11,8 +11,6 @@ import com.stuypulse.robot.util.ArmState;
 
 public interface ArmTrajectories {
 
-    int STRUT_BROKEN_SHOULDER_OFFSET = 4;
-
     /* Intaking */
 
     public interface Acquire {
@@ -96,20 +94,20 @@ public interface ArmTrajectories {
 
         public interface High {
             ArmState kConeTipInBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready High Tip In Back Shoulder", -185 - STRUT_BROKEN_SHOULDER_OFFSET),
+                new SmartNumber("Arm Trajectories/Ready High Tip In Back Shoulder", -185),
                 new SmartNumber("Arm Trajectories/Ready High Tip In Back Wrist", -180));
 
             // -175, 128
             ArmState kConeTipUpBack = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready High Tip Up Back Shoulder", -179 - STRUT_BROKEN_SHOULDER_OFFSET),
+                new SmartNumber("Arm Trajectories/Ready High Tip Up Back Shoulder", -179),
                 new SmartNumber("Arm Trajectories/Ready High Tip Up Back Wrist", 136));
 
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Ready High Tip Out Front Shoulder", 3 + STRUT_BROKEN_SHOULDER_OFFSET),
+                new SmartNumber("Arm Trajectories/Ready High Tip Out Front Shoulder", 3),
                 new SmartNumber("Arm Trajectories/Ready High Tip Out Front Wrist", 37));
 
             ArmState kCubeFront = new ArmState(
-                new SmartNumber("Arm Trajectories/High Cube Front/Shoulder", -5 + STRUT_BROKEN_SHOULDER_OFFSET),
+                new SmartNumber("Arm Trajectories/High Cube Front/Shoulder", -5),
                 new SmartNumber("Arm Trajectories/High Cube Front/Wrist", 46));
 
             ArmState kCubeAutonBack = new ArmState(
@@ -117,7 +115,7 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/High Auton Cube Back/Wrist", -138 + 5));
 
             ArmState kCubeBack = new ArmState(
-                new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", -186 - STRUT_BROKEN_SHOULDER_OFFSET),
+                new SmartNumber("Arm Trajectories/High Cube Back/Shoulder", -186),
                 new SmartNumber("Arm Trajectories/High Cube Back/Wrist", -138));
         }
     }
@@ -125,7 +123,7 @@ public interface ArmTrajectories {
     public interface Score {
         public interface High {
             ArmState kConeTipOutFront = new ArmState(
-                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -11 + STRUT_BROKEN_SHOULDER_OFFSET), // 16 lower
+                new SmartNumber("Arm Trajectories/Score High Tip Out Front Shoulder", -11), // 16 lower
                 new SmartNumber("Arm Trajectories/Score High Tip Out Front Wrist", 37));
         }
 
