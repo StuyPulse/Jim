@@ -112,7 +112,7 @@ public class TwoPieceDockBlue extends DebugSequentialCommandGroup {
 
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
