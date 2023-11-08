@@ -16,13 +16,13 @@ public interface ArmTrajectories {
     public interface Acquire {
         ArmState kCone = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cone Shoulder", -75),
-            new SmartNumber("Arm Trajectories/Acquire Cone Wrist", 7));
+            new SmartNumber("Arm Trajectories/Acquire Cone Wrist", 12));
         ArmState kCube = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cube Shoulder", -75),
             new SmartNumber("Arm Trajectories/Acquire Cube Wrist", 12));
 
         ArmState kHPCone = new ArmState(
-            new SmartNumber("Arm Trajectories/Acquire HP Cone Shoulder", 5),    
+            new SmartNumber("Arm Trajectories/Acquire HP Cone Shoulder", 5),   
             new SmartNumber("Arm Trajectories/Acquire HP Cone Wrist", 0));
 
         ArmState kIntermediate = new ArmState(
