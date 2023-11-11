@@ -74,7 +74,7 @@ public class ThreePieceRed extends DebugSequentialCommandGroup {
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             dest = new ArmState(
-                -70.82,
+                -70.82 - 2,
                 11);
                // 8.37);
 
