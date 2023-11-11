@@ -15,8 +15,8 @@ public interface ArmTrajectories {
 
     public interface Acquire {
         ArmState kCone = new ArmState(
-            new SmartNumber("Arm Trajectories/Acquire Cone Shoulder", -75),
-            new SmartNumber("Arm Trajectories/Acquire Cone Wrist", 12));
+            new SmartNumber("Arm Trajectories/Acquire Cone Shoulder", -78),
+            new SmartNumber("Arm Trajectories/Acquire Cone Wrist", 11));
         ArmState kCube = new ArmState(
             new SmartNumber("Arm Trajectories/Acquire Cube Shoulder", -75),
             new SmartNumber("Arm Trajectories/Acquire Cube Wrist", 12));
