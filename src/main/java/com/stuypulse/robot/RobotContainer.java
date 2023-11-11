@@ -154,8 +154,7 @@ public class RobotContainer {
             .debounce(0.5, DebounceType.kFalling)
             .onTrue(new LEDSet(LEDColor.RED))
             .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
-            .onFalse(new InstantCommand(() -> driver.setRumble(0.0)))
-        ;
+            .onFalse(new InstantCommand(() -> driver.setRumble(0.0)));
     }
 
     private void configureOperatorBindings() {
@@ -224,6 +223,12 @@ public class RobotContainer {
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());
+        
+        new Trigger(intake::hasGamePiece)
+            .and(DriverStation::isTeleop)
+            .debounce(0.5, DebounceType.kFalling)
+            .onTrue(new InstantCommand(() -> operator.setRumble(0.5)))
+            .onFalse(new InstantCommand(() -> operator.setRumble(0.0)));
     }
 
     /**************/
