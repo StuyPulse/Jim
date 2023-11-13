@@ -12,7 +12,6 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
@@ -26,26 +25,6 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
-
-    static class ConeAutonReady extends ArmRoutine {
-        public ConeAutonReady() {
-            super(() -> {
-                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH)
-                    return new ArmState(-179, 136 - 8);
-                else
-                    return new ArmState(-161.7, 133.9);
-            });
-        }
-
-        @Override   
-        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
-            return new ArmTrajectory()
-                .addState(
-                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
-                        .setWristLimp(true))
-                .addState(dest);        
-        }
-    }
 
     private class FastStow extends ArmRoutine {
         public FastStow() {
@@ -70,13 +49,13 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
 
     public OnePieceMobilityDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1 Piece Mobility Dock", OVER_CHARGE, DOCK),
+            PathPlanner.loadPathGroup("1 Piece + Mobility Dock", OVER_CHARGE, DOCK),
             "Over Charge", "Dock"
         );
 
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.MID),
+            new ManagerSetNodeLevel(NodeLevel.HIGH),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
@@ -84,7 +63,10 @@ public class OnePieceMobilityDock extends DebugSequentialCommandGroup {
         // score first piece
         addCommands(
             new LEDSet(LEDColor.RED),
-            new ConeAutonReady()
+            new ArmReady()
+                .setWristVelocityTolerance(25)
+                .setShoulderVelocityTolerance(45)
+                .withTolerance(7, 9)
                 .withTimeout(3)
         );
 

@@ -122,7 +122,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.605534) // recalibrated 10/1              
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.949092) // recalibrated 11/11        
                 .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
