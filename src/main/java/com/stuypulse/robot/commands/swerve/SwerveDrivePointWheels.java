@@ -5,7 +5,7 @@
 
 package com.stuypulse.robot.commands.swerve;
 
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,7 +32,7 @@ public class SwerveDrivePointWheels extends CommandBase {
     public void execute(){
         SwerveModuleState state = new SwerveModuleState(
             0,
-            angle.minus(Odometry.getInstance().getRotation()));
+            angle.minus(AbstractOdometry.getInstance().getRotation()));
         swerve.setModuleStates(state, state, state, state);
     }
 

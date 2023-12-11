@@ -14,7 +14,7 @@ import com.stuypulse.robot.constants.ArmTrajectories.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Field.ScoreXPoses;
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.util.ArmState;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -200,7 +200,7 @@ public class Manager extends SubsystemBase {
     }
 
     public int getNearestScoreIndex() {
-        var robot = Odometry.getInstance().getTranslation();
+        var robot = AbstractOdometry.getInstance().getTranslation();
 
         double gridDistance = getSelectedScoreX().doubleValue();
         double[] positions = Field.ScoreYPoses.getYPoseArray(RobotContainer.getCachedAlliance(), scoreSide);

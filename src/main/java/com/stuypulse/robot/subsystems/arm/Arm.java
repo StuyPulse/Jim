@@ -23,7 +23,7 @@ import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
 import com.stuypulse.robot.constants.Settings.Robot;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.ArmDriveFeedforward;
 import com.stuypulse.robot.util.ArmEncoderAngleFeedforward;
@@ -202,7 +202,7 @@ public abstract class Arm extends SubsystemBase {
         wristVoltageOverride = Optional.empty();
         shoulderVoltageOverride = Optional.empty();
 
-        armVisualizer = new ArmVisualizer(Odometry.getInstance().getField().getObject("Field Arm"));
+        armVisualizer = new ArmVisualizer(AbstractOdometry.getInstance().getField().getObject("Field Arm"));
 
         pieceGravityCompensation = false;
     }
@@ -392,7 +392,7 @@ public abstract class Arm extends SubsystemBase {
 
         armVisualizer.setTargetAngles(Units.radiansToDegrees(shoulderController.getSetpoint()), wristController.getSetpoint().toDegrees());
         armVisualizer.setMeasuredAngles(getShoulderAngle().getDegrees(), getWristAngle().getDegrees());
-        armVisualizer.setFieldArm(Odometry.getInstance().getPose(), getState());
+        armVisualizer.setFieldArm(AbstractOdometry.getInstance().getPose(), getState());
 
         SmartDashboard.putNumber("Arm/Shoulder/Angle (deg)", getShoulderAngle().getDegrees());
         SmartDashboard.putNumber("Arm/Shoulder/Setpoint (deg)", Units.radiansToDegrees(shoulderController.getSetpoint()));

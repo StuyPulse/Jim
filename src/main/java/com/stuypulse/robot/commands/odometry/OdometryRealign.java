@@ -5,7 +5,7 @@
 
 package com.stuypulse.robot.commands.odometry;
 
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import java.util.function.Supplier;
 
 public class OdometryRealign extends InstantCommand {
-    private final Odometry odometry;
+    private final AbstractOdometry odometry;
     private final Supplier<Rotation2d> references;
 
     public OdometryRealign(Supplier<Rotation2d> references) {
-        odometry = Odometry.getInstance();
+        odometry = AbstractOdometry.getInstance();
         this.references = references;
 
         // addRequirements(odometry);

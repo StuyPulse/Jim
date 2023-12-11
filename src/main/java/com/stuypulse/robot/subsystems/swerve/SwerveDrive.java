@@ -15,7 +15,7 @@ import com.stuypulse.robot.constants.Settings.Swerve.BackLeft;
 import com.stuypulse.robot.constants.Settings.Swerve.BackRight;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontLeft;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontRight;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.modules.SL_SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SacrodModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
@@ -150,7 +150,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.y, -velocity.x,
                 -omega,
-                Odometry.getInstance().getRotation());
+                AbstractOdometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
             Settings.DT * speeds.vxMetersPerSecond,
@@ -226,7 +226,7 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getBalanceAngle() {
         Rotation2d pitch = getGyroPitch();
         Rotation2d roll = getGyroRoll();
-        Rotation2d yaw = Odometry.getInstance().getRotation();
+        Rotation2d yaw = AbstractOdometry.getInstance().getRotation();
 
         double facingSlope = pitch.getTan() * yaw.getCos() + roll.getTan() * yaw.getSin();
         double maxSlope = Math.sqrt(Math.pow(roll.getTan(), 2) + Math.pow(pitch.getTan(), 2));
@@ -250,7 +250,7 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Odometry odometry = Odometry.getInstance();
+        AbstractOdometry odometry = AbstractOdometry.getInstance();
         Pose2d pose = odometry.getPose();
         Rotation2d angle = odometry.getRotation();
 

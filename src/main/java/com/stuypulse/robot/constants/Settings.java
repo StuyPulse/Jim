@@ -378,12 +378,15 @@ public interface Settings {
         SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);
+            // SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);
+            // SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
+            // SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);            
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 0.5);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 3);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 0.1);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }

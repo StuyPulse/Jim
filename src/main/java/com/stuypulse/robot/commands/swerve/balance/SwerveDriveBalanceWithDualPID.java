@@ -14,7 +14,7 @@ import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 import com.stuypulse.robot.constants.Settings.AutoBalance;
 import com.stuypulse.robot.constants.Settings.AutoBalance.*;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.plant.Plant;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
@@ -37,7 +37,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
     private Number ANGLE_THRESHOLD;
 
     private final SwerveDrive swerve;
-    private final Odometry odometry;
+    private final AbstractOdometry odometry;
 
     private final Controller tiltController, translationController;
     private final Controller gyroController;
@@ -49,7 +49,7 @@ public class SwerveDriveBalanceWithDualPID extends CommandBase {
         ANGLE_THRESHOLD = AutoBalance.ANGLE_THRESHOLD.doubleValue();
 
         this.swerve = SwerveDrive.getInstance();
-        this.odometry = Odometry.getInstance();
+        this.odometry = AbstractOdometry.getInstance();
 
         tiltController = new PIDController(Tilt.P, Tilt.I, Tilt.D);
         translationController = new PIDController(Translation.P, Translation.I, Translation.D);

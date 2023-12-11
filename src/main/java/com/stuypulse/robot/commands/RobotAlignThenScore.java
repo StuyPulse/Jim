@@ -21,7 +21,7 @@ import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.*;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.Derivative;
 import com.stuypulse.robot.util.HolonomicController;
@@ -74,7 +74,7 @@ public class RobotAlignThenScore extends CommandBase {
         xErrorChange = new Derivative();
         stoppedByGrid = BStream.create(this::isAgainstGrid).filtered(new BDebounceRC.Both(Alignment.AGAINST_GRID_DEBOUNCE));
 
-        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
+        targetPose2d = AbstractOdometry.getInstance().getField().getObject("Target Pose");
 
         addRequirements(swerve, arm, intake);
     }
@@ -107,7 +107,7 @@ public class RobotAlignThenScore extends CommandBase {
     public void initialize() {
         movingWhileScoring = false;
         intake.enableBreak();
-        Odometry.USE_VISION_ANGLE.set(true);
+        // AbstractOdometry.USE_VISION_ANGLE.set(true);
 
         xErrorChange.reset();
         
@@ -116,7 +116,7 @@ public class RobotAlignThenScore extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d currentPose = Odometry.getInstance().getPose();
+        Pose2d currentPose = AbstractOdometry.getInstance().getPose();
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
 
@@ -174,7 +174,7 @@ public class RobotAlignThenScore extends CommandBase {
 
     public void end(boolean interupted) {
         intake.enableBreak();
-        Odometry.USE_VISION_ANGLE.set(false);
+        // AbstractOdometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));

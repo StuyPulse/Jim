@@ -17,7 +17,7 @@ import com.stuypulse.robot.constants.Settings.Alignment.Translation;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.intake.*;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
 import com.stuypulse.robot.util.LEDColor;
@@ -58,7 +58,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
-        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
+        targetPose2d = AbstractOdometry.getInstance().getField().getObject("Target Pose");
         addRequirements(swerve, intake);
     }
 
@@ -89,14 +89,14 @@ public class RobotAlignThenScoreCubes extends CommandBase {
     public void initialize() {
         movingWhileScoring = false;
         intake.enableBreak();
-        Odometry.USE_VISION_ANGLE.set(true);
+        // AbstractOdometry.USE_VISION_ANGLE.set(true);
 
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
     @Override
     public void execute() {
-        Pose2d currentPose = Odometry.getInstance().getPose();
+        Pose2d currentPose = AbstractOdometry.getInstance().getPose();
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
 
@@ -139,7 +139,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
     public void end(boolean interupted) {
         intake.enableBreak();
-        Odometry.USE_VISION_ANGLE.set(false);
+        // AbstractOdometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));

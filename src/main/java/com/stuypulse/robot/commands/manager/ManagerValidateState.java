@@ -8,7 +8,7 @@ package com.stuypulse.robot.commands.manager;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,7 +28,7 @@ public class ManagerValidateState extends InstantCommand {
         super(() -> {
             var manager = Manager.getInstance();
 
-            ScoreSide facingSide = getCurrentScoringSide(Odometry.getInstance().getRotation());
+            ScoreSide facingSide = getCurrentScoringSide(AbstractOdometry.getInstance().getRotation());
             manager.setScoreSide(facingSide);
 
             // if game piece is cone, choose cone type based on side

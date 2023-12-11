@@ -13,7 +13,7 @@ import com.stuypulse.stuylib.streams.IStream;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import com.stuypulse.robot.subsystems.arm.Arm;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -56,7 +56,7 @@ public class ArmDrive extends CommandBase {
     public void execute(){
         final double dt = timer.reset();
 
-        double sign = Odometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
+        double sign = AbstractOdometry.getInstance().getRotation().getCos() > 0 ? 1 : -1;
 
         if (gamepad.getRawRightBumper()) {
             arm.setShoulderVoltage(shoulder.get() * SHOULDER_DRIVE_VOLTAGE.get());

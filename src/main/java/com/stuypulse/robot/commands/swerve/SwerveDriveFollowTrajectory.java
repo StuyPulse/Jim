@@ -6,7 +6,7 @@
 package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.constants.Settings.Swerve.Motion;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -50,7 +50,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 
 		super(
 			path,
-			Odometry.getInstance()::getPose,
+			AbstractOdometry.getInstance()::getPose,
 			SwerveDrive.getInstance().getKinematics(),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
 			new PIDController(Motion.XY.kP, Motion.XY.kI, Motion.XY.kD),
@@ -61,7 +61,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 		);
 
 		robotRelative = false;
-		trajectory = Odometry.getInstance().getField().getObject("Trajectory");
+		trajectory = AbstractOdometry.getInstance().getField().getObject("Trajectory");
 		this.path = path;
 		events = new HashMap<String, Command>();
 		shouldStop = false;
@@ -102,7 +102,7 @@ public class SwerveDriveFollowTrajectory extends PPSwerveControllerCommand {
 			PathPlannerState initialState = PathPlannerTrajectory.transformStateForAlliance(
 				path.getInitialState(), DriverStation.getAlliance());
 
-			Odometry.getInstance().reset(new Pose2d(
+			AbstractOdometry.getInstance().reset(new Pose2d(
 				initialState.poseMeters.getTranslation(),
 				initialState.holonomicRotation
 			));

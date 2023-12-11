@@ -14,7 +14,7 @@ import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
 
@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 public class SwerveDriveToPose extends CommandBase{
     private final SwerveDrive swerve;
-    private final Supplier<Pose2d> targetPoses;
+    private final Pose2d targetPose;
 
     // Holonomic control
     private final HolonomicController controller;
@@ -36,9 +36,9 @@ public class SwerveDriveToPose extends CommandBase{
 
     private final FieldObject2d targetPose2d;
 
-    public SwerveDriveToPose(Supplier<Pose2d> targetPoses){
+    public SwerveDriveToPose(Pose2d targetPose){
         this.swerve = SwerveDrive.getInstance();
-        this.targetPoses = targetPoses;
+        this.targetPose = targetPose;
 
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
@@ -49,7 +49,7 @@ public class SwerveDriveToPose extends CommandBase{
 
         aligned = BStream.create(this::isAligned).filtered(new BDebounceRC.Rising(Alignment.DEBOUNCE_TIME));
 
-        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
+        targetPose2d = AbstractOdometry.getInstance().getField().getObject("Target Pose");
         addRequirements(swerve);
     }
 
@@ -69,13 +69,13 @@ public class SwerveDriveToPose extends CommandBase{
 
     @Override
     public void initialize() {
-        Odometry.USE_VISION_ANGLE.set(true);
+        // AbstractOdometry.USE_VISION_ANGLE.set(true);
     }
 
     @Override
     public void execute() {
-        Pose2d currentPose = Odometry.getInstance().getPose();
-        Pose2d targetPose = targetPoses.get();
+        Pose2d currentPose = AbstractOdometry.getInstance().getPose();
+        // Pose2d targetPose = targetPose.get();
 
         targetPose2d.setPose(targetPose);
 
@@ -89,7 +89,7 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     public void end(boolean interupted) {
-        Odometry.USE_VISION_ANGLE.set(false);
+        // AbstractOdometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }
