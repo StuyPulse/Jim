@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class ThreePiece extends DebugSequentialCommandGroup {
+public class ThreePieceBlue extends DebugSequentialCommandGroup {
 
     static class AutonMidCubeReady extends ArmRoutine {
         public AutonMidCubeReady() {
@@ -74,7 +74,7 @@ public class ThreePiece extends DebugSequentialCommandGroup {
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             dest = new ArmState(
-                -70.82,
+                -70.82 - 2,
                 11);
                // 8.37);
 
@@ -149,10 +149,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
 
     private static final PathConstraints BACK_AWAY_CONSTRAINTS = new PathConstraints(2.5, 2);
 
-    public ThreePiece() {
+    public ThreePieceBlue() {
 
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("3 Piece", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
+            PathPlanner.loadPathGroup("3 Piece Blue", INTAKE_SECOND_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS, INTAKE_THIRD_PIECE_CONSTRAINTS, THIRD_SCORE_PIECE_CONSTRAINTS, BACK_AWAY_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Intake Third Piece", "Score Third Piece", "Back Away"
         );
 
@@ -252,10 +252,10 @@ public class ThreePiece extends DebugSequentialCommandGroup {
                     // .withTolerance(4, 10)
             ),
 
-            new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
-                .until(Intake.getInstance()::hasGamePiece)
-                .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
-                .withTimeout(ACQUIRE_WAIT_TIME),
+            // new SwerveDriveWiggle(WIGGLE_PERIOD, WIGGLE_VEL_AMPLITUDE)
+            //     .until(Intake.getInstance()::hasGamePiece)
+            //     .alongWith(arm.runOnce(() -> arm.setWristVoltage(-3)))
+            //     .withTimeout(ACQUIRE_WAIT_TIME),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
         );

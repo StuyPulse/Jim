@@ -27,12 +27,19 @@ public class PlantImpl extends Plant {
         disengage();
     }
 
+    @Override
     public void engage() {
         solenoid.set(Value.kReverse);
     }
 
+    @Override
     public void disengage() {
         solenoid.set(Value.kForward);
+    }
+
+    @Override
+    public boolean isEngaged() {
+        return solenoid.get() == Value.kReverse;
     }
 
     @Override

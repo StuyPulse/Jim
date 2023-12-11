@@ -84,7 +84,13 @@ public class RobotAlignThenScore extends CommandBase {
     }
 
     private boolean isAligned() {
-        if (Manager.getInstance().getGamePiece().isCone()) {
+        if(Manager.getInstance().getNodeLevel() == Manager.NodeLevel.LOW) {
+            return stoppedByGrid.get() || controller.isDone(
+                Alignment.ALIGNED_LOW_THRESHOLD_X.get(),
+                Alignment.ALIGNED_LOW_THRESHOLD_Y.get(),
+                Alignment.ALIGNED_LOW_THRESHOLD_ANGLE.get());
+        }
+        else if (Manager.getInstance().getGamePiece().isCone()) {
             return stoppedByGrid.get() || controller.isDone(
                 Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
                 Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
@@ -114,11 +120,16 @@ public class RobotAlignThenScore extends CommandBase {
         Pose2d targetPose = Manager.getInstance().getScorePose();
         targetPose2d.setPose(targetPose);
 
+        // TODO: add getError methods to controller
         xErrorChange.get(targetPose.getX() - currentPose.getX());
 
         controller.update(targetPose, currentPose);
 
         if (aligned.get() || movingWhileScoring) {
+            if (!movingWhileScoring) {
+                swerve.stop();
+            }
+
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
                 intake.deacquire();

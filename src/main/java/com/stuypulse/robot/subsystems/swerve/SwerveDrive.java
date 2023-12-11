@@ -247,10 +247,10 @@ public class SwerveDrive extends SubsystemBase {
 
     public void setXMode() {
         SwerveModuleState[] state = {
-            new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
             new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
             new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
             new SwerveModuleState(0, Rotation2d.fromDegrees(315)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
         };
         setModuleStates(state);
     }

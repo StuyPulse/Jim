@@ -12,8 +12,12 @@ import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
+import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
+import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.util.ArmState;
+import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
@@ -23,7 +27,27 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class TwoPieceWire extends DebugSequentialCommandGroup {
+public class TwoPieceBump extends DebugSequentialCommandGroup {
+
+    static class ConeAutonReady extends ArmRoutine {
+        public ConeAutonReady() {
+            super(() -> {
+                if (Manager.getInstance().getNodeLevel() == NodeLevel.HIGH)
+                    return new ArmState(-179, 136 - 8);
+                else
+                    return new ArmState(-161.7, 133.9);
+            });
+        }
+
+        @Override   
+        protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
+            return new ArmTrajectory()
+                .addState(
+                    new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
+                        .setWristLimp(true))
+                .addState(dest);
+        }
+    }
 
     private static final double INTAKE_DEACQUIRE_TIME = 0.5;
     private static final double INTAKE_STOP_WAIT_TIME = 1;
@@ -36,9 +60,9 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
     private static final PathConstraints SCORE_PIECE_CONSTRAINTS = new PathConstraints(2, 2);
 
 
-    public TwoPieceWire() {
+    public TwoPieceBump() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("2 Piece Wire", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
+            PathPlanner.loadPathGroup("2 Piece Bump", INTAKE_PIECE_CONSTRAINTS, SCORE_PIECE_CONSTRAINTS),
             "Intake Piece", "Score Piece", "Back Away"
         );
 
@@ -47,18 +71,16 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
 
         // initial setup
         addCommands(
-            new ManagerSetNodeLevel(NodeLevel.HIGH),
+            new ManagerSetNodeLevel(NodeLevel.MID),
             new ManagerSetGamePiece(GamePiece.CONE_TIP_UP),
             new ManagerSetScoreSide(ScoreSide.BACK)
         );
 
         // score first piece
         addCommands(
-            new ArmReady()
-                .setWristVelocityTolerance(25)
-                .setShoulderVelocityTolerance(45)
-                .withTolerance(7, 9)
-                .withTimeout(4)
+            new LEDSet(LEDColor.RED),
+            new ConeAutonReady()
+                .withTimeout(3)
         );
 
         addCommands(
@@ -74,7 +96,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
-        // intake second piece
+        // intake second piece and strafe
         addCommands(
             new LEDSet(LEDColor.GREEN),
 
@@ -82,7 +104,8 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
                     .robotRelative().withStop(),
 
-                new WaitCommand(INTAKE_STOP_WAIT_TIME)
+                new IntakeScore()
+                    .andThen(new WaitCommand(INTAKE_STOP_WAIT_TIME))
                     .andThen(new IntakeStop())
                     .andThen(new WaitCommand(INTAKE_WAIT_TIME))
                     .andThen(new ManagerSetGamePiece(GamePiece.CUBE))
@@ -93,7 +116,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
                     .withTimeout(6.5)
             ),
 
-            new WaitCommand(ACQUIRE_WAIT_TIME)
+            new WaitCommand(ACQUIRE_WAIT_TIME).until(Intake.getInstance()::hasGamePiece)
                 .alongWith(arm.runOnce(() -> arm.setWristVoltage(-2))),
 
             arm.runOnce(() -> arm.setWristVoltage(0))
@@ -111,6 +134,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetScoreSide(ScoreSide.BACK),
 
+            new LEDSet(LEDColor.RED),
 
             new SwerveDriveFollowTrajectory(
                 paths.get("Score Piece"))
@@ -127,6 +151,7 @@ public class TwoPieceWire extends DebugSequentialCommandGroup {
         );
 
         addCommands(
+            new LEDSet(LEDColor.RAINBOW),
             new SwerveDriveFollowTrajectory(
                 paths.get("Back Away"))
                     .withStop()

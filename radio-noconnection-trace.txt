@@ -1,0 +1,74 @@
+Driver Station reported IP: 172.22.11.2
+
+> Task :discoverroborio
+Discovering Target roborio
+Using admin@172.22.11.2:22 for target roborio
+
+> Task :deployprogramKillroborioroborio
+    -C-> . /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t 2> /dev/null @ /home/lvuser
+
+> Task :deployrobotCommandfrcJavaroborio
+    -C-> echo '/usr/local/frc/JRE/bin/java -XX:+UseG1GC -XX:MaxGCPauseMillis=1 -XX:GCTimeRatio=1 -XX:+AlwaysPreTouch
+-Djava.lang.invoke.stringConcat=BC_SB -Djava.library.path=/usr/local/frc/third-party/lib -jar "/home/lvuser/Jim.jar"
+' > /home/lvuser/robotCommand @ /home/lvuser
+      -[-1]
+    -C-> chmod +x /home/lvuser/robotCommand; chown lvuser /home/lvuser/robotCommand @ /home/lvuser
+
+> Task :deployfrcStaticFileDeployroborio
+    -C-> mkdir -p pathplanner @ /home/lvuser/deploy
+      -[-1]
+    20 file(s) are up-to-date and were not deployed
+
+> Task :deployjrefrcJavaroborio
+    -C-> if [[ -f "/usr/local/frc/JRE/bin/java" ]]; then echo OK; else echo MISSING; fi @ /tmp
+      -[0]-> OK
+
+    -C-> opkg list-installed | grep openjdk @ /tmp
+      -[0]-> frc2023-openjdk-17-jre - 17.0.5u7-1 - FRC OpenJDK Java Runtime Environment
+
+  Searching for JRE 17.0.5u7-1
+  Found JRE frc2023-openjdk-17-jre - 17.0.5u7-1 - FRC OpenJDK Java Runtime Environment
+  JRE Is Correct Version
+  Artifact skipped
+
+> Task :deployfrcJavaroborio
+    -F-> C:\Users\StuyPulse\Desktop\Robot Code\Jim\build\libs\Jim.jar -> Jim.jar @ /home/lvuser
+
+> Task :deployfrcJavaroborio FAILED
+> Task :deploynativeZipsfrcJavaroborio FAILED
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':deployfrcJavaroborio'.
+> A failure occurred while executing edu.wpi.first.deployutils.deploy.artifact.ArtifactDeployWorker
+   > 4: java.io.IOException: inputstream is closed
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':deploynativeZipsfrcJavaroborio'.
+> A failure occurred while executing edu.wpi.first.deployutils.deploy.artifact.ArtifactDeployWorker
+   > com.jcraft.jsch.JSchException: session is down
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+==============================================================================
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 10s
+10 actionable tasks: 8 executed, 2 up-to-date
+
+ *  The terminal process "cmd.exe /d /c gradlew deploy  -PteamNumber=694 --offline  -Dorg.gradle.java.home="C:\Users\Public\wpilib\2023\jdk"" terminated with exit code: 1. 
+ *  Terminal will be reused by tasks, press any key to close it. 

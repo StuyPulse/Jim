@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-
 import com.pathplanner.lib.auto.PIDConstants;
 
 /*-
@@ -75,13 +74,15 @@ public interface Settings {
 
         public interface Limelight {
             String [] LIMELIGHTS = {
-                "limelight-back",
-                "limelight-front"
+                "limelight-left",
+                "limelight-right",
+                "limelight-back"
             };
             int[] PORTS = {5800, 5801, 5802, 5803, 5804, 5805};
             Pose3d [] POSITIONS = new Pose3d[] {
-                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI)),
-                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), 0))
+                new Pose3d(new Translation3d(0.0635, -0.3429, 0.4699), new Rotation3d(Math.toRadians(90), 0, Math.toRadians(-30))),
+                new Pose3d(new Translation3d(0.0635, 0.3429, 0.4699), new Rotation3d(Math.toRadians(-90), 0, Math.toRadians(30))),
+                new Pose3d(new Translation3d(0.1, 0, 1.29032), new Rotation3d(0, Math.toRadians(-30), Math.PI))
             };
         }
     }
@@ -121,7 +122,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(2.419310) // recalibrated 3/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.949092) // recalibrated 11/11        
                 .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
@@ -142,7 +143,7 @@ public interface Settings {
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(125.385847) // recalibrated 3/24
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(117.311604) // recalibrated 10/1
                 .plus(Rotation2d.fromDegrees(90));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
@@ -188,7 +189,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.025333).plus(Rotation2d.fromDegrees(+90));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.531731).plus(Rotation2d.fromDegrees(90));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Shoulder/Teleop Max Velocity (deg)", 315);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Shoulder/Teleop Max Acceleration (deg)", 420);
@@ -214,10 +215,10 @@ public interface Settings {
                 SmartNumber kS = new SmartNumber("Arm/Shoulder/kS", 0.061);
                 SmartNumber kV = new SmartNumber("Arm/Shoulder/kV", 1.2);
                 SmartNumber kA = new SmartNumber("Arm/Shoulder/kA", 0.038097);
-                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.6);
+                SmartNumber kGEmpty = new SmartNumber("Arm/Shoulder/kG Empty", 0.7);
 
-                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.6);
-                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.71);
+                SmartNumber kGCube = new SmartNumber("Arm/Shoulder/kG Cube", 0.7);
+                SmartNumber kGCone = new SmartNumber("Arm/Shoulder/kG Cone", 0.81);
             }
         }
 
@@ -237,7 +238,7 @@ public interface Settings {
                     MOI,
                     RADIUS);
 
-            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.662482).plus(Rotation2d.fromDegrees(180));
+            Rotation2d ZERO_ANGLE = Rotation2d.fromRotations(0.322017).plus(Rotation2d.fromDegrees(0));
 
             SmartNumber TELEOP_MAX_VELOCITY = new SmartNumber("Arm/Wrist/Teleop Max Velocity (deg)", 480.0);
             SmartNumber TELEOP_MAX_ACCELERATION = new SmartNumber("Arm/Wrist/Teleop Max Acceleration (deg)", 480.0);
@@ -245,7 +246,7 @@ public interface Settings {
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Auton Shoulder Velocity Feedback Cutoff (deg per s)", 5.0);
             SmartNumber AUTON_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Auton Feedback Enabled Debounce", 0.15);
 
-            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 20.0);
+            SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_CUTOFF = new SmartNumber("Arm/Wrist/Teleop Shoulder Velocity Feedback Cutoff (deg per s)", 13.0);
             SmartNumber TELEOP_SHOULDER_VELOCITY_FEEDBACK_DEBOUNCE = new SmartNumber("Arm/Wrist/Teleop Feedback Enabled Debounce", 0.0);
 
             SmartNumber WRIST_SAFE_ANGLE = new SmartNumber("Arm/Wrist/Safe Angle (deg)", 80);
@@ -255,9 +256,9 @@ public interface Settings {
             SmartNumber INTAKE_VOLTAGE = new SmartNumber("Arm/Wrist/Intake Voltage", 0);
 
             public interface PID {
-                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 6.0);
+                SmartNumber kP = new SmartNumber("Arm/Wrist/kP", 5.5);
                 SmartNumber kI = new SmartNumber("Arm/Wrist/kI", 0);
-                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 1);
+                SmartNumber kD = new SmartNumber("Arm/Wrist/kD", 0.5);
             }
 
             public interface Feedforward {
@@ -281,10 +282,10 @@ public interface Settings {
 
     public interface AutoBalance {
         SmartNumber DISTANCE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Distance Threshold", 0.05);
-        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 12);
+        SmartNumber ANGLE_THRESHOLD = new SmartNumber("Auto Balance/Dual PID/Angle Thrshold", 8); // 6 originally
 
         SmartNumber MAX_TILT = new SmartNumber("Auto Balance/Max Tilt (deg)", 15.0);
-        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.8);
+        SmartNumber MAX_SPEED = new SmartNumber("Auto Balance/Max Engage Speed (m per s)", 0.5); // 0.8 originally
 
         SmartNumber kT_u = new SmartNumber("Auto Balance/With Plant/Tu", 0.2);  // from Zieger-Nichols tuning method
 
@@ -323,22 +324,22 @@ public interface Settings {
 
     public interface Driver {
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.10);
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.03);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.125);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.2);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 1.5);
 
             SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.MAX_MODULE_SPEED.get());
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 20);
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", 15);
         }
 
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.15);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
-            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 7.0);
+            SmartNumber MAX_TELEOP_TURNING = new SmartNumber("Driver Settings/Turn/Max Turning", 6.0);
 
             public interface GyroFeedback {
                 SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
@@ -362,22 +363,27 @@ public interface Settings {
 
         SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
-        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 5);
+        SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 8);
 
         SmartNumber ALIGNED_CONE_THRESHOLD_X = new SmartNumber("Alignment/X Cone Threshold", 0.08);
         SmartNumber ALIGNED_CONE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cone Threshold", 0.05);
-        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1);
+        SmartNumber ALIGNED_CONE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cone Threshold", 1.5);
+
+        SmartNumber ALIGNED_LOW_THRESHOLD_X = new SmartNumber("Alignment/X Low Threshold", 0.16);
+        SmartNumber ALIGNED_LOW_THRESHOLD_Y = new SmartNumber("Alignment/Y Low Threshold", 0.2);
+        SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 8);
+
 
         SmartNumber AGAINST_GRID_VEL_X = new SmartNumber("Alignment/Against Grid X Velocity (m per s)", 0.02);
         SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
 
         public interface Translation {
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }
         public interface Rotation {
-            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 2);
+            SmartNumber P = new SmartNumber("Alignment/Rotation/kP", 3);
             SmartNumber I = new SmartNumber("Alignment/Rotation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Rotation/kD", 0);
         }
@@ -393,7 +399,7 @@ public interface Settings {
         SmartNumber kBackwardsTipInSpeed = new SmartNumber("Robot Score/Tip In Backwards Speed (in per s)", 16);
 
         // Tip out releasing
-        SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 16);
+        SmartNumber kBackwardsTipOutSpeed = new SmartNumber("Robot Score/Tip Out Backwards Speed (in per s)", 24);
 
         SmartNumber kShoulderTipOutTolerance = new SmartNumber("Robot Score/Tip Out Shoulder Tolerance (degrees)", 5);
     }

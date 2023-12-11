@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
-public class MobilityAuton extends SequentialCommandGroup {
+public class Mobility extends SequentialCommandGroup {
 
     private static final PathConstraints CONSTRAINTS = new PathConstraints(2, 2);
 
-    public MobilityAuton() {
+    public Mobility() {
         addCommands(
             new SwerveDriveFollowTrajectory(
                 PathPlanner.loadPath("Mobility", CONSTRAINTS)

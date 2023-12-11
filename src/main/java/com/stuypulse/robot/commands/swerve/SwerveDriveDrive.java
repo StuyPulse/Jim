@@ -25,6 +25,7 @@ import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -109,9 +110,6 @@ public class SwerveDriveDrive extends CommandBase {
             holdAngle = Optional.empty();
         }
 
-        // use the angularVelocity for drive
-        swerve.drive(speed.get(), angularVel);
-
         // unplant if driving in endgame
         if (Timer.getMatchTime() < 30) {
             if ((driver.getLeftStick().magnitude() > 0.5) ||
@@ -119,6 +117,21 @@ public class SwerveDriveDrive extends CommandBase {
 
                 plant.disengage();
             }
+        }
+
+        // if planted then X
+        if (plant.isEngaged() || driver.getRawStartButton() || driver.getRawSelectButton()) {
+            swerve.setXMode();
+        }
+
+        // if in robot relative mode, set raw chassis speed
+        else if (driver.getRawLeftBumper()) {
+            swerve.setChassisSpeeds(new ChassisSpeeds(speed.get().y, -speed.get().x, -angularVel));
+        }
+        
+        // use the angularVelocity for drive otherwise
+        else {
+            swerve.drive(speed.get(), angularVel);
         }
     }
 }

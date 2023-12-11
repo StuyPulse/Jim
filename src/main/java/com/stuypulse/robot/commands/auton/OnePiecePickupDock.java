@@ -35,7 +35,7 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
     public OnePiecePickupDock() {
         var paths = SwerveDriveFollowTrajectory.getSeparatedPaths(
-            PathPlanner.loadPathGroup("1.5 Piece + Dock", INTAKE_PIECE, DOCK),
+            PathPlanner.loadPathGroup("1.5 Piece Dock", INTAKE_PIECE, DOCK),
             "Intake Piece", "Dock"
         );
 
