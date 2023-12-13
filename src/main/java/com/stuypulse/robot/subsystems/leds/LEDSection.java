@@ -1,15 +1,15 @@
 package com.stuypulse.robot.subsystems.leds;
 
-import com.stuypulse.robot.util.SLColor;
+import java.awt.Color;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LEDSection implements LEDInstruction {
 
-    public SLColor[] sections;
+    public Color[] sections;
 
-    public LEDSection(SLColor[] sections) {
+    public LEDSection(Color[] sections) {
         this.sections = sections;
     }
         

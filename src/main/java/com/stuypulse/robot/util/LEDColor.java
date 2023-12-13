@@ -7,8 +7,10 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
 import com.stuypulse.robot.subsystems.leds.LEDPulseColor;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
+import com.stuypulse.robot.subsystems.leds.LEDSection;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import java.awt.Color;
   
 /**
  * Class that stores all of the different RGB values for the LED Controller.
@@ -37,6 +39,10 @@ public class LEDColor implements LEDInstruction {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    public LEDColor(Color color) {
+        this(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
     public int getRed() {
         return red;
     }
@@ -49,8 +55,12 @@ public class LEDColor implements LEDInstruction {
         return blue;
     }
 
-    public SLColor getSLColor() {
-        return new SLColor(red, green, blue);
+    public static Color getAWTColor(int red, int green, int blue) {
+        return new Color(red, green, blue);
+    }
+    
+    public Color getAWTColor() {
+        return new Color(red, green, blue);
     }
 
     @Override
@@ -65,35 +75,35 @@ public class LEDColor implements LEDInstruction {
     /*** COLOR CONSTANTS ***/
     /***********************/
 
-    public static final LEDColor AQUA = new LEDColor(new SLColor(0, 255, 255));
-    public static final LEDColor BLACK = new LEDColor(new SLColor(0, 0, 0));
-    public static final LEDColor BLUE = new LEDColor(new SLColor(0, 128, 255));
-    public static final LEDColor BLUE_GREEN = new LEDColor(new SLColor(0, 255, 128));
-    public static final LEDColor BLUE_VIOLET = new LEDColor(new SLColor(51, 51, 255));
-    public static final LEDColor DARK_BLUE = new LEDColor(new SLColor(0, 0, 204));
-    public static final LEDColor DARK_GRAY = new LEDColor(new SLColor(64, 64, 64));
-    public static final LEDColor DARK_GREEN = new LEDColor(new SLColor(0, 153, 0));
-    public static final LEDColor DARK_RED = new LEDColor(new SLColor(204, 0, 0));
-    public static final LEDColor GOLD = new LEDColor(new SLColor(218,165,32));
-    public static final LEDColor GRAY = new LEDColor(new SLColor(128, 128, 128));
-    public static final LEDColor GREEN = new LEDColor(new SLColor(0, 255, 0));
-    public static final LEDColor HOT_PINK = new LEDColor(new SLColor(255, 105, 180));
-    public static final LEDColor LAWN_GREEN = new LEDColor(new SLColor(102, 204, 0));
-    public static final LEDColor LIME = new LEDColor(new SLColor(191, 255, 0));
-    public static final LEDColor ORANGE = new LEDColor(new SLColor(255, 128, 0));
-    public static final LEDColor PINK = new LEDColor(new SLColor(255, 192, 203));
-    public static final LEDColor PURPLE = new LEDColor(new SLColor(160, 32, 240));
-    public static final LEDColor RED = new LEDColor(new SLColor(255, 0 , 0));
-    public static final LEDColor RED_ORANGE = new LEDColor(new SLColor(255, 83, 73));
-    public static final LEDColor VIOLET = new LEDColor(new SLColor(127, 0, 255));
-    public static final LEDColor WHITE = new LEDColor(new SLColor(255, 255, 255));
-    public static final LEDColor YELLOW = new LEDColor(new SLColor(255, 255, 0));
+    public static final LEDColor AQUA = new LEDColor(getAWTColor(0, 255, 255));
+    public static final LEDColor BLACK = new LEDColor(getAWTColor(0, 0, 0));
+    public static final LEDColor BLUE = new LEDColor(getAWTColor(0, 128, 255));
+    public static final LEDColor BLUE_GREEN = new LEDColor(getAWTColor(0, 255, 128));
+    public static final LEDColor BLUE_VIOLET = new LEDColor(getAWTColor(51, 51, 255));
+    public static final LEDColor DARK_BLUE = new LEDColor(getAWTColor(0, 0, 204));
+    public static final LEDColor DARK_GRAY = new LEDColor(getAWTColor(64, 64, 64));
+    public static final LEDColor DARK_GREEN = new LEDColor(getAWTColor(0, 153, 0));
+    public static final LEDColor DARK_RED = new LEDColor(getAWTColor(204, 0, 0));
+    public static final LEDColor GOLD = new LEDColor(getAWTColor(218, 165, 32));
+    public static final LEDColor GRAY = new LEDColor(getAWTColor(128, 128, 128));
+    public static final LEDColor GREEN = new LEDColor(getAWTColor(0, 255, 0));
+    public static final LEDColor HOT_PINK = new LEDColor(getAWTColor(255, 105, 180));
+    public static final LEDColor LAWN_GREEN = new LEDColor(getAWTColor(102, 204, 0));
+    public static final LEDColor LIME = new LEDColor(getAWTColor(191, 255, 0));
+    public static final LEDColor ORANGE = new LEDColor(getAWTColor(255, 128, 0));
+    public static final LEDColor PINK = new LEDColor(getAWTColor(255, 192, 203));
+    public static final LEDColor PURPLE = new LEDColor(getAWTColor(160, 32, 240));
+    public static final LEDColor RED = new LEDColor(getAWTColor(255, 0 , 0));
+    public static final LEDColor RED_ORANGE = new LEDColor(getAWTColor(255, 83, 73));
+    public static final LEDColor VIOLET = new LEDColor(getAWTColor(127, 0, 255));
+    public static final LEDColor WHITE = new LEDColor(getAWTColor(255, 255, 255));
+    public static final LEDColor YELLOW = new LEDColor(getAWTColor(255, 255, 0));
 
-    public static final LEDColor OFF = new LEDColor(new SLColor(0, 0, 0));
+    public static final LEDColor OFF = new LEDColor(getAWTColor(0, 0, 0));
 
     public static final LEDInstruction RAINBOW = new LEDRainbow();
-    public static final LEDInstruction PULSE_RED = new LEDPulseColor(RED.getSLColor());
-    public static final LEDInstruction PULSE_RED_BLUE = new LEDPulseColor(RED.getSLColor(), BLUE.getSLColor());
-    
+    public static final LEDInstruction PULSE_RED = new LEDPulseColor(RED.getAWTColor());
+    public static final LEDInstruction PULSE_RED_BLUE = new LEDPulseColor(RED.getAWTColor(), BLUE.getAWTColor());
+    public static final LEDInstruction BANGLADESH = new LEDSection(new Color[] {RED.getAWTColor(), BLACK.getAWTColor(), DARK_GREEN.getAWTColor()});
     
 }
