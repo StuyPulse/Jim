@@ -21,16 +21,16 @@ public class LEDPulseColor implements LEDInstruction {
     public Color altcolor; 
     public StopWatch stopwatch;
 
+    public LEDPulseColor(Color color1, Color color2) {
+        this.color = color1;
+        this.altcolor = color2;
+        stopwatch = new StopWatch();    
+    }
+
     public LEDPulseColor(Color color) {
         this(color, new Color(0,0,0));
     }
 
-    public LEDPulseColor(Color color1, Color color2) {
-        this.color = color1;
-        this.altcolor = color2;
-        stopwatch = new StopWatch();
-        
-    }
 
     @Override
     public void setLED(AddressableLEDBuffer ledsBuffer) {

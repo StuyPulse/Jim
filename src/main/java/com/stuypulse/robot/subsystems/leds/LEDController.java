@@ -41,7 +41,7 @@ public abstract class LEDController extends SubsystemBase {
 
     public LEDInstruction getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
-            case CUBE: return LEDColor.PURPLE;
+            case CUBE: return LEDColor.RAINBOW;
             case CONE_TIP_IN: return LEDColor.YELLOW;
             case CONE_TIP_UP: return LEDColor.GREEN;
             case CONE_TIP_OUT: return LEDColor.ORANGE;
