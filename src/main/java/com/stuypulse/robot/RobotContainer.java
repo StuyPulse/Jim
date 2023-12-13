@@ -238,6 +238,8 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
+        autonChooser.setDefaultOption("Do Nothing", new DoNothing());
+        /* 
         autonChooser.addOption("Do Nothing", new DoNothing());
         autonChooser.addOption("Mobility", new Mobility());
 
@@ -268,7 +270,7 @@ public class RobotContainer {
         // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
         // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
         autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
-
+        */
         SmartDashboard.putData("Autonomous", autonChooser);
     }
 

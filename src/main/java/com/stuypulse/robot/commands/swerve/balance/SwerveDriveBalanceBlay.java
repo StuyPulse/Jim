@@ -38,6 +38,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
     private SwerveDrive swerve;
     private Odometry odometry;
     private Plant plant;
+    private LEDController leds;
 
     public SwerveDriveBalanceBlay() {
         maxSpeed = AutoBalance.MAX_SPEED;
@@ -47,6 +48,7 @@ public class SwerveDriveBalanceBlay extends CommandBase {
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
         plant = Plant.getInstance();
+        leds = LEDController.getInstance();
         control = new PIDController(kP, 0, kD).setOutputFilter(x -> -x);
 
         addRequirements(swerve, plant);
@@ -82,7 +84,7 @@ private boolean timedOut = false;
         plant.engage();
 
         if (timedOut) {
-            LEDController.getInstance().setColor(LEDColor.YELLOW, 1);
+            leds.forceSetLED(LEDColor.BLUE);
         }
     }
 

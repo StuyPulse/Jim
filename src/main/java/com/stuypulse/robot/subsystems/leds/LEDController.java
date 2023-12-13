@@ -34,11 +34,14 @@ public abstract class LEDController extends SubsystemBase {
         return instance;
     }
 
+    // LEDVisualizer
+    LEDVisualizer visualizer = new LEDVisualizer();
+
     public abstract void forceSetLED(LEDInstruction instruction);
 
     public LEDInstruction getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
-            case CUBE: return LEDColor.PURPLE;
+            case CUBE: return LEDColor.PULSE_RED_BLUE;
             case CONE_TIP_IN: return LEDColor.YELLOW;
             case CONE_TIP_UP: return LEDColor.GREEN;
             case CONE_TIP_OUT: return LEDColor.ORANGE;
@@ -51,5 +54,6 @@ public abstract class LEDController extends SubsystemBase {
         if (Robot.getMatchState() == MatchState.TELEOP) {
             forceSetLED(getDefaultColor());
         }
+        visualizer.setColor(LEDColor.BLUE, 10);
     }
 }
