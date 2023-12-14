@@ -44,6 +44,7 @@ import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -150,8 +151,8 @@ public class RobotContainer {
         // driver.getRightButton().onTrue(new PlantEngage());
         // driver.getRightBumper().onTrue(new PlantDisengage());
 
-        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d()));
-        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(1, 0, new Rotation2d(0))));
+        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, 1.524, new Rotation2d(0))));
+        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, 1.524, new Rotation2d(0))));
 
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)

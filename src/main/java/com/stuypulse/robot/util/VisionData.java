@@ -8,6 +8,7 @@ package com.stuypulse.robot.util;
 import com.stuypulse.robot.constants.Field;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 
 public class VisionData {
@@ -35,7 +36,9 @@ public class VisionData {
         this.ids = ids;
         this.tvecs = tvecs;
         this.cameraLocation = cameraLocation;
-        this.robotPose = robotPose;
+        this.robotPose = new Pose3d(
+            new Translation3d(robotPose.getTranslation().getX(), Field.HEIGHT - robotPose.getTranslation().getY(), robotPose.getTranslation().getZ()),
+            new Rotation3d(robotPose.getRotation().getX(), robotPose.getRotation().getY(), robotPose.getRotation().getZ() + Math.PI));
         this.latency = latency;
     }
 }

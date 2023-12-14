@@ -22,6 +22,7 @@ import edu.wpi.first.networktables.PubSubOption;
 public class CustomCamera {
 
     private final String cameraName;
+    private final Pose3d cameraPose;
 
     // Default Values
     private final int camera_id = 0;
@@ -38,7 +39,6 @@ public class CustomCamera {
     private final DoubleArraySubscriber tvecsSub;
     private final IntegerArraySubscriber idSub;
 
-    private final Pose3d cameraPose;
 
     private double[] rawPoseData;
     private double latency;
@@ -48,6 +48,7 @@ public class CustomCamera {
     public CustomCamera(String cameraName, Pose3d cameraPose) {
 
         this.cameraName = cameraName;
+        this.cameraPose = cameraPose;
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable(cameraName);
 
@@ -61,6 +62,7 @@ public class CustomCamera {
         configTable.getDoubleTopic("camera_brightness").publish().set(camera_brightness);
         configTable.getDoubleTopic("fiducial_size").publish().set(Field.FIDUCIAL_SIZE);
         configTable.getDoubleArrayTopic("fiducial_layout").publish().set(Field.getTagLayout(Field.TAGS));
+        configTable.getDoubleArrayTopic("camera_offset").publish().set(getCameraPoseAsDoubleArray());
 
         NetworkTable outputTable = table.getSubTable("output");
         robotPoseSub = outputTable.getDoubleArrayTopic("robot_pose")
@@ -76,8 +78,6 @@ public class CustomCamera {
                 PubSubOption.keepDuplicates(true),
                 PubSubOption.sendAll(true));
         idSub = outputTable.getIntegerArrayTopic("ids").subscribe(new long[] {});
-
-        this.cameraPose = cameraPose;
     }
 
     public String getCameraName() {
@@ -119,6 +119,17 @@ public class CustomCamera {
 
     public VisionData getVisionData() {
         return new VisionData(rawIdData, getTvecs(), cameraPose, getRobotPose(), getLatency());
+    }
+
+    public double[] getCameraPoseAsDoubleArray() {
+        return new double[] {
+            cameraPose.getX(),
+            cameraPose.getY(),
+            cameraPose.getZ(),
+            Units.radiansToDegrees(cameraPose.getRotation().getX()),
+            Units.radiansToDegrees(cameraPose.getRotation().getY()),
+            Units.radiansToDegrees(cameraPose.getRotation().getZ()),
+        };
     }
 
     public long getFPS() {

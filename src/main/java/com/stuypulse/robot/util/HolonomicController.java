@@ -57,9 +57,8 @@ public class HolonomicController implements Sendable {
         builder.addDoubleProperty("X Measurement (meters)", () -> xController.getMeasurement(), null);
         builder.addDoubleProperty("Y Setpoint (meters)", () -> yController.getSetpoint(), null);
         builder.addDoubleProperty("Y Measurement (meters)", () -> yController.getMeasurement(), null);
-
+        builder.addDoubleProperty("X Error (meters)", () -> xController.getError(), null);
+        builder.addDoubleProperty("Y Error (meters)", () -> yController.getError(), null);
+        builder.addDoubleProperty("Angle Error (degrees)", () -> angleController.getError().getRotation2d().getDegrees(), null);
     }
-
-
-
 }

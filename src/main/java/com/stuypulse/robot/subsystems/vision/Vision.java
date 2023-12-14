@@ -29,10 +29,10 @@ public class Vision extends AbstractVision {
     protected Vision() {
         String[] cameraNames = new String[] {"default"};
         Pose3d[] cameraLocations = new Pose3d[] {
-            new Pose3d(Units.inchesToMeters(-12.5), Units.inchesToMeters(11.5), Units.inchesToMeters(8.5), 
+            new Pose3d(Units.inchesToMeters(12.5), Units.inchesToMeters(11.5), Units.inchesToMeters(8.5), 
             // new Pose3d(Units.inchesToMeters(0), Units.inchesToMeters(-11.5), Units.inchesToMeters(0), 
             // new Pose3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0), 
-            new Rotation3d(0, 0, 180))
+            new Rotation3d(0, 0, 0))
         };
 
         cameras = new CustomCamera[cameraNames.length];

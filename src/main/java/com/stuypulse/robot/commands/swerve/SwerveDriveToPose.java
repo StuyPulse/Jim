@@ -68,14 +68,11 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     @Override
-    public void initialize() {
-        // AbstractOdometry.USE_VISION_ANGLE.set(true);
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
         Pose2d currentPose = AbstractOdometry.getInstance().getPose();
-        // Pose2d targetPose = targetPose.get();
 
         targetPose2d.setPose(targetPose);
 
@@ -89,7 +86,6 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     public void end(boolean interupted) {
-        // AbstractOdometry.USE_VISION_ANGLE.set(false);
         swerve.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
     }

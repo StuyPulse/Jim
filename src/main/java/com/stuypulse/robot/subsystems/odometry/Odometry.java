@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -41,7 +42,7 @@ public class Odometry extends AbstractOdometry {
     private final FieldObject2d odometryPose2D;
     private final FieldObject2d estimatorPose2D;
 
-    Vector<N3> visionStdDevs = VecBuilder.fill(1, 1, Units.degreesToRadians(15));
+    Vector<N3> visionStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0));
 
     protected Odometry() {
         SwerveDrive swerve = SwerveDrive.getInstance();
@@ -59,7 +60,7 @@ public class Odometry extends AbstractOdometry {
                         swerve.getGyroAngle(),
                         swerve.getModulePositions(),
                         new Pose2d(),
-                        VecBuilder.fill(0.1, 0.1, 0),
+                        VecBuilder.fill(100000, 100000, 100000),
                         visionStdDevs);
 
         xyRegression = new LinearRegression(Field.xyStdDevs);
@@ -78,11 +79,16 @@ public class Odometry extends AbstractOdometry {
         return field;
     }
 
+    private Pose2d lastVisionPose = new Pose2d();
+
     @Override
     public Pose2d getPose() {
         return new Pose2d(
-                estimator.getEstimatedPosition().getTranslation(),
-                odometry.getPoseMeters().getRotation());
+            lastVisionPose.getTranslation(),
+            odometry.getPoseMeters().getRotation());
+        // return new Pose2d(
+        //         estimator.getEstimatedPosition().getTranslation(),
+        //         estimator.getEstimatedPosition().getRotation());
     }
 
     @Override
@@ -106,34 +112,30 @@ public class Odometry extends AbstractOdometry {
                 thetaStdDev);
     }
 
-    private double lastAngle = 0;
-
     private void updateWithVision(List<VisionData> visionData) {
         for (VisionData result : visionData) {
+            lastVisionPose = result.robotPose.toPose2d();
 
-            if (Math.abs(result.robotPose.getRotation().getZ() - lastAngle) > 30) {
-                SmartDashboard.putBoolean("Odometry/Rotation Flip Blocked", true);
-                result.robotPose = new Pose3d(result.robotPose.getTranslation(), new Rotation3d(result.robotPose.getRotation().getX(), result.robotPose.getRotation().getY(), -result.robotPose.getRotation().getZ()));
-            } else {
-                SmartDashboard.putBoolean("Odometry/Rotation Flip Blocked", false);
-            }
+            // if (Math.abs(result.robotPose.getRotation().getZ() - lastAngle) > 30) {
+            //     SmartDashboard.putBoolean("Odometry/Rotation Flip Blocked", true);
+            //     result.robotPose = new Pose3d(result.robotPose.getTranslation(), new Rotation3d(result.robotPose.getRotation().getX(), result.robotPose.getRotation().getY(), -result.robotPose.getRotation().getZ()));
+            // } else {
+            //     SmartDashboard.putBoolean("Odometry/Rotation Flip Blocked", false);
+            // }
 
             Fiducial primaryTag = result.getPrimaryTag();
             double distance = result.calculateDistanceToTag(primaryTag);
 
             SmartDashboard.putNumber("Odometry/Primary Tag/Distance", distance);
 
-            estimator.addVisionMeasurement(
-                result.robotPose.plus(new Transform3d(result.cameraLocation.getTranslation(), result.cameraLocation.getRotation())).toPose2d(),
-                Timer.getFPGATimestamp() - result.latency, 
-                getStdDevs(distance));
-            
-            lastAngle = result.robotPose.getRotation().getZ();
-
             // estimator.addVisionMeasurement(
-            //     result.robotPose.plus(new Transform3d(result.cameraLocation.getTranslation(), result.cameraLocation.getRotation())).toPose2d(), 
+            //     result.robotPose.toPose2d(),
             //     Timer.getFPGATimestamp() - result.latency, 
-            //     visionStdDevs);
+            //     getStdDevs(distance));
+            
+            estimator.addVisionMeasurement(
+                result.robotPose.toPose2d(), 
+                Timer.getFPGATimestamp() - result.latency);
         }
     }
 

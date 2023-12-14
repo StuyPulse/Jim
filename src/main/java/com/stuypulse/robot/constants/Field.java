@@ -23,13 +23,19 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public interface Field {
     
+
+    double WIDTH = 16.54;
+    double HEIGHT = 8.02;
+
     public static final double FIDUCIAL_SIZE = 0.15716;
 
     Fiducial TAGS[] = {
-        new Fiducial(0,new Pose3d(new Translation3d(0, 0, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
-        new Fiducial(1,new Pose3d(new Translation3d(0, Units.inchesToMeters(28.125), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0))))
+        new Fiducial(0,new Pose3d(new Translation3d(0, HEIGHT - 1, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
+        new Fiducial(1,new Pose3d(new Translation3d(0, HEIGHT - (1 + Units.inchesToMeters(28.125)), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0))))
     //     new Fiducial(0,new Pose3d(new Translation3d(0, 0, Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))), // home
     //     new Fiducial(1,new Pose3d(new Translation3d(0, Units.inchesToMeters(33), Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
+        // new Fiducial(0,new Pose3d(new Translation3d(8.23, 1, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // flipped test
+        // new Fiducial(1,new Pose3d(new Translation3d(8.23, 1 + Units.inchesToMeters(28.125), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180))))
     };
 
     public static boolean isValidTag(int id) {
@@ -91,9 +97,6 @@ public interface Field {
     double PEG_TO_CHARGING_STATION_EDGE = Units.inchesToMeters(60.69);
 
     double GRID_DEPTH = Units.inchesToMeters(54.25);
-
-    double WIDTH = 16.54;
-    double HEIGHT = 8.02;
 
     // intake offset from center to the right
     double INTAKE_OFFSET_RIGHT = Units.inchesToMeters(1.625);
