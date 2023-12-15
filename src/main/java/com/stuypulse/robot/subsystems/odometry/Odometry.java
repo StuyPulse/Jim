@@ -79,16 +79,11 @@ public class Odometry extends AbstractOdometry {
         return field;
     }
 
-    private Pose2d lastVisionPose = new Pose2d();
-
     @Override
     public Pose2d getPose() {
         return new Pose2d(
-            lastVisionPose.getTranslation(),
-            odometry.getPoseMeters().getRotation());
-        // return new Pose2d(
-        //         estimator.getEstimatedPosition().getTranslation(),
-        //         estimator.getEstimatedPosition().getRotation());
+                estimator.getEstimatedPosition().getTranslation(),
+                estimator.getEstimatedPosition().getRotation());
     }
 
     @Override
@@ -114,8 +109,6 @@ public class Odometry extends AbstractOdometry {
 
     private void updateWithVision(List<VisionData> visionData) {
         for (VisionData result : visionData) {
-            lastVisionPose = result.robotPose.toPose2d();
-
             // if (Math.abs(result.robotPose.getRotation().getZ() - lastAngle) > 30) {
             //     SmartDashboard.putBoolean("Odometry/Rotation Flip Blocked", true);
             //     result.robotPose = new Pose3d(result.robotPose.getTranslation(), new Rotation3d(result.robotPose.getRotation().getX(), result.robotPose.getRotation().getY(), -result.robotPose.getRotation().getZ()));

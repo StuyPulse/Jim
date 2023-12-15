@@ -18,6 +18,8 @@ import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class CustomCamera {
 
@@ -98,11 +100,16 @@ public class CustomCamera {
     }
 
     private Pose3d getRobotPose() {
+        double y = rawPoseData[1];
+
+        if (DriverStation.getAlliance() == Alliance.Blue)
+            y = Field.HEIGHT - y;
+        
         return new Pose3d(
-                new Translation3d(rawPoseData[0], rawPoseData[1], rawPoseData[2]),
+                new Translation3d(rawPoseData[0], Field.HEIGHT - rawPoseData[1], rawPoseData[2]),
                 new Rotation3d(
                         Units.degreesToRadians(rawPoseData[3]),
-                        Units.degreesToRadians(rawPoseData[4]),
+                        Units.degreesToRadians(0),
                         Units.degreesToRadians(rawPoseData[5])));
     }
     

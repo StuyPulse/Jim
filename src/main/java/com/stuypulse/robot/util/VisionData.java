@@ -36,9 +36,7 @@ public class VisionData {
         this.ids = ids;
         this.tvecs = tvecs;
         this.cameraLocation = cameraLocation;
-        this.robotPose = new Pose3d(
-            new Translation3d(robotPose.getTranslation().getX(), Field.HEIGHT - robotPose.getTranslation().getY(), robotPose.getTranslation().getZ()),
-            new Rotation3d(robotPose.getRotation().getX(), robotPose.getRotation().getY(), robotPose.getRotation().getZ() + Math.PI));
+        this.robotPose = robotPose;
         this.latency = latency;
     }
 }
