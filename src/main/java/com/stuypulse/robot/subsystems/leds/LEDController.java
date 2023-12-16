@@ -7,8 +7,15 @@ package com.stuypulse.robot.subsystems.leds;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.util.LEDColor;
+
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /*-
@@ -21,23 +28,34 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * @author Richie Xue
  * @author Jo Walkup
  */
-public abstract class LEDController extends SubsystemBase {
+public class LEDController extends SubsystemBase {
 
 // singleton
-    private static LEDController instance;
+    private static LEDController instance = new LEDController();
     
-    static {
-        instance = new LEDControllerImpl();
-    }
-
     public static LEDController getInstance() {
         return instance;
     }
 
-    // LEDVisualizer
-    LEDVisualizer visualizer = new LEDVisualizer();
+    private AddressableLED leds;
+    private AddressableLEDBuffer ledsBuffer;
 
-    public abstract void forceSetLED(LEDInstruction instruction);
+    public LEDController() {
+        leds = new AddressableLED(Ports.LEDController.PORT);
+        ledsBuffer = new AddressableLEDBuffer(Settings.LED.LED_LENGTH); 
+
+        leds.setLength(ledsBuffer.getLength());
+        leds.setData(ledsBuffer);
+        leds.start();
+
+        SmartDashboard.putData(instance);
+    }
+
+
+    public void forceSetLED(LEDInstruction instruction) {
+        instruction.setLED(ledsBuffer);
+        leds.setData(ledsBuffer);
+    }
 
     public LEDInstruction getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
@@ -54,6 +72,5 @@ public abstract class LEDController extends SubsystemBase {
         if (Robot.getMatchState() == MatchState.TELEOP) {
             forceSetLED(getDefaultColor());
         }
-        visualizer.setColor(LEDColor.BLUE, 10);
     }
 }
