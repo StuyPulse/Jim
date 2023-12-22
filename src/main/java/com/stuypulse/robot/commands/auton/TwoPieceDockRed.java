@@ -66,13 +66,13 @@ public class TwoPieceDockRed extends DebugSequentialCommandGroup {
             });
         }
 
-        @Override   
+        @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             return new ArmTrajectory()
                 .addState(
                     new ArmState(dest.getShoulderDegrees(), src.getWristDegrees())
                         .setWristLimp(true))
-                .addState(dest);        
+                .addState(dest);
         }
     }
 

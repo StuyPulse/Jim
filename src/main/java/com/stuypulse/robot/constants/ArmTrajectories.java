@@ -22,7 +22,7 @@ public interface ArmTrajectories {
             new SmartNumber("Arm Trajectories/Acquire Cube Wrist", 12));
 
         ArmState kHPCone = new ArmState(
-            new SmartNumber("Arm Trajectories/Acquire HP Cone Shoulder", 5),   
+            new SmartNumber("Arm Trajectories/Acquire HP Cone Shoulder", 5),
             new SmartNumber("Arm Trajectories/Acquire HP Cone Wrist", 0));
 
         ArmState kIntermediate = new ArmState(
@@ -87,7 +87,7 @@ public interface ArmTrajectories {
                 new SmartNumber("Arm Trajectories/Mid Cube Front/Shoulder", -27),
                 new SmartNumber("Arm Trajectories/Mid Cube Front/Wrist", 49));
 
-            ArmState kCubeBack = new ArmState( 
+            ArmState kCubeBack = new ArmState(
                 new SmartNumber("Arm Trajectories/Mid Cube Back/Shoulder", -175),
                 new SmartNumber("Arm Trajectories/Mid Cube Back/Wrist", -62));
         }

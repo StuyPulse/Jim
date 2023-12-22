@@ -39,7 +39,7 @@ public class TwoPieceBump extends DebugSequentialCommandGroup {
             });
         }
 
-        @Override   
+        @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             return new ArmTrajectory()
                 .addState(

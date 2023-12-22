@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import java.util.function.Supplier;
 
 public class SwerveDriveToPose extends CommandBase{
     private final SwerveDrive swerve;

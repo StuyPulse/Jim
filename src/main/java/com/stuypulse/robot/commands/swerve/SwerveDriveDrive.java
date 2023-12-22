@@ -128,7 +128,7 @@ public class SwerveDriveDrive extends CommandBase {
         else if (driver.getRawLeftBumper()) {
             swerve.setChassisSpeeds(new ChassisSpeeds(speed.get().y, -speed.get().x, -angularVel));
         }
-        
+
         // use the angularVelocity for drive otherwise
         else {
             swerve.drive(speed.get(), angularVel);

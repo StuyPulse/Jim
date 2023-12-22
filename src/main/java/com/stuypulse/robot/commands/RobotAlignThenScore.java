@@ -9,13 +9,13 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.IFilter;
+
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
+import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.GamePiece;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
@@ -110,7 +110,7 @@ public class RobotAlignThenScore extends CommandBase {
         // AbstractOdometry.USE_VISION_ANGLE.set(true);
 
         xErrorChange.reset();
-        
+
         LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
     }
 
@@ -178,7 +178,7 @@ public class RobotAlignThenScore extends CommandBase {
         swerve.stop();
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
-        
+
         LEDController.getInstance().setColor(LEDController.getInstance().getDefaultColor(), 0);
     }
 

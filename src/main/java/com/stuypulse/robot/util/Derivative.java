@@ -1,6 +1,7 @@
-/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved. */
-/* This work is licensed under the terms of the MIT license */
-/* found in the root directory of this project. */
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
 
 package com.stuypulse.robot.util;
 

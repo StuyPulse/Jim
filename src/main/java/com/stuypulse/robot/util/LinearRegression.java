@@ -1,15 +1,20 @@
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
+/* This work is licensed under the terms of the MIT license.  */
+/**************************************************************/
+
 package com.stuypulse.robot.util;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
- * Linear regression is a linear approach for modeling the relationship 
+ * Linear regression is a linear approach for modeling the relationship
  * between the response variable and one or more explanatory variables.
- * 
+ *
  * Y = XA + B
- * Where Y is the dependent variable, X is the independent variable, 
+ * Where Y is the dependent variable, X is the independent variable,
  * A is the slope of the line, and A is the y-intercept of the regression line
- * 
+ *
  * @author Ivan Chen <ivanchen07@gmail.com>
  */
 public class LinearRegression {

@@ -31,7 +31,7 @@ public class RobotScore extends CommandBase {
         arm = Arm.getInstance();
         intake = Intake.getInstance();
         manager = Manager.getInstance();
-        
+
         addRequirements(swerve, arm, intake);
     }
 

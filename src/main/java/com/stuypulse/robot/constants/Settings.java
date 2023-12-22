@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+
 import com.pathplanner.lib.auto.PIDConstants;
 
 /*-
@@ -122,7 +123,7 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.949092) // recalibrated 11/11        
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(122.949092) // recalibrated 11/11
                 .plus(Rotation2d.fromDegrees(0));
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }

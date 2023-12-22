@@ -10,10 +10,10 @@ import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
-import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
+import com.stuypulse.robot.subsystems.LEDController;
 import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.NodeLevel;
 import com.stuypulse.robot.subsystems.intake.*;
@@ -143,7 +143,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         swerve.stop();
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
-        
+
         LEDController.getInstance().setColor(LEDController.getInstance().getDefaultColor(), 0);
     }
 

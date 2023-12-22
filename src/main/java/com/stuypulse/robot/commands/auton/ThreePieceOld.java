@@ -59,7 +59,7 @@ public class ThreePieceOld extends DebugSequentialCommandGroup {
                 }
             });
         }
- 
+
         @Override
         protected ArmTrajectory getTrajectory(ArmState src, ArmState dest) {
             double wristSafeAngle = Wrist.WRIST_SAFE_ANGLE.get();

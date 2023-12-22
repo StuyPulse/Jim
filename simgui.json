@@ -31,7 +31,25 @@
         "Manager": {
           "open": true
         },
+        "Odometry": {
+          "Estimator": {
+            "open": true
+          },
+          "Odometry": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
+      },
+      "default": {
+        "config": {
+          "open": true
+        },
+        "open": true,
+        "output": {
+          "open": true
+        }
       }
     }
   }

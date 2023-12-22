@@ -13,7 +13,6 @@ import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.ArmTrajectories.Ready;
 import com.stuypulse.robot.constants.Settings.Arm.Wrist;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.intake.Intake;

@@ -1,4 +1,4 @@
-    /************************ PROJECT JIM *************************/
+/************************ PROJECT JIM *************************/
 /* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
@@ -13,10 +13,6 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpRed;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpRed;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -25,6 +21,7 @@ import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.*;
 import com.stuypulse.robot.commands.wing.*;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.*;
@@ -44,7 +41,6 @@ import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -151,8 +147,8 @@ public class RobotContainer {
         // driver.getRightButton().onTrue(new PlantEngage());
         // driver.getRightBumper().onTrue(new PlantDisengage());
 
-        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, 1.524, new Rotation2d(0))));
-        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, 1.524, new Rotation2d(0))));
+        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, Field.HEIGHT - 1.524, new Rotation2d(0))));
+        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, Field.HEIGHT - 1.524, new Rotation2d(0))));
 
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
@@ -161,7 +157,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> driver.setRumble(0.5)))
             .onFalse(new InstantCommand(() -> driver.setRumble(0.0)));
 
-        
+
     }
 
     private void configureOperatorBindings() {
@@ -230,7 +226,7 @@ public class RobotContainer {
         // arm to neutral
         operator.getDPadRight().onTrue(new IntakeAcquire())
             .onFalse(new IntakeStop());
-        
+
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
             .debounce(0.5, DebounceType.kFalling)

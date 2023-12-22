@@ -1,11 +1,12 @@
-/************************ PROJECT OFSS ************************/
-/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved.*/
+/************************ PROJECT JIM *************************/
+/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -18,10 +19,13 @@ import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+
+import java.util.Optional;
 
 public class CustomCamera {
+
+    private final Field2d field;
 
     private final String cameraName;
     private final Pose3d cameraPose;
@@ -43,11 +47,13 @@ public class CustomCamera {
 
 
     private double[] rawPoseData;
-    private double latency;
+    private double rawLatency;
     private double[] rawTvecsData;
     private long[] rawIdData;
 
     public CustomCamera(String cameraName, Pose3d cameraPose) {
+
+        this.field = AbstractOdometry.getInstance().getField();
 
         this.cameraName = cameraName;
         this.cameraPose = cameraPose;
@@ -64,7 +70,15 @@ public class CustomCamera {
         configTable.getDoubleTopic("camera_brightness").publish().set(camera_brightness);
         configTable.getDoubleTopic("fiducial_size").publish().set(Field.FIDUCIAL_SIZE);
         configTable.getDoubleArrayTopic("fiducial_layout").publish().set(Field.getTagLayout(Field.TAGS));
-        configTable.getDoubleArrayTopic("camera_offset").publish().set(getCameraPoseAsDoubleArray());
+        configTable.getDoubleArrayTopic("camera_offset").publish()
+            .set(new double[] {
+                cameraPose.getX(),
+                cameraPose.getY(),
+                cameraPose.getZ(),
+                Units.radiansToDegrees(cameraPose.getRotation().getX()),
+                Units.radiansToDegrees(cameraPose.getRotation().getY()),
+                Units.radiansToDegrees(cameraPose.getRotation().getZ()),
+            });
 
         NetworkTable outputTable = table.getSubTable("output");
         robotPoseSub = outputTable.getDoubleArrayTopic("robot_pose")
@@ -86,57 +100,45 @@ public class CustomCamera {
         return cameraName;
     }
 
-    public void updateData() {
+    private void updateData() {
         rawPoseData = robotPoseSub.get();
-        latency = latencySub.get();
+        rawLatency = latencySub.get();
         rawTvecsData = tvecsSub.get();
         rawIdData = idSub.get();
     }
 
-    public boolean hasData() {
-        return rawPoseData.length > 0 && 
-               rawTvecsData.length > 0 && 
+    private boolean hasData() {
+        return rawPoseData.length > 0 &&
+               rawTvecsData.length > 0 &&
                rawIdData.length > 0;
     }
 
-    private Pose3d getRobotPose() {
-        double y = rawPoseData[1];
+    public Optional<VisionData> getVisionData() {
+        updateData();
 
-        if (DriverStation.getAlliance() == Alliance.Blue)
-            y = Field.HEIGHT - y;
-        
+        if (!hasData()) return Optional.empty();
+        field.getObject(cameraName).setPose(getRobotPose().toPose2d());
+
+        double fpgaTime = latencySub.getLastChange() / 1_000_000.0; // replace with Timer.getFPGATimestamp() if breaks
+        double timestamp = fpgaTime - Units.millisecondsToSeconds(rawLatency);
+
+        return Optional.of(new VisionData(rawIdData, getTvecs(), cameraPose, getRobotPose(), timestamp));
+    }
+
+    private Pose3d getRobotPose() {
         return new Pose3d(
-                new Translation3d(rawPoseData[0], Field.HEIGHT - rawPoseData[1], rawPoseData[2]),
+                new Translation3d(rawPoseData[0], rawPoseData[1], rawPoseData[2]),
                 new Rotation3d(
                         Units.degreesToRadians(rawPoseData[3]),
                         Units.degreesToRadians(0),
                         Units.degreesToRadians(rawPoseData[5])));
     }
-    
+
     private Translation3d[] getTvecs() {
         Translation3d[] tvecs = new Translation3d[rawTvecsData.length / 3];
         for (int i = 0; i < rawTvecsData.length; i += 3)
             tvecs[i / 3] = new Translation3d(rawTvecsData[i], rawTvecsData[i + 1], rawTvecsData[i + 2]);
         return tvecs;
-    }
-
-    private double getLatency() {
-        return Units.millisecondsToSeconds(latency);
-    }
-
-    public VisionData getVisionData() {
-        return new VisionData(rawIdData, getTvecs(), cameraPose, getRobotPose(), getLatency());
-    }
-
-    public double[] getCameraPoseAsDoubleArray() {
-        return new double[] {
-            cameraPose.getX(),
-            cameraPose.getY(),
-            cameraPose.getZ(),
-            Units.radiansToDegrees(cameraPose.getRotation().getX()),
-            Units.radiansToDegrees(cameraPose.getRotation().getY()),
-            Units.radiansToDegrees(cameraPose.getRotation().getZ()),
-        };
     }
 
     public long getFPS() {

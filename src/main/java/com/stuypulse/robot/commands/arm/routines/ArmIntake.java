@@ -72,8 +72,8 @@ public class ArmIntake extends ArmRoutine {
         //         new ArmState(dest.getShoulderDegrees(), dest.getWristDegrees())
         //             .setShoulderTolerance(3)
         //             .setWristTolerance(4));
-        
-        
+
+
         return new ArmTrajectory()
             .addState(src.getShoulderDegrees(), wristSafeAngle)
 
