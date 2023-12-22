@@ -67,6 +67,6 @@ public class Vision extends AbstractVision {
             });
         }
 
-        SmartDashboard.putBoolean("Vision/Has Any Data", outputs.isEmpty());
+        SmartDashboard.putBoolean("Vision/Has Any Data", !outputs.isEmpty());
     }
 }

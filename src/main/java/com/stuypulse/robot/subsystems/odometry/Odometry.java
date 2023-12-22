@@ -74,7 +74,17 @@ public class Odometry extends AbstractOdometry {
     }
 
     private void updateWithVision(List<VisionData> visionData) {
-        for (VisionData result : visionData) {
+
+    }
+
+    @Override
+    public void periodic() {
+        SwerveDrive swerve = SwerveDrive.getInstance();
+
+        odometry.update(swerve.getGyroAngle(), swerve.getModulePositions());
+        estimator.update(swerve.getGyroAngle(), swerve.getModulePositions());
+
+        for (VisionData result : AbstractVision.getInstance().getOutput()) {
 
             Fiducial primaryTag = result.getPrimaryTag();
             double distance = result.calculateDistanceToTag(primaryTag);
@@ -85,23 +95,9 @@ public class Odometry extends AbstractOdometry {
                 result.robotPose.toPose2d(),
                 result.timestamp);
         }
-    }
-
-    @Override
-    public void periodic() {
-        SwerveDrive swerve = SwerveDrive.getInstance();
-
-        odometry.update(swerve.getGyroAngle(), swerve.getModulePositions());
-        estimator.update(swerve.getGyroAngle(), swerve.getModulePositions());
-
-        List<VisionData> output = AbstractVision.getInstance().getOutput();
-
-        if (!output.isEmpty()) updateWithVision(output);
 
         odometryPose2D.setPose(odometry.getPoseMeters());
         estimatorPose2D.setPose(estimator.getEstimatedPosition());
-
-        SmartDashboard.putBoolean("Vision/Is Empty", output.isEmpty());
 
         SmartDashboard.putNumber("Odometry/Odometry/X", odometry.getPoseMeters().getTranslation().getX());
         SmartDashboard.putNumber("Odometry/Odometry/Y", odometry.getPoseMeters().getTranslation().getY());
