@@ -13,10 +13,6 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpRed;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpRed;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -31,12 +27,14 @@ import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
 import com.stuypulse.robot.subsystems.intake.*;
+import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.subsystems.odometry.*;
 import com.stuypulse.robot.subsystems.plant.*;
 import com.stuypulse.robot.subsystems.swerve.*;
 import com.stuypulse.robot.subsystems.vision.*;
 import com.stuypulse.robot.subsystems.wing.*;
 import com.stuypulse.robot.util.*;
+
 import com.stuypulse.robot.util.BootlegXbox;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -236,6 +234,8 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
+        autonChooser.setDefaultOption("Do Nothing", new DoNothing());
+        /* 
         autonChooser.addOption("Do Nothing", new DoNothing());
         autonChooser.addOption("Mobility", new Mobility());
 
@@ -266,7 +266,7 @@ public class RobotContainer {
         // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
         // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
         autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
-
+        */
         SmartDashboard.putData("Autonomous", autonChooser);
     }
 

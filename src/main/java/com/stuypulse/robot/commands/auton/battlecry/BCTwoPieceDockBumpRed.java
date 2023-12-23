@@ -7,7 +7,6 @@ package com.stuypulse.robot.commands.auton.battlecry;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
-import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
@@ -22,7 +21,6 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.util.ArmState;
 import com.stuypulse.robot.util.ArmTrajectory;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
-import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -117,7 +115,6 @@ public class BCTwoPieceDockBumpRed extends DebugSequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new LEDSet(LEDColor.RED),
             new ArmReady()
                 .withTolerance(7, 9)
                 .setShoulderVelocityTolerance(25)
@@ -126,22 +123,12 @@ public class BCTwoPieceDockBumpRed extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            arm.runOnce(() -> {
-                arm.setShoulderConstraints(Shoulder.TELEOP_MAX_VELOCITY, Shoulder.TELEOP_MAX_ACCELERATION);
-                arm.setWristConstraints(Wrist.TELEOP_MAX_VELOCITY, Wrist.TELEOP_MAX_ACCELERATION);
-            })
-        );
-
-        addCommands(
-            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
 
         // intake second piece
         addCommands(
-
-            new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
@@ -177,10 +164,6 @@ public class BCTwoPieceDockBumpRed extends DebugSequentialCommandGroup {
             new ManagerSetGamePiece(GamePiece.CUBE),
             new ManagerSetScoreSide(ScoreSide.BACK),
 
-            new LEDSet(LEDColor.RED),
-
-            arm.runOnce(() -> arm.setShoulderVelocityFeedbackCutoff(10.0)),
-
             new ParallelCommandGroup(
                 new SwerveDriveFollowTrajectory(
                     paths.get("Score Piece"))
@@ -205,7 +188,6 @@ public class BCTwoPieceDockBumpRed extends DebugSequentialCommandGroup {
 
         // dock and engage
         addCommands(
-            new LEDSet(LEDColor.PURPLE),
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Dock"))
                         .fieldRelative().withStop(),
@@ -215,8 +197,6 @@ public class BCTwoPieceDockBumpRed extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.GREEN),
-
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(0.75)
                 .withTimeout(ENGAGE_TIME)

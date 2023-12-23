@@ -57,12 +57,19 @@ public class SwerveDrive extends SubsystemBase {
                     new SL_SwerveModule(BackLeft.ID, BackLeft.MODULE_OFFSET, Ports.Swerve.BackLeft.TURN, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE),
                     new SL_SwerveModule(BackRight.ID, BackRight.MODULE_OFFSET, Ports.Swerve.BackRight.TURN, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE)
                 );
-            } else {
+            } else if (Settings.ROBOT == Robot.SACROD) {
                 instance = new SwerveDrive(
                     SacrodModule.createFrontRight(),
                     SacrodModule.createFrontLeft(),
                     SacrodModule.createBackLeft(),
                     SacrodModule.createBackRight()
+                );
+            } else {
+                instance = new SwerveDrive(
+                    new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET),
+                    new SimModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET),
+                    new SimModule(BackLeft.ID, BackLeft.MODULE_OFFSET),
+                    new SimModule(BackRight.ID, BackRight.MODULE_OFFSET)
                 );
             }
         } else {

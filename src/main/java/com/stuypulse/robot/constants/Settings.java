@@ -32,13 +32,13 @@ public interface Settings {
     public enum Robot {
         JIM,
         SACROD,
-
+        LED_TEST_BOARD,
 
         // runs voltage control project
         BLAY_MODE
     }
 
-    Robot ROBOT = Robot.JIM;
+    Robot ROBOT = Robot.LED_TEST_BOARD;
 
     double DT = 0.02;
 

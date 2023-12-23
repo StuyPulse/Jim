@@ -5,6 +5,7 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.wpilibj.RobotBase;

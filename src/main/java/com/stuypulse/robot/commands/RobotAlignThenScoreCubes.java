@@ -10,7 +10,9 @@ import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 
-import com.stuypulse.robot.subsystems.LEDController;
+import com.stuypulse.robot.constants.ArmTrajectories;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.leds.LEDController;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
@@ -33,6 +35,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
     // Subsystems
     private final SwerveDrive swerve;
     private final Intake intake;
+    private final LEDController leds;
 
     private final Manager manager;
 
@@ -48,6 +51,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         this.swerve = SwerveDrive.getInstance();
         this.intake = Intake.getInstance();
         manager = Manager.getInstance();
+        this.leds = LEDController.getInstance();
 
         controller = new HolonomicController(
             new PIDController(Translation.P,Translation.I,Translation.D),
@@ -91,7 +95,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         intake.enableBreak();
         Odometry.USE_VISION_ANGLE.set(true);
 
-        LEDController.getInstance().setColor(LEDColor.BLUE, 694000000);
+        leds.forceSetLED(LEDColor.BLUE);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
             // simply outtake when low
             if (manager.getNodeLevel() == NodeLevel.LOW) {
-                LEDController.getInstance().setColor(LEDColor.GREEN, 694000000);
+                leds.forceSetLED(LEDColor.GREEN);
                 intake.deacquire();
             }
 
@@ -119,7 +123,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
 
                 // only score for cubes
                 if (manager.getGamePiece().isCube()) {
-                    LEDController.getInstance().setColor(LEDColor.GREEN, 694000000);
+                    leds.forceSetLED(LEDColor.GREEN);
                     intake.deacquire();
                 }
             }
@@ -144,7 +148,7 @@ public class RobotAlignThenScoreCubes extends CommandBase {
         intake.stop();
         targetPose2d.setPose(Double.NaN, Double.NaN, new Rotation2d(Double.NaN));
         
-        LEDController.getInstance().setColor(LEDController.getInstance().getDefaultColor(), 0);
+        leds.forceSetLED(leds.getDefaultColor());
     }
 
 }

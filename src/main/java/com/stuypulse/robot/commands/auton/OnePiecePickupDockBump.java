@@ -17,6 +17,8 @@ import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
 import com.stuypulse.robot.util.LEDColor;
 
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -53,7 +55,6 @@ public class OnePiecePickupDockBump extends DebugSequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new LEDSet(LEDColor.RED),
             new ArmReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
@@ -70,8 +71,6 @@ public class OnePiecePickupDockBump extends DebugSequentialCommandGroup {
         // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-
-            new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
@@ -95,7 +94,6 @@ public class OnePiecePickupDockBump extends DebugSequentialCommandGroup {
 
         // dock and engage
         addCommands(
-            new LEDSet(LEDColor.PURPLE),
                 new ParallelDeadlineGroup(
                     new SwerveDriveFollowTrajectory(paths.get("Dock"))
                             .fieldRelative().withStop(),
@@ -105,7 +103,6 @@ public class OnePiecePickupDockBump extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.RAINBOW),
 
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(0.5)

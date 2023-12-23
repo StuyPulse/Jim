@@ -7,7 +7,6 @@ package com.stuypulse.robot.commands.auton;
 
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
-import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
 import com.stuypulse.robot.commands.plant.PlantEngage;
 import com.stuypulse.robot.commands.swerve.*;
@@ -15,7 +14,6 @@ import com.stuypulse.robot.commands.swerve.balance.SwerveDriveBalanceBlay;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.util.DebugSequentialCommandGroup;
-import com.stuypulse.robot.util.LEDColor;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -52,7 +50,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
         // score first piece
         addCommands(
-            new LEDSet(LEDColor.RED),
             new ArmReady()
                 .setWristVelocityTolerance(25)
                 .setShoulderVelocityTolerance(45)
@@ -61,7 +58,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.BLUE),
             new IntakeScore(),
             new WaitCommand(INTAKE_DEACQUIRE_TIME)
         );
@@ -69,8 +65,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         // intake second piece
         addCommands(
             new ManagerSetGamePiece(GamePiece.CUBE),
-
-            new LEDSet(LEDColor.GREEN),
 
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Intake Piece"))
@@ -94,7 +88,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
 
         // dock and engage
         addCommands(
-            new LEDSet(LEDColor.PURPLE),
             new ParallelDeadlineGroup(
                 new SwerveDriveFollowTrajectory(paths.get("Dock"))
                         .fieldRelative().withStop(),
@@ -104,7 +97,6 @@ public class OnePiecePickupDock extends DebugSequentialCommandGroup {
         );
 
         addCommands(
-            new LEDSet(LEDColor.RAINBOW),
 
             new SwerveDriveBalanceBlay()
                 .withMaxSpeed(0.7)
