@@ -1,12 +1,10 @@
-/************************ PROJECT JIM *************************/
-/* Copyright (c) 2023 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
 package com.stuypulse.robot.util;
+
 import edu.wpi.first.wpilibj.util.Color8Bit;
+//import edu.wpi.first.wpilibj.util.Color8 implicitly in code
+
 import java.awt.Color;
-// class is also importing edu.wpi.first.wpilibj.util.Color8 implicitly 
+import java.util.Objects;
 
 import com.stuypulse.stuylib.math.SLMath;
   
@@ -14,27 +12,28 @@ import com.stuypulse.stuylib.math.SLMath;
  * StuyLib wrapper class for colors that handles various Color classes used in FRC (java.awt.Color, wpilibj.util.Color, wpilibj.util.Color8Bit)
  * @author Richie Xue
  */
-public class SLColor {
+public class SLColor extends edu.wpi.first.wpilibj.util.Color {
 
     private final int red;
     private final int green;
     private final int blue;
 
     /**
-     * Create an LEDColor object using RGB values
+     * Constructs an LEDColor object from RGB values
      *
      * @param r the r value [0-255]
      * @param g the g value [0-255]
      * @param b the b value [0-255]
     */
     public SLColor(int red, int green, int blue) {
+        super(red, green, blue);
         this.red = (int) SLMath.clamp(red, 0, 255);
         this.green = (int) SLMath.clamp(green, 0, 255);
         this.blue = (int) SLMath.clamp(blue, 0, 255);
     }
 
     /**
-    * Create an LEDColor object using java.awt.Color
+     * Constructs an LEDColor object from java.awt.Color objects
      *
      * @param color The java.awt.Color object
     */
@@ -43,7 +42,7 @@ public class SLColor {
     }
 
     /**
-    * Create an LEDColor object using edu.wpi.first.wpilibj.util.Color
+     * Constructs an LEDColor object from edu.wpi.first.wpilibj.util.Color objects
      *
      * @param color The edu.wpi.first.wpilibj.util.Color object
     */
@@ -52,7 +51,7 @@ public class SLColor {
     }
 
     /**
-    * Create an LEDColor object using edu.wpi.first.wpilibj.util.Color8Bit
+     * Constructs an LEDColor object from edu.wpi.first.wpilibj.util.Color8Bit objects
      *
      * @param color The edu.wpi.first.wpilibj.util.Color8Bit object
     */
@@ -88,17 +87,57 @@ public class SLColor {
     }
 
     /* Getters to convert LEDColor objects into other Color types */
- 
+    
+    /**
+     * @return the SLColor object as the java.awt.Color object equivalent 
+    */
     public Color getAWTColor() {
-        return new Color(this.red, this.green, this.blue);
+        return new Color(red, green, blue);
     }
 
+    /**
+     * @return the SLColor object as the edu.wpi.first.wpilibj.util.Color object equivalent 
+    */
     public edu.wpi.first.wpilibj.util.Color getWPILibColor() {
-        return new edu.wpi.first.wpilibj.util.Color(this.red / 255.0, this.green / 255.0, this.blue / 255.0);
+        return new edu.wpi.first.wpilibj.util.Color(red / 255.0, green / 255.0, blue / 255.0);
     }
 
+    /**
+     * @return the SLColor object as the edu.wpi.first.wpilibj.util.Color8Bit object equivalent 
+    */
     public Color8Bit getColor8Bit() {
         return new Color8Bit(red, green, blue);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+        return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+        return false;
+        }
+
+        SLColor color = (SLColor) other;
+        return Integer.compare(color.red, red) == 0
+            && Integer.compare(color.green, green) == 0
+            && Integer.compare(color.blue, blue) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(red, green, blue);
+    }
+
+    /**
+     * Return this color represented as a hex string.
+     *
+     * @return a string of the format <code>#RRGGBB</code>
+    */
+    @Override
+    public String toString() {
+        return String.format(
+            "#%02X%02X%02X", (int) (red * 255), (int) (green * 255), (int) (blue * 255));
     }
 
     /***********************/

@@ -5,7 +5,6 @@ import com.stuypulse.robot.subsystems.leds.LEDPulseColor;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
 import com.stuypulse.robot.subsystems.leds.LEDSection;
 import com.stuypulse.robot.subsystems.leds.LEDSingleColor;
-import com.stuypulse.robot.subsystems.leds.LEDInstruction;
 import com.stuypulse.robot.subsystems.leds.RichieMode;
 import com.stuypulse.robot.util.SLColor; 
 
