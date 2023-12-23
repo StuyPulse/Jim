@@ -5,10 +5,7 @@
 
 package com.stuypulse.robot.util;
 import com.stuypulse.robot.subsystems.leds.LEDInstruction;
-import com.stuypulse.robot.subsystems.leds.LEDPulseColor;
 import com.stuypulse.robot.subsystems.leds.LEDRainbow;
-import com.stuypulse.robot.subsystems.leds.LEDSection;
-import com.stuypulse.robot.subsystems.leds.RichieMode;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import java.awt.Color;
@@ -99,9 +96,8 @@ public class LEDColor implements LEDInstruction {
     public static final LEDColor OFF = new LEDColor(getAWTColor(0, 0, 0));
 
     public static final LEDInstruction RAINBOW = new LEDRainbow();
-    public static final LEDInstruction PULSE_RED = new LEDPulseColor(RED.getAWTColor());
-    public static final LEDInstruction PULSE_RED_BLUE = new LEDPulseColor(RED.getAWTColor(), BLUE.getAWTColor());
-    public static final LEDInstruction RICHIE = new RichieMode(RED.getAWTColor());
-    public static final LEDInstruction BANGLADESH = new LEDSection(new Color[] {RED.getAWTColor(), BLACK.getAWTColor(), DARK_GREEN.getAWTColor()});
-    
+    // public static final LEDInstruction PULSE_RED = new LEDPulseColor(RED.getAWTColor());
+    // public static final LEDInstruction PULSE_RED_BLUE = new LEDPulseColor(RED.getAWTColor(), BLUE.getAWTColor());
+    // public static final LEDInstruction RICHIE = new RichieMode(RED.getAWTColor());
+    // public static final LEDInstruction BANGLADESH = new LEDSection(new Color[] {RED.getAWTColor(), BLACK.getAWTColor(), DARK_GREEN.getAWTColor()});   
 }

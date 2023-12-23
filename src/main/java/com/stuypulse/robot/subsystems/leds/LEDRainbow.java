@@ -1,7 +1,5 @@
 package com.stuypulse.robot.subsystems.leds;
 
-import com.stuypulse.stuylib.util.StopWatch;
-
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 /*-
  * Contains:

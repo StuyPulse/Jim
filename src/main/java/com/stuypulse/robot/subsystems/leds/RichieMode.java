@@ -1,6 +1,6 @@
 package com.stuypulse.robot.subsystems.leds;
 
-import java.awt.Color;
+import com.stuypulse.robot.util.SLColor;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
  */
 
 public class RichieMode implements LEDInstruction {
-    public Color color;
+    public SLColor color;
     private StopWatch stopwatch;
     private int index;
     private int prevIndex;
 
-    public RichieMode(Color color) {
+    public RichieMode(SLColor color) {
         this.color = color;
         stopwatch = new StopWatch();
     }

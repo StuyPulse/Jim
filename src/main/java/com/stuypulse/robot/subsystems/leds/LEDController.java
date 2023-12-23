@@ -10,9 +10,8 @@ import com.stuypulse.robot.Robot.MatchState;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.Manager;
-import com.stuypulse.robot.util.LEDColor;
+import com.stuypulse.robot.constants.LEDColor;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,7 +58,7 @@ public class LEDController extends SubsystemBase {
 
     public LEDInstruction getDefaultColor() {
         switch (Manager.getInstance().getGamePiece()) {
-            case CUBE: return LEDColor.RAINBOW;
+            case CUBE: return LEDColor.RED;
             case CONE_TIP_IN: return LEDColor.YELLOW;
             case CONE_TIP_UP: return LEDColor.GREEN;
             case CONE_TIP_OUT: return LEDColor.ORANGE;
