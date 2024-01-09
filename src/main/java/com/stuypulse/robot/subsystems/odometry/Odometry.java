@@ -73,10 +73,6 @@ public class Odometry extends AbstractOdometry {
         estimator.resetPosition(swerve.getGyroAngle(), swerve.getModulePositions(), pose2d);
     }
 
-    private void updateWithVision(List<VisionData> visionData) {
-
-    }
-
     @Override
     public void periodic() {
         SwerveDrive swerve = SwerveDrive.getInstance();

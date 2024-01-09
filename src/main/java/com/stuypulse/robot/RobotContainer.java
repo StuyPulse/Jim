@@ -147,8 +147,8 @@ public class RobotContainer {
         // driver.getRightButton().onTrue(new PlantEngage());
         // driver.getRightBumper().onTrue(new PlantDisengage());
 
-        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, Field.HEIGHT - 1.524, new Rotation2d(0))));
-        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, Field.HEIGHT - 1.524, new Rotation2d(0))));
+        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, 1.524, new Rotation2d(0))));
+        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, 1.524, new Rotation2d(0))));
 
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)

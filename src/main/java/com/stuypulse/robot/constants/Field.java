@@ -29,10 +29,10 @@ public interface Field {
     public static final double FIDUCIAL_SIZE = 0.15716;
 
     Fiducial TAGS[] = {
-        new Fiducial(0,new Pose3d(new Translation3d(0, HEIGHT - 1, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
-        new Fiducial(1,new Pose3d(new Translation3d(0, HEIGHT - (1 + Units.inchesToMeters(28.125)), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(0))))
-    //     new Fiducial(0,new Pose3d(new Translation3d(0, 0, Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))), // home
-    //     new Fiducial(1,new Pose3d(new Translation3d(0, Units.inchesToMeters(33), Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
+        new Fiducial(1,new Pose3d(new Translation3d(0, 0, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
+        // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, (1 + Units.inchesToMeters(28.125)), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180))))
+        // new Fiducial(0,new Pose3d(new Translation3d(WIDTH, 0, Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // home
+        // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, Units.inchesToMeters(33), Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))),
         // new Fiducial(0,new Pose3d(new Translation3d(8.23, 1, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // flipped test
         // new Fiducial(1,new Pose3d(new Translation3d(8.23, 1 + Units.inchesToMeters(28.125), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180))))
     };
@@ -58,9 +58,9 @@ public interface Field {
             layout[i * 7 + 1] = tag.getPose().getTranslation().getX();
             layout[i * 7 + 2] = tag.getPose().getTranslation().getY();
             layout[i * 7 + 3] = tag.getPose().getTranslation().getZ();
-            layout[i * 7 + 4] = Units.radiansToDegrees(tag.getPose().getRotation().getX());
-            layout[i * 7 + 5] = Units.radiansToDegrees(tag.getPose().getRotation().getY());
-            layout[i * 7 + 6] = Units.radiansToDegrees(tag.getPose().getRotation().getZ());
+            layout[i * 7 + 4] = tag.getPose().getRotation().getX();
+            layout[i * 7 + 5] = tag.getPose().getRotation().getY();
+            layout[i * 7 + 6] = tag.getPose().getRotation().getZ();
         }
 
         return layout;
