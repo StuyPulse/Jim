@@ -79,6 +79,7 @@ public class CustomCamera {
                 Units.radiansToDegrees(cameraPose.getRotation().getY()),
                 Units.radiansToDegrees(cameraPose.getRotation().getZ()),
             });
+        configTable.getDoubleArrayTopic("fiducial_poses").publish().set(Field.getTagPoses(Field.TAGS));
 
         NetworkTable outputTable = table.getSubTable("output");
         robotPoseSub = outputTable.getDoubleArrayTopic("robot_pose")
