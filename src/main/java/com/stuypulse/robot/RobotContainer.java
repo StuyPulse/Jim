@@ -24,6 +24,7 @@ import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Driver.Drive;
 import com.stuypulse.robot.subsystems.*;
 import com.stuypulse.robot.subsystems.Manager.*;
 import com.stuypulse.robot.subsystems.arm.*;
@@ -147,8 +148,8 @@ public class RobotContainer {
         // driver.getRightButton().onTrue(new PlantEngage());
         // driver.getRightBumper().onTrue(new PlantDisengage());
 
-        driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, 1.524, new Rotation2d(0))));
-        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(3.0, 1.524, new Rotation2d(0))));
+        // driver.getLeftButton().onTrue(new OdometryReset(new Pose2d(3.0, 1.524, new Rotation2d(0))));
+        driver.getRightButton().whileTrue(new SwerveDriveToPose(new Pose2d(8.23+1, 4.115, new Rotation2d(0))));
 
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
@@ -269,6 +270,9 @@ public class RobotContainer {
         // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
         // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
         // autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
+        
+        autonChooser.setDefaultOption("Drive Straight", new DriveStraight());
+        autonChooser.addOption("Drive Straight Turning", new DriveStraightTurning());
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

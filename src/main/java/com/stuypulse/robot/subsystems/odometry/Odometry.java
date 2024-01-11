@@ -9,6 +9,7 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.subsystems.vision.AbstractVision;
 import com.stuypulse.robot.util.Fiducial;
 import com.stuypulse.robot.util.VisionData;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,6 +28,8 @@ public class Odometry extends AbstractOdometry {
     private final Field2d field;
     private final FieldObject2d odometryPose2D;
     private final FieldObject2d estimatorPose2D;
+
+    private final SmartBoolean VISION_ACTIVE;
 
     protected Odometry() {
         SwerveDrive swerve = SwerveDrive.getInstance();
@@ -51,6 +54,7 @@ public class Odometry extends AbstractOdometry {
 
         swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
+        VISION_ACTIVE = new SmartBoolean("Odometry/VISION ACTIVE", true);
     }
 
     @Override
@@ -80,16 +84,18 @@ public class Odometry extends AbstractOdometry {
         odometry.update(swerve.getGyroAngle(), swerve.getModulePositions());
         estimator.update(swerve.getGyroAngle(), swerve.getModulePositions());
 
-        for (VisionData result : AbstractVision.getInstance().getOutput()) {
+        if (VISION_ACTIVE.getAsBoolean()) {
+            for (VisionData result : AbstractVision.getInstance().getOutput()) {
 
-            Fiducial primaryTag = result.getPrimaryTag();
-            double distance = result.calculateDistanceToTag(primaryTag);
+                Fiducial primaryTag = result.getPrimaryTag();
+                double distance = result.calculateDistanceToTag(primaryTag);
 
-            SmartDashboard.putNumber("Odometry/Primary Tag/Distance", distance);
+                SmartDashboard.putNumber("Odometry/Primary Tag/Distance", distance);
 
-            estimator.addVisionMeasurement(
-                result.robotPose.toPose2d(),
-                result.timestamp);
+                estimator.addVisionMeasurement(
+                    result.robotPose.toPose2d(),
+                    result.timestamp);
+            }
         }
 
         odometryPose2D.setPose(odometry.getPoseMeters());
