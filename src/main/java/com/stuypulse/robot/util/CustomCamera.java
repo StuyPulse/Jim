@@ -75,9 +75,9 @@ public class CustomCamera {
                 cameraPose.getX(),
                 cameraPose.getY(),
                 cameraPose.getZ(),
-                Units.radiansToDegrees(cameraPose.getRotation().getX()),
-                Units.radiansToDegrees(cameraPose.getRotation().getY()),
-                Units.radiansToDegrees(cameraPose.getRotation().getZ()),
+                cameraPose.getRotation().getX(),
+                cameraPose.getRotation().getY(),
+                cameraPose.getRotation().getZ(),
             });
         configTable.getDoubleArrayTopic("fiducial_poses").publish().set(Field.getTagPoses(Field.TAGS));
 
