@@ -29,7 +29,7 @@ public interface Field {
     public static final double FIDUCIAL_SIZE = 0.15716;
 
     Fiducial TAGS[] = {
-        new Fiducial(1,new Pose3d(new Translation3d(WIDTH / 2, HEIGHT / 2, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(90)))),
+        new Fiducial(1,new Pose3d(new Translation3d(WIDTH / 2, HEIGHT / 2, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
         // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, (1 + Units.inchesToMeters(28.125)), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180))))
         // new Fiducial(0,new Pose3d(new Translation3d(WIDTH, 0, Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // home
         // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, Units.inchesToMeters(33), Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))),

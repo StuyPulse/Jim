@@ -13,6 +13,8 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.auton.camera.DriveStraight;
+import com.stuypulse.robot.commands.auton.camera.DriveStraightTurning;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
