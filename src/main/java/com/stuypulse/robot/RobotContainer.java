@@ -13,8 +13,11 @@ import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.auton.*;
+import com.stuypulse.robot.commands.auton.camera.DriveSquare;
+import com.stuypulse.robot.commands.auton.camera.DriveSquareTurning;
 import com.stuypulse.robot.commands.auton.camera.DriveStraight;
 import com.stuypulse.robot.commands.auton.camera.DriveStraightTurning;
+import com.stuypulse.robot.commands.auton.camera.DriveStraightTurningHalfVision;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -275,6 +278,9 @@ public class RobotContainer {
         
         autonChooser.setDefaultOption("Drive Straight", new DriveStraight());
         autonChooser.addOption("Drive Straight Turning", new DriveStraightTurning());
+        autonChooser.addOption("Drive Straight Turning Half Vision", new DriveStraightTurningHalfVision());
+        autonChooser.addOption("Drive Square", new DriveSquare());
+        autonChooser.addOption("Drive Square Turning", new DriveSquareTurning());
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }
