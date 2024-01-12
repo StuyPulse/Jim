@@ -31,6 +31,8 @@ public abstract class AbstractOdometry extends SubsystemBase {
 
     public abstract void reset(Pose2d pose2d);
 
+    public abstract void setActive(boolean active);
+
     public final Translation2d getTranslation() {
         return getPose().getTranslation();
     }
