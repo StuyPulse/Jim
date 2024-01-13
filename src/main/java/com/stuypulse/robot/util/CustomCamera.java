@@ -5,12 +5,14 @@
 
 package com.stuypulse.robot.util;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
@@ -20,8 +22,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-
-import java.util.Optional;
 
 public class CustomCamera {
 
@@ -39,20 +39,16 @@ public class CustomCamera {
     private final double camera_gain = 0.0;
     private final double camera_brightness = 0.0;
 
-    private final DoubleArraySubscriber robotPoseSub;
     private final DoubleSubscriber latencySub;
     private final IntegerSubscriber fpsSub;
-    private final DoubleArraySubscriber tvecsSub;
+    private final DoubleArraySubscriber poseSub;
     private final IntegerArraySubscriber idSub;
-
 
     private double[] rawPoseData;
     private double rawLatency;
-    private double[] rawTvecsData;
     private long[] rawIdData;
 
     public CustomCamera(String cameraName, Pose3d cameraPose) {
-
         this.field = AbstractOdometry.getInstance().getField();
 
         this.cameraName = cameraName;
@@ -82,19 +78,14 @@ public class CustomCamera {
         configTable.getDoubleArrayTopic("fiducial_poses").publish().set(Field.getTagPoses(Field.TAGS));
 
         NetworkTable outputTable = table.getSubTable("output");
-        robotPoseSub = outputTable.getDoubleArrayTopic("robot_pose")
-            .subscribe(
-                new double[] {},
-                PubSubOption.keepDuplicates(true),
-                PubSubOption.sendAll(true));
         latencySub = outputTable.getDoubleTopic("latency").subscribe(0);
         fpsSub = outputTable.getIntegerTopic("fps").subscribe(0);
-        tvecsSub = outputTable.getDoubleArrayTopic("tvecs")
+        poseSub = outputTable.getDoubleArrayTopic("pose")
             .subscribe(
                 new double[] {},
                 PubSubOption.keepDuplicates(true),
                 PubSubOption.sendAll(true));
-        idSub = outputTable.getIntegerArrayTopic("ids").subscribe(new long[] {});
+        idSub = outputTable.getIntegerArrayTopic("tids").subscribe(new long[] {});
     }
 
     public String getCameraName() {
@@ -102,15 +93,13 @@ public class CustomCamera {
     }
 
     private void updateData() {
-        rawPoseData = robotPoseSub.get();
         rawLatency = latencySub.get();
-        rawTvecsData = tvecsSub.get();
+        rawPoseData = poseSub.get();
         rawIdData = idSub.get();
     }
 
     private boolean hasData() {
         return rawPoseData.length > 0 &&
-               rawTvecsData.length > 0 &&
                rawIdData.length > 0;
     }
 
@@ -123,23 +112,21 @@ public class CustomCamera {
         double fpgaTime = latencySub.getLastChange() / 1_000_000.0; // replace with Timer.getFPGATimestamp() if breaks
         double timestamp = fpgaTime - Units.millisecondsToSeconds(rawLatency);
 
-        return Optional.of(new VisionData(rawIdData, getTvecs(), cameraPose, getRobotPose(), timestamp));
+        LogPose3d.logPose3d("Vision/Robot Pose", getRobotPose());
+
+        return Optional.of(new VisionData(rawIdData, cameraPose, getRobotPose(), timestamp));
+    }
+
+    private Pose3d poseFromArray(double[] rawData) {
+        return new Pose3d(
+            rawData[0], rawData[1], rawData[2],
+            new Rotation3d(rawData[3], rawData[4], rawData[5]));
     }
 
     private Pose3d getRobotPose() {
-        return new Pose3d(
-                new Translation3d(rawPoseData[0], rawPoseData[1], rawPoseData[2]),
-                new Rotation3d(
-                        Units.degreesToRadians(rawPoseData[3]),
-                        Units.degreesToRadians(0),
-                        Units.degreesToRadians(rawPoseData[5])));
-    }
+        return poseFromArray(rawPoseData).transformBy(
+            new Transform3d(cameraPose.getTranslation(), cameraPose.getRotation()).inverse());
 
-    private Translation3d[] getTvecs() {
-        Translation3d[] tvecs = new Translation3d[rawTvecsData.length / 3];
-        for (int i = 0; i < rawTvecsData.length; i += 3)
-            tvecs[i / 3] = new Translation3d(rawTvecsData[i], rawTvecsData[i + 1], rawTvecsData[i + 2]);
-        return tvecs;
     }
 
     public long getFPS() {
