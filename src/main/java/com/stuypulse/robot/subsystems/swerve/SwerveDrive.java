@@ -41,7 +41,6 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import java.lang.annotation.Target;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -167,21 +166,21 @@ public class SwerveDrive extends SubsystemBase {
         return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
     }
     
-    private void updatePose() {
-        // poseEstimator.update(getGyroAngle(), getModulePositions());
-        // ICamera camera = ICamera.getInstance();
-        // if (camera.hasTarget()) {
-        //     poseEstimator.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp() - camera.getLatency());
-        // }
-    }
+    // private void updatePose() {
+    //     // poseEstimator.update(getGyroAngle(), getModulePositions());
+    //     // ICamera camera = ICamera.getInstance();
+    //     // if (camera.hasTarget()) {
+    //     //     poseEstimator.addVisionMeasurement(camera.getRobotPose(), Timer.getFPGATimestamp() - camera.getLatency());
+    //     // }
+    // }
 
-    public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
-    }
+    // public Pose2d getPose() {
+    //     return poseEstimator.getEstimatedPosition();
+    // }
 
-    public Rotation2d getAngle() {
-        return getPose().getRotation();
-    }
+    // public Rotation2d getAngle() {
+    //     return getPose().getRotation();
+    // }
 
     
 

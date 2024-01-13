@@ -1,6 +1,7 @@
 package com.stuypulse.robot.commands;
 
 import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.odometry.OdometryImpl;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.math.Angle;
@@ -29,6 +30,8 @@ public class PointWhileDrive extends CommandBase {
     private Rotation2d currentAngle;
     private AnglePIDController angleController;
 
+    private Odometry odometry = OdometryImpl.getInstance();
+
 
 
     public PointWhileDrive(SwerveDrive swerve, Translation2d target){
@@ -44,21 +47,24 @@ public class PointWhileDrive extends CommandBase {
 
     @Override
     public void execute(){
-        currentAngle = swerve.getAngle().plus(swerve.getGyroAngle());
+        currentAngle = odometry.getPose().getRotation().plus(swerve.getGyroAngle());
         
         
         //calculate targetAngle
         targetAngle = new Rotation2d(
-            swerve.getPose().getX() - target.getX(),
-            swerve.getPose().getY() - target.getY())
-        .plus(Rotation2d.fromRadians(Math.PI));
+            odometry.getPose().getX() - target.getX(),
+            odometry.getPose().getY() - target.getY())
+            .plus(Rotation2d.fromRadians(Math.PI));
         
         swerve.aimAt(targetAngle);
         
         
 
-        swerve.drive(new Vector2D(swerve.getVelocity()),
-        angleController.update(Angle.fromRotation2d(targetAngle), Angle.fromRotation2d(currentAngle)));
+        swerve.drive(
+            new Vector2D(swerve.getVelocity()),
+            angleController.update(
+                Angle.fromRotation2d(targetAngle), 
+                Angle.fromRotation2d(currentAngle)));
         
         SmartDashboard.putNumber("Swerve/targetAngle", targetAngle.getDegrees());
         //System.out.println(targetAngle);
@@ -66,6 +72,6 @@ public class PointWhileDrive extends CommandBase {
         //     swerve.getPose().getX() - target.getX(),
         //     swerve.getPose().getY() - target.getY()));
 
-        System.out.println(swerve.getPose());
+        System.out.println(odometry.getPose());
     }
 }
