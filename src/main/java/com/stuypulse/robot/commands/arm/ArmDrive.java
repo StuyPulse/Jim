@@ -9,15 +9,15 @@ import static com.stuypulse.robot.constants.Settings.Operator.*;
 
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.SLMath;
-import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.numbers.IStream;
 import com.stuypulse.stuylib.util.StopWatch;
 
 import com.stuypulse.robot.subsystems.arm.Arm;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class ArmDrive extends CommandBase {
+public class ArmDrive extends Command {
     private final Arm arm;
 
     private final IStream shoulder;

@@ -8,14 +8,14 @@ package com.stuypulse.robot.commands.arm;
 import static com.stuypulse.robot.constants.Settings.Operator.*;
 
 import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.numbers.IStream;
 
 import com.stuypulse.robot.subsystems.arm.Arm;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class ArmVoltageDrive extends CommandBase {
+public class ArmVoltageDrive extends Command {
 
     private final Arm arm;
 

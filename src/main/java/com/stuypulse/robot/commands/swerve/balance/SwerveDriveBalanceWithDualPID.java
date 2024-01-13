@@ -9,7 +9,7 @@ import static com.stuypulse.robot.constants.Field.*;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.numbers.IStream;
 
 import com.stuypulse.robot.commands.swerve.SwerveDrivePointWheels;
 import com.stuypulse.robot.constants.Settings.AutoBalance;
@@ -23,9 +23,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class SwerveDriveBalanceWithDualPID extends CommandBase {
+public class SwerveDriveBalanceWithDualPID extends Command {
 
     private Number maxSpeed;
 

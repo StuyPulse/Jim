@@ -9,7 +9,6 @@ import com.stuypulse.stuylib.util.StopWatch;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import java.util.ArrayList;
@@ -24,8 +23,7 @@ import java.util.List;
  *
  * <p>This class is provided by the NewCommands VendorDep
  */
-@SuppressWarnings("removal")
-public class DebugSequentialCommandGroup extends CommandGroupBase {
+public class DebugSequentialCommandGroup extends Command {
   private final List<Command> m_commands = new ArrayList<>();
   private int m_currentCommandIndex = -1;
   private boolean m_runWhenDisabled = true;
@@ -43,7 +41,6 @@ public class DebugSequentialCommandGroup extends CommandGroupBase {
     addCommands(commands);
   }
 
-  @Override
   public final void addCommands(Command... commands) {
     if (m_currentCommandIndex != -1) {
       throw new IllegalStateException(

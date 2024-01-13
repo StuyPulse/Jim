@@ -7,6 +7,8 @@ package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
@@ -47,7 +49,9 @@ public interface Field {
     }
 
     public static Pose2d getAprilTagFromId(int id) {
-        if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
+        if (RobotContainer.getCachedAlliance().isEmpty()) return null;
+
+        if (RobotContainer.getCachedAlliance().get() == Alliance.Blue) {
             return BLUE_APRIL_TAGS[id - 1];
         } else {
             return AllianceUtil.getMirroredPose(BLUE_APRIL_TAGS[8 - id]);
@@ -81,7 +85,7 @@ public interface Field {
         };
     }
 
-    static class RedBlueNumber extends Number { private double red, blue; public RedBlueNumber(double red, double blue) { this.red = red; this.blue = blue; } public double doubleValue() { if (RobotContainer.getCachedAlliance() == Alliance.Red) return red; return blue; } public int intValue() { return (int) doubleValue(); } public float floatValue() { return (float) doubleValue(); } public long longValue() { return (long) doubleValue(); } }
+    static class RedBlueNumber extends Number { private double red, blue; public RedBlueNumber(double red, double blue) { this.red = red; this.blue = blue; } public double doubleValue() { if (RobotContainer.getCachedAlliance().isEmpty()) return Double.NaN; if (RobotContainer.getCachedAlliance().get() == Alliance.Red) return red; return blue; } public int intValue() { return (int) doubleValue(); } public float floatValue() { return (float) doubleValue(); } public long longValue() { return (long) doubleValue(); } }
 
     public interface ScoreXPoses {
         public interface High {
@@ -106,11 +110,15 @@ public interface Field {
 
     // red left to right
     public interface ScoreYPoses {
-        public static double[] getYPoseArray(Alliance alliance, ScoreSide side) {
+        public static double[] getYPoseArray(Optional<Alliance> alliance, ScoreSide side) {
+            if (alliance.isEmpty()) {
+                return null;
+            }
+
             if (side == ScoreSide.FRONT)
-                return alliance == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
+                return alliance.get() == Alliance.Red ? Front.RED_Y_POSES : Front.BLUE_Y_POSES;
             else
-                return alliance == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
+                return alliance.get() == Alliance.Red ? Back.RED_Y_POSES : Back.BLUE_Y_POSES;
         }
 
         public static double middleToBack(double midYPose) {

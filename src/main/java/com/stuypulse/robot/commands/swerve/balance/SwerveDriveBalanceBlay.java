@@ -7,7 +7,7 @@ package com.stuypulse.robot.commands.swerve.balance;
 
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.numbers.IStream;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.Robot.MatchState;
@@ -21,9 +21,9 @@ import com.stuypulse.robot.util.LEDColor;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class SwerveDriveBalanceBlay extends CommandBase {
+public class SwerveDriveBalanceBlay extends Command {
 
     private Number maxSpeed;
 

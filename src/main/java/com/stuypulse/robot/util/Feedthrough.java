@@ -6,7 +6,7 @@
 package com.stuypulse.robot.util;
 
 import com.stuypulse.stuylib.control.Controller;
-import com.stuypulse.stuylib.streams.filters.Derivative;
+import com.stuypulse.stuylib.streams.numbers.filters.Derivative;
 
 public class Feedthrough extends Controller {
 

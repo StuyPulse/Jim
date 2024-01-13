@@ -26,9 +26,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class RobotAlignThenScoreCubes extends CommandBase {
+public class RobotAlignThenScoreCubes extends Command {
 
     // Subsystems
     private final SwerveDrive swerve;

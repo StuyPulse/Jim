@@ -5,6 +5,7 @@
 
 package com.stuypulse.robot.commands.auton;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.robot.commands.arm.routines.*;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
@@ -29,8 +30,6 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 
 public class TwoPieceDockRed extends DebugSequentialCommandGroup {
     static class AutonReady extends ArmRoutine {

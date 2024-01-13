@@ -21,13 +21,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 
 
@@ -40,16 +40,16 @@ public class MAX_SwerveModule extends SwerveModule {
 
     // turn
     private CANSparkMax turnMotor;
-    private SparkMaxAbsoluteEncoder absoluteEncoder;
+    private SparkAbsoluteEncoder absoluteEncoder;
 
     // drive
     private CANSparkMax driveMotor;
     private RelativeEncoder driveEncoder;
 
     // controller
-    private SparkMaxPIDController drivePID;
+    private SparkPIDController drivePID;
     private SimpleMotorFeedforward driveFF;
-    private SparkMaxPIDController turnPID;
+    private SparkPIDController turnPID;
 
 
     private final SlewRateLimiter turnRateLimit;

@@ -12,8 +12,8 @@ import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_LEFT;
 import static com.stuypulse.robot.constants.Ports.Arm.SHOULDER_RIGHT;
 import static com.stuypulse.robot.constants.Ports.Arm.WRIST;
 
-import com.stuypulse.stuylib.streams.filters.IFilter;
-import com.stuypulse.stuylib.streams.filters.TimedMovingAverage;
+import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.TimedMovingAverage;
 
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Settings.Arm.Shoulder;

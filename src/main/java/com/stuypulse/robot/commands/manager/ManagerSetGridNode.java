@@ -17,7 +17,7 @@ public class ManagerSetGridNode extends InstantCommand {
         super(() -> {
             var manager = Manager.getInstance();
 
-            if (RobotContainer.getCachedAlliance() == Alliance.Blue) {
+            if (RobotContainer.getCachedAlliance().get() == Alliance.Blue) {
                 manager.setGridNode(index);
             } else {
                 manager.setGridNode(8 - index);

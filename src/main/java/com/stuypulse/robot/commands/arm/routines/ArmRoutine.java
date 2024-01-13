@@ -13,11 +13,11 @@ import com.stuypulse.robot.util.ArmTrajectory;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.Supplier;
 
-public abstract class ArmRoutine extends CommandBase {
+public abstract class ArmRoutine extends Command {
 
     private Number shoulderTolerance;
     private Number wristTolerance;

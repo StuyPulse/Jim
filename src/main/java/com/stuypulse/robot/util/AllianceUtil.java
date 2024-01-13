@@ -5,7 +5,7 @@
 
 package com.stuypulse.robot.util;
 
-import com.stuypulse.stuylib.streams.IStream;
+import com.stuypulse.stuylib.streams.numbers.IStream;
 
 import com.stuypulse.robot.constants.Field;
 

@@ -9,7 +9,7 @@ import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
 import com.stuypulse.robot.constants.ArmTrajectories;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.LEDController;
@@ -33,9 +33,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class RobotAlignThenScore extends CommandBase {
+public class RobotAlignThenScore extends Command {
 
     // Subsystems
     private final SwerveDrive swerve;

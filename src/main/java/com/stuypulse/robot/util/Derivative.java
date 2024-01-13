@@ -4,7 +4,7 @@
 
 package com.stuypulse.robot.util;
 
-import com.stuypulse.stuylib.streams.filters.IFilter;
+import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
 import com.stuypulse.stuylib.util.StopWatch;
 
 /**

@@ -8,8 +8,8 @@ package com.stuypulse.robot.constants;
 import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
-import com.stuypulse.stuylib.streams.IStream;
-
+import com.stuypulse.stuylib.streams.numbers.IStream;
+import com.pathplanner.lib.util.PIDConstants;
 import com.stuypulse.robot.util.ArmJoint;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import com.pathplanner.lib.auto.PIDConstants;
 
 /*-
  * File containing tunable settings for every subsystem on the robot.
@@ -90,6 +89,7 @@ public interface Settings {
     public interface Swerve {
         double WIDTH = Units.inchesToMeters(26.504);
         double LENGTH = Units.inchesToMeters(20.508);
+        double RADIUS = Math.sqrt(WIDTH * WIDTH + LENGTH * LENGTH);
 
         SmartNumber MAX_MODULE_SPEED = new SmartNumber("Swerve/Max Module Speed (meter per s)", 5.0);
         SmartNumber MAX_TURNING = new SmartNumber("Swerve/Max Turn Velocity (rad per s)", 6.28);

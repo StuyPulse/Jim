@@ -9,6 +9,8 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.*;
 import com.stuypulse.stuylib.network.SmartBoolean;
 
+import java.util.Optional;
+
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
@@ -40,9 +42,9 @@ import com.stuypulse.robot.util.*;
 import com.stuypulse.robot.util.BootlegXbox;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -75,7 +77,7 @@ public class RobotContainer {
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
-    private static Alliance cachedAlliance;
+    private static Optional<Alliance> cachedAlliance;
 
     // Robot container
 
@@ -274,11 +276,11 @@ public class RobotContainer {
         return autonChooser.getSelected();
     }
 
-    public static void setCachedAlliance(Alliance alliance) {
+    public static void setCachedAlliance(Optional<Alliance> alliance) {
         cachedAlliance = alliance;
     }
 
-    public static Alliance getCachedAlliance() {
+    public static Optional<Alliance> getCachedAlliance() {
         return cachedAlliance;
     }
 }
