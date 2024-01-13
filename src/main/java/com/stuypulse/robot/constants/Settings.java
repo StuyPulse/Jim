@@ -360,8 +360,6 @@ public interface Settings {
 
     public interface Alignment {
 
-        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.15);
-
         SmartNumber ALIGNED_CUBE_THRESHOLD_X = new SmartNumber("Alignment/X Cube Threshold", 0.08);
         SmartNumber ALIGNED_CUBE_THRESHOLD_Y = new SmartNumber("Alignment/Y Cube Threshold", 0.1);
         SmartNumber ALIGNED_CUBE_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Cube Threshold", 8);
@@ -374,9 +372,14 @@ public interface Settings {
         SmartNumber ALIGNED_LOW_THRESHOLD_Y = new SmartNumber("Alignment/Y Low Threshold", 0.2);
         SmartNumber ALIGNED_LOW_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Low Threshold", 8);
 
-
         SmartNumber AGAINST_GRID_VEL_X = new SmartNumber("Alignment/Against Grid X Velocity (m per s)", 0.02);
         SmartNumber AGAINST_GRID_DEBOUNCE = new SmartNumber("Alignment/Against Grid Debounce", 0.3);
+
+        SmartNumber DEBOUNCE_TIME = new SmartNumber("Alignment/Debounce Time", 0.15);
+
+        SmartNumber ALIGNED_THRESHOLD_X = new SmartNumber("Alignment/X Threshold", 0.1);
+        SmartNumber ALIGNED_THRESHOLD_Y = new SmartNumber("Alignment/Y Threshold", 0.1);
+        SmartNumber ALIGNED_THRESHOLD_ANGLE = new SmartNumber("Alignment/Angle Threshold", 5);
 
         public interface Translation {
             // SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);

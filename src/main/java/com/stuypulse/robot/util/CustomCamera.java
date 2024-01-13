@@ -20,6 +20,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Optional;
 
@@ -43,12 +44,14 @@ public class CustomCamera {
     private final DoubleSubscriber latencySub;
     private final IntegerSubscriber fpsSub;
     private final DoubleArraySubscriber tvecsSub;
+    private final DoubleArraySubscriber rangsSub;
     private final IntegerArraySubscriber idSub;
 
 
     private double[] rawPoseData;
     private double rawLatency;
     private double[] rawTvecsData;
+    private double[] rawRangsData;
     private long[] rawIdData;
 
     public CustomCamera(String cameraName, Pose3d cameraPose) {
@@ -94,6 +97,11 @@ public class CustomCamera {
                 new double[] {},
                 PubSubOption.keepDuplicates(true),
                 PubSubOption.sendAll(true));
+        rangsSub = outputTable.getDoubleArrayTopic("rangs")
+            .subscribe(
+                new double[] {},
+                PubSubOption.keepDuplicates(true),
+                PubSubOption.sendAll(true));
         idSub = outputTable.getIntegerArrayTopic("ids").subscribe(new long[] {});
     }
 
@@ -105,6 +113,7 @@ public class CustomCamera {
         rawPoseData = robotPoseSub.get();
         rawLatency = latencySub.get();
         rawTvecsData = tvecsSub.get();
+        rawRangsData = rangsSub.get();
         rawIdData = idSub.get();
     }
 
@@ -127,12 +136,16 @@ public class CustomCamera {
     }
 
     private Pose3d getRobotPose() {
+        Rotation3d rangs = new Rotation3d(rawRangsData[0], rawRangsData[1], rawRangsData[2]);
+
+        SmartDashboard.putNumberArray("rangs", new double[] {0., 0., 0., rangs.getQuaternion().getW(), rangs.getQuaternion().getX(), rangs.getQuaternion().getY(), rangs.getQuaternion().getZ()});
+
         return new Pose3d(
                 new Translation3d(rawPoseData[0], rawPoseData[1], rawPoseData[2]),
                 new Rotation3d(
-                        Units.degreesToRadians(rawPoseData[3]),
-                        Units.degreesToRadians(0),
-                        Units.degreesToRadians(rawPoseData[5])));
+                        rawPoseData[3],
+                        rawPoseData[4],
+                        rawPoseData[5]));
     }
 
     private Translation3d[] getTvecs() {

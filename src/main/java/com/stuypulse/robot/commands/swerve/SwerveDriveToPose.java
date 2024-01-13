@@ -13,7 +13,6 @@ import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
 import com.stuypulse.robot.constants.Settings.Alignment;
 import com.stuypulse.robot.constants.Settings.Alignment.Rotation;
 import com.stuypulse.robot.constants.Settings.Alignment.Translation;
-import com.stuypulse.robot.subsystems.Manager;
 import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.HolonomicController;
@@ -53,17 +52,7 @@ public class SwerveDriveToPose extends CommandBase{
     }
 
     private boolean isAligned() {
-        if (Manager.getInstance().getGamePiece().isCone()) {
-            return controller.isDone(
-                Alignment.ALIGNED_CONE_THRESHOLD_X.get(),
-                Alignment.ALIGNED_CONE_THRESHOLD_Y.get(),
-                Alignment.ALIGNED_CONE_THRESHOLD_ANGLE.get());
-        } else {
-            return controller.isDone(
-                Alignment.ALIGNED_CUBE_THRESHOLD_X.get(),
-                Alignment.ALIGNED_CUBE_THRESHOLD_Y.get(),
-                Alignment.ALIGNED_CUBE_THRESHOLD_ANGLE.get());
-        }
+        return controller.isDone(Alignment.ALIGNED_THRESHOLD_X.get(), Alignment.ALIGNED_THRESHOLD_Y.get(), Alignment.ALIGNED_THRESHOLD_ANGLE.get());
     }
 
     @Override
