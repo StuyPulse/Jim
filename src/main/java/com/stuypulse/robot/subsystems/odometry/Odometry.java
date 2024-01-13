@@ -82,14 +82,6 @@ public class Odometry extends AbstractOdometry {
         VISION_ACTIVE.set(active);
     }
 
-    private Pose2d cameraToRobotPose(VisionData result) {
-        Pose2d camera_output = result.robotPose.toPose2d();
-        Pose2d camera_offset = result.cameraLocation.toPose2d();
-        return new Pose2d(camera_output.getTranslation().getX() + camera_offset.getX() * Math.sin(odometry.getPoseMeters().getRotation().getRadians()) - camera_offset.getY() * Math.cos(odometry.getPoseMeters().getRotation().getRadians()), 
-                          camera_output.getTranslation().getY() + camera_offset.getX() * Math.cos(odometry.getPoseMeters().getRotation().getRadians()) + camera_offset.getY() * Math.sin(odometry.getPoseMeters().getRotation().getRadians()),
-                          camera_output.getRotation());
-    }
-
     @Override
     public void periodic() {
         SwerveDrive swerve = SwerveDrive.getInstance();
@@ -106,8 +98,7 @@ public class Odometry extends AbstractOdometry {
                 SmartDashboard.putNumber("Odometry/Primary Tag/Distance", distance);
 
                 estimator.addVisionMeasurement(
-                    // result.robotPose.toPose2d().transformBy(new Transform2d(result.cameraLocation.getTranslation().toTranslation2d(), result.cameraLocation.getRotation().toRotation2d())),
-                    new Pose2d(result.robotPose.toPose2d().getTranslation(), result.robotPose.toPose2d().getRotation().plus(Rotation2d.fromDegrees(180))),
+                    result.robotPose.toPose2d(),
                     result.timestamp);
             }
         }
