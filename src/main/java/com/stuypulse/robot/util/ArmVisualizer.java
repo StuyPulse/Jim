@@ -145,6 +145,6 @@ public class ArmVisualizer {
     }
 
     public void setFieldArm(Pose2d robotPose, ArmState armState) {
-        fieldArm2d.update(robotPose, armState);
+        //fieldArm2d.update(robotPose, armState);
     }
 }

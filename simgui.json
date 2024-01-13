@@ -8,16 +8,6 @@
       "/SmartDashboard/LED Mech2d": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/Arm Mech2d": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Autonomous": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "window": {
           "visible": true
@@ -31,8 +21,16 @@
         "Manager": {
           "open": true
         },
+        "Swerve": {
+          "open": true
+        },
         "open": true
       }
+    }
+  },
+  "NetworkTables Info": {
+    "Connections": {
+      "open": true
     }
   }
 }

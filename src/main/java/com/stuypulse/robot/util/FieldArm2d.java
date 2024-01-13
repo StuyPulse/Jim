@@ -25,9 +25,9 @@ public class FieldArm2d {
 
         Translation2d topDownTranslation = new Translation2d(distanceFromSwerveCenter, robot.getRotation());
 
-        object.setPose(new Pose2d(
-            topDownTranslation.plus(robot.getTranslation()),
-            robot.getRotation()
-        ));
+        // object.setPose(new Pose2d(
+        //     topDownTranslation.plus(robot.getTranslation()),
+        //     robot.getRotation()
+        // ));
     }
 }

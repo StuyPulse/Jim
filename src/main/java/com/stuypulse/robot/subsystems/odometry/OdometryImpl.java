@@ -135,13 +135,13 @@ public class OdometryImpl extends Odometry {
         poseEstimator.update(drive.getGyroAngle(), drive.getModulePositions());
         odometry.update(drive.getGyroAngle(), drive.getModulePositions());
 
-        poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
+        //poseEstimatorPose2d.setPose(poseEstimator.getEstimatedPosition());
 
         Vision vision = Vision.getInstance();
         List<AprilTagData> results = Vision.getInstance().getResults();
         processResults(results, drive, vision);
 
-        odometryPose2d.setPose(odometry.getPoseMeters());
+        //odometryPose2d.setPose(odometry.getPoseMeters());
 
         SmartDashboard.putNumber("Odometry/Odometry Pose X", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Odometry/Odometry Pose Y", odometry.getPoseMeters().getY());

@@ -5,60 +5,83 @@
   "MainWindow": {
     "GLOBAL": {
       "fps": "120",
-      "height": "1046",
-      "maximized": "1",
+      "height": "577",
+      "maximized": "0",
       "style": "0",
       "userScale": "2",
-      "width": "1920",
+      "width": "1153",
       "xpos": "0",
       "ypos": "34"
     }
   },
+  "Table": {
+    "0xE56EC1C2,4": {
+      "Column 0  Weight": "1.0000",
+      "Column 1  Weight": "1.0000",
+      "Column 2  Weight": "1.0000",
+      "Column 3  Weight": "1.0000"
+    }
+  },
   "Window": {
+    "###/FMSInfo": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "169,167"
+    },
     "###/SmartDashboard/Arm Mech2d": {
       "Collapsed": "0",
-      "Pos": "1022,157",
-      "Size": "656,416"
+      "Pos": "785,149",
+      "Size": "656,399"
     },
     "###/SmartDashboard/Autonomous": {
       "Collapsed": "0",
       "Pos": "234,43",
-      "Size": "361,66"
+      "Size": "254,54"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "366,214",
-      "Size": "600,300"
+      "Pos": "486,-16",
+      "Size": "717,401"
     },
     "###FMS": {
-      "Collapsed": "0",
-      "Pos": "7,810",
-      "Size": "388,182"
+      "Collapsed": "1",
+      "Pos": "-13,722",
+      "Size": "283,146"
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "375,697",
-      "Size": "1156,91"
+      "Pos": "460,422",
+      "Size": "796,155"
+    },
+    "###Keyboard 0 Settings": {
+      "Collapsed": "0",
+      "Pos": "140,119",
+      "Size": "300,560"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "467,901",
-      "Size": "1125,277"
+      "Pos": "492,408",
+      "Size": "857,401"
+    },
+    "###NetworkTables Info": {
+      "Collapsed": "1",
+      "Pos": "611,624",
+      "Size": "750,145"
     },
     "###Other Devices": {
-      "Collapsed": "0",
-      "Pos": "1537,30",
-      "Size": "375,1042"
+      "Collapsed": "1",
+      "Pos": "1134,30",
+      "Size": "517,1042"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "7,525",
-      "Size": "273,290"
+      "Pos": "528,428",
+      "Size": "192,218"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "7,225",
-      "Size": "188,157"
+      "Size": "135,127"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -68,7 +91,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "5,20",
-      "Size": "126,129"
+      "Size": "92,99"
     }
   }
 }

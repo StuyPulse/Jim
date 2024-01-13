@@ -42,7 +42,9 @@ import com.stuypulse.robot.util.BootlegXbox;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -60,6 +62,7 @@ public class RobotContainer {
     public final Gamepad operator = new BootlegXbox(Ports.Gamepad.OPERATOR);
 
     // Subsystem
+   
     public final SwerveDrive swerve = SwerveDrive.getInstance();
     public final Intake intake = Intake.getInstance();
     public final Vision vision = Vision.getInstance();
@@ -93,6 +96,9 @@ public class RobotContainer {
         SmartDashboard.putData("Gamepads/Driver", driver);
         SmartDashboard.putData("Gamepads/Operator", operator);
         // SmartDashboard.putData("Gamepads/Chooser", chooser);
+        
+       
+
     }
 
     /****************/
@@ -136,7 +142,8 @@ public class RobotContainer {
             .whileTrue(new RobotAlignThenScoreCubes());
 
         // swerve
-        driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+        //driver.getLeftButton().whileTrue(new SwerveDriveAlignThenBalance());
+       
         // left bumper -> robot relative
 
         // odometry
@@ -146,8 +153,9 @@ public class RobotContainer {
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant
-        driver.getRightButton().onTrue(new PlantEngage());
-        driver.getRightBumper().onTrue(new PlantDisengage());
+        // driver.getRightButton().onTrue(new PlantEngage());
+        driver.getRightButton().whileTrue(new PointWhileDrive(swerve, new Translation2d()));
+        //driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasGamePiece)
             .and(DriverStation::isTeleop)
@@ -237,37 +245,37 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.addOption("Do Nothing", new DoNothing());
-        autonChooser.addOption("Mobility", new Mobility());
+        // autonChooser.addOption("Mobility", new Mobility());
 
-        // One Piece
+        // // One Piece
 
-        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
-        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
+        // // autonChooser.addOption("One Piece Dock", new OnePieceDock());
+        // autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
 
-        // One Piece Dock
+        // // One Piece Dock
 
-        // autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        // autonChooser.addOption("1.5 Piece Dock Bump", new OnePiecePickupDockBump());
+        // // autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
+        // // autonChooser.addOption("1.5 Piece Dock Bump", new OnePiecePickupDockBump());
 
-        // Two Piece
+        // // Two Piece
 
-        autonChooser.addOption("Two Piece", new TwoPiece());
-        autonChooser.addOption("Two Piece Bump", new TwoPieceBump());
-        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
-        autonChooser.setDefaultOption("Two Piece Dock Blue", new TwoPieceDockBlue());
-        // autonChooser.addOption("Two Piece Dock Bump Removed Blue", new BCTwoPieceDockBumpBlue());
-        // autonChooser.addOption("Two Piece Dock Bump Removed Red", new BCTwoPieceDockBumpRed());
+        // autonChooser.addOption("Two Piece", new TwoPiece());
+        // autonChooser.addOption("Two Piece Bump", new TwoPieceBump());
+        // autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
+        // autonChooser.setDefaultOption("Two Piece Dock Blue", new TwoPieceDockBlue());
+        // // autonChooser.addOption("Two Piece Dock Bump Removed Blue", new BCTwoPieceDockBumpBlue());
+        // // autonChooser.addOption("Two Piece Dock Bump Removed Red", new BCTwoPieceDockBumpRed());
 
-        // Three Piece
+        // // Three Piece
 
-        autonChooser.addOption("Three Piece", new ThreePiece()); // basically blue
-        autonChooser.addOption("Three Piece Red", new ThreePieceRed());
-        autonChooser.addOption("Three Piece Blue", new ThreePieceBlue());
-        // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
-        // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
-        autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
+        // autonChooser.addOption("Three Piece", new ThreePiece()); // basically blue
+        // autonChooser.addOption("Three Piece Red", new ThreePieceRed());
+        // autonChooser.addOption("Three Piece Blue", new ThreePieceBlue());
+        // // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
+        // // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
+        // autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
 
-        SmartDashboard.putData("Autonomous", autonChooser);
+        // SmartDashboard.putData("Autonomous", autonChooser);
     }
 
     public Command getAutonomousCommand() {
