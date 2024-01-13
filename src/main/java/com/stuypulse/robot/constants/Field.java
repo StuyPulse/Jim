@@ -7,6 +7,8 @@ package com.stuypulse.robot.constants;
 
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import java.util.ArrayList;
+
 import com.stuypulse.robot.RobotContainer;
 import com.stuypulse.robot.subsystems.Manager.ScoreSide;
 import com.stuypulse.robot.util.AllianceUtil;
@@ -30,12 +32,15 @@ public interface Field {
 
     Fiducial TAGS[] = {
         new Fiducial(1,new Pose3d(new Translation3d(WIDTH / 2, HEIGHT / 2, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
-        // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, (1 + Units.inchesToMeters(28.125)), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180))))
-        // new Fiducial(0,new Pose3d(new Translation3d(WIDTH, 0, Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // home
-        // new Fiducial(1,new Pose3d(new Translation3d(WIDTH, Units.inchesToMeters(33), Units.inchesToMeters(61.5)), new Rotation3d(Units.degreesToRadians(90),Units.degreesToRadians(0),Units.degreesToRadians(180)))),
-        // new Fiducial(0,new Pose3d(new Translation3d(8.23, 1, Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180)))), // flipped test
-        // new Fiducial(1,new Pose3d(new Translation3d(8.23, 1 + Units.inchesToMeters(28.125), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(180))))
+        new Fiducial(3,new Pose3d(new Translation3d(WIDTH / 2, HEIGHT / 2 - Units.inchesToMeters(44.25), Units.inchesToMeters(30)), new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(0),Units.degreesToRadians(0)))),
     };
+
+    public static Fiducial[] getFiducialLayout(int[] tids) {
+        ArrayList<Fiducial> fiducials = new ArrayList<Fiducial>();
+        for (int tid : tids) for (Fiducial tag: TAGS) if (tag.getID() == tid) fiducials.add(tag);
+        Fiducial[] fiducials_array = new Fiducial[fiducials.size()];
+        return fiducials.toArray(fiducials_array);
+    }
 
     public static boolean isValidTag(int id) {
         for (Fiducial tag : TAGS)

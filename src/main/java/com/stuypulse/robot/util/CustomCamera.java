@@ -5,6 +5,7 @@
 
 package com.stuypulse.robot.util;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import com.stuypulse.robot.constants.Field;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
@@ -44,6 +46,8 @@ public class CustomCamera {
     private final DoubleArraySubscriber poseSub;
     private final IntegerArraySubscriber idSub;
 
+    private final DoubleArrayPublisher layoutSub;
+
     private double[] rawPoseData;
     private double rawLatency;
     private long[] rawIdData;
@@ -65,7 +69,8 @@ public class CustomCamera {
         configTable.getDoubleTopic("camera_gain").publish().set(camera_gain);
         configTable.getDoubleTopic("camera_brightness").publish().set(camera_brightness);
         configTable.getDoubleTopic("fiducial_size").publish().set(Field.FIDUCIAL_SIZE);
-        configTable.getDoubleArrayTopic("fiducial_layout").publish().set(Field.getTagLayout(Field.TAGS));
+        layoutSub = configTable.getDoubleArrayTopic("fiducial_layout").publish();
+        layoutSub.set(Field.getTagLayout(Field.TAGS));
         configTable.getDoubleArrayTopic("camera_offset").publish()
             .set(new double[] {
                 cameraPose.getX(),
@@ -90,6 +95,10 @@ public class CustomCamera {
 
     public String getCameraName() {
         return cameraName;
+    }
+
+    public void setLayout(Fiducial[] layout) {
+        layoutSub.set(Field.getTagLayout(layout));
     }
 
     private void updateData() {

@@ -345,7 +345,7 @@ public interface Settings {
             public interface GyroFeedback {
                 SmartBoolean GYRO_FEEDBACK_ENABLED = new SmartBoolean("Driver Settings/Gyro Feedback/Enabled", true);
 
-                SmartNumber P = new SmartNumber("Driver Settings/Gyro Feedback/kP", 0.5);
+                SmartNumber P = new SmartNumber("Driver Settings/Gyro Feedback/kP", 10);
                 SmartNumber I = new SmartNumber("Driver Settings/Gyro Feedback/kI", 0.0);
                 SmartNumber D = new SmartNumber("Driver Settings/Gyro Feedback/kD", 0.1);
             }
@@ -382,7 +382,7 @@ public interface Settings {
             // SmartNumber P = new SmartNumber("Alignment/Translation/kP", 3);
             // SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             // SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
-            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 1);
+            SmartNumber P = new SmartNumber("Alignment/Translation/kP", 2.5);
             SmartNumber I = new SmartNumber("Alignment/Translation/kI", 0);
             SmartNumber D = new SmartNumber("Alignment/Translation/kD", 0.0);
         }

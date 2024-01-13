@@ -26,4 +26,6 @@ public abstract class AbstractVision extends SubsystemBase {
     protected AbstractVision() {}
 
     public abstract List<VisionData> getOutput();
+
+    public abstract void setCameraLayouts(int[] tids);
 }

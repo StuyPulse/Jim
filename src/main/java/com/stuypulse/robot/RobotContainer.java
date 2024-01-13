@@ -26,6 +26,7 @@ import com.stuypulse.robot.commands.odometry.*;
 import com.stuypulse.robot.commands.plant.*;
 import com.stuypulse.robot.commands.swerve.*;
 import com.stuypulse.robot.commands.swerve.balance.*;
+import com.stuypulse.robot.commands.vision.SetCameraLayout;
 import com.stuypulse.robot.commands.wing.*;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
@@ -131,9 +132,13 @@ public class RobotContainer {
             .whileTrue(new RobotScore());
         driver.getBottomButton()
             .whileTrue(new RobotScore());
+        driver.getStartButton()
+            .whileTrue(new SwerveDriveAimbot(driver));
         driver.getRightTriggerButton()
             .whileTrue(new RobotRelease())
             .onFalse(new WaitCommand(0.5).andThen(new IntakeStop()));
+
+        driver.getDPadDown().onTrue(new SetCameraLayout(new int[] {1})).onFalse(new SetCameraLayout(new int[] {3}));
 
         driver.getTopButton()
             .onTrue(new ManagerValidateState())
@@ -147,7 +152,7 @@ public class RobotContainer {
         // odometry
         driver.getDPadUp().onTrue(new OdometryRealign(Rotation2d.fromDegrees(180)));
         driver.getDPadLeft().onTrue(new OdometryRealign(Rotation2d.fromDegrees(-90)));
-        driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
+        // driver.getDPadDown().onTrue(new OdometryRealign(Rotation2d.fromDegrees(0)));
         driver.getDPadRight().onTrue(new OdometryRealign(Rotation2d.fromDegrees(90)));
 
         // plant

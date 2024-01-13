@@ -6,6 +6,7 @@
 package com.stuypulse.robot.subsystems.vision;
 
 import com.stuypulse.robot.constants.Cameras;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.odometry.AbstractOdometry;
 import com.stuypulse.robot.util.CustomCamera;
 import com.stuypulse.robot.util.Fiducial;
@@ -37,6 +38,13 @@ public class Vision extends AbstractVision {
     @Override
     public List<VisionData> getOutput() {
         return outputs;
+    }
+
+    @Override
+    public void setCameraLayouts(int[] tids) {
+        for (CustomCamera camera : cameras) {
+            camera.setLayout(Field.getFiducialLayout(tids));
+        }
     }
 
     @Override
