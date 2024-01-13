@@ -29,11 +29,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 
 
@@ -46,7 +46,7 @@ public class SL_SwerveModule extends SwerveModule {
 
     // turn
     private final CANSparkMax turnMotor;
-    private final SparkMaxAbsoluteEncoder absoluteEncoder;
+    private final SparkAbsoluteEncoder absoluteEncoder;
 
     // drive
     private final CANSparkMax driveMotor;

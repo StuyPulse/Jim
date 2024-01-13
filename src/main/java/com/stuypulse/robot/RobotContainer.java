@@ -14,11 +14,7 @@ import java.util.Optional;
 import com.stuypulse.robot.commands.*;
 import com.stuypulse.robot.commands.arm.*;
 import com.stuypulse.robot.commands.arm.routines.*;
-import com.stuypulse.robot.commands.auton.*;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCThreePieceBumpRed;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpBlue;
-import com.stuypulse.robot.commands.auton.battlecry.BCTwoPieceDockBumpRed;
+import com.stuypulse.robot.commands.auton.DoNothing;
 import com.stuypulse.robot.commands.intake.*;
 import com.stuypulse.robot.commands.leds.LEDSet;
 import com.stuypulse.robot.commands.manager.*;
@@ -239,35 +235,6 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.addOption("Do Nothing", new DoNothing());
-        autonChooser.addOption("Mobility", new Mobility());
-
-        // One Piece
-
-        // autonChooser.addOption("One Piece Dock", new OnePieceDock());
-        autonChooser.addOption("One Piece Mobility Dock", new OnePieceMobilityDock());
-
-        // One Piece Dock
-
-        // autonChooser.addOption("1.5 Piece Dock", new OnePiecePickupDock());
-        // autonChooser.addOption("1.5 Piece Dock Bump", new OnePiecePickupDockBump());
-
-        // Two Piece
-
-        autonChooser.addOption("Two Piece", new TwoPiece());
-        autonChooser.addOption("Two Piece Bump", new TwoPieceBump());
-        autonChooser.addOption("Two Piece Dock Red", new TwoPieceDockRed());
-        autonChooser.setDefaultOption("Two Piece Dock Blue", new TwoPieceDockBlue());
-        // autonChooser.addOption("Two Piece Dock Bump Removed Blue", new BCTwoPieceDockBumpBlue());
-        // autonChooser.addOption("Two Piece Dock Bump Removed Red", new BCTwoPieceDockBumpRed());
-
-        // Three Piece
-
-        autonChooser.addOption("Three Piece", new ThreePiece()); // basically blue
-        autonChooser.addOption("Three Piece Red", new ThreePieceRed());
-        autonChooser.addOption("Three Piece Blue", new ThreePieceBlue());
-        // autonChooser.addOption("Three Piece Bump Removed Blue", new BCThreePieceBumpBlue());
-        // autonChooser.addOption("Three Piece Bump Removed Red", new BCThreePieceBumpRed());
-        autonChooser.addOption("Three Piece Bump", new ThreePieceBump());
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

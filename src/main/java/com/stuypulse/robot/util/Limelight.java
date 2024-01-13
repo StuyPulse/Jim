@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.IntegerEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class Limelight {
     }
 
     private double[] getPoseData() {
-        return RobotContainer.getCachedAlliance() == Alliance.Blue ?
+        return DriverStation.getAlliance().get() == Alliance.Blue ?
             blueBotposeEntry.get() :
             redBotposeEntry.get();
     }
