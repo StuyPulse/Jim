@@ -154,7 +154,8 @@ public class RobotContainer {
 
         // plant
         // driver.getRightButton().onTrue(new PlantEngage());
-        driver.getRightButton().whileTrue(new PointWhileDrive(swerve, new Translation2d()));
+        driver.getRightButton().toggleOnTrue(new SwerveDriveAndPoint(driver, new Translation2d()));
+
         //driver.getRightBumper().onTrue(new PlantDisengage());
 
         new Trigger(intake::hasGamePiece)
